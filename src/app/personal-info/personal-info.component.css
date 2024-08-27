@@ -1,0 +1,197 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Align items to the top of the page */
+    height: 100vh;
+}
+
+.form-container {
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    width: 160%; /* Adjusted to ensure proper scaling */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: auto; /* Let the form container adjust height automatically */
+
+}
+
+
+.form-container:hover {
+    transform: scale(1.02); /* Slight zoom effect */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    text-transform: uppercase; /* Add a bit of style */
+    margin: 160px;
+}
+
+.form-section {
+    margin-bottom: 20px;}
+
+h2 {
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 12px;
+    color: #3498db;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+label {
+    margin: 6px ; /* Adds some space around the labels */
+    color: #555; /* Ensure the color contrasts well with the background */
+    font-weight: bold; /* Makes labels stand out */
+    font-size: 16px; /* Adjust the font size if necessary */
+    line-height: 1.5; /* Ensures readability by setting line height */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+    width: 100%;
+    padding: 14px; /* Slightly larger padding for better touch targets */
+    margin-bottom: 10px; /* Increased margin for better spacing */
+    border: 1px solid #ccc; /* Softer border color */
+    border-radius: 10px; /* More rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+    font-size: 1rem; /* Ensure text size is consistent */
+    color: #333; /* Darker text color for better readability */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="number"]::placeholder,
+input[type="url"]::placeholder,
+textarea::placeholder,
+select::placeholder {
+    color: #888; /* Lighter placeholder text */
+    font-style: italic; /* Slightly italicized placeholder */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #3498db; /* Blue border on focus */
+    background-color: #fff; /* White background on focus */
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); /* Glowing effect on focus */
+    outline: none; /* Remove default focus outline */
+}
+
+textarea {
+    resize: vertical; /* Only allow vertical resizing */
+    min-height: 100px; /* Minimum height for textareas */
+}
+
+select {
+    appearance: none; /* Remove default arrow */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%233498db" d="M2 0L0 2h4z"/></svg>'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 12px top 50%; /* Position the custom arrow */
+    background-size: 12px; /* Size of the custom arrow */
+    padding-right: 36px; /* Add space for the arrow */
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="tel"]:hover,
+input[type="number"]:hover,
+input[type="url"]:hover,
+textarea:hover,
+select:hover {
+    border-color: #bbb; /* Slightly darker border on hover */
+}
+
+input[type="text"]:disabled,
+input[type="email"]:disabled,
+input[type="tel"]:disabled,
+input[type="number"]:disabled,
+input[type="url"]:disabled,
+textarea:disabled,
+select:disabled {
+    background-color: #eee; /* Light gray background for disabled inputs */
+    color: #aaa; /* Light gray text for disabled inputs */
+    cursor: not-allowed; /* Not-allowed cursor for disabled inputs */
+}
+
+input[type="text"]:active,
+input[type="email"]:active,
+input[type="tel"]:active,
+input[type="number"]:active,
+input[type="url"]:active,
+textarea:active,
+select:active {
+    background-color: #eaf4fb; /* Slightly different background on click */
+    box-shadow: inset 0 2px 6px rgba(52, 152, 219, 0.15); /* Subtle inset shadow on click */
+}
+
+
+button {
+    background: linear-gradient(135deg, #3498db, #2980b9); /* Gradient background */
+    color: #ffffff;
+    border: 1px solid #2980b9; /* Subtle border */
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Text shadow for depth */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle box-shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, text-shadow 0.3s ease; /* Smooth transitions */
+}
+
+button:hover {
+    background: linear-gradient(135deg, #3da1df, #3498db); /* Lighten gradient on hover */
+    transform: translateY(-4px); /* Lift effect */
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3); /* Enhanced shadow on hover */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4); /* Enhance text shadow on hover */
+    outline: none; /* Remove outline */
+}
+
+button:active {
+    background: linear-gradient(135deg, #2980b9, #1c5d8e); /* Darker gradient on click */
+    transform: translateY(2px); /* Press effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Reduced shadow on click */
+}
+
+button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.8); /* Glowing outline on focus */
+}
+
+button.pulse:hover {
+    animation: pulse 1s infinite; /* Pulse animation on hover */
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(52, 152, 219, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(52, 152, 219, 0.5);
+    }
+}

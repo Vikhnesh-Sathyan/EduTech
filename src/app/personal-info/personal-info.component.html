@@ -1,0 +1,56 @@
+
+<body>
+    <div class="form-container">
+        <h1>Person Details Form</h1>
+        <form id="person-details-form">
+            <div class="form-section">
+                <h2>Personal Information</h2>
+                <label for="full-name">Full Name:</label>
+                <input type="text" id="full-name" name="full-name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone">
+
+                <label for="address">Address:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+
+            <div class="form-section">
+                <h2>Education</h2>
+                <label for="highest-education">Highest Level of Education:</label>
+                <select id="highest-education" name="highest-education">
+                    <option value="high-school">High School</option>
+                    <option value="associate-degree">Associate Degree</option>
+                    <option value="bachelor-degree">Bachelor's Degree</option>
+                    <option value="master-degree">Master's Degree</option>
+                    <option value="doctorate">Doctorate</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="institution">Institution Name:</label>
+                <input type="text" id="institution" name="institution">
+
+                <label for="graduation-year">Year of Graduation:</label>
+                <input type="num" id="graduation-year" name="graduation-year">
+            </div>
+
+            <div class="form-section">
+                <h2>Hobbies</h2>
+                <label for="hobbies">Select your hobbies:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="hobbies" value="reading"> Reading</label>
+                    <label><input type="checkbox" name="hobbies" value="traveling"> Traveling</label>
+                    <label><input type="checkbox" name="hobbies" value="cooking"> Cooking</label>
+                    <label><input type="checkbox" name="hobbies" value="sports"> Sports</label>
+                    <label><input type="checkbox" name="hobbies" value="music"> Music</label>
+                </div>
+            </div>
+
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>

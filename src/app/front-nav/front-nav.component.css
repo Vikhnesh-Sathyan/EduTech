@@ -1,0 +1,146 @@
+/* Navigation */
+.navbar {
+    padding: 10px 20px; /* Adjust padding for top and bottom */
+    position: fixed;
+    top: 0;
+    right: 0; /* Align to the top right */
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between; /* Distribute space between logo and nav items */
+    align-items: center; /* Center items vertically */
+    width: 100%; /* Full width to make sure it spans across the top */
+    background: #e9e6e6; /* Optional: white background */
+}
+
+/* Logo */
+.navbar .logo {
+    font-size: 24px;
+    text-decoration: none;
+    color: #34495e; /* Dark blue-gray for contrast */
+    margin-left: 0; /* Remove margin on the left side */
+}
+.navbar .logo {
+    font-size: 24px;
+    text-decoration: none;
+    color: #34495e; /* Dark blue-gray for contrast */
+    margin-left: 0; /* Remove margin on the left side */
+    padding: 5px 10px; /* Add some padding */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth background color transition */
+}
+
+.navbar .logo:hover {
+    background-color: #1abc9c; /* Teal background */
+    color: #ffffff; /* White text color */
+}
+.navbar .logo {
+    font-size: 24px;
+    text-decoration: none;
+    color: #34495e; /* Dark blue-gray for contrast */
+    margin-left: 0; /* Remove margin on the left side */
+    position: relative;
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.navbar .logo::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 2px;
+    background: #11b7b7; /* Teal underline */
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease; /* Smooth underline animation */
+}
+
+.navbar .logo:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+
+
+/* Navigation Links */
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Center items vertically */
+}
+
+.navbar .nav-links li {
+    margin: 0 20px; /* Increase space between links */
+    position: relative;
+}
+
+.navbar .nav-links a {
+    color: #34495e; /* Dark blue-gray */
+    text-decoration: none;
+    transition: color 0.3s, transform 0.3s;
+    font-size: 18px; /* Increase font size */
+    padding: 10px; /* Add padding for larger clickable area */
+    display: flex; /* Make anchor tag a flex container */
+    align-items: center; /* Center text vertically */
+}
+
+.navbar .nav-links a:hover {
+    color: #1abc9c; /* Teal */
+    transform: translateY(-2px); /* Slight hover effect */
+}
+
+/* Call to Action (CTA) */
+.navbar .cta {
+    background: #0ad9d9; /* Teal */
+    color: #fff;
+    padding: 8px 20px; /* Increase padding for larger button */
+    border-radius: 5px;
+    font-size: 16px; /* Adjust font size */
+    margin-left: 20px; /* Space between CTA and nav-links */
+    display: flex;
+    align-items: center; /* Center text vertically */
+}
+
+.navbar .cta:hover {
+    background: #16a085; /* Darker teal */
+}
+
+/* Dropdown Menu */
+.navbar .nav-links li ul.dropdown {
+    position: absolute;
+    top: 100%; /* Align dropdown below the navbar item */
+    right: 0; /* Align dropdown to the right of the navbar item */
+    background: #1b1b1b; /* Dark background for dropdown */
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional: add shadow for better visibility */
+    max-height: 300px; /* Set a maximum height to limit size */
+    overflow: hidden; /* Hide overflow to avoid scrollbars */
+    padding: 0; /* Remove padding if not needed */
+}
+
+.navbar .nav-links li:hover ul.dropdown {
+    visibility: visible;
+    opacity: 1;
+}
+
+.navbar .nav-links li ul.dropdown li {
+    margin: 0;
+    padding: 8px 10px; /* Reduce padding for a smaller height */
+    background: #1b1b1b; /* Dark background for dropdown items */
+    width: 150px; /* Adjust width */
+}
+
+.navbar .nav-links li ul.dropdown li a {
+    color: white;
+    padding: 8px 10px; /* Adjust padding */
+    font-size: 16px; /* Match font size with main nav links */
+}
+
+.navbar .nav-links li ul.dropdown li a:hover {
+    color: cyan;
+    border-radius: 5px;
+}

@@ -1,0 +1,65 @@
+<div class="dashboard" [class.dark-mode]="darkMode">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="toggle-switch">
+        <label for="dark-mode-toggle">🌙</label>
+        <input type="checkbox" id="dark-mode-toggle" (change)="toggleDarkMode()">
+      </div>
+      <ul>
+        <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="#"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a href="#"><i class="fas fa-clipboard-list"></i> Grades</a></li>
+        <li><a href="#"><i class="fas fa-book"></i> Resources</a></li>
+        <li><a href="#"><i class="fas fa-exclamation-triangle"></i> Alerts</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Feedback</a></li>
+        <li><a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i> Messages</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Parent Communication</a></li>
+        <li><a href="#"><i class="fas fa-book-open"></i> Gradebook</a></li>
+      </ul>
+    </nav>
+  
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Top Right Section -->
+      <header class="top-right">
+        <div class="profile-info">
+          <img src="assets/profile-pic.jpg" alt="Profile Picture" class="profile-pic">
+          <h2>Mr. John Doe</h2>
+          <p>Mathematics | 9th & 10th Grade</p>
+        </div>
+        <div class="notifications">
+          <h3>Notifications</h3>
+          <ul>
+            <li>Student John submitted an assignment.</li>
+            <li>Meeting on Friday at 10 AM.</li>
+            <li>New update on school portal.</li>
+          </ul>
+        </div>
+      </header>
+  
+      <!-- Dynamic Content Sections -->
+      <section class="content-section">
+        <h2>Dashboard Overview</h2>
+        <div class="dashboard-cards">
+          <div class="card students">
+            <h3>Students</h3>
+            <p>Track student performance, communication, and assignment support.</p>
+          </div>
+          <div class="card grades">
+            <h3>Grades</h3>
+            <p>Manage grading, feedback, and reports.</p>
+          </div>
+          <div class="card resources">
+            <h3>Resources</h3>
+            <p>Access teaching materials, lesson plans, and educational resources.</p>
+          </div>
+          <div class="card alerts">
+            <h3>Alerts</h3>
+            <p>Notifications about students needing attention or support.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  

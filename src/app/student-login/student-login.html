@@ -1,0 +1,46 @@
+<div class="container" id="main">
+    <div class="sign-up">
+      <form action="#">
+        <h1>Student Login</h1>
+        <div class="social-container">
+          <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+          <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <p>Or use your email to register</p>
+        <input type="text" placeholder="Name" name="txt" required>
+        <input type="text" placeholder="Email" name="email" required>
+        <input type="password" placeholder="Password" name="password" required>
+        <button type="submit" class="btn">Sign-Up</button>
+      </form>
+    </div>
+    <div class="sign-in">
+      <form action="#">
+        <h1>Sign-In</h1>
+        <div class="social-container">
+          <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+          <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <p>or use your account</p>
+        <input type="text" placeholder="Name" name="txt" required>
+        <input type="text" placeholder="Email" name="email" required>
+        <input type="password" placeholder="Password" name="password" required/>
+        <a href="#">Forgot your password?</a>
+        <button type="submit" class="btn">Sign-In</button>
+      </form>
+    </div>
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-left">
+          <h1>Welcome!!</h1>
+          <p>To our website</p>
+          <button class="btn" (click)="togglePanel('signIn')">Sign In</button>
+        </div>
+        <div class="overlay-right">
+          <h1>Hello</h1>
+          <p>Enter your personal details and start your journey with US</p>
+          <button class="btn" (click)="togglePanel('signUp')">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+

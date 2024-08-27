@@ -1,0 +1,89 @@
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile-info">
+        <img src="assets/parent-profile.jpg" alt="Parent's Profile Picture" class="profile-pic">
+        <h2>Parent Name</h2>
+      </div>
+      <nav class="quick-access">
+        <a href="#student-profile">Student Profile</a>
+        <a href="#current-courses">Current Courses</a>
+        <a href="#recent-grades">Recent Grades</a>
+      </nav>
+    </aside>
+  
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-right">
+        <!-- Removed dark mode toggle button -->
+      </div>
+  
+      <!-- Notifications Section -->
+      <section class="notifications">
+        <h3>Notifications</h3>
+        <ul>
+          <li><strong>Update:</strong> School open house next week.</li>
+          <li><strong>Message:</strong> New message from the teacher.</li>
+          <li><strong>Event:</strong> Parent-teacher meeting on Friday.</li>
+        </ul>
+      </section>
+  
+      <!-- Communication Section -->
+      <section class="communication">
+        <h3>Communication</h3>
+        <p>Recent messages from teachers and school administration.</p>
+        <div class="message">
+          <h4>Teacher's Message</h4>
+          <p>Don't forget about the upcoming parent-teacher meeting.</p>
+        </div>
+      </section>
+  
+      <!-- Student Profile Section -->
+      <section class="student-profile" id="student-profile">
+        <h3>Student Profile</h3>
+        <div class="student-info">
+          <img src="assets/student-profile.jpg" alt="Student's Profile Picture" class="student-pic">
+          <div>
+            <h4>Student Name</h4>
+            <p>Grade: 5</p>
+            <p>Class: A</p>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Current Courses Section -->
+      <section class="current-courses" id="current-courses">
+        <h3>Current Courses</h3>
+        <ul>
+          <li>Math</li>
+          <li>Science</li>
+          <li>English</li>
+          <li>History</li>
+        </ul>
+      </section>
+  
+      <!-- Recent Grades Section -->
+      <section class="recent-grades" id="recent-grades">
+        <h3>Recent Grades</h3>
+        <div class="grade-summary">
+          <div class="grade">
+            <h4>Math Test</h4>
+            <p>Score: 95%</p>
+          </div>
+          <div class="grade">
+            <h4>Science Quiz</h4>
+            <p>Score: 89%</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <!-- Modal for additional information -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <p>Some text in the Modal..</p>
+    </div>
+  </div>
+  

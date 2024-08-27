@@ -1,0 +1,96 @@
+/* CTA Section */
+.cta-section {
+    color: #333; /* Dark text color for better readability */
+    padding: 60px 20px;
+    text-align: center; /* Center align all text */
+    font-family: 'Merriweather', serif; /* Use a custom serif font for body text */
+}
+
+/* Container within CTA Section */
+.cta-section .container {
+    max-width: 800px; /* Container width */
+    margin: 0 auto; /* Center align container */
+    padding: 0 20px; /* Padding inside the container */
+}
+
+.cta-section h2 {
+    font-size: 2.2em; /* Slightly larger font size for heading */
+    margin-bottom: 20px;
+    font-weight: 900; /* Extra bold font weight */
+    font-family: 'Montserrat', sans-serif; /* Use a custom sans-serif font for headings */
+    text-transform: uppercase; /* Uppercase for a bold look */
+    letter-spacing: 1px; /* Increased letter spacing */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Text shadow for emphasis */
+}
+
+.cta-description {
+    font-size: 1.2em; /* Slightly larger font size for description */
+    margin-bottom: 30px;
+    font-weight: 300; /* Light weight for descriptions */
+    line-height: 1.6; /* Increased line height for readability */
+    background: linear-gradient(135deg, #f8c291, #e77f7f, #cf6e8f); /* Gradient background with vibrant colors */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Text gradient effect */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners for background */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+}
+
+
+.cta-benefits {
+    margin-bottom: 30px;
+}
+
+.cta-benefits h3 {
+    font-size: 1.6em; /* Larger font size for benefits heading */
+    margin-bottom: 15px;
+    font-weight: 600; /* Semi-bold font weight */
+    letter-spacing: 0.8px; /* Increased letter spacing */
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.05); /* Light shadow for depth */
+}
+
+.cta-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto; /* Center align the list */
+    font-size: 1.1em; /* Font size for benefits list */
+    max-width: 600px; /* Restrict the width for better alignment */
+}
+
+.cta-benefits li {
+    margin-bottom: 10px;
+    text-align: center; /* Center align list items text */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center align list items */
+    line-height: 1.4; /* Increased line height for better readability */
+}
+
+.cta-benefits i {
+    margin-right: 8px;
+    font-size: 1.2em; /* Slightly larger icon size for better visibility */
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #ffffff, #e0f2f1); /* Gradient background for a modern look */
+    color: #1abc9c; /* Teal text color */
+    padding: 15px 25px;
+    border-radius: 8px; /* Slightly larger border radius for rounded corners */
+    border: none;
+    text-decoration: none;
+    font-size: 1.2em; /* Font size for button text */
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s; /* Smooth transition for background, color, and shadow */
+    display: inline-block; /* Ensure the button is centered */
+    margin-top: 20px; /* Space above the button */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-transform: uppercase; /* Uppercase text for a bolder look */
+    font-weight: 700; /* Bold font weight for the button */
+    letter-spacing: 1px; /* Increased letter spacing for button text */
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #e0f2f1, #ffffff); /* Reversed gradient on hover */
+    color: #004d40; /* Darker text color for better contrast on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover for emphasis */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}

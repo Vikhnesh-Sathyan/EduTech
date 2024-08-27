@@ -1,0 +1,108 @@
+/* Advertisement Section */
+.advertisement-section {
+    padding: 40px 0; /* Remove horizontal padding */
+    background: #f9f9f9; /* Light gray background for the section */
+    display: flex;
+    justify-content: center; /* Center the card horizontally */
+    width: 100vw;
+    box-sizing: border-box;
+}
+
+/* Ad Card */
+.ad-card {
+    width: 400%; /* Full width of the container */
+    max-width: 1200px; /* Limit max-width to ensure content is not too wide */
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative; /* Required for the overlay effect */
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Ad Content */
+.ad-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+/* Ad Image */
+.ad-image {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.ad-image img {
+    width: 80%;
+    height: 50vh;
+    border-radius: 15px;
+    transition: transform 0.3s;
+}
+
+/* Ad Details */
+.ad-details {
+    flex: 1;
+    text-align: center;
+}
+
+.ad-details h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.ad-details p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.btn-discover {
+    display: inline-block;
+    background: #ff6f61;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.btn-discover:hover {
+    background: #ff4b3a;
+    transform: scale(1.05);
+}
+
+/* Hover Effect */
+.ad-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Image Hover Effect */
+.ad-image:hover img {
+    transform: scale(1.05);
+}
+
+/* Background Animation */
+.ad-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 105, 97, 0.1); /* Light overlay */
+    border-radius: 15px;
+    z-index: -1; /* Behind the content */
+    transition: background 0.3s;
+}
+
+.ad-card:hover::before {
+    background: rgba(255, 105, 97, 0.2); /* Darker overlay on hover */
+}
