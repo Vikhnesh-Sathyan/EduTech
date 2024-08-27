@@ -1,13 +1,20 @@
 <nav class="navbar">
-  <a routerLink="/" class="logo">EduTech</a>
+  <a href="#" class="logo">EduTech</a>
   <ul class="nav-links">
-    <!-- Other navigation items -->
+    <li><a href="#features"><i class="fas fa-cogs"></i> Features</a></li>
+    <li><a href="#testimonials"><i class="fas fa-users"></i> Testimonials</a></li>
+    <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+    <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
     <li>
       <a href="#" class="cta"><i class="fas fa-sign-in-alt"></i> Sign In | Sign Up</a>
       <ul class="dropdown">
-        <li><a href="/student-login" target="_blank"><i class="fas fa-user-graduate"></i> Students</a></li>
-        <li><a href="/teacher-login" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Teacher</a></li>
-        <li><a href="/parent-login" target="_blank"><i class="fas fa-user"></i> Parents</a></li>
+        <li><a (click)="goToStudentLogin()"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a (click)="goToTeacherLogin()"><i class="fas fa-chalkboard-teacher"></i> Teacher</a></li>
+        <li><a (click)="goToParentLogin()"><i class="fas fa-user"></i> Parents</a></li>
+
+
+
+
       </ul>
     </li>
   </ul>

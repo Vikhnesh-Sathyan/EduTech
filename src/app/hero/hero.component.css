@@ -3,7 +3,7 @@
 /* Hero Section */
 .hero {
     color: #fff;
-    min-height:1990vh; /* Full viewport height */
+    height:1000vh; /* Full viewport height */
     width: 100vw; /* Full viewport width */
     display: flex;
     justify-content: center;
@@ -13,24 +13,19 @@
     background-size: cover; /* Ensure background image covers the whole section */
     background-position: center; /* Center background image */
 }
-/* CSS */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 110%;
-}
+
 
 .slider {
     position: relative;
-    width: 150%;
-    height: 100vh; /* Full viewport height */
+    width: 100%;
+    height: 100vh; 
 }
 
 .slider img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the entire area */
-    position: absolute;
+    width: 200%;
+    height: 400%;
+    object-fit: cover; 
+    position: relative;
     top: 0;
     left: 0;
 }
@@ -42,8 +37,8 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: 90%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
     z-index: -1; /* Place overlay behind content */
 }
 
