@@ -8,30 +8,79 @@
 html, body {
     height: 100%;
     width: 100%;
-    font-family: 'Poppins', sans-serif; /* Change to your preferred font */
+    font-family: 'Poppins', sans-serif;
 }
 
+/* General Styles */
 .container {
     display: flex;
-    height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Hide any overflowing content */
-    position: fixed; /* Fixes the container in place */
+    height: 100vh;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%; /* Full viewport width */
+    width: 100%;
 }
+
+.sidebar-content {
+    width: 300px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* New Section Styles */
+.sidebar-content section {
+    margin-bottom: 30px;
+}
+
+.sidebar-content h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.sidebar-content p {
+    margin: 0;
+    color: #666;
+}
+
+/* Profile Image */
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-top: 10px;
+}
+
+/* Button Styles */
+button {
+    background-color: #7e4cff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5e38cc;
+}
+
+
 .sidebar {
     width: 250px;
-    background-color: #7e4cff; /* Make sure this doesn't match the logo */
+    background-color: #7e4cff; /* Sidebar color */
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sidebar shadow */
 }
 
 .sidebar .logo img {
-    width: 100px; /* Adjust size as needed */
-    height: auto; /* Maintain aspect ratio */
+    width: 100px; 
+    height: auto; 
+    margin-bottom: 20px; /* Space below logo */
 }
 
 .sidebar nav ul {
@@ -51,11 +100,12 @@ html, body {
     display: block;
     padding: 10px 20px;
     border-radius: 8px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s; /* Transition for transform */
 }
 
 .sidebar nav ul li a:hover {
     background-color: #5e38cc;
+    transform: scale(1.05); /* Slight scale effect on hover */
 }
 
 .main-content {
@@ -69,6 +119,8 @@ html, body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    padding-bottom: 20px; /* Space below header */
+    border-bottom: 2px solid #eaeaea; /* Divider under header */
 }
 
 .header .date p {
@@ -79,7 +131,7 @@ html, body {
 .header .search-bar input {
     padding: 10px;
     border-radius: 20px;
-    border: none;
+    border: 1px solid #dcdcdc; /* Light border */
     width: 250px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -94,6 +146,7 @@ html, body {
     height: 50px;
     border-radius: 50%;
     margin-right: 10px;
+    border: 2px solid #7e4cff; /* Border for profile image */
 }
 
 .header .profile-info p {
@@ -111,6 +164,7 @@ html, body {
     border-radius: 10px;
     color: #ffffff;
     margin-bottom: 30px;
+    text-align: center; /* Center text */
 }
 
 .welcome-section h1 {
@@ -118,13 +172,16 @@ html, body {
     font-size: 24px;
 }
 
-.finance-section {
+.finance-section,
+.enrolled-courses {
     margin-bottom: 30px;
 }
 
-.finance-section h2 {
+.finance-section h2,
+.enrolled-courses h2 {
     margin-bottom: 20px;
     color: #333;
+    text-transform: uppercase; /* Uppercase section titles */
 }
 
 .finance-cards {
@@ -139,6 +196,11 @@ html, body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     flex: 1;
     text-align: center;
+    transition: transform 0.2s; /* Transition effect */
+}
+
+.finance-cards .card:hover {
+    transform: translateY(-5px); /* Hover effect */
 }
 
 .finance-cards .card p {
@@ -149,15 +211,6 @@ html, body {
 
 .finance-cards .card small {
     color: #666;
-}
-
-.enrolled-courses {
-    margin-bottom: 30px;
-}
-
-.enrolled-courses h2 {
-    margin-bottom: 20px;
-    color: #333;
 }
 
 .courses {
@@ -172,6 +225,12 @@ html, body {
     text-align: center;
     flex: 1;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s; /* Transition for hover effects */
+}
+
+.course-card:hover {
+    background-color: #e0d3ff; /* Change background on hover */
+    transform: scale(1.03); /* Scale effect on hover */
 }
 
 .course-card p {
@@ -187,6 +246,19 @@ html, body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s; /* Button hover effect */
+}
+
+.course-card button:hover {
+    background-color: #5e38cc; /* Darker shade on hover */
+}
+
+.sidebar-content {
+    width: 300px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .course-instructors {
@@ -207,6 +279,7 @@ html, body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    border: 2px solid #7e4cff; /* Border for instructor images */
 }
 
 .see-all {
@@ -214,6 +287,7 @@ html, body {
     text-decoration: none;
     display: block;
     margin-top: 10px;
+    text-align: center; /* Center align */
 }
 
 .daily-notice h2 {
@@ -237,4 +311,9 @@ html, body {
 .notice a {
     color: #7e4cff;
     text-decoration: none;
+    font-weight: bold; /* Bold for visibility */
+}
+
+.notice a:hover {
+    text-decoration: underline; /* Underline on hover */
 }

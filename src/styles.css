@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
 /* Root Variables */
 :root {
@@ -25,6 +26,17 @@ body {
     font-size: 1.6rem;
     background: #f2f2f2;
 }
-
+.social {
+    color: #db4437; /* Google Red */
+    font-size: 24px;
+    padding: 10px;
+    transition: 0.3s ease;
+  }
+  
+  .social:hover {
+    color: #e57373;
+    transform: scale(1.1); /* Slight zoom effect on hover */
+  }
+  
 
 

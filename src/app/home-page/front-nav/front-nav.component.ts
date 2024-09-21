@@ -14,20 +14,17 @@ export class FrontNavComponent {
   constructor(private router: Router) { }
 
   goToStudentLogin() {
-    this.router.navigate(['/student-login']);
-    window.open('/student-login', '_blank');
+  window.open('student-login');
 
   }
 
   goToTeacherLogin() {
-    this.router.navigate(['/teacher-login']);
-    window.open('/teacher-login', '_blank');
+    window.open('teacher-login');
 
   }
 
   goToParentLogin() {
-    this.router.navigate(['/parent-login']);
-    window.open('/parent-login', '_blank');
+    window.open('parent-login', '_blank');
 
   }
 }

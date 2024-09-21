@@ -1,158 +1,194 @@
-
-
+/* Container Styles */
 .container {
-    width: 100%;
-    max-width: 1600px;
-    margin: auto;
-    padding: 50px 0;
+    min-width: 1500px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Header Styles */
+/* Section Titles */
 h2 {
+    font-size: 2rem;
     text-align: center;
-    color: #333;
-    font-size: 2.2rem;
     margin-bottom: 30px;
-    font-weight: 600;
 }
 
-/* Extracurricular Activities Section */
-.extra-activities {
-    margin-bottom: 50px;
-}
-
-.activities-grid {
+/* Grid Layout for Consistent Heights */
+.activities-grid,
+.jobs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
 
-.activity-card {
-    background-color: #ffffff;
+/* Extracurricular Activities Section */
+.activity-card,
+.job-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    padding: 20px;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    height: 100%; /* Ensure cards take full height */
+}
+
+.activity-card:hover,
+.job-card:hover {
+    transform: scale(1.05);
+}
+
+/* Image Overlay Styles */
+.image-overlay {
     position: relative;
+    flex: 1; /* Allow image to expand to fill space */
 }
 
-.activity-card img {
+.image-overlay img {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+    height: auto;
+    display: block;
 }
 
-.activity-card h3 {
-    color: #ff6600;
+.overlay-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-overlay:hover .overlay-content {
+    opacity: 1;
+}
+
+.overlay-content h3 {
+    margin: 10px 0;
     font-size: 1.5rem;
-    margin-top: 15px;
 }
 
-.activity-card p {
-    color: #555;
-    font-size: 1rem;
-    margin-top: 10px;
-    line-height: 1.8;
-}
-
-.activity-card:hover {
-    background-color: #ffe6cc;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
+.overlay-content p {
+    text-align: center;
+    padding: 0 15px;
 }
 
 /* Job Offers Section */
-.job-offers {
-    position: relative;
-    padding: 20px 0;
-}
-
-.jobs-grid {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-    padding: 10px 0;
-    scroll-behavior: smooth;
-}
-
-.job-card {
-    flex: 0 0 300px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+.overlay-card .job-image {
     position: relative;
     overflow: hidden;
+    border-radius: 10px 10px 0 0;
+    flex: 1; /* Allow image to expand to fill space */
 }
 
-.job-card img {
+.overlay-card .job-image img {
+    width: 50%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.overlay-card .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
 }
 
+.overlay-card:hover .overlay {
+    transform: translateY(0);
+}
+
+.overlay-card:hover .job-image img {
+    transform: scale(1.1);
+}
+
+
+
+/* Job Image Styles */
+.job-image {
+    overflow: auto;
+    border-radius: 10px 10px 0 0;
+}
+
+.job-image img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.job-card:hover .job-image img {
+    transform: scale(1.1);
+}
+
+/* Job Card Content */
 .job-card h3 {
-    color: #007bff;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.8rem;
+    margin: 15px 20px 10px 20px;
 }
 
 .job-card p {
-    color: #333;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    margin: 0 20px 20px 20px;
 }
 
-.job-card .apply-btn {
+.apply-btn {
     display: inline-block;
+    margin: 0 20px 40px 40px;
     padding: 10px 20px;
     background-color: #007bff;
-    color: #fff;
-    border-radius: 25px;
+    color: white;
     text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: background-color 0.3s, transform 0.3s;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-weight: bold;
 }
 
-.job-card .apply-btn:hover {
+.apply-btn i {
+    margin-right: 35px;
+    transition: transform 0.3s ease;
+}
+
+/* Custom Hover Effects */
+.apply-btn:hover {
     background-color: #0056b3;
-    transform: scale(1.05);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.job-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+.apply-btn:hover i {
+    transform: translateX(5px);
 }
 
-/* Additional Styling */
-body:before {
-    content: '';
-    background-image: linear-gradient(45deg, #d1c4e9, #c5e1a5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0.2;
-    z-index: -1;
-}
-
-.job-card:before {
+/* Ripple Effect */
+.apply-btn:before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background-color: rgba(0, 123, 255, 0.2);
-    transform: rotate(45deg);
-    z-index: -1;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease, opacity 1s ease;
 }
+
+.apply-btn:hover:before {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+}
+

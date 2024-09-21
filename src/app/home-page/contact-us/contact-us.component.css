@@ -1,19 +1,19 @@
 /* Contact Section */
 .contact-section {
     background: #fff;
-    padding: 60px 20px;
+    padding: 40px 20px;
 }
 
 .contact-section h2 {
     text-align: center;
     color: #34495e; /* Dark blue-gray */
     margin-bottom: 40px;
-    font-size: 2em; /* Reduced font size */
+    font-size: 2em; /* Adjust as needed */
     font-weight: bold;
 }
 
 .contact-form {
-    max-width: 600px;
+    width: 500px; /* Increased max-width */
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -30,36 +30,38 @@
     display: flex;
     align-items: center;
     color: #34495e;
-    font-size: 1em; /* Reduced font size */
+    font-size: 1em; /* Adjust as needed */
     margin-bottom: 5px;
 }
 
 .form-group i {
-    margin-right: 8px; /* Adjusted for smaller icon */
+    margin-right: 8px; /* Adjust for smaller icon */
     color: #1abc9c; /* Teal */
 }
 
-.contact-form input, .contact-form textarea {
+.contact-form input,
+.contact-form textarea {
     width: 100%;
-    padding: 12px; /* Reduced padding */
+    padding: 12px;
     border-radius: 5px;
     border: 1px solid #ddd;
-    font-size: 0.9em; /* Reduced font size */
+    font-size: 0.9em; /* Adjust as needed */
     box-sizing: border-box;
 }
 
-.contact-form input::placeholder, .contact-form textarea::placeholder {
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
     color: #888;
 }
 
 .contact-form button {
     background: #1abc9c; /* Teal */
     color: #fff;
-    padding: 12px; /* Reduced padding */
+    padding: 12px;
     border-radius: 5px;
     border: none;
     cursor: pointer;
-    font-size: 0.9em; /* Reduced font size */
+    font-size: 0.9em; /* Adjust as needed */
     transition: background 0.3s;
     display: flex;
     align-items: center;
@@ -67,7 +69,7 @@
 }
 
 .contact-form button i {
-    margin-right: 6px; /* Adjusted for smaller button icon */
+    margin-right: 6px; /* Adjust for smaller button icon */
 }
 
 .contact-form button:hover {
@@ -80,7 +82,8 @@
         padding: 10px;
     }
 
-    .contact-form input, .contact-form textarea {
+    .contact-form input, 
+    .contact-form textarea {
         font-size: 0.8em; /* Further reduced for smaller screens */
     }
 

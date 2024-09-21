@@ -1,24 +1,43 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router'; // Ensure this import is present
-
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Authservice } from '../authservice/authservice.component';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
+  standalone: true, 
   imports: [],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
+  auth = inject(Authservice);
+  name: string | undefined;
+  userProfileImg: string | undefined;
 
-  logout() {
-    // Implement your logout logic here
-    // For example, clear user data, tokens, etc.
+  ngOnInit() {
+    // Safely access sessionStorage data
+    const userData = sessionStorage.getItem("loggedInUser");
+    const   userProfileImg = sessionStorage.getItem("loggedInUser");
 
-    // Redirect to login page
-    this.router.navigate(['/student-login']); // Adjust the path as needed
+
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      this.name = parsedData.name;
+      this.userProfileImg = parsedData.picture;
+    } else {
+      console.error("No user data found in sessionStorage.");
+    }
   }
-}
 
+  // Sign-out function
+  signOut() {
+    this.auth.signOut();
+  }
+  Extracurriculm()
+  {
+    this.router.navigate(['student-login/extracurriculm']);
+  }
+  
+}
