@@ -2,7 +2,7 @@ declare var google: any;
 
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';  // <-- Import this
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -16,6 +16,12 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./teacher-login.component.css']
 })
 export class TeacherLoginComponent implements OnInit {
+  
+  username: string = '';
+  email: string = '';
+  password: string = '';
+  confirmPassword: string = '';
+
   private router = inject(Router);
   private http = inject(HttpClient);
 

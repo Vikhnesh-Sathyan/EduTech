@@ -230,6 +230,36 @@ app.post('/api/forgot-password', async (req, res) => {
     });
   });
   
+
+  
+  app.post('/api/students', (req, res) => {
+    console.log('Received data:', req.body); // Log the incoming request body
+    const { student_name, dob, gender, email, phone, address, guardian_name, grade } = req.body;
+  
+    // Simple validation
+    if (!student_name || !dob || !gender || !email || !phone || !address || !guardian_name || !grade) {
+        return res.status(400).send('All fields are required');
+    }
+  
+    const sql = 'INSERT INTO students (student_name, dob, gender, email, phone, address, guardian_name, grade) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    
+    db.query(sql, [student_name, dob, gender, email, phone, address, guardian_name, grade], (err, result) => {
+      if (err) {
+        console.error('Error inserting student data:', err);
+        return res.status(500).send('Error inserting student data');
+      }
+      res.status(201).send({ id: result.insertId, student_name, dob, gender, email, phone, address, guardian_name, grade });
+    });
+});
+
+  
+
+
+
+
+
+
+
 // Start the server
 app.listen(3000, () => {
     console.log('Server running on port 3000');

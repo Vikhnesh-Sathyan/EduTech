@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { Authservice } from '../authservice/authservice.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true, 
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -39,5 +40,11 @@ export class DashboardComponent implements OnInit {
   {
     this.router.navigate(['student-login/extracurriculm']);
   }
+  navigateToProfile(): void {
+    this.router.navigate(['student-login/profile']);
+  }
+  studentInfo: any;
+
+
   
 }

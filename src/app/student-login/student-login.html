@@ -6,9 +6,55 @@
         <div id="google-btn"></div> <!-- Google Sign-In Button -->
       </div>
       <p>Or use your email to register</p>
-      <input type="text" placeholder="userName" name="username" required>
-      <input type="email" placeholder="Email" name="email" required>
-      <input type="password" placeholder="Password" name="password" required>
+      <input 
+      type="text" 
+      placeholder="Username" 
+      name="username" 
+      ngModel 
+      #username="ngModel" 
+      required 
+      minlength="3" 
+      maxlength="15">
+    <div *ngIf="username.invalid && (username.dirty || username.touched)">
+      <small *ngIf="username.errors?.['required']">Username is required.</small>
+      <small *ngIf="username.errors?.['minlength']">Username must be at least 3 characters long.</small>
+      <small *ngIf="username.errors?.['maxlength']">Username cannot exceed 15 characters.</small>
+    </div>
+
+    <input 
+    autocomplete="off"
+    type="email" 
+    name="email"
+    placeholder="Email" 
+    [(ngModel)]="email" 
+    #email="ngModel" 
+    required 
+    email>
+
+<!-- Display an error message if the email is invalid or empty -->
+<div *ngIf="email.invalid && email.touched">
+<small *ngIf="email.errors?.['required']">Email is required.</small>
+<small *ngIf="email.errors?.['email']">Please enter a valid email.</small>
+</div>
+
+<input 
+  autocomplete="off"
+  type="password" 
+  placeholder="Password"
+  name="password" 
+  [(ngModel)]="password" 
+  [ngModelOptions]="{standalone: true}"
+
+  #password="ngModel" 
+  required 
+  minlength="8">
+  
+<!-- Display an error message if the password is invalid -->
+<div *ngIf="password.invalid && password.touched">
+  <small *ngIf="password.errors?.['required']">Password is required.</small>
+  <small *ngIf="password.errors?.['minlength']">Password must be at least 8 characters long.</small>
+</div>
+
       <input type="password" placeholder="Confirm Password" name="confirmPassword" required>
       <button type="submit" class="btn">Sign Up</button>
     </form>

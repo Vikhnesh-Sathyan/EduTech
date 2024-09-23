@@ -11,16 +11,18 @@ import { PDashboardComponent } from './p-dashboard/p-dashboard.component';
 import { CurriculumComponent } from './curriculum/curriculum.component';
 
 export const routes: Routes = [
-  {path:'',component:HomePageComponent},
-  {path:'student-login',component:StudentLoginComponent},
-  {path:'student-login/dashboard',component:DashboardComponent},
-  {path:'student-login/extracurriculm',component:CurriculumComponent},
-  {path:'teacher-login',component:TeacherLoginComponent},
-  {path:'teacher-login/t-dashboard',component:TDashboardComponent},
-  {path:'parent-login',component:ParentLoginComponent},
-  {path:'parent-login/p-dashboard',component:PDashboardComponent} ,
-  { path: 'personal', component: PersonalComponent }
+  { path: '', component: HomePageComponent },
+  { path: 'student-login', component: StudentLoginComponent },
+  { path: 'student-login/personal', component: PersonalComponent },
+  { path: 'student-login/dashboard', component: DashboardComponent },
+  { path: 'student-login/extracurriculum', component: CurriculumComponent },
+  { path: 'teacher-login', component: TeacherLoginComponent },
+  { path: 't-dashboard', component: TDashboardComponent },
+  { path: 'parent-login', component: ParentLoginComponent },
+  { path: 'parent-login/p-dashboard', component: PDashboardComponent }
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

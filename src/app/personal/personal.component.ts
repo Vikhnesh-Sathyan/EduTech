@@ -1,63 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
-// Define the interface for the Student type
-interface Student {
-  studentId: string;
-  studentName: string;
-  dob: string;
-  gender: string;
-  email: string;
-  phone: string;
-  address: string;
-  nationality: string;
-  department: string;
-  program: string;
-  year: string;
-}
+import { FormsModule } from '@angular/forms'; 
+import { HttpClientModule } from '@angular/common/http';
+// Import FormsModule for template-driven forms
 
 @Component({
   selector: 'app-personal',
+  standalone: true,
+  imports: [FormsModule,HttpClientModule], // Include FormsModule
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.css']
 })
-export class PersonalComponent implements OnInit {
-  student: Student = {
-    studentId: '',
-    studentName: '',
+export class PersonalComponent {
+  private apiUrl = 'http://localhost:3000/api/students';
+
+  // Object to store form data
+  studentData = {
+    student_name: '',
     dob: '',
     gender: '',
     email: '',
     phone: '',
     address: '',
-    nationality: '',
-    department: '',
-    program: '',
-    year: ''
-  };
+    guardian_name: '',
+    grade: ''
+};
 
-  private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
-  ngOnInit(): void {
-    const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser') || '{}');
-    if (loggedInUser && loggedInUser.id) {
-      this.http.get<Student>(`${this.apiUrl}/get-personal-info/${loggedInUser.id}`)
-        .subscribe(data => {
-          this.student = data; // Populate student data if available
-        }, error => {
-          console.error('Error fetching personal info:', error);
-        });
-    }
-  }
-
-  onSubmit() {
-    this.http.put(`${this.apiUrl}/update-personal-info`, { ...this.student, userId: this.student.studentId })
+  handleSubmit() {
+    console.log('Submitting data:', this.studentData); // Log the data being sent
+    this.http.post(this.apiUrl, this.studentData)
       .subscribe(response => {
-        alert('Personal information updated successfully!');
+        console.log('Data submitted successfully:', response);
+        this.router.navigate(['/student-login/dashboard']); // Navigate after successful submission
       }, error => {
-        console.error('Error updating personal info:', error);
+        console.error('Error submitting data:', error);
       });
-  }
+}
+  
 }

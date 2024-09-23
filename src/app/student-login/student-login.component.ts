@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./student-login.component.css']
 })
 export class StudentLoginComponent implements OnInit {
+  
   private router = inject(Router);
   private http = inject(HttpClient);
 
@@ -79,64 +80,76 @@ export class StudentLoginComponent implements OnInit {
   }
 
   // Handle form submission
-  handleSubmit(event: Event, formType: string): void {
-    event.preventDefault(); // Prevent default form submission behavior
+  // Handle form submission
+handleSubmit(event: Event, formType: string): void {
+  event.preventDefault(); // Prevent default form submission behavior
 
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
 
-    if (formType === 'signUp') {
-      const username = formData.get('username') as string;
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
-      const confirmPassword = formData.get('confirmPassword') as string;
+  if (formType === 'signUp') {
+    const username = formData.get('username') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
 
-      this.http.post(`${this.apiUrl}/student-signup`, { username, email, password, confirmPassword }, { responseType: 'text' })
-        .subscribe(response => {
-          console.log('Sign-up successful', response);
-          // Handle sign-up success (e.g., show a success message or redirect)
-        }, error => {
-          console.error('Sign-up error', error);
-          // Handle sign-up error (e.g., show an error message)
-        });
-    } else if (formType === 'signIn') {
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
+    this.http.post(`${this.apiUrl}/student-signup`, { username, email, password, confirmPassword }, { responseType: 'text' })
+      .subscribe(response => {
+        console.log('Sign-up successful', response);
+        // Automatically log the user in after successful sign-up
+        this.handleLoginAfterSignUp({ email, password });
+      }, error => {
+        console.error('Sign-up error', error);
+        // Handle sign-up error (e.g., show an error message)
+      });
+  } else if (formType === 'signIn') {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-      this.http.post(`${this.apiUrl}/student-signin`, { email, password }, { responseType: 'text' })
-        .subscribe(response => {
-          console.log('Sign-in successful', response);
-          try {
-            // Try to parse the response if it is in JSON format
-            const parsedResponse = JSON.parse(response);
-            if (parsedResponse && parsedResponse.user) {
-              sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
-              this.router.navigate(['student-login/dashboard']);
-            }
-          } catch (e) {
-            // Handle non-JSON response
-            console.error('Error parsing response:', e);
+    this.http.post(`${this.apiUrl}/student-signin`, { email, password }, { responseType: 'text' })
+      .subscribe(response => {
+        console.log('Sign-in successful', response);
+        try {
+          // Parse the response if it's JSON formatted
+          const parsedResponse = JSON.parse(response);
+          if (parsedResponse && parsedResponse.user) {
+            sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
+            // Navigate to the "personal" page after successful login
+            this.router.navigate(['student-login/personal']);
           }
-        }, error => {
-          console.error('Sign-in error', error);
-        });
-    }
+        } catch (e) {
+          // Handle case where the response is not JSON
+          console.error('Error parsing response:', e);
+        }
+      }, error => {
+        console.error('Sign-in error', error);
+      });
   }
+}
 
-  private handleLoginAfterSignUp(response: any): void {
-    if (response && response.user) {
-      const { email, password } = response.user;
-      this.http.post(`${this.apiUrl}/student-signin`, { email, password })
-        .subscribe(
-          signinResponse => {
-            console.log('Automatic sign-in successful', signinResponse);
-            sessionStorage.setItem('loggedInUser', JSON.stringify(signinResponse));
-            this.router.navigate(['dashboard']);
-          },
-          signinError => {
-            console.error('Automatic sign-in error', signinError);
+// Handle login after sign-up
+private handleLoginAfterSignUp(userData: any): void {
+  const { email, password } = userData;
+  this.http.post(`${this.apiUrl}/student-signin`, { email, password }, { responseType: 'text' })
+    .subscribe(
+      signinResponse => {
+        console.log('Automatic sign-in successful', signinResponse);
+        try {
+          // Parse the response if needed
+          const parsedResponse = JSON.parse(signinResponse);
+          if (parsedResponse && parsedResponse.user) {
+            sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
+            // Redirect to the personal page after automatic sign-in
+            this.router.navigate(['personal']);
           }
-        );
-    }
-  }
+        } catch (e) {
+          console.error('Error parsing automatic sign-in response:', e);
+        }
+      },
+      signinError => {
+        console.error('Automatic sign-in error', signinError);
+      }
+    );
+}
+
 }
