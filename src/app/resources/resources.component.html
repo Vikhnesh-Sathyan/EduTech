@@ -1,0 +1,35 @@
+<form (ngSubmit)="onSubmit()" #fileUploadForm="ngForm">
+    <input type="file" (change)="onFileChange($event)" multiple />
+    <button type="submit" [disabled]="!uploadedFiles.length">Upload Files</button>
+</form>
+
+<div>
+    <h3>Add Website Link:</h3>
+    <input type="text" [(ngModel)]="siteLink" placeholder="Enter website URL" />
+    <button (click)="addSiteLink()">Add Link</button>
+</div>
+
+<div>
+    <h3>Add Video Link:</h3>
+    <input type="text" [(ngModel)]="videoLink" placeholder="Enter video URL" />
+    <button (click)="addVideoLink()">Add Link</button>
+</div>
+
+<div *ngIf="uploadedFiles.length">
+    <h3>Uploaded Files and Links:</h3>
+    <ul>
+        <li *ngFor="let file of uploadedFiles; let i = index">
+            <ng-container [ngSwitch]="file.type">
+                <img *ngSwitchCase="'image/png'" [src]="file.url" alt="Image" width="100" />
+                <img *ngSwitchCase="'image/jpeg'" [src]="file.url" alt="Image" width="100" />
+                <audio *ngSwitchCase="'audio/mpeg'" [src]="file.url" controls></audio>
+                <video *ngSwitchCase="'video/mp4'" [src]="file.url" controls width="200"></video>
+                <a *ngSwitchCase="'application/pdf'" [href]="file.url" target="_blank">View PDF</a>
+                <a *ngSwitchCase="'website'" [href]="file.url" target="_blank">{{ file.name }}</a>
+                <a *ngSwitchCase="'video_link'" [href]="file.url" target="_blank">{{ file.name }}</a>
+                <span *ngSwitchDefault>{{ file.name }}</span>
+            </ng-container>
+            <button (click)="deleteFile(i)">Delete</button> <!-- Delete button -->
+        </li>
+    </ul>
+</div>

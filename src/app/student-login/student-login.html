@@ -1,76 +1,99 @@
 <div class="container" id="main">
   <div class="sign-up">
-    <form (submit)="handleSubmit($event, 'signUp')">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit($event)">
       <h1>Student Sign Up</h1>
       <div class="social-container">
         <div id="google-btn"></div> <!-- Google Sign-In Button -->
       </div>
       <p>Or use your email to register</p>
+
       <input 
-      type="text" 
-      placeholder="Username" 
-      name="username" 
-      ngModel 
-      #username="ngModel" 
-      required 
-      minlength="3" 
-      maxlength="15">
-    <div *ngIf="username.invalid && (username.dirty || username.touched)">
-      <small *ngIf="username.errors?.['required']">Username is required.</small>
-      <small *ngIf="username.errors?.['minlength']">Username must be at least 3 characters long.</small>
-      <small *ngIf="username.errors?.['maxlength']">Username cannot exceed 15 characters.</small>
-    </div>
-
-    <input 
-    autocomplete="off"
-    type="email" 
-    name="email"
-    placeholder="Email" 
-    [(ngModel)]="email" 
-    #email="ngModel" 
-    required 
-    email>
-
-<!-- Display an error message if the email is invalid or empty -->
-<div *ngIf="email.invalid && email.touched">
-<small *ngIf="email.errors?.['required']">Email is required.</small>
-<small *ngIf="email.errors?.['email']">Please enter a valid email.</small>
+      autocomplete="off"
+        type="text" 
+        placeholder="Username" 
+        formControlName="username"
+      >
+      <!-- Error messages for username -->
+  <!-- Error messages -->
+<div *ngIf="signupForm.get('username')?.invalid && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
+  <small *ngIf="signupForm.get('username')?.errors?.['required']">Username is required.</small>
+  <small *ngIf="signupForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters long.</small>
+  <small *ngIf="signupForm.get('username')?.errors?.['maxlength']">Username cannot exceed 15 characters.</small>
+  <small *ngIf="signupForm.get('username')?.errors?.['pattern']">Username can only contain letters, numbers, and underscores.</small>
+  <small *ngIf="signupForm.get('username')?.errors?.['noSpaces']">Username must not contain spaces.</small>
+  <small *ngIf="signupForm.get('username')?.errors?.['startsWithSpecial']">Username must not start with a special character.</small>
+  <small *ngIf="signupForm.get('username')?.errors?.['usernameTaken']">Username is already taken.</small>
 </div>
+
+    <!-- Email input field for signup -->
+  
+
+  <input id="signupEmail" formControlName="email" type="email"  placeholder="Email" >
+  <div *ngIf="signupForm.get('email')?.invalid && (signupForm.get('email')?.touched || signupForm.get('email')?.dirty)">
+      <div *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</div>
+      <div *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format.</div>
+      <div *ngIf="signupForm.get('email')?.errors?.['invalidDomain']">Email domain is not allowed.</div>
+  </div>
+
 
 <input 
-  autocomplete="off"
-  type="password" 
-  placeholder="Password"
-  name="password" 
-  [(ngModel)]="password" 
-  [ngModelOptions]="{standalone: true}"
+autocomplete="off"
+type="password" 
+placeholder="Password"
+formControlName="password"
+minlength="8"
+>
 
-  #password="ngModel" 
-  required 
-  minlength="8">
-  
-<!-- Display an error message if the password is invalid -->
-<div *ngIf="password.invalid && password.touched">
-  <small *ngIf="password.errors?.['required']">Password is required.</small>
-  <small *ngIf="password.errors?.['minlength']">Password must be at least 8 characters long.</small>
+<!-- Error messages for password -->
+<div *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
+<small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
+<small *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</small>
 </div>
 
-      <input type="password" placeholder="Confirm Password" name="confirmPassword" required>
-      <button type="submit" class="btn">Sign Up</button>
+
+      <input 
+        autocomplete="off"
+        type="password" 
+        placeholder="Confirm Password" 
+        formControlName="confirmPassword"
+        required
+      >
+
+      <button type="submit" class="btn" [disabled]="signupForm.invalid">Sign Up</button>
     </form>
   </div>
 
   <div class="sign-in">
-    <form (submit)="handleSubmit($event, 'signIn')">
+    <form [formGroup]="signinForm" (ngSubmit)="handleSubmit($event)">
+
       <h1>Sign In</h1>
       <div class="social-container">
         <div id="google-btn"></div> <!-- Google Sign-In Button -->
         <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
       </div>
       <p>or use your account</p>
-      <input type="email" placeholder="Email" name="email" required>
-      <input type="password" placeholder="Password" name="password" required/>
+
+ <input id="signinEmail" formControlName="email" type="email"  placeholder="Email" >
+  <div *ngIf="signinForm.get('email')?.invalid && (signinForm.get('email')?.touched || signinForm.get('email')?.dirty)">
+      <div *ngIf="signinForm.get('email')?.errors?.['required']">Email is required.</div>
+      <div *ngIf="signinForm.get('email')?.errors?.['email']">Invalid email format.</div>
+      <div *ngIf="signinForm.get('email')?.errors?.['invalidDomain']">Email domain is not allowed.</div>
+  </div>
+  
+  <input 
+autocomplete="off"
+type="password" 
+placeholder="Password"
+formControlName="password"
+minlength="8"
+>
+  <div *ngIf="signinForm.get('password')?.invalid && (signinForm.get('password')?.dirty || signinForm.get('password')?.touched)">
+    <small *ngIf="signinForm.get('password')?.errors?.['required']">Password is required.</small>
+    <small *ngIf="signinForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</small>
+    </div>
+
       <a href="#">Forgot your password?</a>
+
       <button type="submit" class="btn">Sign In</button>
     </form>
   </div>

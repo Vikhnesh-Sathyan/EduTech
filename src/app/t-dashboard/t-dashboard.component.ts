@@ -1,19 +1,21 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-t-dashboard',
-  standalone: true,
-  imports: [],
   templateUrl: './t-dashboard.component.html',
-  styleUrl: './t-dashboard.component.css'
+  styleUrls: ['./t-dashboard.component.css']
 })
 export class TDashboardComponent {
+  darkMode: boolean = false; // Default dark mode is off
 
-  darkMode = false;
+  constructor(private router: Router) {}
 
   toggleDarkMode() {
-    this.darkMode = !this.darkMode;
-    const body = document.body;
-    body.classList.toggle('dark-mode', this.darkMode);
+    this.darkMode = !this.darkMode; // Toggle dark mode
+  }
+
+  goToResources() {
+    this.router.navigate(['resources']); // Navigate to resources page
   }
 }

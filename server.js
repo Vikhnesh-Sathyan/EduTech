@@ -86,33 +86,48 @@ app.post('/api/teacher-signin', async (req, res) => {
     });
 });
 
+
 // Handle Student Sign-Up
 app.post('/api/student-signup', async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
 
-    // Validate passwords
+    // Validate password and confirm password
     if (password !== confirmPassword) {
         return res.status(400).send('Passwords do not match');
     }
 
     try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // SQL query to insert a new student
-        const sql = 'INSERT INTO user (username, email, password) VALUES (?, ?, ?)';
-        db.query(sql, [username, email, hashedPassword], (err, result) => {
+        // Check if email already exists
+        const emailCheckSql = 'SELECT * FROM user WHERE email = ?';
+        db.query(emailCheckSql, [email], async (err, results) => {
             if (err) {
-                console.error('Database error during student sign-up:', err);
+                console.error('Database error:', err);
                 return res.status(500).send('Server error');
             }
-            res.send('Sign-up successful');
+
+            if (results.length > 0) {
+                return res.status(409).send('Email is already registered');
+            }
+
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // SQL query to insert a new student
+            const sql = 'INSERT INTO user (username, email, password) VALUES (?, ?, ?)';
+            db.query(sql, [username, email, hashedPassword], (err, result) => {
+                if (err) {
+                    console.error('Database error during student sign-up:', err);
+                    return res.status(500).send('Server error');
+                }
+                res.status(201).send('Sign-up successful');
+            });
         });
     } catch (error) {
         console.error('Error during student sign-up:', error);
         res.status(500).send('Server error');
     }
 });
+
 
 // Handle Student Sign-In
 app.post('/api/student-signin', async (req, res) => {
@@ -128,6 +143,7 @@ app.post('/api/student-signin', async (req, res) => {
 
         if (results.length > 0) {
             const student = results[0];
+            // Compare the password with the hashed password
             const match = await bcrypt.compare(password, student.password);
             if (match) {
                 res.json({
@@ -138,10 +154,10 @@ app.post('/api/student-signin', async (req, res) => {
                     }
                 });
             } else {
-                res.status(401).send('Incorrect password');
+                return res.status(401).send('Incorrect password');
             }
         } else {
-            res.status(404).send('Student not found');
+            return res.status(404).send('Student not found');
         }
     });
 });
