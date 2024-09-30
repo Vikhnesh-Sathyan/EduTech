@@ -22,7 +22,7 @@ body {
     max-width: 100%;  /* Make the container responsive */
     width: 600px;  /* Fixed width for larger screens */
     margin: 0 20px; /* Space around the container */
-    min-height: 120vh;
+    height: 150vh;
 }
 
 h2 {

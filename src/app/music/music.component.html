@@ -1,0 +1,47 @@
+<form (submit)="onSubmit()" class="application-form">
+    <div class="form-group">
+      <label for="name" class="form-label">Full Name:</label>
+      <input type="text" id="name" [(ngModel)]="student.name" required name="name" class="form-control">
+    </div>
+  
+    <div class="form-group">
+      <label for="email" class="form-label">Email:</label>
+      <input type="email" id="email" [(ngModel)]="student.email" required name="email" class="form-control">
+    </div>
+  
+    <div class="form-group">
+      <label for="course" class="form-label">Select Course:</label>
+      <select id="course" [(ngModel)]="student.course" required name="course" class="form-select">
+        <option *ngFor="let course of courses" [value]="course.name">{{ course.name }}</option>
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="class" class="form-label">Select Class:</label>
+      <select id="class" [(ngModel)]="student.class" required name="class" class="form-select">
+        <option value="8">8th Grade</option>
+        <option value="9">9th Grade</option>
+        <option value="10">10th Grade</option>
+        <option value="11">11th Grade</option>
+        <option value="12">12th Grade</option>
+        <!-- Add more classes as needed -->
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="experience" class="form-label">Experience Level:</label>
+      <select id="experience" [(ngModel)]="student.experience" name="experience" class="form-select">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="notes" class="form-label">Additional Notes:</label>
+      <textarea id="notes" [(ngModel)]="student.notes" name="notes" class="form-textarea"></textarea>
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Submit Application</button>
+  </form>
+  

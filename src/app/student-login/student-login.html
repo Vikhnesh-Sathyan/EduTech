@@ -1,6 +1,7 @@
 <div class="container" id="main">
   <div class="sign-up">
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit($event)">
+    <form (ngSubmit)="onSubmit($event,'signUp')" [formGroup]="signupForm">
+
       <h1>Student Sign Up</h1>
       <div class="social-container">
         <div id="google-btn"></div> <!-- Google Sign-In Button -->
@@ -64,7 +65,7 @@ minlength="8"
   </div>
 
   <div class="sign-in">
-    <form [formGroup]="signinForm" (ngSubmit)="handleSubmit($event)">
+    <form [formGroup]="signinForm" (ngSubmit)="($event)">
 
       <h1>Sign In</h1>
       <div class="social-container">

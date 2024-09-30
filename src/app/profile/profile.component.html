@@ -1,1 +1,17 @@
-<p>profile works!</p>
+<div class="container">
+  <h2>Student Personal Information</h2>
+
+  <div class="profile-info">
+    <p><strong>Full Name:</strong> {{ studentData.student_name }}</p>
+    <p><strong>Date of Birth:</strong> {{ studentData.dob }}</p>
+    <p><strong>Gender:</strong> {{ studentData.gender }}</p>
+    <p><strong>Email:</strong> {{ studentData.email }}</p>
+    <p><strong>Phone Number:</strong> {{ studentData.phone }}</p>
+    <p><strong>Address:</strong> {{ studentData.address }}</p>
+    <p><strong>Guardian's Name:</strong> {{ studentData.guardian_name }}</p>
+    <p><strong>Grade:</strong> {{ studentData.grade }}</p>
+  </div>
+
+  <!-- Add a button to navigate back to the form or dashboard -->
+  <button (click)="goBack()" class="btn">Back to Form</button>
+</div>

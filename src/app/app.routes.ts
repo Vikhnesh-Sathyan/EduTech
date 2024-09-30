@@ -10,18 +10,23 @@ import { ParentLoginComponent } from './parent-login/parent-login.component';
 import { PDashboardComponent } from './p-dashboard/p-dashboard.component';
 import { CurriculumComponent } from './curriculum/curriculum.component';
 import { ResourcesComponent } from './resources/resources.component';
-
+import { ProfileComponent } from './profile/profile.component';
+import { MusicComponent } from './music/music.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'student-login', component: StudentLoginComponent },
-  { path: 'student-login/personal', component: PersonalComponent },
+  { path: 'personal', component: PersonalComponent },
   { path: 'student-login/dashboard', component: DashboardComponent },
-  { path: 'student-login/extracurriculum', component: CurriculumComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'student-login/curriculum', component: CurriculumComponent },
+  {path:  'student-login/music',component:MusicComponent},
+  {path:'notifications',component:NotificationsComponent},
   { path: 'teacher-login', component: TeacherLoginComponent },
-  { path: 'teacher-login/t-dashboard', component: TDashboardComponent} ,
-  { path: 'resources', component: ResourcesComponent } ,// Nested route
+  { path: 'teacher-login/t-dashboard', component: TDashboardComponent },
+  { path: 'resources', component: ResourcesComponent }, // Ensure ResourcesComponent handles child routes if needed
   { path: 'parent-login', component: ParentLoginComponent },
-  { path: 'parent-login/p-dashboard', component: PDashboardComponent }
+  { path: 'parent-login/p-dashboard', component: PDashboardComponent },
 ];
 
 @NgModule({

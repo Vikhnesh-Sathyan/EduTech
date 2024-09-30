@@ -1,114 +1,108 @@
 <div class="container">
-    <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="logo">
-            <img src="assets/logo.svg" alt="Graduation Icon" />
-        </div>
-        <nav>
-            <ul>
-<!-- dashboard.component.html -->
-    <button (click)="navigateToProfile()">My Profile</button>
-    <div *ngIf="studentInfo">
-      <h3>Profile Information</h3>
-      <p><strong>Name:</strong> {{ studentInfo.name }}</p>
-      <p><strong>Date of Birth:</strong> {{ studentInfo.dob }}</p>
-      <p><strong>Gender:</strong> {{ studentInfo.gender }}</p>
-      <p><strong>Email:</strong> {{ studentInfo.email }}</p>
-      <p><strong>Phone:</strong> {{ studentInfo.phone }}</p>
-      <p><strong>Address:</strong> {{ studentInfo.address }}</p>
-      <p><strong>Guardian's Name:</strong> {{ studentInfo.guardianName }}</p>
-      <p><strong>Grade/Level:</strong> {{ studentInfo.grade }}</p>
-    </div>
-                  <li><a ><i class="fas fa-tachometer-alt"></i> Notifications</a></li>
-                <li><a href="#"><i class="fas fa-credit-card"></i> Academics </a></li>
-                <li><a href="#"><i class="fas fa-edit"></i> Study Tools</a></li>
-                <li><a href="#"><i class="fas fa-book"></i> Resource Link</a></li>
-                <li><a href="#"><i class="fas fa-calendar-times"></i> Teach back</a></li>
-                <li><a href="#"><i class="fas fa-clipboard-list"></i> Result</a></li>
-                <li><a href="#"><i class="fas fa-bullhorn"></i> Notifications</a></li>
-                <li><a (click)="Extracurriculm()"><i class="fas fa-users"></i> Extra Curriculum</a></li>
-                <li><a href="#" (click)="signOut()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </nav>
+      <div class="logo">
+        <img src="assets/logo.svg" alt="Graduation Icon" />
+      </div>
+      <nav>
+        <ul>
+          <button (click)="navigateToProfile()">My Profile</button>
+          <li><a href="#"><i class="fas fa-credit-card"></i> Academics</a></li>
+          <li><a href="#"><i class="fas fa-edit"></i> Study Tools</a></li>
+          <li><a href="#"><i class="fas fa-book"></i> Resource Link</a></li>
+          <li><a href="#"><i class="fas fa-calendar-times"></i> Teach back</a></li>
+          <li><a href="#"><i class="fas fa-clipboard-list"></i> Result</a></li>
+          <ul>
+            <li>
+              <a (click)="notification()">
+                <i class="fas fa-bullhorn"></i>
+                Notifications
+                <span class="badge" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
+              </a>
+            </li>
+            <li><a (click)="Extracurriculm()"><i class="fas fa-users"></i> Extra Curriculum</a></li>
+            <li><a (click)="signOut()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+          </ul>
+        </ul>
+      </nav>
     </aside>
-
-    <!-- Main Content -->
+  
     <main class="main-content">
-        <header class="header">
-            <div class="date">
-                <p>September 25, 2024</p>
-            </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Search">
-            </div>
-            <div class="profile">
-                <img [src]="userProfileImg" alt="Profile Picture">
-                <div class="profile-info">
-                    <p>{{ name }}</p>
-                </div>
-            </div>
-        </header>
-
-        <section class="welcome-section">
-            <h1>Welcome back, {{ name }}</h1>
-            <p>Always stay updated in your student portal</p>
+      <header class="header">
+        <div class="date">
+          <p>September 25, 2024</p>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search">
+        </div>
+        <div class="profile">
+          <img [src]="userProfileImg" alt="Profile Picture">
+          <div class="profile-info">
+            <p>{{ name }}</p>
+          </div>
+        </div>
+      </header>
+  
+      <section class="welcome-section">
+        <h1>Welcome back, {{ name }}</h1>
+        <p>Always stay updated in your student portal</p>
+      </section>
+  
+      <section class="finance-section">
+        <h2>Challenges</h2>
+        <div class="finance-cards">
+          <div class="card">
+            <p>Coding</p>
+            <small>$50</small>
+          </div>
+          <div class="card">
+            <p>Quiz</p>
+            <small>Free</small>
+          </div>
+          <div class="card">
+            <p>Extra Curriculum</p>
+          </div>
+        </div>
+      </section>
+  
+      <section class="enrolled-courses">
+        <h2>Enrolled Courses</h2>
+        <div class="courses">
+          <div class="course-card">
+            <p>Object Oriented Programming</p>
+            <button>View</button>
+          </div>
+          <div class="course-card">
+            <p>Fundamentals of Database Systems</p>
+            <button>View</button>
+          </div>
+        </div>
+      </section>
+  
+      <aside class="sidebar-content">
+        <section class="course-instructors">
+          <h2>Course Instructors</h2>
+          <div class="instructors">
+            <img src="assets/team1.jpg" alt="Instructor">
+            <img src="assets/team2.jpg" alt="Instructor">
+            <img src="assets/team3.jpeg" alt="Instructor">
+          </div>
+          <a href="#" class="see-all">See all</a>
         </section>
-
-        <section class="finance-section">
-            <h2>Challenges</h2>
-            <div class="finance-cards">
-                <div class="card">
-                    <p>Coding</p>
-                    <small>$50</small>
-                </div>
-                <div class="card">
-                    <p>Quiz</p>
-                    <small>Free</small>
-                </div>
-                <div class="card">
-                    <p>Extra Curriculm</p>
-                </div>
-            </div>
+  
+        <section class="daily-notice">
+          <h2>Daily Notice</h2>
+          <div class="notice">
+            <p><strong>Prelim payment due</strong></p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <a href="#">See more</a>
+          </div>
+          <div class="notice">
+            <p><strong>Exam schedule</strong></p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <a href="#">See more</a>
+          </div>
         </section>
-
-        <section class="enrolled-courses">
-            <h2>Enrolled Courses</h2>
-            <div class="courses">
-                <div class="course-card">
-                    <p>Object Oriented Programming</p>
-                    <button>View</button>
-                </div>
-                <div class="course-card">
-                    <p>Fundamentals of Database Systems</p>
-                    <button>View</button>
-                </div>
-            </div>
-        </section>
-
-        <aside class="sidebar-content">
-            <section class="course-instructors">
-                <h2>Course Instructors</h2>
-                <div class="instructors">
-                    <img src="assets/team1.jpg" alt="Instructor">
-                    <img src="assets/team2.jpg" alt="Instructor">
-                    <img src="assets/team3.jpeg" alt="Instructor">
-                </div>
-                <a href="#" class="see-all">See all</a>
-            </section>
-
-            <section class="daily-notice">
-                <h2>Daily Notice</h2>
-                <div class="notice">
-                    <p><strong>Prelim payment due</strong></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <a href="#">See more</a>
-                </div>
-                <div class="notice">
-                    <p><strong>Exam schedule</strong></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <a href="#">See more</a>
-                </div>
-            </section>
-        </aside>
+      </aside>
     </main>
-</div>
+  </div>
+  

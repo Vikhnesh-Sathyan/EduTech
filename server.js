@@ -129,6 +129,7 @@ app.post('/api/student-signup', async (req, res) => {
 });
 
 
+
 // Handle Student Sign-In
 app.post('/api/student-signin', async (req, res) => {
     const { email, password } = req.body;
@@ -161,6 +162,7 @@ app.post('/api/student-signin', async (req, res) => {
         }
     });
 });
+
 
 // Parent Sign-Up
 app.post('/api/parent-signup', async (req, res) => {
@@ -224,31 +226,10 @@ app.post('/api/parent-signin', async (req, res) => {
     });
 });
 
-app.post('/api/forgot-password', async (req, res) => {
-    const { email } = req.body;
-  
-    // Check if email exists
-    const sql = 'SELECT * FROM user WHERE email = ?';
-    db.query(sql, [email], (err, results) => {
-      if (err) {
-        console.error('Database error during forgot password:', err);
-        return res.status(500).send('Server error');
-      }
-  
-      if (results.length > 0) {
-        // Logic to send email to reset password
-        const resetToken = "SomeRandomToken";
-        console.log(`Sending reset token: ${resetToken} to ${email}`);
-        return res.status(200).send('Password reset link sent');
-      }
-  
-      res.status(404).send('Email not found');
-    });
-  });
-  
 
   
-  app.post('/api/students', (req, res) => {
+  
+app.post('/api/students', (req, res) => {
     console.log('Received data:', req.body); // Log the incoming request body
     const { student_name, dob, gender, email, phone, address, guardian_name, grade } = req.body;
   
@@ -267,14 +248,69 @@ app.post('/api/forgot-password', async (req, res) => {
       res.status(201).send({ id: result.insertId, student_name, dob, gender, email, phone, address, guardian_name, grade });
     });
 });
-
   
 
 
+// Endpoint to handle music applications
+app.post('/api/music', (req, res) => {
+    const { name, email, course, experience, class: className, notes } = req.body;
 
+    const sql = `INSERT INTO music (name, email, course, experience, class, notes) 
+                 VALUES (?, ?, ?, ?, ?, ?)`;
+    db.query(sql, [name, email, course, experience, className, notes], (err, result) => {
+        if (err) {
+            console.error('Error inserting application:', err);
+            return res.status(500).json({ error: 'Error inserting application' }); // Return JSON on error
+        }
 
+        // Insert notification
+        const notificationMessage = `New application submitted by ${name}`;
+        const notificationSql = `INSERT INTO notifications (message, is_read) VALUES (?, ?)`;
+        db.query(notificationSql, [notificationMessage, false], (err, notificationResult) => {
+            if (err) {
+                console.error('Error inserting notification:', err);
+                return res.status(500).json({ error: 'Error inserting notification' }); // Return JSON on error
+            }
 
-
+            // Ensure the response is a JSON object
+            res.status(200).json({ message: 'Application and notification created successfully' }); // Return JSON
+        });
+    });
+});
+// Endpoint to mark a notification as read
+app.get('/api/notifications', (req, res) => {
+    const sqlQuery = 'SELECT * FROM notifications'; // Adjust the table name
+  
+    db.query(sqlQuery, (err, results) => {
+      if (err) {
+        console.error('Error fetching notifications:', err);
+        return res.status(500).json({ error: 'Failed to fetch notifications' });
+      }
+  
+      res.status(200).json(results); // Send the notifications back to the client
+    });
+  });
+  
+  // Route to mark a notification as read
+  app.put('/api/notifications/:id', (req, res) => {
+    const notificationId = req.params.id;
+    const sqlUpdateQuery = 'UPDATE notifications SET is_read = 1 WHERE id = ?';
+  
+    db.query(sqlUpdateQuery, [notificationId], (err, results) => {
+      if (err) {
+        console.error('Error updating notification:', err);
+        return res.status(500).json({ error: 'Failed to update notification' });
+      }
+  
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ error: 'Notification not found' });
+      }
+  
+      res.status(200).json({ message: 'Notification marked as read' });
+    });
+  });
+  
+  
 
 // Start the server
 app.listen(3000, () => {

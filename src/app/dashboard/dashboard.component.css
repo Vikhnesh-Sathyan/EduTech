@@ -29,6 +29,22 @@ html, body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.badge {
+    background-color: red;        /* Background color of the badge */
+    color: white;                 /* Text color */
+    padding: 5px 10px;            /* Padding inside the badge */
+    border-radius: 50%;           /* Make it circular */
+    font-size: 12px;              /* Font size of the number */
+    position: absolute;           /* Position it relative to the parent */
+    top: 10px;                    /* Position from the top */
+    right: 10px;                  /* Position from the right */
+    min-width: 20px;              /* Minimum width for the badge */
+    text-align: center;           /* Center the text */
+    line-height: 15px;            /* Line height for proper vertical alignment */
+    display: inline-block;        /* Inline block to make it fit content */
+  }
+  
+
 /* New Section Styles */
 .sidebar-content section {
     margin-bottom: 30px;

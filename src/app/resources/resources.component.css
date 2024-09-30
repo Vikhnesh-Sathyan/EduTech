@@ -1,0 +1,188 @@
+/* Global styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover; /* Cover the entire page */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Avoid repeating the background */
+}
+
+/* Container styles */
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    padding: 30px 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin: 20px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the background image */
+}
+
+/* Form styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    padding: 15px;
+    border-radius: 5px;
+    background-size: cover; /* Cover the entire form */
+    background-position: center; /* Center the background image */
+}
+
+form input[type="file"] {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    cursor: pointer;
+}
+
+form button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color:#218838;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Aligns button to the left */
+}
+
+form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+form button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+/* Input section styles */
+div > h3 {
+    margin: 15px 0 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+input[type="text"] {
+    width: calc(100% - 20px); /* Align with button size */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+}
+
+/* Section button styles */
+div button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+div button:hover {
+    background-color: #218838;
+}
+
+/* Uploaded files section */
+.uploaded-files {
+    margin-top: 25px;
+    background-size: cover; /* Cover the entire section */
+    background-position: center; /* Center the background image */
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.uploaded-files h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.uploaded-files ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.uploaded-files li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    gap: 15px;
+}
+
+.uploaded-files li:last-child {
+    margin-bottom: 0;
+}
+
+.uploaded-files img,
+.uploaded-files audio,
+.uploaded-files video {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 100%;
+}
+
+.uploaded-files button {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.uploaded-files button:hover {
+    background-color: #c82333;
+}
+
+.uploaded-files a {
+    text-decoration: none;
+    color: #218838;
+    transition: color 0.3s ease;
+}
+
+.uploaded-files a:hover {
+    color: #218838;
+}
+
+/* Adjust spacing for file info */
+.uploaded-files li > ng-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: calc(100% - 100px); /* Leave space for delete button */
+}
+
+.uploaded-files li > ng-container img,
+.uploaded-files li > ng-container audio,
+.uploaded-files li > ng-container video {
+    margin-bottom: 5px;
+}
+
+
