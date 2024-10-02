@@ -25,6 +25,19 @@ export class NotificationsComponent implements OnInit {
       }
     );
   }
+  unreadCount: number = 0;  // Store unread notification count
+
+// Fetch unread notification count from the API
+getUnreadNotificationsCount() {
+  this.http.get('http://localhost:3000/api/notifications/unread-count').subscribe(
+    (response: any) => {
+      this.unreadCount = response.unreadCount;
+    },
+    (error) => {
+      console.error('Error fetching unread notifications count', error);
+    }
+  );
+}
 
   // Method to mark a notification as read
   markAsRead(notificationId: number) {

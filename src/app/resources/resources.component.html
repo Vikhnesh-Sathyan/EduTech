@@ -1,20 +1,46 @@
+
+
+<!-- File Upload Section -->
 <form (ngSubmit)="onSubmit()" #fileUploadForm="ngForm">
+    <h3>Upload Files:</h3>
     <input type="file" (change)="onFileChange($event)" multiple />
-    <button type="submit" [disabled]="!uploadedFiles.length">Upload Files</button>
+    <div *ngIf="fileError" class="error">{{ fileError }}</div> <!-- Show file validation error -->
+    <button type="submit" [disabled]="!uploadedFiles.length || !selectedClass">Upload Files</button>
 </form>
 
+<!-- Add Website Link Section -->
 <div>
     <h3>Add Website Link:</h3>
-    <input type="text" [(ngModel)]="siteLink" placeholder="Enter website URL" />
-    <button (click)="addSiteLink()">Add Link</button>
+    <input 
+        type="text" 
+        [(ngModel)]="siteLink" 
+        name="siteLink" 
+        placeholder="Enter website URL" 
+        required 
+        pattern="https?://.+"     
+        #siteInput="ngModel" 
+    />
+    <button (click)="addSiteLink()" [disabled]="siteInput.invalid || !selectedClass">Add Link</button>
+    <div *ngIf="siteInput.invalid && siteInput.touched" class="error">Please enter a valid URL</div> <!-- URL validation message -->
 </div>
 
+<!-- Add Video Link Section -->
 <div>
     <h3>Add Video Link:</h3>
-    <input type="text" [(ngModel)]="videoLink" placeholder="Enter video URL" />
-    <button (click)="addVideoLink()">Add Link</button>
+    <input 
+        type="text" 
+        [(ngModel)]="videoLink" 
+        name="videoLink" 
+        placeholder="Enter video URL" 
+        required 
+        pattern="https?://.+"  
+        #videoInput="ngModel" 
+    />
+    <button (click)="addVideoLink()" [disabled]="videoInput.invalid || !selectedClass">Add Link</button>
+    <div *ngIf="videoInput.invalid && videoInput.touched" class="error">Please enter a valid video URL</div> <!-- Video URL validation message -->
 </div>
 
+<!-- Uploaded Files and Links Section -->
 <div *ngIf="uploadedFiles.length">
     <h3>Uploaded Files and Links:</h3>
     <ul>
@@ -29,7 +55,20 @@
                 <a *ngSwitchCase="'video_link'" [href]="file.url" target="_blank">{{ file.name }}</a>
                 <span *ngSwitchDefault>{{ file.name }}</span>
             </ng-container>
-            <button (click)="deleteFile(i)">Delete</button> <!-- Delete button -->
+            <button (click)="deleteFile(i)">Delete</button> <!-- Confirmation dialog on delete -->
         </li>
     </ul>
 </div>
+<div><h3>Select Class:</h3>
+    <select [(ngModel)]="selectedClass" name="class" required>
+        <option value="">Select a class</option>
+        <option value="8">8th Standard</option>
+        <option value="9">9th Standard</option>
+        <option value="10">10th Standard</option>
+        <option value="11">11th Standard</option>
+        <option value="12">12th Standard</option>
+    </select></div>
+    
+<!-- Success/Error Messages -->
+<div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>

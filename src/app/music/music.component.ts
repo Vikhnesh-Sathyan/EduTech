@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router'; // Import the Router
 
 @Component({
   selector: 'app-music',
@@ -28,7 +29,8 @@ export class MusicComponent {
     { name: 'Voice' }
   ];
 
-  constructor(private http: HttpClient) {}
+  // Single constructor combining both HttpClient and Router
+  constructor(private http: HttpClient, private router: Router) {}
 
   // Handle form submission
   onSubmit() {
@@ -48,6 +50,9 @@ export class MusicComponent {
           class: '',
           notes: ''
         };
+
+        // Navigate to the music course page after submission
+        this.router.navigate(['/musiccourse']);
       },
       (error) => {
         console.error('Error submitting application:', error);

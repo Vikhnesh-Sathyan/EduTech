@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-resources',
   standalone: true,
@@ -10,27 +11,39 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./resources.component.css']
 })
 export class ResourcesComponent {
+  selectedClass: string = ''; // Add this variable
   selectedFiles: File[] = [];
   uploadedFiles: { name: string; url: string; type: string }[] = [];
   siteLink: string = '';
   videoLink: string = '';
+  fileError: string = ''; // For file validation errors
+  successMessage: string = ''; // To show success messages
+  errorMessage: string = ''; // To show error messages
 
   onFileChange(event: any) {
     const files: FileList = event.target.files;
     this.uploadedFiles = []; // Reset the uploaded files on new selection
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const fileURL = URL.createObjectURL(file); // Create a URL for the file
-      this.uploadedFiles.push({ name: file.name, url: fileURL, type: file.type });
+    if (files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileURL = URL.createObjectURL(file); // Create a URL for the file
+        this.uploadedFiles.push({ name: file.name, url: fileURL, type: file.type });
+      }
+      this.selectedFiles = Array.from(files); // Store selected files for future use
+    } else {
+      this.fileError = 'Please select at least one file'; // Handle empty file selection
     }
-
-    this.selectedFiles = Array.from(files); // Store selected files for future use
   }
 
   onSubmit() {
+    if (!this.selectedClass) {
+      this.errorMessage = 'Please select a class.';
+      return;
+    }
     // Handle file submission (e.g., upload to server if needed)
     console.log('Uploaded files:', this.selectedFiles);
+    this.successMessage = 'Files uploaded successfully!';
   }
 
   addSiteLink() {

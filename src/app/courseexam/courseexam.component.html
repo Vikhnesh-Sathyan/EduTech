@@ -1,0 +1,23 @@
+<div class="exam-container">
+    <h2>Course Exam</h2>
+    
+    <div *ngFor="let question of examQuestions; let i = index" class="question-block">
+      <p>{{ i + 1 }}. {{ question.questionText }}</p>
+      <div>
+        <label *ngFor="let option of question.options">
+          <input
+            type="radio"
+            name="question{{ i }}"
+            [value]="option"
+            (change)="userAnswers[i] = option"
+          />
+          {{ option }}
+        </label>
+      </div>
+    </div>
+  
+    <button (click)="submitExam()">Submit Exam</button>
+  </div>
+  
+  
+  

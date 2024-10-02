@@ -1,0 +1,35 @@
+<div class="container">
+    <h3>Student Information</h3>
+  
+    <table *ngIf="students.length > 0; else noData">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>DOB</th>
+          <th>Gender</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Guardian Name</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students">
+          <td>{{ student.student_name }}</td>
+          <td>{{ student.dob }}</td>
+          <td>{{ student.gender }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.phone }}</td>
+          <td>{{ student.address }}</td>
+          <td>{{ student.guardian_name }}</td>
+          <td>{{ student.grade }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <ng-template #noData>
+      <p>No student data available.</p>
+    </ng-template>
+  </div>
+  

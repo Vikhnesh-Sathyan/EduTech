@@ -1,10 +1,9 @@
-<div *ngFor="let notification of notifications">
-    <p>
-      {{ notification.message }} - 
-      <span>{{ notification.is_read ? 'Read' : 'Unread' }}</span>
-    </p>
-    <button (click)="markAsRead(notification.id)" [disabled]="notification.is_read">
-      Mark as Read
-    </button>
-  </div>
-  
+<div *ngFor="let notification of notifications; let i = index" [ngClass]="{'read': notification.is_read, 'unread': !notification.is_read}">
+  <p>
+    {{ i + 1 }}. {{ notification.message }} - 
+    <span>{{ notification.is_read ? 'Read' : 'Unread' }}</span>
+  </p>
+  <button (click)="markAsRead(notification.id)" [disabled]="notification.is_read">
+    Mark as Read
+  </button>
+</div>

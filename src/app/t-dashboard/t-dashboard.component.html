@@ -7,8 +7,12 @@
         </div>
         <ul>
             <li><a routerLink="/teacher-login/t-dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a routerLink="/teacher-login/t-dashboard/students"><i class="fas fa-user-graduate"></i> Students</a></li>
-            <li><a routerLink="/teacher-login/t-dashboard/grades"><i class="fas fa-clipboard-list"></i> Grades</a></li>
+            <li>
+                <a (click)="studentlist()">
+                  <i class="fas fa-user-graduate"></i> Students
+                </a>
+              </li>
+                          <li><a routerLink="/teacher-login/t-dashboard/grades"><i class="fas fa-clipboard-list"></i> Grades</a></li>
             <li><a routerLink="/teacher-login/t-dashboard/resources">
                 <button (click)="goToResources()">
                     Resources <i class="fas fa-book"></i> 

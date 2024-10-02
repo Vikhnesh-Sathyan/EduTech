@@ -1,0 +1,90 @@
+<div class="course-detail">
+    <h1>Fundamentals of Music Theory</h1>
+    <p>
+      This course, provided by <strong>The University of Edinburgh</strong>, is designed for aspiring musicians, composers, and anyone who wants to deepen their understanding of music. Whether you're a beginner or already familiar with music, this course will provide you with a comprehensive understanding of the foundational elements of music theory.
+    </p>
+  
+    <h3>What You Will Learn</h3>
+    <p>
+      The course covers essential topics that will help you understand how music works, enabling you to read, write, and compose your own pieces.
+    </p>
+  
+    <h4>Click on the topics below to learn more:</h4>
+  
+    <div class="accordion">
+      <!-- Topic 1: Introduction to Music Theory -->
+      <div>
+        <h5 (click)="toggleTopic('topic1')" class="topic-header">Introduction to Music Theory</h5>
+        <div [hidden]="!topics['topic1']" class="topic-details">
+          <p>
+            Music theory forms the foundation for all musical understanding. In this section, you'll learn about the core elements of music, including rhythm, melody, harmony, and the basics of musical structure. We will discuss how these elements come together to form the building blocks of songs, symphonies, and everything in between.
+          </p>
+          <!-- Add an image for Introduction to Music Theory -->
+          <img src="assets/team1.jpg" alt="Music Theory" class="course-image">
+        </div>
+      </div>
+  
+      <!-- Topic 2: Musical Notation -->
+      <div>
+        <h5 (click)="toggleTopic('topic2')" class="topic-header">Musical Notation</h5>
+        <div [hidden]="!topics['topic2']" class="topic-details">
+          <p>
+            Understanding musical notation is essential for reading and writing music. In this topic, we will cover the various symbols and signs used in music notation, such as notes, rests, time signatures, and key signatures. You will also learn how to interpret these symbols to read sheet music.
+          </p>
+          <!-- Add an image for Musical Notation -->
+          <img src="assets/images/musical-notation.jpg" alt="Musical Notation" class="course-image">
+        </div>
+      </div>
+  
+      <!-- Topic 3: Scales and Intervals -->
+      <div>
+        <h5 (click)="toggleTopic('topic3')" class="topic-header">Scales and Intervals</h5>
+        <div [hidden]="!topics['topic3']" class="topic-details">
+          <p>
+            Scales and intervals are fundamental to understanding the relationships between notes in music. You will learn about major and minor scales, how they are constructed, and the role intervals play in creating melodies and harmonies. Understanding these concepts will allow you to compose and analyze music effectively.
+          </p>
+          <!-- Add an image for Scales and Intervals -->
+          <img src="assets/images/scales-intervals.jpg" alt="Scales and Intervals" class="course-image">
+        </div>
+      </div>
+  
+      <!-- Topic 4: Chords and Harmony -->
+      <div>
+        <h5 (click)="toggleTopic('topic4')" class="topic-header">Chords and Harmony</h5>
+        <div [hidden]="!topics['topic4']" class="topic-details">
+          <p>
+            Chords are created by combining multiple notes, and harmony occurs when these chords support the melody. This topic will teach you how to construct chords, understand chord progressions, and analyze harmonic structures. You’ll also learn how harmony is used to create emotional depth in music.
+          </p>
+          <!-- Add an image for Chords and Harmony -->
+          <img src="assets/images/chords-harmony.jpg" alt="Chords and Harmony" class="course-image">
+        </div>
+      </div>
+  
+      <!-- Topic 5: Practical Exercises -->
+      <div>
+        <h5 (click)="toggleTopic('topic5')" class="topic-header">Practical Exercises</h5>
+        <div [hidden]="!topics['topic5']" class="topic-details">
+          <p>
+            In this section, you'll engage in practical exercises designed to reinforce the theoretical concepts you've learned. These exercises include composing simple melodies, harmonizing them, and analyzing music to understand how the theory is applied in real-world musical settings.
+          </p>
+          <!-- Add an image for Practical Exercises -->
+          <img src="assets/images/practical-exercises.jpg" alt="Practical Exercises" class="course-image">
+        </div>
+      </div>
+    </div>
+  
+    <h3>Course Objectives</h3>
+    <p>
+      By the end of the course, you will:
+    </p>
+    <ul>
+      <li>Be able to read and write musical notation fluently.</li>
+      <li>Understand key concepts such as time signatures, scales, intervals, and chords.</li>
+      <li>Recognize common harmonic structures in different types of music.</li>
+      <li>Have the ability to compose and analyze simple pieces of music.</li>
+    </ul>
+  
+    <!-- Button to take the exam or proceed with the course -->
+    <button class="btn btn-success" (click)="takeExam()">Take the Exam</button>
+  </div>
+  

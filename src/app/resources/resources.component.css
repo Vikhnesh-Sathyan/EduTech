@@ -17,13 +17,16 @@ body {
 .container {
     background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
     padding: 30px 25px;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
     max-width: 600px;
     width: 100%;
     margin: 20px;
-    background-size: cover; /* Cover the entire container */
-    background-position: center; /* Center the background image */
+    transition: transform 0.3s; /* Add animation on hover */
+}
+
+.container:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
 }
 
 /* Form styles */
@@ -32,30 +35,35 @@ form {
     flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
     padding: 15px;
-    border-radius: 5px;
-    background-size: cover; /* Cover the entire form */
-    background-position: center; /* Center the background image */
+    border-radius: 15px; /* More rounded corners */
+    border: 1px solid #ddd; /* Light border */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Light shadow */
 }
 
 form input[type="file"] {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
+    border: 2px dashed #218838; /* Dashed border for file input */
+    padding: 15px;
+    border-radius: 10px; /* More rounded corners */
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
     cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+form input[type="file"]:hover {
+    border-color: #0056b3; /* Change border color on hover */
 }
 
 form button {
     padding: 12px 20px;
     border: none;
-    border-radius: 5px;
-    background-color:#218838;
+    border-radius: 20px; /* Fully rounded button */
+    background-color: #28a745; /* Green background */
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, transform 0.3s;
     align-self: flex-start; /* Aligns button to the left */
 }
 
@@ -65,7 +73,8 @@ form button:disabled {
 }
 
 form button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
 }
 
 /* Input section styles */
@@ -80,7 +89,7 @@ input[type="text"] {
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px; /* More rounded corners */
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
 }
@@ -89,24 +98,25 @@ input[type="text"] {
 div button {
     padding: 10px 15px;
     border: none;
-    border-radius: 5px;
-    background-color: #28a745;
+    border-radius: 20px; /* Fully rounded button */
+    background-color: #28a745; /* Green background */
     color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 div button:hover {
-    background-color: #218838;
+    background-color: #218838; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
 }
 
 /* Uploaded files section */
 .uploaded-files {
     margin-top: 25px;
-    background-size: cover; /* Cover the entire section */
-    background-position: center; /* Center the background image */
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 15px; /* More rounded corners */
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Light shadow */
 }
 
 .uploaded-files h3 {
@@ -130,9 +140,14 @@ div button:hover {
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
     padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px; /* More rounded corners */
     margin-bottom: 10px;
     gap: 15px;
+    transition: transform 0.3s; /* Add animation on hover */
+}
+
+.uploaded-files li:hover {
+    transform: scale(1.02); /* Slightly increase size on hover */
 }
 
 .uploaded-files li:last-child {
@@ -143,22 +158,23 @@ div button:hover {
 .uploaded-files audio,
 .uploaded-files video {
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px; /* More rounded corners */
     max-width: 100%;
 }
 
 .uploaded-files button {
     padding: 7px 12px;
     border: none;
-    border-radius: 5px;
-    background-color: #dc3545;
+    border-radius: 20px; /* Fully rounded button */
+    background-color: #dc3545; /* Red background */
     color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .uploaded-files button:hover {
-    background-color: #c82333;
+    background-color: #c82333; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
 }
 
 .uploaded-files a {
@@ -184,5 +200,3 @@ div button:hover {
 .uploaded-files li > ng-container video {
     margin-bottom: 5px;
 }
-
-

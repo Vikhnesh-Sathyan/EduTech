@@ -1,0 +1,30 @@
+/* Styling for read notifications */
+.read {
+    background-color: lightgreen;
+    color: green;
+  }
+  
+  /* Styling for unread notifications */
+  .unread {
+    background-color: lightcoral;
+    color: red;
+  }
+  
+  /* Optional: Additional styling for buttons */
+  button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  button {
+    padding: 5px 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background-color: darkblue;
+  }
+  
