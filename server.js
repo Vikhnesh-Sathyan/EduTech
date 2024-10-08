@@ -3,10 +3,16 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json()); // Parse application/json
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MySQL database connection
 const db = mysql.createConnection({
@@ -230,24 +236,18 @@ app.post('/api/parent-signin', async (req, res) => {
   
   
 app.post('/api/students', (req, res) => {
-    console.log('Received data:', req.body); // Log the incoming request body
-    const { student_name, dob, gender, email, phone, address, guardian_name, grade } = req.body;
-  
-    // Simple validation
-    if (!student_name || !dob || !gender || !email || !phone || !address || !guardian_name || !grade) {
-        return res.status(400).send('All fields are required');
+  const { student_name, dob, gender, email, phone, address, guardian_name, grade, parent_id } = req.body;
+
+  // Insert the new student into the database
+  const query = 'INSERT INTO students (student_name, dob, gender, email, phone, address, guardian_name, grade, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  db.query(query, [student_name, dob, gender, email, phone, address, guardian_name, grade, parent_id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error: ' + err });
     }
-  
-    const sql = 'INSERT INTO students (student_name, dob, gender, email, phone, address, guardian_name, grade) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    
-    db.query(sql, [student_name, dob, gender, email, phone, address, guardian_name, grade], (err, result) => {
-      if (err) {
-        console.error('Error inserting student data:', err);
-        return res.status(500).send('Error inserting student data');
-      }
-      res.status(201).send({ id: result.insertId, student_name, dob, gender, email, phone, address, guardian_name, grade });
-    });
+    res.status(201).json({ message: 'Student created', id: result.insertId });
+  });
 });
+
   
 
 
@@ -310,7 +310,175 @@ app.get('/api/notifications', (req, res) => {
     });
   });
   
+
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Set up storage for uploaded files
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const grade = req.body.grade; // Get the grade from the request body
+        const uploadPath = path.join(__dirname, 'uploads', `grade-${grade}`);
+
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+
+        cb(null, uploadPath); // Store files in grade-specific folder
+    },
+    filename: (req, file, cb) => {
+        const filename = `${Date.now()}-${file.originalname}`; // Generate a unique filename
+        cb(null, filename);
+    },
+});
+
+// Initialize multer with the defined storage
+const upload = multer({ storage: storage });
+
+// Route to handle file uploads
+app.post('/api/upload-content', upload.single('file'), (req, res) => {
+    const { grade, title, description, type } = req.body;
+
+    // Ensure all required fields are provided
+    if (!grade || !title || !description || !type || !req.file) {
+        return res.status(400).json({ message: 'All fields are required, including file.' });
+    }
+
+    // Construct file URL for response
+    const fileUrl = `/uploads/grade-${grade}/${req.file.filename}`;
+
+    // Insert content details into the database
+    const query = `
+        INSERT INTO contents (grade, title, description, type, fileUrl)
+        VALUES (?, ?, ?, ?, ?)`;
+    
+    db.query(query, [grade, title, description, type, fileUrl], (err, result) => {
+        if (err) {
+            console.error('Error inserting content into database:', err);
+            return res.status(500).json({ error: 'Failed to upload content.' });
+        }
+
+        // Create new content object to return in the response
+        const newContent = {
+            id: result.insertId, // Get the ID of the inserted row
+            grade,
+            title,
+            description,
+            type,
+            fileUrl,
+        };
+
+        res.json({
+            message: 'File uploaded successfully!',
+            content: newContent,
+        });
+    });
+});
+
+// API to get content by grade
+app.get('/api/get-content/:grade', (req, res) => {
+    const grade = req.params.grade;
+
+    console.log(`Fetching content for grade: ${grade}`); // Log grade
+
+    // Fetch content from the database for the given grade
+    const query = `SELECT * FROM contents WHERE grade = ?`;
+    db.query(query, [grade], (err, rows) => {
+        if (err) {
+            console.error('Error fetching content:', err);
+            return res.status(500).json({ error: 'Failed to fetch content.' });
+        }
+
+        // If no content is found for the grade
+        if (rows.length === 0) {
+            return res.status(404).json({ message: `No content found for grade ${grade}.` });
+        }
+
+        console.log(`Content fetched for grade ${grade}:`, rows); // Log fetched data
+        res.json(rows);
+    });
+});
+
+// API to delete content by grade and filename
+app.delete('/api/delete-content/:grade/:filename', (req, res) => {
+    const { grade, filename } = req.params;
+    const filePath = path.join(__dirname, 'uploads', `grade-${grade}`, filename);
+
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            return res.status(404).send('File not found');
+        }
+        res.status(200).send('File deleted successfully');
+    });
+});
+
+
+
+app.post('/api/register', (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const sql = 'INSERT INTO profiles (username, email, password) VALUES (?, ?, ?)';
+
+    db.query(sql, [username, email, hashedPassword], (err, result) => {
+        if (err) {
+            if (err.code === 'ER_DUP_ENTRY') {
+                return res.status(400).json({ error: 'User already exists.' });
+            }
+            return res.status(500).json({ error: 'Error registering user.' });
+        }
+        res.status(201).json({ message: 'User registered successfully.' });
+    });
+});
+
+
+
+const userProfiles = {
+    1: { skills: 'JavaScript, Angular', interests: 'Coding, Reading', availability: 'Full-time' },
+    // Other profiles...
+  };
   
+  app.get('/api/profile/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const profile = userProfiles[userId];
+  
+    if (profile) {
+      res.json(profile);
+    } else {
+      res.status(404).send('User profile not found');
+    }
+  });
+
+
+
+// Update User Profile
+app.put('/api/profile/:id', (req, res) => {
+    const { skills, interests, availability } = req.body;
+
+    const sql = 'UPDATE profiles SET skills = ?, interests = ?, availability = ? WHERE id = ?';
+
+    db.query(sql, [skills, interests, availability, req.params.id], (err, result) => {
+        if (err) {
+            return res.status(500).send('Error updating profile.');
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+        res.json({ message: 'Profile updated successfully.' });
+    });
+});
+
+
+
+
+
+
 
 // Start the server
 app.listen(3000, () => {

@@ -1,21 +1,24 @@
 .topic-header {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border: 1px solid #ddd;
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  
-  .topic-details {
-    padding: 10px;
-    border-left: 2px solid #007bff;
-    margin-left: 20px;
-    background-color: #f9f9f9;
-  }
-  .course-image {
-    max-width: 90%;
-    height: auto;
-    margin-top: 10px;
-  }
-  
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.topic-details {
+  padding: 10px;
+  border-left: 2px solid #007bff;
+  margin-left: 20px;
+  background-color: #f9f9f9;
+}
+
+.course-image {
+  max-width: 70%; /* Reduced image size */
+  height: auto;
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; /* Center the image */
+}

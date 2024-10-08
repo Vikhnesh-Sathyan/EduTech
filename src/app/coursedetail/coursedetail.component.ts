@@ -4,13 +4,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-coursedetail',
   standalone: true,
-  imports: [],
   templateUrl: './coursedetail.component.html',
-  styleUrl: './coursedetail.component.css'
+  styleUrls: ['./coursedetail.component.css']
 })
 export class CoursedetailComponent {
 
-  // Use a string index signature to allow string keys for the 'topics' object
+  // Track the state of the topics and whether the video has been watched
   topics: { [key: string]: boolean } = {
     topic1: false,
     topic2: false,
@@ -19,6 +18,9 @@ export class CoursedetailComponent {
     topic5: false
   };
 
+  // Initially, the exam button is disabled
+  videoWatched = false;
+
   constructor(private router: Router) {}
 
   // Toggle the display of the selected topic
@@ -26,8 +28,17 @@ export class CoursedetailComponent {
     this.topics[topicKey] = !this.topics[topicKey];
   }
 
+  // Called when the video ends
+  onVideoEnd() {
+    this.videoWatched = true;  // Enable the button when the video ends
+  }
+
   // Navigate to the exam page
   takeExam() {
-    this.router.navigate(['courseexam']);  // Replace '/exam' with the actual route for your exam page
+    if (this.videoWatched) {
+      this.router.navigate(['courseexam']);  // Replace 'courseexam' with your exam route
+    } else {
+      alert('Please watch the video before proceeding to the exam.');
+    }
   }
 }

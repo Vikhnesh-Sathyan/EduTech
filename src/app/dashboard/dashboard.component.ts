@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../authservice/authservice.component'; 
 import { HttpClientModule, HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -31,8 +31,13 @@ export class DashboardComponent implements OnInit {
   userProfileImg: string | undefined;
   unreadNotificationsCount: number = 0;
 
+  // New properties to hold the parameters
+  studentName: string | undefined;
+  studentGrade: string | undefined;
+
   // Inject dependencies
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute); // For query parameters
   private auth = inject(AuthService);
   private http = inject(HttpClient);
   private studentService = inject(StudentserviceService); // Inject StudentService
@@ -43,6 +48,12 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadUserData();
     this.getUnreadNotificationsCount();
+    
+    // Subscribe to the query parameters
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.studentName = params['name']; // Get the student's name
+      this.studentGrade = params['grade']; // Get the student's grade
+    });
   }
 
   // Method to load user data from sessionStorage
@@ -93,9 +104,26 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['notifications']);
   }
 
+  onProfileClick() {
+    // Navigate to the profile page
+    this.router.navigate(['/profile']); // Adjust the route as necessary
+  }
+
   // Navigate to Profile page
   navigateToProfile(): void {
     this.router.navigate(['profile']);
+  }
+
+  resourcelink(): void {
+    this.router.navigate(['resourcelink']);
+  }
+
+  studentgenerated(): void {
+    this.router.navigate(['studentgenerated']);
+  }
+
+  navigateToskillswap(): void {
+    this.router.navigate(['user-profile']); // Correctly navigates to the User Profile page
   }
 
   // Fetch unread notifications count from the server

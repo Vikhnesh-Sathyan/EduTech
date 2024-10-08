@@ -3,13 +3,12 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-courseexam',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './courseexam.component.html',
-  styleUrls: ['./courseexam.component.css'], // Fix styleUrl to styleUrls
+  styleUrls: ['./courseexam.component.css'],
 })
 export class CourseexamComponent {
   examQuestions = [
@@ -28,8 +27,8 @@ export class CourseexamComponent {
   submitExam() {
     const score = this.calculateScore();
     if (score >= this.passingScore) {
-      // Redirect to the certificate component if passed
-      this.router.navigate(['/certificate']); // Change this path as necessary
+      // Redirect to Task 2 if passed
+      this.router.navigate(['task2']); // Change this path as necessary
     } else {
       alert('You did not pass. Please retake the exam.');
     }
@@ -54,4 +53,3 @@ export class CourseexamComponent {
     return (correctAnswers / this.examQuestions.length) * 100;
   }
 }
-

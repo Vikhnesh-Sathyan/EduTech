@@ -60,4 +60,5 @@ getUnreadNotificationsCount() {
   ngOnInit() {
     this.getNotifications(); // Fetch notifications when the component loads
   }
+  
 }

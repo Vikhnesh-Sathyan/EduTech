@@ -31,13 +31,25 @@
     <div class="form-group">
       <label for="email"><i class="fas fa-envelope"></i> Email:</label>
       <input type="email" id="email" name="email" [(ngModel)]="studentData.email" required>
+      
+      <!-- Validation Message -->
+      <div *ngIf="studentData.email && !isEmailValid()" class="error-message">
+        Please enter a valid email address (e.g., example&#64;domain.com).
+      </div>
     </div>
+    
 
-    <!-- Phone Number -->
     <div class="form-group">
       <label for="phone"><i class="fas fa-phone"></i> Phone Number:</label>
       <input type="tel" id="phone" name="phone" [(ngModel)]="studentData.phone" required>
+      
+      <!-- Validation Message -->
+      <div *ngIf="studentData.phone && !isPhoneValid()" class="error-message">
+        Please enter a valid Indian phone number (e.g., 9876543210).
+      </div>
     </div>
+    
+    
 
     <!-- Address -->
     <div class="form-group">

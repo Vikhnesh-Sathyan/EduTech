@@ -1,4 +1,3 @@
-
 <body>
     <div class="container">
         <!-- Extracurricular Activities Section -->
@@ -12,8 +11,6 @@
                             <h3>Music Club</h3>
                             <p>Join our music club and explore various instruments and vocal training.</p>
                             <li><a class="apply-btn" (click)="applynow()"><i class="fas fa-paper-plane"></i> Apply Now</a></li>
-
-
                         </div>
                     </div>
                 </div>
@@ -24,7 +21,6 @@
                             <h3>Sports Teams</h3>
                             <p>Be part of our sports teams and compete in various athletic events.</p>
                             <a href="#" class="apply-btn"><i class="fas fa-paper-plane"></i> Apply Now</a>
-
                         </div>
                     </div>
                 </div>
@@ -35,7 +31,6 @@
                             <h3>Art Classes</h3>
                             <p>Express your creativity in our art classes with professional guidance.</p>
                             <a href="#" class="apply-btn"><i class="fas fa-paper-plane"></i> Apply Now</a>
-
                         </div>
                     </div>
                 </div>
@@ -46,13 +41,31 @@
                             <h3>Coding Workshops</h3>
                             <p>Enhance your coding skills with our expert-led coding workshops.</p>
                             <a href="#" class="apply-btn"><i class="fas fa-paper-plane"></i> Apply Now</a>
-
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        
+        <!-- Notification Popup -->
+        <div class="notification" id="adPopup">
+            <div class="notification-content">
+                <div class="icon">
+                    <img src="assets/logo.svg" alt="Logo">
+                </div>
+                <div class="text">
+                    <h4>New Course Available!</h4>
+                    <p>Check out our latest course!</p>
+                </div>
+                <div class="close" (click)="closePopup()">
+                    &#10006;
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 
+        
         <!-- Job Offers Section -->
         <!-- <section class="job-offers">
             <h2>Job Offers</h2>
@@ -101,6 +114,5 @@
         </section> -->
         
         
-    </div>
-</body>
+   
 

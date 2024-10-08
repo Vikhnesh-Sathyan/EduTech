@@ -1,14 +1,14 @@
 /* Styling for read notifications */
-.read {
+/* .read {
     background-color: lightgreen;
     color: green;
-  }
+  } */
   
   /* Styling for unread notifications */
-  .unread {
+  /* .unread {
     background-color: lightcoral;
     color: red;
-  }
+  } */
   
   /* Optional: Additional styling for buttons */
   button[disabled] {

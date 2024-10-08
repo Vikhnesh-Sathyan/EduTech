@@ -1,0 +1,43 @@
+.resource-widget {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+label, select, input {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.resource-item {
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.resource-item a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.resource-item a:hover {
+    text-decoration: underline;
+}
+
+.resource-item h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.resource-item p {
+    margin: 0;
+    font-size: 14px;
+}

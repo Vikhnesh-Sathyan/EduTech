@@ -1,0 +1,82 @@
+<div>
+  <h1>Upload Learning Content</h1>
+
+  <form (ngSubmit)="uploadContent()">
+    <div>
+      <label for="grade">Grade:</label>
+      <select id="grade" [(ngModel)]="newContent.grade" name="grade" required>
+        <option *ngFor="let grade of grades" [value]="grade">{{ grade }}</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="title">Title:</label>
+      <input type="text" id="title" [(ngModel)]="newContent.title" name="title" required>
+    </div>
+
+    <div>
+      <label for="description">Description:</label>
+      <textarea id="description" [(ngModel)]="newContent.description" name="description" required></textarea>
+    </div>
+
+    <div>
+      <label for="type">Type:</label>
+      <input type="text" id="type" [(ngModel)]="newContent.type" name="type" required>
+    </div>
+
+    <div>
+      <label for="file">File:</label>
+      <input type="file" id="file" (change)="onFileSelected($event)" required>
+    </div>
+
+    <button type="submit" [disabled]="uploading">Upload</button>
+    <div *ngIf="uploading">Uploading...</div>
+    <div *ngIf="successMessage">{{ successMessage }}</div>
+  </form>
+
+  <!-- Display Uploaded Content -->
+  <aside class="content-display card">
+    <h2 class="text-center">Uploaded Content</h2>
+    <div class="row">
+      <div class="col-md-6" *ngFor="let grade of grades">
+        <div class="card mb-3">
+          <div class="card-header">
+            <h4 class="mb-0">Grade {{ grade }}</h4>
+          </div>
+          <div class="card-body">
+            <button class="btn btn-primary" (click)="getContentForGrade(grade)">Load Content</button>
+
+            <!-- Display uploaded contents for the selected grade -->
+            <div *ngIf="selectedGrade === grade && getContentsForGrade(grade).length > 0">
+              <table class="table mt-3">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let content of getContentsForGrade(grade)">
+                    <td>{{ content.title }}</td>
+                    <td>{{ content.description }}</td>
+                    <td>{{ content.type }}</td>
+                    <td>
+                      <a class="btn btn-link" [href]="content.fileUrl" target="_blank">View</a>
+                      <button class="btn btn-danger" (click)="deleteContent(content)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p *ngIf="selectedGrade === grade && getContentsForGrade(grade).length === 0" class="text-muted">
+              No content available for Grade {{ grade }}.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

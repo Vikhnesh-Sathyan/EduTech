@@ -1,26 +1,25 @@
 <div class="certificate-container">
-    <div class="certificate" id="certificate">
-      <h1>Certificate of Achievement</h1>
-      <p class="subtitle">This certificate is proudly awarded to</p>
-      <h2 class="recipient-name">{{ certificateData?.name }}</h2>
-      <p class="course-detail">For successfully completing</p>
-      <h3>{{ certificateData?.courseTitle }}</h3>
-      <p>Date: {{ certificateData?.completionDate }}</p>
-      <div class="award-seal">
-        <img src="assets/award.jpg" alt="Award Seal">
-      </div>
-      <div class="signature-section">
-        <div class="signature">
-          <img src="assets/instructor.jpg" alt="Instructor Signature" class="signature-image">
-          <span>Instructor Signature</span>
-        </div>
-        <div class="signature">
-          <img src="assets/director.png" alt="Director Signature" class="signature-image">
-          <span>Director Signature</span>
-        </div>
-      </div>
-      
+  <div class="certificate" id="certificate">
+    <h1>Certificate of Achievement</h1>
+    <p class="subtitle">This certificate is proudly awarded to</p>
+    <h2 class="recipient-name">{{ certificateData?.name }}</h2>
+    <p class="course-detail">For successfully completing</p>
+    <h3>{{ certificateData?.courseTitle }}</h3>
+    <p class="score">Score: {{ certificateData?.score }}</p>
+    <p>Date: {{ certificateData?.completionDate }}</p>
+    <div class="award-seal">
+      <img src="assets/award.jpg" alt="Award Seal">
     </div>
-    <button (click)="downloadCertificate()">Download Certificate</button>
+    <div class="signature-section">
+      <div class="signature">
+        <img src="assets/instructor.jpg" alt="Instructor Signature" class="signature-image">
+        <span>Instructor Signature</span>
+      </div>
+      <div class="signature">
+        <img src="assets/director.png" alt="Director Signature" class="signature-image">
+        <span>Director Signature</span>
+      </div>
+    </div>
   </div>
-  
+  <button (click)="downloadCertificate()">Download Certificate</button>
+</div>

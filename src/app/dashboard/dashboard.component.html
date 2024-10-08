@@ -1,108 +1,109 @@
 <div class="container">
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="assets/logo.svg" alt="Graduation Icon" />
-      </div>
-      <nav>
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="assets/logo.svg" alt="Graduation Icon" />
+    </div>
+    <nav>
+      <ul>
+        <li><button (click)="navigateToProfile()">My Profile</button></li>
+        <li><a href="#"><i class="fas fa-credit-card"></i> Academics</a></li>
+        <li><a href="#"><i class="fas fa-edit"></i> Study Tools</a></li>
+        <li><a (click)="resourcelink()"><i class="fas fa-book"></i> Resource link</a></li>
+        <li><button (click)="navigateToskillswap()" class="nav-button"><i class="fas fa-calendar-times"></i> Skill Swap</button></li>
+        <li><a (click)="studentgenerated()"><i class="fas fa-book"></i> Student Generated</a></li>
         <ul>
-          <button (click)="navigateToProfile()">My Profile</button>
-          <li><a href="#"><i class="fas fa-credit-card"></i> Academics</a></li>
-          <li><a href="#"><i class="fas fa-edit"></i> Study Tools</a></li>
-          <li><a href="#"><i class="fas fa-book"></i> Resource Link</a></li>
-          <li><a href="#"><i class="fas fa-calendar-times"></i> Teach back</a></li>
-          <li><a href="#"><i class="fas fa-clipboard-list"></i> Result</a></li>
-          <ul>
-            <li>
-              <a (click)="notification()">
-                <i class="fas fa-bullhorn"></i>
-                Notifications
-                <span class="badge" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
-              </a>
-            </li>
-            <li><a (click)="Extracurriculm()"><i class="fas fa-users"></i> Extra Curriculum</a></li>
-            <li><a (click)="signOut()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-          </ul>
+          <li>
+            <a (click)="notification()">
+              <i class="fas fa-bullhorn"></i>
+              Notifications
+              <span class="badge" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
+            </a>
+          </li>
+          <li><a (click)="Extracurriculm()"><i class="fas fa-users"></i> Extra Curriculum</a></li>
+          <li><a (click)="signOut()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
-      </nav>
-    </aside>
-  
-    <main class="main-content">
-      <header class="header">
-        <div class="date">
-          <p>September 25, 2024</p>
-        </div>
-        <div class="search-bar">
-          <input type="text" placeholder="Search">
-        </div>
-        <div class="profile">
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="header">
+      <div class="date">
+        <p>September 25, 2024</p>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search">
+      </div>
+      <div class="profile">
+        <button class="profile-button" (click)="onProfileClick()">
           <img [src]="userProfileImg" alt="Profile Picture">
-          <div class="profile-info">
-            <p>{{ name }}</p>
-          </div>
+        </button>
+        <div class="profile-info">
+          <p>{{ name }}</p>
         </div>
-      </header>
-  
-      <section class="welcome-section">
-        <h1>Welcome back, {{ name }}</h1>
-        <p>Always stay updated in your student portal</p>
+      </div>
+    </header>
+
+    <section class="welcome-section">
+      <h1>Welcome back, {{ studentName }}</h1> <!-- Displaying the student's name -->
+      <p>Your grade: {{ studentGrade }}</p> <!-- Displaying the student's grade -->
+      <p>Always stay updated in your student portal</p>
+    </section>
+
+    <section class="finance-section">
+      <h2>Challenges</h2>
+      <div class="finance-cards">
+        <div class="card">
+          <p>Coding</p>
+          <small>$50</small>
+        </div>
+        <div class="card">
+          <p>Quiz</p>
+          <small>Free</small>
+        </div>
+        <div class="card">
+          <p (click)="Extracurriculm()" class="extra-curriculum">Extra Curriculum</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="enrolled-courses">
+      <h2>Enrolled Courses</h2>
+      <div class="courses">
+        <div class="course-card">
+          <p>Object Oriented Programming</p>
+          <button>View</button>
+        </div>
+        <div class="course-card">
+          <p>Fundamentals of Database Systems</p>
+          <button>View</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="sidebar-content">
+      <section class="course-instructors">
+        <h2>Course Instructors</h2>
+        <div class="instructors">
+          <img src="assets/team1.jpg" alt="Instructor">
+          <img src="assets/team2.jpg" alt="Instructor">
+          <img src="assets/team3.jpeg" alt="Instructor">
+        </div>
+        <a href="#" class="see-all">See all</a>
       </section>
-  
-      <section class="finance-section">
-        <h2>Challenges</h2>
-        <div class="finance-cards">
-          <div class="card">
-            <p>Coding</p>
-            <small>$50</small>
-          </div>
-          <div class="card">
-            <p>Quiz</p>
-            <small>Free</small>
-          </div>
-          <div class="card">
-            <p>Extra Curriculum</p>
-          </div>
+
+      <section class="daily-notice">
+        <h2>Daily Notice</h2>
+        <div class="notice">
+          <p><strong>Prelim payment due</strong></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <a href="#">See more</a>
+        </div>
+        <div class="notice">
+          <p><strong>Exam schedule</strong></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <a href="#">See more</a>
         </div>
       </section>
-  
-      <section class="enrolled-courses">
-        <h2>Enrolled Courses</h2>
-        <div class="courses">
-          <div class="course-card">
-            <p>Object Oriented Programming</p>
-            <button>View</button>
-          </div>
-          <div class="course-card">
-            <p>Fundamentals of Database Systems</p>
-            <button>View</button>
-          </div>
-        </div>
-      </section>
-  
-      <aside class="sidebar-content">
-        <section class="course-instructors">
-          <h2>Course Instructors</h2>
-          <div class="instructors">
-            <img src="assets/team1.jpg" alt="Instructor">
-            <img src="assets/team2.jpg" alt="Instructor">
-            <img src="assets/team3.jpeg" alt="Instructor">
-          </div>
-          <a href="#" class="see-all">See all</a>
-        </section>
-  
-        <section class="daily-notice">
-          <h2>Daily Notice</h2>
-          <div class="notice">
-            <p><strong>Prelim payment due</strong></p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <a href="#">See more</a>
-          </div>
-          <div class="notice">
-            <p><strong>Exam schedule</strong></p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <a href="#">See more</a>
-          </div>
-        </section>
-      </aside>
-    </main>
-  </div>
-  
+    </aside>
+  </main>

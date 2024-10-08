@@ -8,9 +8,17 @@ import { Router } from '@angular/router';
   styleUrl: './curriculum.component.css'
 })
 export class CurriculumComponent {
-  constructor(private router: Router) {}  
+  constructor(private router: Router) {}
 
   applynow() {
     this.router.navigate(['student-login/music']);
   }
+
+  closePopup() {
+    const popup = document.getElementById('adPopup');
+    if (popup) {
+      popup.style.display = 'none';
+    }
+  }
+
 }

@@ -1,0 +1,58 @@
+<div class="theory-container">
+  <h2>Task 3: Music Theory Basics</h2>
+  <p>Learn the fundamental concepts of music theory that will help you in your composition.</p>
+
+  <div class="theory-section">
+    <h3>Scales</h3>
+    <p>A scale is a series of notes in a specific order. The most common scale is the major scale.</p>
+    <ul>
+      <li>Example: C Major Scale - C, D, E, F, G, A, B</li>
+    </ul>
+  </div>
+
+  <div class="theory-section">
+    <h3>Intervals</h3>
+    <p>An interval is the distance between two notes. Here are some common intervals:</p>
+    <ul>
+      <li>Major Second: 2 half steps (C to D)</li>
+      <li>Perfect Fifth: 7 half steps (C to G)</li>
+      <li>Minor Sixth: 8 half steps (C to Ab)</li>
+    </ul>
+  </div>
+
+  <div class="theory-section">
+    <h3>Key Signatures</h3>
+    <p>Key signatures indicate the key of the piece of music. For example:</p>
+    <ul>
+      <li>G Major: 1 sharp (F#)</li>
+      <li>D Major: 2 sharps (F# and C#)</li>
+    </ul>
+  </div>
+
+  <div class="quiz-section">
+    <h3>Quick Quiz</h3>
+    <p>Test your knowledge!</p>
+
+    <label>1. What is the interval between C and E?
+      <input type="text" [(ngModel)]="userAnswers[0]" placeholder="Type your answer here" />
+    </label>
+    <p *ngIf="feedback[0]" [ngClass]="{'correct': isCorrect[0], 'incorrect': !isCorrect[0]}">{{ feedback[0] }}</p>
+
+    <label>2. What is the interval between C and G?
+      <input type="text" [(ngModel)]="userAnswers[1]" placeholder="Type your answer here" />
+    </label>
+    <p *ngIf="feedback[1]" [ngClass]="{'correct': isCorrect[1], 'incorrect': !isCorrect[1]}">{{ feedback[1] }}</p>
+
+    <label>3. What is the interval between C and Ab?
+      <input type="text" [(ngModel)]="userAnswers[2]" placeholder="Type your answer here" />
+    </label>
+    <p *ngIf="feedback[2]" [ngClass]="{'correct': isCorrect[2], 'incorrect': !isCorrect[2]}">{{ feedback[2] }}</p>
+
+    <button (click)="checkAnswers()">Check Answers</button>
+  </div>
+
+  <p *ngIf="showScore">Your current score is: {{ score }}/{{ questions }}</p>
+
+  <button (click)="certificate()">Proceed to Certificate</button>
+</div>
+

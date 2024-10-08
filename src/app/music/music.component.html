@@ -1,5 +1,5 @@
 <form (ngSubmit)="onSubmit()" class="application-form" #applicationForm="ngForm" novalidate>
-  
+
   <!-- Full Name Field -->
   <div class="form-group">
     <label for="name" class="form-label">Full Name:</label>
@@ -9,9 +9,9 @@
       <div *ngIf="name.errors?.['minlength']">Name must be at least 3 characters long.</div>
     </div>
   </div>
-
   <!-- Email Field -->
   <div class="form-group">
+    
     <label for="email" class="form-label">Email:</label>
     <input type="email" id="email" [(ngModel)]="student.email" name="email" required email class="form-control" #email="ngModel">
     <div *ngIf="email.invalid && email.touched" class="error">

@@ -123,4 +123,8 @@ export class ParentLoginComponent implements OnInit {
         });
     }
   }
+  forgotpassword()
+  {
+    this.router.navigate(['forgot-password']);
+  }
 }

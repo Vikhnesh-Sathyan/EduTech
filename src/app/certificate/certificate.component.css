@@ -110,4 +110,10 @@
     font-size: 18px;
     font-weight: bold;
   }
+  .score {
+    font-size: 20px; /* Adjust the font size */
+    color: #4CAF50; /* Change the color to green or any preferred color */
+    margin-top: 10px; /* Space above the score */
+    text-align: center; /* Center align the score */
+  }
   

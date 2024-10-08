@@ -192,3 +192,127 @@ h2 {
     opacity: 0;
 }
 
+/* Notification Popup */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient background */
+    border: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    width: 320px;
+    padding: 15px;
+    animation: slideUp 0.6s ease-out;
+    color: white; /* Ensure text is visible on darker background */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notification:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Notification Content */
+.notification-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Icon Image Styling */
+.icon img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Rounded icon */
+    border: 3px solid white; /* White border for better visibility */
+}
+
+/* Text Styling */
+.text {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.text h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.text p {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+    color: #dcdcdc; /* Light gray text for readability */
+    line-height: 1.4;
+}
+
+/* Close Button Styling */
+.close {
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: #ffdddd; /* Light red close button */
+    padding-left: 10px;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #ff4444; /* Darker red on hover */
+}
+
+/* Slide-up Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Unique Gradient Animation (Optional) */
+.notification {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite, slideUp 0.6s ease-out;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+    .notification {
+        width: 100%;
+        bottom: 10px;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        border-radius: 0;
+    }
+
+    .icon img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .text h4 {
+        font-size: 1.1rem;
+    }
+
+    .text p {
+        font-size: 0.85rem;
+    }
+
+    .close {
+        font-size: 1.2rem;
+    }
+}

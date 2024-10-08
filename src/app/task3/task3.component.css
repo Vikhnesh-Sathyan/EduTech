@@ -1,0 +1,99 @@
+/* Container Styles */
+.theory-container {
+    width: 80%;
+    max-width: 900px; /* Limit the max width */
+    margin: 0 auto;
+    border-radius: 10px;
+    padding: 13px; /* Increased padding for a spacious feel */
+    /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); */
+    font-family: 'Poppins', sans-serif;
+    height: 730px;
+  }
+  
+  /* Section Headings */
+  .theory-section h3,
+  .quiz-section h3 {
+    color: #333;
+    margin-top: 20px;
+    font-size: 24px; /* Larger font size for emphasis */
+    border-bottom: 2px solid #4CAF50; /* Underline for section headers */
+    padding-bottom: 10px; /* Spacing below the heading */
+  }
+  
+  /* Paragraph Styling */
+  .theory-section p,
+  .quiz-section p {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.6; /* Improved line height for readability */
+  }
+  
+  /* List Styling */
+  ul {
+    margin-left: 20px;
+    color: #444;
+  }
+  
+  ul li {
+    margin-bottom: 5px;
+    font-size: 16px;
+    position: relative; /* For adding icons or styles */
+    padding-left: 20px; /* Space for bullet styling */
+  }
+  
+  /* Add bullet style */
+  ul li::before {
+    content: "•"; /* Custom bullet */
+    color: #4CAF50; /* Bullet color */
+    position: absolute;
+    left: 0;
+  }
+  
+  /* Input Styles */
+  input[type="text"] {
+    width: 100%; /* Full width for input */
+    padding: 12px; /* More padding for comfort */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px; /* Increased font size for readability */
+  }
+  
+  /* Button Styles */
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 8px; /* Increased padding for better appearance */
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    font-size: 16px; /* Consistent font size */
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Feedback Text */
+  .quiz-section p {
+    font-weight: bold;
+    color: #007BFF; /* Feedback color */
+    margin-top: 10px; /* Spacing above feedback */
+  }
+  
+  /* Align Center */
+  .theory-container,
+  .quiz-section {
+    text-align: center;
+  }
+  .correct {
+    color: green;
+  }
+  
+  .incorrect {
+    color: red;
+  }
+  
