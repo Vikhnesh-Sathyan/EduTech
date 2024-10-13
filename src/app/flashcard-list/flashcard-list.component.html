@@ -1,0 +1,18 @@
+<h2>Flashcard List</h2>
+<div class="flashcard-list">
+  <div *ngFor="let card of flashcards" class="flashcard">
+    <h4>{{ card.question }}</h4>
+    <p [hidden]="!card.showAnswer">{{ card.answer }}</p>
+    <p>Tags: {{ card.tags }}</p>
+    <p>Deck: {{ card.deck }}</p>
+
+    <button (click)="toggleAnswer(card)">
+      {{ card.showAnswer ? 'Hide Answer' : 'Show Answer' }}
+    </button>
+
+    <div class="flashcard-navigation">
+      <button>&lt;</button>
+      <button>&gt;</button>
+    </div>
+  </div>
+</div>

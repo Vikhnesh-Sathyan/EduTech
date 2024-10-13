@@ -1,27 +1,43 @@
 declare var google: any;
 
+
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-parent-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './parent-login.component.html',
   styleUrls: ['./parent-login.component.css']
 })
 export class ParentLoginComponent implements OnInit {
   private router = inject(Router);
   private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/api';
 
-  private apiUrl = 'http://localhost:3000/api'; // API endpoint for parent login/signup
-
-  constructor() {}
+  signUpForm!: FormGroup;
+  signInForm!: FormGroup;
+  
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    // Initialize the forms
+    this.signUpForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required]
+    });
+
+    this.signInForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
+
     if (typeof google !== 'undefined') {
       google.accounts.id.initialize({
         client_id: '768539892216-0qtcb4267ggt7hivd8r2vhva0vmnr85b.apps.googleusercontent.com',
@@ -45,21 +61,12 @@ export class ParentLoginComponent implements OnInit {
     }
   }
 
-  private decodeToken(token: string): any {
-    try {
-      return JSON.parse(atob(token.split('.')[1]));
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return null;
-    }
-  }
-
   handleLogin(response: any): void {
     if (response && response.credential) {
       const payLoad = this.decodeToken(response.credential);
       if (payLoad) {
         sessionStorage.setItem('loggedInUser', JSON.stringify(payLoad));
-        this.router.navigate(['parent-login/p-dashboard']); // Navigate to parent dashboard
+        this.router.navigate(['parent-login/p-dashboard']);
       } else {
         console.error('Invalid token payload');
       }
@@ -67,8 +74,6 @@ export class ParentLoginComponent implements OnInit {
       console.error('Google login response is invalid');
     }
   }
-
-  
 
   togglePanel(panel: string): void {
     const mainContainer = document.getElementById('main');
@@ -79,52 +84,53 @@ export class ParentLoginComponent implements OnInit {
     }
   }
 
-  // Handle form submission
-  handleSubmit(event: Event, formType: string): void {
-    event.preventDefault(); // Prevent default form submission behavior
-
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-
-    if (formType === 'signUp') {
-      const username = formData.get('username') as string;
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
-      const confirmPassword = formData.get('confirmPassword') as string;
-
+  handleSubmitSignUp(): void {
+    if (this.signUpForm.valid) {
+      const { username, email, password, confirmPassword } = this.signUpForm.value;
       this.http.post(`${this.apiUrl}/parent-signup`, { username, email, password, confirmPassword }, { responseType: 'text' })
         .subscribe(response => {
           console.log('Sign-up successful', response);
-          // Handle sign-up success (e.g., show a success message or redirect)
         }, error => {
           console.error('Sign-up error', error);
-          // Handle sign-up error (e.g., show an error message)
         });
-    } else if (formType === 'signIn') {
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
+    } else {
+      console.error('Sign-up form is invalid');
+    }
+  }
 
+  handleSubmitSignIn(): void {
+    if (this.signInForm.valid) {
+      const { email, password } = this.signInForm.value;
       this.http.post(`${this.apiUrl}/parent-signin`, { email, password }, { responseType: 'text' })
         .subscribe(response => {
           console.log('Sign-in successful', response);
           try {
-            // Try to parse the response if it is in JSON format
             const parsedResponse = JSON.parse(response);
             if (parsedResponse && parsedResponse.user) {
               sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
-              this.router.navigate(['parent-login/p-dashboard']); // Navigate to parent dashboard
+              this.router.navigate(['parent-login/p-dashboard']);
             }
           } catch (e) {
-            // Handle non-JSON response
             console.error('Error parsing response:', e);
           }
         }, error => {
           console.error('Sign-in error', error);
         });
+    } else {
+      console.error('Sign-in form is invalid');
     }
   }
-  forgotpassword()
-  {
+
+  forgotPassword(): void {
     this.router.navigate(['forgot-password']);
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 }

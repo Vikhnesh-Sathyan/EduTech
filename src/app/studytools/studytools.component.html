@@ -1,0 +1,11 @@
+<div class="study-tools">
+  <h2>Study Tools - Student Notes</h2>
+
+  <ul *ngIf="notes.length > 0; else noNotes">
+    <li *ngFor="let note of notes">{{ note }}</li>
+  </ul>
+
+  <ng-template #noNotes>
+    <p>No notes available yet.</p>
+  </ng-template>
+</div>

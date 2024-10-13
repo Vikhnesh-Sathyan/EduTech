@@ -1,35 +1,29 @@
 <div class="container">
-    <h3>Student Information</h3>
-  
-    <table *ngIf="students.length > 0; else noData">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>DOB</th>
-          <th>Gender</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Address</th>
-          <th>Guardian Name</th>
-          <th>Grade</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let student of students">
-          <td>{{ student.student_name }}</td>
-          <td>{{ student.dob }}</td>
-          <td>{{ student.gender }}</td>
-          <td>{{ student.email }}</td>
-          <td>{{ student.phone }}</td>
-          <td>{{ student.address }}</td>
-          <td>{{ student.guardian_name }}</td>
-          <td>{{ student.grade }}</td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <ng-template #noData>
-      <p>No student data available.</p>
-    </ng-template>
-  </div>
-  
+  <h2>Submitted Student Information</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Guardian's Name</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students">
+        <td>{{ student.student_name }}</td>
+        <td>{{ student.dob | date:'yyyy-MM-dd' }}</td> <!-- Ensure dob is in a valid date format -->
+        <td>{{ student.gender }}</td>
+        <td>{{ student.email }}</td>
+        <td>{{ student.phone }}</td>
+        <td>{{ student.address }}</td>
+        <td>{{ student.guardian_name }}</td>
+        <td>{{ student.grade }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

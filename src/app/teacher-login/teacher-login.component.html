@@ -1,6 +1,6 @@
 <div class="container" id="main">
   <div class="sign-up">
-    <form (ngSubmit)="handleSubmit($event, 'signUp')" #signUpForm="ngForm">
+    <form [formGroup]="signUpForm" (ngSubmit)="handleSubmit('signUp')">
       <h1>Teacher Sign Up</h1>
       <div class="social-container">
         <div id="google-btn"></div><!-- Google Sign-In Button -->
@@ -11,70 +11,55 @@
       <input 
         type="text" 
         placeholder="Username" 
-        name="username" 
-        ngModel 
-        #username="ngModel" 
-        required 
-        minlength="3" 
-        maxlength="15">
-      <div *ngIf="username.invalid && (username.dirty || username.touched)">
-        <small *ngIf="username.errors?.['required']">Username is required.</small>
-        <small *ngIf="username.errors?.['minlength']">Username must be at least 3 characters long.</small>
-        <small *ngIf="username.errors?.['maxlength']">Username cannot exceed 15 characters.</small>
+        formControlName="username">
+      <div *ngIf="signUpForm.get('username')?.invalid && (signUpForm.get('username')?.dirty || signUpForm.get('username')?.touched)">
+        <small *ngIf="signUpForm.get('username')?.errors?.['required']">Username is required.</small>
+        <small *ngIf="signUpForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters long.</small>
+        <small *ngIf="signUpForm.get('username')?.errors?.['maxlength']">Username cannot exceed 15 characters.</small>
       </div>
 
       <input 
-      autocomplete="off"
-      type="email" 
-      name="email"
-      placeholder="Email" 
-      [(ngModel)]="email" 
-      #email="ngModel" 
-      required 
-      email>
-  
-<!-- Display an error message if the email is invalid or empty -->
-<div *ngIf="email.invalid && email.touched">
-  <small *ngIf="email.errors?.['required']">Email is required.</small>
-  <small *ngIf="email.errors?.['email']">Please enter a valid email.</small>
-</div>
+        autocomplete="off"
+        type="email" 
+        placeholder="Email" 
+        formControlName="email">
+      <div *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched">
+        <small *ngIf="signUpForm.get('email')?.errors?.['required']">Email is required.</small>
+        <small *ngIf="signUpForm.get('email')?.errors?.['email']">Please enter a valid email.</small>
+      </div>
 
-<input 
-    autocomplete="off"
-    type="password" 
-    placeholder="Password"
-    name="password" 
-    [(ngModel)]="password" 
-    [ngModelOptions]="{standalone: true}"
+      <input 
+        autocomplete="off"
+        type="password" 
+        placeholder="Password"
+        formControlName="password">
+      <div *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched">
+        <small *ngIf="signUpForm.get('password')?.errors?.['required']">Password is required.</small>
+        <small *ngIf="signUpForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</small>
+      </div>
 
-    #password="ngModel" 
-    required 
-    minlength="8">
-    
-<!-- Display an error message if the password is invalid -->
-<div *ngIf="password.invalid && password.touched">
-    <small *ngIf="password.errors?.['required']">Password is required.</small>
-    <small *ngIf="password.errors?.['minlength']">Password must be at least 8 characters long.</small>
-</div>
-
-
-  <input type="password" placeholder="Confirm Password" name="confirmPassword" ngModel required>  
-  
-      <button type="submit" class="btn">Sign Up</button>
+      <input 
+        type="password" 
+        placeholder="Confirm Password" 
+        formControlName="confirmPassword">
+      <div *ngIf="signUpForm.errors?.['mismatch']">
+        <small>Passwords do not match.</small>
+      </div>
       
+      <button type="submit" class="btn">Sign Up</button>
     </form>
   </div>
 
   <div class="sign-in">
-    <form (ngSubmit)="handleSubmit($event, 'signIn')" #signInForm="ngForm">
+    <form [formGroup]="signInForm" (ngSubmit)="handleSubmit('signIn')">
       <h1>Sign In</h1>
       <div class="social-container">
         <div id="google-btn"></div> <!-- Google Sign-In Button -->
         <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
       </div>
       <p>Or use your account</p>
-      <input type="email" placeholder="Email" name="email" ngModel required>
-      <input type="password" placeholder="Password" name="password" ngModel required>
+      <input type="email" placeholder="Email" formControlName="email" required>
+      <input type="password" placeholder="Password" formControlName="password" required>
       <a href="#">Forgot your password?</a>
       <button type="submit" class="btn">Sign In</button>
     </form>
@@ -82,15 +67,15 @@
 
   <div class="overlay-container">
     <div class="overlay">
-      <div class="overlay-left">
-        <h1>Welcome!!</h1>
-        <p>To our website</p>
-        <button class="btn" (click)="togglePanel('signIn')">Sign In</button>
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        <button class="ghost" id="signIn" (click)="togglePanel('signIn')">Sign In</button>
       </div>
-      <div class="overlay-right">
-        <h1>Hello</h1>
+      <div class="overlay-panel overlay-right">
+        <h1>Welcome!</h1>
         <p>Enter your personal details and start your journey with us</p>
-        <button class="btn" (click)="togglePanel('signUp')">Sign Up</button>
+        <button class="ghost" id="signUp" (click)="togglePanel('signUp')">Sign Up</button>
       </div>
     </div>
   </div>

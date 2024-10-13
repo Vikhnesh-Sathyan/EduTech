@@ -1,5 +1,6 @@
 declare var google: any;
 
+
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +23,10 @@ export class StudentLoginComponent implements OnInit {
   private apiUrl = 'http://localhost:3000/api';
   signupForm!: FormGroup;
   signinForm!: FormGroup;
+
+  // Notification variables
+  notificationMessage: string = '';
+  notificationVisible: boolean = false;
 
   constructor() {}
 
@@ -59,10 +64,10 @@ export class StudentLoginComponent implements OnInit {
         sessionStorage.setItem('loggedInUser', JSON.stringify(payload));
         this.router.navigate(['student-login/dashboard']);
       } else {
-        console.error('Invalid token payload');
+        this.showNotification('Login failed: Invalid token received.');
       }
     } else {
-      console.error('Google login response is invalid');
+      this.showNotification('Login failed: Invalid Google login response.');
     }
   }
 
@@ -119,55 +124,61 @@ export class StudentLoginComponent implements OnInit {
     return takenUsernames.includes(control.value) ? { usernameTaken: true } : null;
   }
 
-  // Handle form submission based on form type (sign-up or sign-in)
-onSubmit(event: Event, formType: 'signUp' | 'signIn'): void {
-  event.preventDefault(); // Prevent the default form submission behavior
-
-  if (formType === 'signUp') {
-    if (this.signupForm.valid) {
-      const { username, email, password, confirmPassword } = this.signupForm.value;
-
-      // Call backend to register user
-      this.http.post(`${this.apiUrl}/student-signup`, { username, email, password, confirmPassword }, { responseType: 'text' })
-        .subscribe(response => {
-          console.log('Sign-up successful', response);
-          this.handleLoginAfterSignUp({ email, password });
-        }, error => {
-          console.error('Sign-up error', error);
-          // Optionally, you could handle the error response (e.g., show an error message)
-        });
-    } else {
-      console.error('Sign-up form is invalid');
-    }
-  } else if (formType === 'signIn') {
-    if (this.signinForm.valid) {
-      const { email, password } = this.signinForm.value;
-
-      // Call backend to authenticate user
-      this.http.post(`${this.apiUrl}/student-signin`, { email, password }, { responseType: 'text' })
-        .subscribe(response => {
-          console.log('Sign-in successful', response);
-          try {
-            const parsedResponse = JSON.parse(response);
-            if (parsedResponse && parsedResponse.user) {
-              sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
-              this.router.navigate(['student-login/personal']);
-            }
-          } catch (e) {
-            console.error('Error parsing response:', e);
-            // Handle JSON parsing errors if needed
-          }
-        }, error => {
-          console.error('Sign-in error', error);
-          // Optionally, handle the error response (e.g., show an error message)
-        });
-    } else {
-      console.error('Sign-in form is invalid');
-    }
-  } else {
-    console.error('Invalid form type');
+  // Show notification
+  private showNotification(message: string): void {
+    this.notificationMessage = message;
+    this.notificationVisible = true;
+    setTimeout(() => {
+      this.notificationVisible = false; // Hide after 3 seconds
+    }, 3000);
   }
-}
+
+  // Handle form submission based on form type (sign-up or sign-in)
+  onSubmit(event: Event, formType: 'signUp' | 'signIn'): void {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    if (formType === 'signUp') {
+      if (this.signupForm.valid) {
+        const { username, email, password, confirmPassword } = this.signupForm.value;
+
+        // Call backend to register user
+        this.http.post(`${this.apiUrl}/student-signup`, { username, email, password, confirmPassword }, { responseType: 'text' })
+          .subscribe(response => {
+            console.log('Sign-up successful', response);
+            this.handleLoginAfterSignUp({ email, password });
+          }, error => {
+            this.showNotification('Sign-up failed: ' + (error.message || 'Please try again later.'));
+          });
+      } else {
+        this.showNotification('Please fill in all fields correctly.');
+      }
+    } else if (formType === 'signIn') {
+      if (this.signinForm.valid) {
+        const { email, password } = this.signinForm.value;
+
+        // Call backend to authenticate user
+        this.http.post(`${this.apiUrl}/student-signin`, { email, password }, { responseType: 'text' })
+          .subscribe(response => {
+            console.log('Sign-in successful', response);
+            try {
+              const parsedResponse = JSON.parse(response);
+              if (parsedResponse && parsedResponse.user) {
+                sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
+                this.router.navigate(['student-login/personal']);
+              }
+            } catch (e) {
+              this.showNotification('Sign-in failed: Unable to process response.');
+            }
+          }, error => {
+            this.showNotification('Sign-in failed: ' + (error.message || 'Please check your credentials and try again.'));
+          });
+      } else {
+        this.showNotification('Please fill in all fields correctly.');
+      }
+    } else {
+      this.showNotification('Invalid form type');
+    }
+  }
 
   private handleLoginAfterSignUp(userData: any): void {
     const { email, password } = userData;
@@ -181,15 +192,14 @@ onSubmit(event: Event, formType: 'signUp' | 'signIn'): void {
               sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
               this.router.navigate(['personal']);
             } else {
-              console.error('User data is missing in the response:', parsedResponse);
+              this.showNotification('Automatic sign-in failed: User data is missing.');
             }
           } catch (e) {
-            console.error('Error parsing automatic sign-in response:', e);
+            this.showNotification('Automatic sign-in failed: Unable to process response.');
           }
         },
         error: (signinError) => {
-          console.error('Automatic sign-in error', signinError);
-          alert('Automatic sign-in failed. Please try again.');
+          this.showNotification('Automatic sign-in failed: ' + (signinError.message || 'Please try again.'));
         }
       });
   }

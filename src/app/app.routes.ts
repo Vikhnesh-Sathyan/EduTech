@@ -20,18 +20,25 @@ import { CourseexamComponent } from './courseexam/courseexam.component';
 import { CertificateComponent } from './certificate/certificate.component';
 import { Task2Component } from './task2/task2.component';
 import { Task3Component } from './task3/task3.component';
-import { ResourcelinkComponent } from './resourcelink/resourcelink.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { StudentgeneratedComponent } from './studentgenerated/studentgenerated.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { SkillListComponent } from './skill-list/skill-list.component';
+import { StudytoolsComponent } from './studytools/studytools.component';
+import { TodoListComponent } from './todo-list/todo-list.component';
+import { FlashcardComponent } from './flashcard/flashcard.component';
+import { FlashcardListComponent } from './flashcard-list/flashcard-list.component';
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'student-login', component: StudentLoginComponent },
   { path: 'personal', component: PersonalComponent },
   { path: 'student-login/dashboard', component: DashboardComponent },
   { path: 'profile', component: ProfileComponent },
-  {path:'resourcelink',component:ResourcelinkComponent},
+  {path:'flashcard',component:FlashcardComponent},
+  {path:'flashcard-list',component:FlashcardListComponent},
+  {path:'todo-list',component:TodoListComponent},
   {path:'user-profile',component:UserProfileComponent},
+  {path:'skill-list',component:SkillListComponent},
   {path:'studentgenerated',component:StudentgeneratedComponent},
   { path: 'student-login/curriculum', component: CurriculumComponent },
   {path:  'student-login/music',component:MusicComponent},
@@ -42,13 +49,14 @@ export const routes: Routes = [
   {path:'task2',component:Task2Component},
   {path:'task3',component:Task3Component},
   {path:'certificate',component:CertificateComponent},
-  { path: 'teacher-login', component: TeacherLoginComponent },
   {path:'forgot-password',component:ForgotPasswordComponent},
+  { path: 'teacher-login', component: TeacherLoginComponent },
   { path: 'teacher-login/t-dashboard', component: TDashboardComponent },
-  { path: 'resources', component: ResourcesComponent }, // Ensure ResourcesComponent handles child routes if needed
   {path:'studentlist',component:StudentlistComponent},
+  { path: 'resources', component: ResourcesComponent }, // Ensure ResourcesComponent handles child routes if needed
   { path: 'parent-login', component: ParentLoginComponent },
   { path: 'parent-login/p-dashboard', component: PDashboardComponent },
+  {path:'studytools',component:StudytoolsComponent}
 ];
 
 @NgModule({

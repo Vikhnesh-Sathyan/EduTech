@@ -6,9 +6,11 @@
     <nav>
       <ul>
         <li><button (click)="navigateToProfile()">My Profile</button></li>
-        <li><a href="#"><i class="fas fa-credit-card"></i> Academics</a></li>
-        <li><a href="#"><i class="fas fa-edit"></i> Study Tools</a></li>
-        <li><a (click)="resourcelink()"><i class="fas fa-book"></i> Resource link</a></li>
+        <button (click)="navigateToTodoList()">Go to Todo List</button>
+
+                <li><a (click)="studytools()"><i class="fas fa-edit"></i> Study Tools</a></li>
+
+        <li><a (click)="flashcard()"><i class="fas fa-book"></i> Flash Card</a></li>
         <li><button (click)="navigateToskillswap()" class="nav-button"><i class="fas fa-calendar-times"></i> Skill Swap</button></li>
         <li><a (click)="studentgenerated()"><i class="fas fa-book"></i> Student Generated</a></li>
         <ul>

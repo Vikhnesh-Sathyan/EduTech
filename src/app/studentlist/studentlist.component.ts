@@ -1,53 +1,19 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { CommonModule } from '@angular/common'; // Import CommonModule
-
-interface Student {
-  student_name: string;
-  dob: string;
-  gender: string;
-  email: string;
-  phone: string;
-  address: string;
-  guardian_name: string;
-  grade: number;
-}
-
+import { Component, OnInit } from '@angular/core';
+import { StudentserviceService, Student } from '../studentservice.service'; // Adjust import path accordingly
+import { CommonModule } from '@angular/common';
 @Component({
-  selector: 'app-studentlist',
-  standalone: true,
-  imports: [FormsModule, CommonModule], // Include CommonModule here
+  selector: 'app-student-list',
   templateUrl: './studentlist.component.html',
+  standalone: true,
+  imports: [CommonModule],
   styleUrls: ['./studentlist.component.css']
 })
-export class StudentlistComponent {
-  students: Student[] = []; // Store the list of students
-  studentData: Student = { // Initial student data structure
-    student_name: '',
-    dob: '',
-    gender: '',
-    email: '',
-    phone: '',
-    address: '',
-    guardian_name: '',
-    grade: 0
-  };
+export class StudentlistComponent implements OnInit {
+  students: Student[] = []; // Array to hold student data
 
-  handleSubmit(): void {
-    this.students.push({ ...this.studentData }); // Push the new student data to the array
-    this.resetForm(); // Reset the form after submission
-  }
+  constructor(private studentService: StudentserviceService) {}
 
-  resetForm(): void {
-    this.studentData = { // Reset the studentData object
-      student_name: '',
-      dob: '',
-      gender: '',
-      email: '',
-      phone: '',
-      address: '',
-      guardian_name: '',
-      grade: 0
-    };
+  ngOnInit(): void {
+    this.students = this.studentService.getStudentData(); // Retrieve submitted students on initialization
   }
 }

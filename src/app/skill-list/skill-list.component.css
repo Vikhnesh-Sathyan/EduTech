@@ -1,0 +1,74 @@
+.skill-list-container {
+    padding: 30px;
+    background-color: #f0f4f8; /* Light background for contrast */
+    border: 1px solid #e0e4e8; /* Soft border */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-top: 20px;
+    max-width: 600px; /* Limit width for better readability */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+  }
+  
+  h2 {
+    color: #007bff; /* Primary color */
+    margin-bottom: 20px; /* Spacing below title */
+    text-align: center; /* Center align the title */
+  }
+  
+  .student-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .student-item {
+    display: flex; /* Flexbox for better alignment */
+    justify-content: space-between; /* Space out content */
+    align-items: center; /* Center vertically */
+    margin: 10px 0;
+    padding: 15px;
+    background: #ffffff; /* White background for each item */
+    border: 1px solid #d1d1d1; /* Border for items */
+    border-radius: 5px;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  }
+  
+  .student-item:hover {
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+    border-color: #007bff; /* Change border color on hover */
+  }
+  
+  .student-info {
+    flex: 1; /* Flex property to allow proper spacing */
+  }
+  
+  .student-skills {
+    display: block; /* Block for better spacing */
+    color: #555; /* Secondary color */
+  }
+  
+  .student-availability {
+    font-size: 0.9em; /* Smaller font for availability */
+    color: #d51919; /* Slightly muted color */
+  }
+  
+  .go-to-profile {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745; /* Green background for the button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+    display: block; /* Center button */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+  }
+  
+  .go-to-profile:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  

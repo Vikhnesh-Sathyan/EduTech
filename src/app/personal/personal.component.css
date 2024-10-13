@@ -89,23 +89,3 @@ button:hover {
     transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* Responsive styling for smaller screens */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px; /* Adjust padding on smaller screens */
-    }
-
-    h2 {
-        font-size: 24px; /* Smaller header size */
-    }
-
-    input, select, textarea {
-        padding: 5px; /* Adjust padding for inputs */
-        font-size: 13px; /* Adjust font size */
-    }
-
-    button {
-        padding: 10px; /* Adjust button padding */
-        font-size: 16px; /* Adjust font size */
-    }
-}

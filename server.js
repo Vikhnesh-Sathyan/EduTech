@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -406,77 +408,204 @@ app.delete('/api/delete-content/:grade/:filename', (req, res) => {
     const { grade, filename } = req.params;
     const filePath = path.join(__dirname, 'uploads', `grade-${grade}`, filename);
 
-    fs.unlink(filePath, (err) => {
+    console.log('Deleting file at:', filePath); // Debugging output
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
-            return res.status(404).send('File not found');
+            return res.status(404).json({ message: 'File not found' });
         }
-        res.status(200).send('File deleted successfully');
-    });
-});
 
-
-
-app.post('/api/register', (req, res) => {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
-        return res.status(400).json({ error: 'All fields are required.' });
-    }
-
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    const sql = 'INSERT INTO profiles (username, email, password) VALUES (?, ?, ?)';
-
-    db.query(sql, [username, email, hashedPassword], (err, result) => {
-        if (err) {
-            if (err.code === 'ER_DUP_ENTRY') {
-                return res.status(400).json({ error: 'User already exists.' });
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+                return res.status(500).json({ message: 'Error deleting file' });
             }
-            return res.status(500).json({ error: 'Error registering user.' });
-        }
-        res.status(201).json({ message: 'User registered successfully.' });
+
+            console.log('File deleted successfully'); // Log success
+            res.status(200).json({ message: 'File deleted successfully' }); // Send JSON response
+        });
     });
 });
 
 
 
-const userProfiles = {
-    1: { skills: 'JavaScript, Angular', interests: 'Coding, Reading', availability: 'Full-time' },
-    // Other profiles...
-  };
-  
-  app.get('/api/profile/:userId', (req, res) => {
-    const userId = req.params.userId;
-    const profile = userProfiles[userId];
-  
-    if (profile) {
-      res.json(profile);
-    } else {
-      res.status(404).send('User profile not found');
+
+
+// API endpoint to insert user profile data
+app.post('/api/swap', (req, res) => {
+    console.log('Received data:', req.body); // Log the incoming data
+
+    const { name, skills, interests, availability } = req.body;
+
+    const sql = 'INSERT INTO swap (name, skills, interests, availability) VALUES (?, ?, ?, ?)';
+    
+    // Insert the swap data into the database
+    db.query(sql, [name, skills, interests, availability], (err, results) => {
+        if (err) {
+            console.error('Error inserting data:', JSON.stringify(err)); // Enhanced logging
+            return res.status(500).json({ error: 'Error saving user profile.' }); // Return JSON on error
+        }
+
+        // Insert a notification
+        const notificationMessage = `New swap request submitted by ${name}`;
+        const notificationSql = 'INSERT INTO notifications (message, is_read) VALUES (?, ?)';
+        db.query(notificationSql, [notificationMessage, false], (err, notificationResult) => {
+            if (err) {
+                console.error('Error inserting notification:', JSON.stringify(err)); // Enhanced logging
+                return res.status(500).json({ error: 'Error inserting notification.' }); // Return JSON on error
+            }
+
+            // Ensure the response is a JSON object
+            res.status(201).json({ message: 'User profile saved successfully!', id: results.insertId }); // Return JSON
+        });
+    });
+});
+
+
+
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, // Use the email from environment variable
+        pass: process.env.EMAIL_PASS,   // Use the app password from environment variable
+    },
+});
+
+// Forgot password endpoint
+app.post('/api/forgot-password', (req, res) => {
+    const { email } = req.body;
+
+    // Check if email is provided
+    if (!email) {
+        return res.status(400).send({ error: 'Email is required' });
     }
+
+    // Validate email format (simple regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).send({ error: 'Invalid email format' });
+    }
+
+    // Setup email data
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Password Reset Link',
+        text: `Click the following link to reset your password: http://yourdomain.com/reset-password?email=${encodeURIComponent(email)}`
+    };
+
+    // Send email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).send({ error: 'Error sending email' });
+        }
+        console.log('Email sent:', info.response);
+        return res.status(200).send({ message: 'Password reset link sent to your email' });
+    });
+});
+  
+  
+
+
+
+// Get all To-Do Items
+app.get('/api/todos', (req, res) => {
+    db.query('SELECT * FROM ToDoList ORDER BY dueDate ASC', (err, results) => {
+      if (err) throw err;
+      res.json(results);
+    });
+  });
+  
+  // Create a new To-Do Item
+// POST route to create a new to-do item
+app.post('/api/todos', (req, res) => {
+    const { title, description, dueDate } = req.body;
+    
+    // Insert the new to-do item into the database
+    db.query(
+      'INSERT INTO ToDoList (title, description, due_date) VALUES (?, ?, ?)',
+      [title, description, dueDate],
+      (err, result) => {
+        if (err) {
+          console.error('Error inserting new todo:', err);
+          return res.status(500).json({ message: 'Failed to add to-do' });
+        }
+        
+        // Send back the newly created to-do item
+        const newTodo = { id: result.insertId, title, description, dueDate, completed: false };
+        res.status(201).json(newTodo);
+      }
+    );
+  });
+  
+  
+  // Update a To-Do Item (mark as completed)
+  app.put('/api/todos/:id', (req, res) => {
+    const { id } = req.params;
+    const { completed } = req.body;
+  
+    // Check if 'completed' is passed and is a boolean
+    if (typeof completed !== 'boolean') {
+      return res.status(400).json({ message: 'Invalid value for completed' });
+    }
+  
+    // SQL query to update the `completed` field
+    db.query(
+      'UPDATE ToDoList SET completed = ? WHERE id = ?',
+      [completed, id],
+      (err, result) => {
+        if (err) {
+          console.error('Error executing query:', err);
+          return res.status(500).json({ message: 'Server error' });
+        }
+  
+        // Check if any rows were updated
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ message: 'To-Do item not found' });
+        }
+  
+        res.json({ message: 'To-Do item updated successfully' });
+      }
+    );
+  });
+  
+  
+  // Delete a To-Do Item
+  app.delete('/api/todos/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM ToDoList WHERE id = ?', [id], (err) => {
+      if (err) throw err;
+      res.status(204).send();
+    });
   });
 
 
 
-// Update User Profile
-app.put('/api/profile/:id', (req, res) => {
-    const { skills, interests, availability } = req.body;
 
-    const sql = 'UPDATE profiles SET skills = ?, interests = ?, availability = ? WHERE id = ?';
 
-    db.query(sql, [skills, interests, availability, req.params.id], (err, result) => {
-        if (err) {
-            return res.status(500).send('Error updating profile.');
-        }
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-        res.json({ message: 'Profile updated successfully.' });
+
+// Get all flashcards
+app.get('/api/flashcards', (req, res) => {
+    db.query('SELECT * FROM flashcards', (err, results) => {
+      if (err) throw err;
+      res.json(results);
     });
-});
-
-
-
-
+  });
+  
+  // Create a new flashcard
+  app.post('/api/flashcards', (req, res) => {
+    const { question, answer, tags, deck } = req.body;
+    db.query('INSERT INTO flashcards (question, answer, tags, deck) VALUES (?, ?, ?, ?)', 
+      [question, answer, tags, deck], 
+      (err, result) => {
+        if (err) throw err;
+        res.status(201).json({ id: result.insertId, question, answer, tags, deck });
+      }
+    );
+  });
+  
 
 
 

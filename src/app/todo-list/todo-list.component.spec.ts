@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourcelinkComponent } from './resourcelink.component';
+import { TodoListComponent } from './todo-list.component';
 
-describe('ResourcelinkComponent', () => {
-  let component: ResourcelinkComponent;
-  let fixture: ComponentFixture<ResourcelinkComponent>;
+describe('TodoListComponent', () => {
+  let component: TodoListComponent;
+  let fixture: ComponentFixture<TodoListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourcelinkComponent]
+      imports: [TodoListComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ResourcelinkComponent);
+    fixture = TestBed.createComponent(TodoListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

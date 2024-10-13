@@ -1,0 +1,24 @@
+<h2>To-Do List</h2>
+<ul>
+  <li *ngFor="let todo of todos">
+    <label class="switch">
+      <input 
+        type="checkbox" 
+        [checked]="todo.completed" 
+        (change)="toggleComplete(todo)" 
+      />
+      <span class="slider round"></span>
+    </label>
+    <span>{{ todo.title }} (Due: {{ todo.dueDate | date }}) Description : {{ todo.description }}</span>
+    <button (click)="deleteTodo(todo.id)">Delete</button>
+  </li>
+</ul>
+
+
+
+<div>
+  <input [(ngModel)]="newTodo.title" placeholder="Title" />
+  <input [(ngModel)]="newTodo.description" placeholder="Description" />
+  <input [(ngModel)]="newTodo.dueDate" type="date" />
+  <button (click)="addTodo()">Add To-Do</button>
+</div>

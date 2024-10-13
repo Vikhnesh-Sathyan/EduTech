@@ -1,0 +1,30 @@
+<div class="skill-list-container">
+  <h2>Skill List</h2>
+  
+  <!-- Search Input -->
+  <div>
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name or skills" />
+  </div>
+
+  <!-- Display the list of skills -->
+  <div *ngFor="let student of filterSkills()">
+    <h3>{{ student.name }}</h3>
+    <p>Skills: {{ student.skills }}</p>
+    <p>Availability: {{ student.availability }}</p>
+    <p>Location: {{ student.location || 'N/A' }}</p>
+    <p>Interests: {{ student.interests || 'N/A' }}</p>
+    <button (click)="viewDetails(student)">View Details</button>
+    <button (click)="editStudent(student)">Edit Skills</button>
+    <button (click)="sendRequest(student)">Send Request</button>
+    <button (click)="deleteStudent(student)">Delete</button> <!-- Added Delete button -->
+  </div>
+
+  <!-- Display Matches -->
+  <div *ngIf="matches.length > 0">
+    <h3>Matches:</h3>
+    <ul>
+      <li *ngFor="let match of matches">{{ match.name }}: {{ match.skills }} - {{ match.availability }}</li>
+    </ul>
+    <button (click)="clearMatches()">Clear Matches</button> <!-- Clear Matches button -->
+  </div>
+</div>

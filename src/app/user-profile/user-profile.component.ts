@@ -1,55 +1,50 @@
-import { CommonModule } from '@angular/common';
+// src/app/user-profile/user-profile.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
-import axios from 'axios';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-profile',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css'],
-  standalone: true, // Mark this component as standalone
-  imports: [ReactiveFormsModule, CommonModule] // Include ReactiveFormsModule in imports
+  styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  userId = 1; // Example user ID (you can replace this with the actual logged-in user's ID)
-  userProfile: any;
   profileForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.profileForm = this.fb.group({
+      name: ['', Validators.required],
       skills: ['', Validators.required],
       interests: [''],
       availability: ['']
     });
   }
 
-  ngOnInit(): void {
-    this.fetchUserProfile();
+  ngOnInit() {}
+
+  onSubmit() {
+    if (this.profileForm.valid) {
+      const studentProfile = this.profileForm.value;
+
+      // Retrieve existing students from localStorage
+      const existingStudents = JSON.parse(localStorage.getItem('students') || '[]');
+
+      // Push new student profile into the array
+      existingStudents.push(studentProfile);
+
+      // Save the updated students array back to localStorage
+      localStorage.setItem('students', JSON.stringify(existingStudents));
+
+      // Navigate to the skill list after saving
+      this.router.navigate(['/skill-list']);
+    }
   }
 
-  fetchUserProfile(): void {
-    axios.get(`http://localhost:3000/api/profile/${this.userId}`)
-      .then(response => {
-        this.userProfile = response.data;
-        // Populate the form with user profile data
-        this.profileForm.patchValue({
-          skills: this.userProfile.skills,
-          interests: this.userProfile.interests,
-          availability: this.userProfile.availability
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching user profile:', error);
-      });
-  }
-
-  onSubmit(): void {
-    axios.put(`http://localhost:3000/api/profile/${this.userId}`, this.profileForm.value)
-      .then(response => {
-        console.log('Profile updated:', response.data);
-      })
-      .catch(error => {
-        console.error('Error updating profile:', error);
-      });
+  navigateToSkillList() {
+    this.router.navigate(['/skill-list']);
   }
 }

@@ -1,27 +1,23 @@
-<div *ngIf="userProfile">
-    <h2>User Profile</h2>
-    <p><strong>Username:</strong> {{ userProfile.username }}</p>
-    <p><strong>Email:</strong> {{ userProfile.email }}</p>
-  
+<div class="profile-container">
+    <h2>Create Your Profile</h2>
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-        <div>
-            <label for="skills">Skills:</label>
-            <input id="skills" formControlName="skills" />
-            <div *ngIf="profileForm.get('skills')?.invalid && profileForm.get('skills')?.touched">
-                <small>Skills are required.</small>
-            </div>
-        </div>
-  
-        <div>
-            <label for="interests">Interests:</label>
-            <input id="interests" formControlName="interests" />
-        </div>
-  
-        <div>
-            <label for="availability">Availability:</label>
-            <input id="availability" formControlName="availability" />
-        </div>
-  
-        <button type="submit" [disabled]="profileForm.invalid">Update Profile</button>
+      <div>
+        <label for="name">Name:</label>
+        <input id="name" formControlName="name" required />
+      </div>
+      <div>
+        <label for="skills">Skills:</label>
+        <input id="skills" formControlName="skills" required />
+      </div>
+      <div>
+        <label for="interests">Interests:</label>
+        <input id="interests" formControlName="interests" />
+      </div>
+      <div>
+        <label for="availability">Availability:</label>
+        <input id="availability" formControlName="availability" />
+      </div>
+      <button type="submit" [disabled]="profileForm.invalid">Save Profile</button>
+      <button type="button" (click)="navigateToSkillList()">Go to Skill List</button>
     </form>
 </div>

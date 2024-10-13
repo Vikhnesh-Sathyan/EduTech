@@ -1,0 +1,22 @@
+<!-- add-flashcard.component.html -->
+<h2>Add Flashcard</h2>
+<form (ngSubmit)="onSubmit()">
+  <div>
+    <label for="question">Question:</label>
+    <input type="text" id="question" [(ngModel)]="flashcard.question" name="question" required>
+  </div>
+  <div>
+    <label for="answer">Answer:</label>
+    <input type="text" id="answer" [(ngModel)]="flashcard.answer" name="answer" required>
+  </div>
+  <div>
+    <label for="tags">Tags:</label>
+    <input type="text" id="tags" [(ngModel)]="flashcard.tags" name="tags">
+  </div>
+  <div>
+    <label for="deck">Deck:</label>
+    <input type="text" id="deck" [(ngModel)]="flashcard.deck" name="deck">
+  </div>
+  <button type="submit">Add Flashcard</button>
+  <button type="button" (click)="goToFlashcardList()">View Flashcards</button>
+</form>
