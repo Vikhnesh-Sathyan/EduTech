@@ -1,0 +1,34 @@
+<div>
+    <h2>Study Tips for Class {{ selectedClassId }}</h2>
+  
+    <!-- Class Selector -->
+    <label for="classSelect">Select Class:</label>
+    <select id="classSelect" [(ngModel)]="selectedClassId" (change)="fetchTips()">
+      <option *ngFor="let class of [9, 10, 11, 12]" [value]="class">
+        Class {{ class }}
+      </option>
+    </select>
+  
+    <!-- Display Study Tips -->
+    <div *ngIf="tips.length > 0; else noTips">
+      <div *ngFor="let tip of tips">
+        <p><strong>Subject:</strong> {{ tip.subject }}</p>
+        <p><strong>Topic:</strong> {{ tip.topic }}</p>
+        <p><strong>Tip:</strong> {{ tip.tip }}</p>
+        <hr />
+      </div>
+    </div>
+  
+    <ng-template #noTips>
+      <p>No tips available for this class yet.</p>
+    </ng-template>
+  </div>
+  
+  <!-- Scrolling Motivational Quotes Footer -->
+  <footer class="footer">
+    <div class="marquee">
+      <p>Keep going! The harder you work, the greater the reward!</p>
+      <p>Believe in yourself! Every day is a chance to be better!</p>
+    </div>
+  </footer>
+  

@@ -7,15 +7,21 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const fileUpload = require('express-fileupload'); // Moved above to initialize first
 require('dotenv').config();
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json()); // Parse application/json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload()); // Now correctly placed after initialization
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Directory to store uploaded files
+const UPLOAD_DIR = path.join(__dirname, 'uploads');
 // MySQL database connection
 const db = mysql.createConnection({
     host: 'localhost',
@@ -467,8 +473,8 @@ app.post('/api/swap', (req, res) => {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Use the email from environment variable
-        pass: process.env.EMAIL_PASS,   // Use the app password from environment variable
+        user: process.env.EMAIL_USER, // Use email from environment variables
+        pass: process.env.EMAIL_PASS, // Use app password from environment variables
     },
 });
 
@@ -481,7 +487,7 @@ app.post('/api/forgot-password', (req, res) => {
         return res.status(400).send({ error: 'Email is required' });
     }
 
-    // Validate email format (simple regex)
+    // Validate email format with regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).send({ error: 'Invalid email format' });
@@ -492,17 +498,17 @@ app.post('/api/forgot-password', (req, res) => {
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'Password Reset Link',
-        text: `Click the following link to reset your password: http://yourdomain.com/reset-password?email=${encodeURIComponent(email)}`
+        text: `Click the following link to reset your password: http://localhost:4200/reset-password?email=${encodeURIComponent(email)}`,
     };
 
-    // Send email
+    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error('Error sending email:', error);
             return res.status(500).send({ error: 'Error sending email' });
         }
         console.log('Email sent:', info.response);
-        return res.status(200).send({ message: 'Password reset link sent to your email' });
+        return res.status(200).send({ message: 'Password reset link sent to your email.' });
     });
 });
   
@@ -605,6 +611,167 @@ app.get('/api/flashcards', (req, res) => {
       }
     );
   });
+  
+
+
+
+// Route for uploading notes along with a file
+app.post('/api/notes', (req, res) => {
+    const { noteContent, classId } = req.body;
+    const file = req.files ? req.files.file : null; // Get uploaded file
+  
+    if (!noteContent || !classId) {
+      return res.status(400).json({ message: 'Note content or classId is missing' });
+    }
+  
+    let filePath = null;
+  
+    if (file) {
+      const fileName = `${Date.now()}-${file.name}`; // Create unique filename
+      filePath = path.join(UPLOAD_DIR, fileName);
+  
+      // Save the uploaded file
+      file.mv(filePath, (err) => {
+        if (err) {
+          console.error('File upload failed:', err);
+          return res.status(500).json({ message: 'File upload failed' });
+        }
+  
+        // Insert note with file path into the database
+        insertNoteIntoDB(noteContent, classId, filePath, res);
+      });
+    } else {
+      // Insert note without file
+      insertNoteIntoDB(noteContent, classId, null, res);
+    }
+  });
+  
+  // Helper function to insert a note into the database
+  function insertNoteIntoDB(noteContent, classId, filePath, res) {
+    const query = 'INSERT INTO notes (content, class_id, file_path) VALUES (?, ?, ?)';
+    db.query(query, [noteContent, classId, filePath], (err, result) => {
+      if (err) {
+        console.error('Failed to insert note:', err);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      res.status(201).json({
+        message: 'Note saved successfully',
+        id: result.insertId,
+        classId,
+        filePath,
+      });
+    });
+  }
+  
+ // Fetch notes for a specific class
+app.get('/api/notes/class/:classId', (req, res) => {
+    const classId = req.params.classId;
+  
+    const query = 'SELECT * FROM notes WHERE class_id = ?'; // SQL query to fetch notes for the specific class
+    db.query(query, [classId], (err, results) => {
+      if (err) {
+        console.error('Failed to fetch notes:', err);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      res.json(results); // Send back the fetched notes
+    });
+  });
+
+  app.delete('/api/notes/:id', (req, res) => {
+  const { id } = req.params;
+  const note = notes.find(note => note.id === parseInt(id));
+  if (!note) return res.status(404).send('Note not found');
+  notes = notes.filter(note => note.id !== parseInt(id));
+  res.status(204).send(); // 204 for successful delete with no content
+});
+
+  
+  
+// Get Tips by Class
+app.get('/tips/:classId', (req, res) => {
+    const classId = req.params.classId;
+    const query = 'SELECT * FROM tips WHERE classId = ?';
+    db.query(query, [classId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
+// Add a New Tip
+app.post('/tips', (req, res) => {
+    const { classId, subject, topic, tip } = req.body;
+    const query = 'INSERT INTO tips (classId, subject, topic, tip) VALUES (?, ?, ?, ?)';
+    db.query(query, [classId, subject, topic, tip], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: result.insertId });
+    });
+});
+
+
+// Delete a Tip
+app.delete('/tips/:id', (req, res) => {
+    const tipId = req.params.id;
+    const query = 'DELETE FROM tips WHERE id = ?';
+    db.query(query, [tipId], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(204).send();
+    });
+});
+
+
+// Get Tips by Class (for both teacher and student)
+app.get('/tips/:classId', (req, res) => {
+    const classId = req.params.classId;
+    const query = 'SELECT * FROM tips WHERE classId = ?';
+
+    db.query(query, [classId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);  // Send tips as JSON response
+    });
+});
+
+
+  
+
+  // Node.js route to send a message
+app.post('/api/messages', (req, res) => {
+    const { sender, recipient, content } = req.body;
+  
+    const query = 'INSERT INTO messages (sender, recipient, content) VALUES (?, ?, ?)';
+    db.query(query, [sender, recipient, content], (error, results) => {
+      if (error) {
+        console.error('Error inserting message:', error);
+        return res.status(500).json({ error: 'Failed to send message.' });
+      }
+      res.status(201).json({ id: results.insertId, sender, recipient, content });
+    });
+  });
+  
+  // Node.js route to fetch messages by recipient (student ID)
+  // Backend route to fetch messages by recipient (student ID)
+app.get('/api/messages/:recipient', (req, res) => {
+    const recipient = req.params.recipient;
+    
+    // Log the recipient value to make sure it's correctly captured
+    console.log(`Fetching messages for recipient: ${recipient}`);
+  
+    const query = 'SELECT * FROM messages WHERE recipient = ?';
+    
+    // Execute the query and log potential errors
+    db.query(query, [recipient], (err, results) => {
+      if (err) {
+        console.error('Database query failed:', err);  // Log any SQL errors
+        return res.status(500).json({ error: 'Failed to fetch messages' });
+      }
+  
+      console.log('Messages fetched:', results);  // Log the fetched results
+      res.json(results);  // Send the results back to the frontend
+    });
+  });
+  
+  
+  
+  
   
 
 

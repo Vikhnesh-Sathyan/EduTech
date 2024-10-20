@@ -1,22 +1,25 @@
 <div class="skill-list-container">
   <h2>Skill List</h2>
-  
+
   <!-- Search Input -->
   <div>
     <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name or skills" />
   </div>
 
-  <!-- Display the list of skills -->
-  <div *ngFor="let student of filterSkills()">
-    <h3>{{ student.name }}</h3>
-    <p>Skills: {{ student.skills }}</p>
-    <p>Availability: {{ student.availability }}</p>
-    <p>Location: {{ student.location || 'N/A' }}</p>
-    <p>Interests: {{ student.interests || 'N/A' }}</p>
-    <button (click)="viewDetails(student)">View Details</button>
-    <button (click)="editStudent(student)">Edit Skills</button>
-    <button (click)="sendRequest(student)">Send Request</button>
-    <button (click)="deleteStudent(student)">Delete</button> <!-- Added Delete button -->
+  <!-- Display the list of skills as cards -->
+  <div class="card-container">
+    <div *ngFor="let student of filterSkills()" class="card">
+      <h3>{{ student.name }}</h3>
+      <p><strong>Skills:</strong> {{ student.skills }}</p>
+      <p><strong>Availability:</strong> {{ student.availability }}</p>
+      <p><strong>Location:</strong> {{ student.location || 'N/A' }}</p>
+      <p><strong>Interests:</strong> {{ student.interests || 'N/A' }}</p>
+      <div class="card-buttons">
+        <button (click)="editStudent(student)">Edit Skills</button>
+        <button (click)="sendRequest(student)">Send Request</button>
+        <button (click)="deleteStudent(student)">Delete</button>
+      </div>
+    </div>
   </div>
 
   <!-- Display Matches -->
@@ -25,6 +28,6 @@
     <ul>
       <li *ngFor="let match of matches">{{ match.name }}: {{ match.skills }} - {{ match.availability }}</li>
     </ul>
-    <button (click)="clearMatches()">Clear Matches</button> <!-- Clear Matches button -->
+    <button (click)="clearMatches()">Clear Matches</button>
   </div>
 </div>

@@ -1,0 +1,33 @@
+/* Ensure footer stays at the bottom */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: rgb(219, 35, 35);
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  /* Container for the scrolling text */
+  .marquee-wrapper {
+    width: 450%;  
+  }
+  
+  /* Marquee text container - ensure it is wide enough to scroll fully */
+  .marquee {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%; /* Start outside of the viewport */
+    animation: scroll-left 10s linear infinite;
+  }
+  
+  /* Animation to scroll text smoothly from right to left */
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(100%); /* Start outside the screen */
+    }
+    100% {
+      transform: translateX(-100%); /* Move completely off screen */
+    }
+  }
+  

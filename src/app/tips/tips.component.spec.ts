@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResetComponent } from './reset.component';
+import { TipsComponent } from './tips.component';
 
-describe('ResetComponent', () => {
-  let component: ResetComponent;
-  let fixture: ComponentFixture<ResetComponent>;
+describe('TipsComponent', () => {
+  let component: TipsComponent;
+  let fixture: ComponentFixture<TipsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResetComponent]
+      imports: [TipsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ResetComponent);
+    fixture = TestBed.createComponent(TipsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,41 @@
+.skill-swap-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .skill-swap-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .your-skills,
+  .available-swaps {
+    margin-bottom: 20px;
+  }
+  
+  .swap-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .swap-card button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .swap-card button:hover {
+    background-color: #45a049;
+  }
+  

@@ -20,7 +20,7 @@ export class CertificateComponent {
     this.totalScore = this.calculateTotalScore();
     // Replace with actual user name or fetch dynamically
     this.certificateData = {
-      name: 'John',
+      name: 'Vikhnesh sathyan',
       courseTitle: 'Fundamentals of Music Theory',
       completionDate: new Date().toLocaleDateString(),
       score: `${this.totalScore}%`, // Set the calculated score
@@ -31,34 +31,23 @@ export class CertificateComponent {
     const total = this.taskScores.reduce((acc, score) => acc + score, 0);
     return Math.round(total / this.taskScores.length); // Return the average score
   }
-
- downloadCertificate() {
-  const certificateElement = document.querySelector('.certificate') as HTMLElement | null;
+  downloadCertificate() {
+    const certificateElement = document.querySelector('.certificate') as HTMLElement | null;
   
-  // Check if the certificate has already been downloaded
-  const hasDownloaded = localStorage.getItem('certificateDownloaded');
-
-  if (hasDownloaded) {
-    alert('You have already downloaded the certificate.');
-    return; // Prevent further execution
+    // Check if certificateElement is not null
+    if (certificateElement) {
+      html2canvas(certificateElement).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        
+        // Adjust the parameters as necessary
+        pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        pdf.save('certificate.pdf');
+      });
+    } else {
+      alert('Certificate element not found.');
+    }
   }
-
-  // Check if certificateElement is not null
-  if (certificateElement) {
-    html2canvas(certificateElement).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      
-      // Adjust the parameters as necessary
-      pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-      pdf.save('certificate.pdf');
-      
-      // Set a flag in local storage to indicate the certificate has been downloaded
-      localStorage.setItem('certificateDownloaded', 'true');
-    });
-  } else {
-    alert('Certificate element not found.');
-  }
-}
+  
 
 }

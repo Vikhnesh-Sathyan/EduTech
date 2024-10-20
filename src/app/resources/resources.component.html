@@ -1,7 +1,35 @@
-<div class="resources-section">
+<div class="resource-container">
   <h2>Resources (Teacher)</h2>
-  <form (ngSubmit)="sendNote()">
-    <textarea [(ngModel)]="noteContent" name="note" placeholder="Type your notes here..." required></textarea>
-    <button type="submit">Send Note</button>
+
+  <form [formGroup]="noteForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="classSelect">Select Class:</label>
+      <select id="classSelect" formControlName="selectedClass">
+        <option *ngFor="let cls of classes" [value]="cls">Class {{ cls }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="note">Write Note:</label>
+      <textarea
+        id="note"
+        formControlName="noteContent"
+        placeholder="Type your note here..."
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="fileUpload">Upload PDF/Image:</label>
+      <input
+        type="file"
+        id="fileUpload"
+        (change)="onFileSelected($event)"
+        accept=".pdf, image/*"
+      />
+    </div>
+
+    <button type="submit" [disabled]="noteForm.invalid" class="send-button">
+      Send Note
+    </button>
   </form>
 </div>

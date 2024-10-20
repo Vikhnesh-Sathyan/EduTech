@@ -62,7 +62,7 @@ export class StudentLoginComponent implements OnInit {
       const payload = this.decodeToken(response.credential);
       if (payload) {
         sessionStorage.setItem('loggedInUser', JSON.stringify(payload));
-        this.router.navigate(['student-login/dashboard']);
+        this.router.navigate(['student-login/dashboard/grade-9']);
       } else {
         this.showNotification('Login failed: Invalid token received.');
       }

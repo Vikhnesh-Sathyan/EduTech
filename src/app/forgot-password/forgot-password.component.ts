@@ -13,38 +13,36 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-  forgotPasswordForm!: FormGroup;  // Form group for forgot password
+  forgotPasswordForm!: FormGroup;  
+  successMessage: string = '';  
+  errorMessage: string = '';  
 
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Initialize the form group with email field and validators
+    // Initialize the form with email field and validators
     this.forgotPasswordForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email])  // Email validation
+      email: new FormControl('', [Validators.required, Validators.email])
     });
   }
 
-  // Function to handle forgot password form submission
- // Function to handle forgot password form submission
-onSubmit() {
-  if (this.forgotPasswordForm.valid) {
+  // Handle form submission
+  onSubmit() {
+    if (this.forgotPasswordForm.valid) {
       const email = this.forgotPasswordForm.value.email;
 
-      // Make HTTP request to send the forgot password email
+      // Make HTTP request to backend
       this.http.post('http://localhost:3000/api/forgot-password', { email })
-          .subscribe(response => {
-              console.log('Reset link sent successfully:', response);
-              // Handle success, show message or navigate to another page
-          }, error => {
-              console.error('Error sending reset link:', error);
-              // Handle error, show error message
-          });
-  }
-}
-
-
-  // Function to navigate to forgot password page (could be used elsewhere)
-  forgotpassword() {
-    this.router.navigate(['forgot-password']);
+        .subscribe(
+          (response: any) => {
+            this.successMessage = response.message;
+            this.errorMessage = '';
+          },
+          (error) => {
+            this.errorMessage = error.error.error || 'An error occurred. Please try again.';
+            this.successMessage = '';
+          }
+        );
+    }
   }
 }

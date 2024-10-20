@@ -28,12 +28,27 @@ import { StudytoolsComponent } from './studytools/studytools.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { FlashcardComponent } from './flashcard/flashcard.component';
 import { FlashcardListComponent } from './flashcard-list/flashcard-list.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { Grade9DashboardComponent } from './grade-9-dashboard/grade-9-dashboard.component';
+import { Grade10DashboardComponent } from './grade-10-dashboard/grade-10-dashboard.component';
+import { Grade11DashboardComponent } from './grade-11-dashboard/grade-11-dashboard.component';
+import { Grade12DashboardComponent } from './grade-12-dashboard/grade-12-dashboard.component';
+import { StudyTipsComponent } from './study-tips/study-tips.component';
+import { TipsComponent } from './tips/tips.component';
+import { MessagesComponent } from './messages/messages.component';
+import { StudentMessagesComponent } from './student-messages/student-messages.component';
+
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'student-login', component: StudentLoginComponent },
   { path: 'personal', component: PersonalComponent },
   { path: 'student-login/dashboard', component: DashboardComponent },
+  { path: 'student-login/dashboard/grade-9', component: Grade9DashboardComponent },
+  { path: 'student-login/dashboard/grade-10', component: Grade10DashboardComponent },
+  { path: 'student-login/dashboard/grade-11', component: Grade11DashboardComponent },
+  { path: 'student-login/dashboard/grade-12', component: Grade12DashboardComponent },
   { path: 'profile', component: ProfileComponent },
+  {path:'student-messages',component:StudentMessagesComponent},
   {path:'flashcard',component:FlashcardComponent},
   {path:'flashcard-list',component:FlashcardListComponent},
   {path:'todo-list',component:TodoListComponent},
@@ -43,6 +58,7 @@ export const routes: Routes = [
   { path: 'student-login/curriculum', component: CurriculumComponent },
   {path:  'student-login/music',component:MusicComponent},
   {path:'notifications',component:NotificationsComponent},
+  {path:'tips',component:TipsComponent},
   {path:'musiccourse',component:MusiccourseComponent},
   {path:'coursedetail',component:CoursedetailComponent},
   {path:'courseexam',component:CourseexamComponent},
@@ -50,9 +66,12 @@ export const routes: Routes = [
   {path:'task3',component:Task3Component},
   {path:'certificate',component:CertificateComponent},
   {path:'forgot-password',component:ForgotPasswordComponent},
+  {path:'reset-password',component:ResetPasswordComponent},
   { path: 'teacher-login', component: TeacherLoginComponent },
   { path: 'teacher-login/t-dashboard', component: TDashboardComponent },
   {path:'studentlist',component:StudentlistComponent},
+  {path:'study-tips',component:StudyTipsComponent},
+  {path:'messages',component:MessagesComponent},
   { path: 'resources', component: ResourcesComponent }, // Ensure ResourcesComponent handles child routes if needed
   { path: 'parent-login', component: ParentLoginComponent },
   { path: 'parent-login/p-dashboard', component: PDashboardComponent },

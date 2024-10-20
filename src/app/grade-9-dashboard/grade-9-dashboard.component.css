@@ -1,0 +1,340 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensure full height and width */
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* General Styles */
+.container {
+    display: flex;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.sidebar-content {
+    width: 300px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+    background-color: red;        /* Background color of the badge */
+    color: white;                 /* Text color */
+    padding: 5px 10px;            /* Padding inside the badge */
+    border-radius: 50%;           /* Make it circular */
+    font-size: 12px;              /* Font size of the number */
+    position: absolute;           /* Position it relative to the parent */
+    top: 10px;                    /* Position from the top */
+    right: 10px;                  /* Position from the right */
+    min-width: 20px;              /* Minimum width for the badge */
+    text-align: center;           /* Center the text */
+    line-height: 15px;            /* Line height for proper vertical alignment */
+    display: inline-block;        /* Inline block to make it fit content */
+}
+
+/* New Section Styles */
+.sidebar-content section {
+    margin-bottom: 30px;
+}
+
+.sidebar-content h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.sidebar-content p {
+    margin: 0;
+    color: #666;
+}
+
+/* Profile Image */
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;  /* Ensure the profile image is circular */
+    margin-top: 10px;
+}
+
+/* Button Styles */
+button {
+    background-color: #7e4cff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5e38cc;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #7e4cff; /* Sidebar color */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sidebar shadow */
+}
+
+.sidebar .logo img {
+    width: 100px; 
+    height: auto; 
+    margin-bottom: 20px; /* Space below logo */
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar nav ul li {
+    margin: 20px 0;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    display: block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s; /* Transition for transform */
+}
+
+.sidebar nav ul li a:hover {
+    background-color: #5e38cc;
+    transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px; /* Space below header */
+    border-bottom: 2px solid #eaeaea; /* Divider under header */
+}
+
+.header .date p {
+    color: #666;
+    margin: 0;
+}
+
+.header .search-bar input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #dcdcdc; /* Light border */
+    width: 250px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header .profile {
+    display: flex;
+    align-items: center;
+}
+
+.header .profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;  /* Ensure circular shape for profile images */
+    margin-right: 10px;
+    border: 2px solid #7e4cff; /* Border for profile image */
+}
+
+.header .profile-info p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.header .profile-info small {
+    color: #666;
+}
+
+.welcome-section {
+    background-color: #7e4cff;
+    padding: 20px;
+    border-radius: 10px;
+    color: #ffffff;
+    margin-bottom: 30px;
+    text-align: center; /* Center text */
+}
+
+.welcome-section h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.finance-section,
+.enrolled-courses {
+    margin-bottom: 30px;
+}
+
+.finance-section h2,
+.enrolled-courses h2 {
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase; /* Uppercase section titles */
+}
+
+.finance-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.finance-cards .card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+    transition: transform 0.2s; /* Transition effect */
+}
+
+.finance-cards .card:hover {
+    transform: translateY(-5px); /* Hover effect */
+}
+
+.finance-cards .card p {
+    margin: 0;
+    font-size: 20px;
+    color: #7e4cff;
+}
+
+.finance-cards .card small {
+    color: #666;
+}
+
+.courses {
+    display: flex;
+    gap: 20px;
+}
+
+.course-card {
+    background-color: #f0e5ff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    flex: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s; /* Transition for hover effects */
+}
+
+.course-card:hover {
+    background-color: #e0d3ff; /* Change background on hover */
+    transform: scale(1.03); /* Scale effect on hover */
+}
+
+.course-card p {
+    color: #7e4cff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.course-card button {
+    background-color: #7e4cff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Button hover effect */
+}
+
+.course-card button:hover {
+    background-color: #5e38cc; /* Darker shade on hover */
+}
+
+.course-instructors {
+    margin-bottom: 30px;
+}
+
+.course-instructors h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.instructors {
+    display: flex;
+    gap: 10px;
+}
+
+.instructors img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Ensure circular shape for instructor images */
+    border: 2px solid #7e4cff; /* Border for instructor images */
+}
+
+.see-all {
+    color: #7e4cff;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    text-align: center; /* Center align */
+}
+
+.daily-notice h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.notice {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notice p {
+    color: #666;
+    margin: 0 0 10px 0;
+}
+
+.notice a {
+    color: #7e4cff;
+    text-decoration: none;
+    font-weight: bold; /* Bold for visibility */
+}
+
+.notice a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.profile-button {
+    border: none; /* Remove default border */
+    background: none; /* Ensure no background color */
+    padding: 0; /* Remove padding */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.profile-button img {
+    
+    width: 50px; /* Set the width of the image */
+    height: 50px; /* Set the height of the image */
+    border-radius: 50%; /* Ensure circular shape for the image */
+    object-fit: cover; /* Cover the area while maintaining aspect ratio */
+}

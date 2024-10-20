@@ -1,0 +1,43 @@
+<div>
+    <h2>Study Tips for Class {{ selectedClassId }}</h2>
+
+    <!-- Class Selection -->
+    <label for="classSelect">Select Class:</label>
+    <select id="classSelect" [(ngModel)]="selectedClassId" (change)="fetchTips()">
+        <option *ngFor="let class of [9, 10, 11, 12]" [value]="class">
+            Class {{ class }}
+        </option>
+    </select>
+
+    <!-- Display Study Tips -->
+    <h3>Tips:</h3>
+    <div *ngIf="filteredTips.length > 0; else noTips">
+        <div *ngFor="let tip of filteredTips">
+            <p><strong>Subject:</strong> {{ tip.subject }}</p>
+            <p><strong>Topic:</strong> {{ tip.topic }}</p>
+            <p><strong>Tip:</strong> {{ tip.tip }}</p>
+            <button (click)="deleteTip(tip.id)">Delete</button>
+            <hr />
+        </div>
+    </div>
+
+    <ng-template #noTips>
+        <p>{{ motivationalMessage }}</p>
+    </ng-template>
+
+    <!-- Add New Tip Section -->
+    <h3>Add a New Tip:</h3>
+
+    <label for="subject">Subject:</label>
+    <input id="subject" type="text" [(ngModel)]="newSubject" placeholder="Enter subject" />
+
+    <label for="topic">Topic:</label>
+    <input id="topic" type="text" [(ngModel)]="newTopic" placeholder="Enter topic" />
+
+    <textarea [(ngModel)]="newTip" placeholder="Enter your study tip here" rows="4"></textarea>
+
+    <button (click)="addTip()" 
+            [disabled]="!newSubject.trim() || !newTopic.trim() || !newTip.trim()">
+        Add Tip
+    </button>
+</div>

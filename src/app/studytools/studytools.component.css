@@ -1,0 +1,94 @@
+div {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f9;
+    border-radius: 8px;
+    height: 100px;
+  }
+  
+  h2, h3 {
+    color: #2a2a72;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+  }
+  
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #2a72e6;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button:hover:not(:disabled) {
+    background-color: #1f5bb5;
+  }
+  
+  p {
+    margin: 5px 0;
+    line-height: 1.6;
+  }
+  
+  a {
+    color: #1e90ff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  .ng-template p {
+    text-align: center;
+    color: #555;
+  }
+  
+  div {
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 600px) {
+    div {
+      padding: 15px;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+  

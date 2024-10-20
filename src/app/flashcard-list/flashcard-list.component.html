@@ -1,18 +1,51 @@
 <h2>Flashcard List</h2>
+
+<!-- Search Input -->
+<input
+  type="text"
+  placeholder="Search flashcards..."
+  (input)="searchCards($event)"
+  class="search-bar"
+/>
+
 <div class="flashcard-list">
-  <div *ngFor="let card of flashcards" class="flashcard">
-    <h4>{{ card.question }}</h4>
-    <p [hidden]="!card.showAnswer">{{ card.answer }}</p>
-    <p>Tags: {{ card.tags }}</p>
-    <p>Deck: {{ card.deck }}</p>
+  <div *ngFor="let card of filteredFlashcards" class="flashcard">
+    <div *ngIf="!card.isEditing">
+      <h4>{{ card.question }}</h4>
+      <p [hidden]="!card.showAnswer">{{ card.answer }}</p>
+      <p>Tags: {{ card.tags }}</p>
+      <p>Deck: {{ card.deck }}</p>
 
-    <button (click)="toggleAnswer(card)">
-      {{ card.showAnswer ? 'Hide Answer' : 'Show Answer' }}
-    </button>
+      <!-- Buttons -->
+      <button (click)="toggleAnswer(card)">
+        {{ card.showAnswer ? 'Hide Answer' : 'Show Answer' }}
+      </button>
+      <button (click)="enableEdit(card)">Edit</button>
+      <button (click)="deleteFlashcard(card)">Delete</button> <!-- Delete Button -->
 
-    <div class="flashcard-navigation">
-      <button>&lt;</button>
-      <button>&gt;</button>
+      <div class="flashcard-navigation">
+        <button>&lt;</button>
+        <button>&gt;</button>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div *ngIf="card.isEditing" class="edit-form">
+      <input
+        type="text"
+        [(ngModel)]="card.question"
+        placeholder="Edit Question"
+      />
+      <input
+        type="text"
+        [(ngModel)]="card.answer"
+        placeholder="Edit Answer"
+      />
+      <input type="text" [(ngModel)]="card.tags" placeholder="Edit Tags" />
+      <input type="text" [(ngModel)]="card.deck" placeholder="Edit Deck" />
+
+      <button (click)="saveEdit(card)">Save</button>
+      <button (click)="cancelEdit(card)">Cancel</button>
     </div>
   </div>
 </div>

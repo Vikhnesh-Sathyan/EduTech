@@ -1,11 +1,24 @@
-<div class="study-tools">
-  <h2>Study Tools - Student Notes</h2>
+<div>
+  <h2>Study Tools - Notes for Class {{ selectedClassId }}</h2>
 
-  <ul *ngIf="notes.length > 0; else noNotes">
-    <li *ngFor="let note of notes">{{ note }}</li>
-  </ul>
+  <label for="classSelect">Select Class:</label>
+  <select id="classSelect" [(ngModel)]="selectedClassId" (change)="fetchNotes()">
+    <option *ngFor="let class of [9, 10, 11, 12]" [value]="class">
+      Class {{ class }}
+    </option>
+  </select>
 
+  <h3>Notes:</h3>
+  <div *ngIf="notes.length > 0; else noNotes">
+    <div *ngFor="let note of notes">
+      <p>{{ note.content }}</p>
+      <p *ngIf="note.file_path">
+        Attached File: <a [href]="note.file_path" target="_blank">Download</a>
+      </p>
+    </div>
+  </div>
   <ng-template #noNotes>
-    <p>No notes available yet.</p>
+    <p>No notes available for this class.</p>
   </ng-template>
+
 </div>

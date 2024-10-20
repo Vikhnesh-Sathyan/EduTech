@@ -48,6 +48,9 @@ export class StudentgeneratedComponent {
   uploading: boolean = false;
   successMessage: string | null = null;
 
+  // Store search queries for each grade
+  searchQuery: { [key: number]: string } = {};
+
   onFileSelected(event: any) {
     this.newContent.file = event.target.files[0];
   }
@@ -101,10 +104,14 @@ export class StudentgeneratedComponent {
   }
 
   getContentsForGrade(grade: number): UploadedContent[] {
-    if (grade !== null) {
-      return this.gradeContents[grade] || [];
-    }
-    return [];
+    return this.gradeContents[grade] || [];
+  }
+
+  getFilteredContentsForGrade(grade: number): UploadedContent[] {
+    const query = this.searchQuery[grade]?.toLowerCase() || '';
+    return this.getContentsForGrade(grade).filter((content) =>
+      content.type.toLowerCase().includes(query)
+    );
   }
 
   deleteContent(content: UploadedContent) {
@@ -112,8 +119,8 @@ export class StudentgeneratedComponent {
     const grade = content.grade;
 
     this.http.delete(`http://localhost:3000/api/delete-content/${grade}/${fileName}`).subscribe(
-      (response: any) => {
-        this.gradeContents[content.grade] = this.gradeContents[content.grade].filter(
+      () => {
+        this.gradeContents[grade] = this.gradeContents[grade].filter(
           (c) => c.fileUrl !== content.fileUrl
         );
       },
@@ -131,11 +138,7 @@ export class StudentgeneratedComponent {
     if (this.newContent.grade !== null) {
       this.selectedSubjects = this.subjectsByGrade[this.newContent.grade] || [];
     } else {
-      this.selectedSubjects = []; // Reset selectedSubjects if no grade is selected
+      this.selectedSubjects = [];
     }
-  }
-
-  getSubjectsForGrade(grade: number): string[] {
-    return this.subjectsByGrade[grade] || [];
   }
 }

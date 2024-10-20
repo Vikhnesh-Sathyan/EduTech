@@ -1,0 +1,57 @@
+/* Container for messages */
+.messages-container {
+  padding: 30px;
+  max-width: 700px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual message card */
+.message-card {
+  background-color: #f0f4f8;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Hover effect on message card */
+.message-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Message content styling */
+.message-content {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Sender name in bold */
+.message-content strong {
+  font-weight: 700;
+  color: #1a73e8; /* Light blue for better visibility */
+}
+
+/* Timestamp styling */
+.message-timestamp {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  text-align: right;
+}
+
+/* "No messages available" text */
+.no-messages {
+  text-align: center;
+  font-size: 18px;
+  color: #999;
+  margin-top: 20px;
+  font-style: italic;
+}

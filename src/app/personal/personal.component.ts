@@ -42,14 +42,35 @@ export class PersonalComponent {
 
   handleSubmit() {
     console.log('Submitting data:', this.studentData); // Log the data being sent
-
+  
     if (this.isEmailValid() && this.isPhoneValid()) { // Validate email and phone
       this.http.post(this.apiUrl, this.studentData)
         .subscribe(response => {
           console.log('Data submitted successfully:', response);
           this.studentService.setStudentData(this.studentData); // Set the student data here
-          // Pass student name and grade to the dashboard
-          this.router.navigate(['student-login/dashboard'], {
+          
+          // Determine the route based on the selected grade
+          let dashboardRoute = '';
+          switch (this.studentData.grade) {
+            case '9':
+              dashboardRoute = 'student-login/dashboard/grade-9';
+              break;
+            case '10':
+              dashboardRoute = 'student-login/dashboard/grade-10';
+              break;
+            case '11':
+              dashboardRoute = 'student-login/dashboard/grade-11';
+              break;
+            case '12':
+              dashboardRoute = 'student-login/dashboard/grade-12';
+              break;
+            default:
+              console.error('Invalid grade selected');
+              return; // Exit if grade is not valid
+          }
+  
+          // Navigate to the corresponding grade dashboard
+          this.router.navigate([dashboardRoute], {
             queryParams: {
               name: this.studentData.student_name,
               grade: this.studentData.grade
@@ -62,4 +83,5 @@ export class PersonalComponent {
       console.error('Invalid email or phone number.'); // Error handling
     }
   }
+  
 }

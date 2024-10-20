@@ -25,12 +25,18 @@ export class TDashboardComponent implements OnInit {
   goToResources(): void {
     this.router.navigate(['resources']);
   }
-
+  onMessageClick() {
+    console.log('Messages button clicked');
+    // Navigate to messages page programmatically
+    this.router.navigate(['messages']);
+  }
   // Navigate to the student list page
   studentList(): void {
     this.router.navigate(['studentlist']);
   }
-
+  goToStudytips(): void {
+    this.router.navigate(['study-tips']);
+  }
   // Fetch the list of students when the component loads
   ngOnInit(): void {
     const studentData = this.studentService.getStudentData();
