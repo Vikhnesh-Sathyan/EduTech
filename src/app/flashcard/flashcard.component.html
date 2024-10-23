@@ -1,22 +1,43 @@
-<!-- add-flashcard.component.html -->
 <h2>Add Flashcard</h2>
 <form (ngSubmit)="onSubmit()">
-  <div>
+  <div class="form-group">
     <label for="question">Question:</label>
-    <input type="text" id="question" [(ngModel)]="flashcard.question" name="question" required>
+    <input 
+      type="text" 
+      id="question" 
+      [(ngModel)]="flashcard.question" 
+      name="question" 
+      required>
   </div>
-  <div>
+
+  <div class="form-group">
     <label for="answer">Answer:</label>
-    <input type="text" id="answer" [(ngModel)]="flashcard.answer" name="answer" required>
+    <input 
+      type="text" 
+      id="answer" 
+      [(ngModel)]="flashcard.answer" 
+      name="answer" 
+      required>
   </div>
-  <div>
+
+  <div class="form-group">
     <label for="tags">Tags:</label>
-    <input type="text" id="tags" [(ngModel)]="flashcard.tags" name="tags">
+    <input 
+      type="text" 
+      id="tags" 
+      [(ngModel)]="flashcard.tags" 
+      name="tags">
   </div>
-  <div>
+
+  <div class="form-group">
     <label for="deck">Deck:</label>
-    <input type="text" id="deck" [(ngModel)]="flashcard.deck" name="deck">
+    <input 
+      type="text" 
+      id="deck" 
+      [(ngModel)]="flashcard.deck" 
+      name="deck">
   </div>
-  <button type="submit">Add Flashcard</button>
-  <button type="button" (click)="goToFlashcardList()">View Flashcards</button>
+
+  <button type="submit" class="button">Add Flashcard</button>
+  <button type="button" class="button" (click)="goToFlashcardList()">View Flashcards</button>
 </form>

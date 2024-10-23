@@ -1,33 +1,21 @@
-<div class="skill-list-container">
-  <h2>Skill List</h2>
+<!-- skill-list.component.html -->
+<div class="skill-list-container" *ngIf="profileData.length > 0">
+  <h2>Available Skills for Swap</h2>
+  <div *ngFor="let profile of profileData" class="profile-summary">
+    <h3>{{ profile.name }}</h3>
+    <p><strong>Skills Offered:</strong> {{ profile.skills_offered }}</p>
+    <p><strong>Skills Wanted:</strong> {{ profile.skills_wanted }}</p>
+    <p><strong>Availability:</strong> {{ profile.availability }}</p>
+    <p><strong>Start Time:</strong> {{ profile.start_time }}</p>
+    <p><strong>End Time:</strong> {{ profile.end_time }}</p>
+    <p><strong>Interests:</strong> {{ profile.interests }}</p>
+    <p><strong>Experience Level:</strong> {{ profile.experience_level }}</p>
+    <p><strong>Location:</strong> {{ profile.location }}</p>
 
-  <!-- Search Input -->
-  <div>
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name or skills" />
+    <button class="call-button" (click)="navigateTovideoCall()">Video Call</button>
   </div>
+</div>
 
-  <!-- Display the list of skills as cards -->
-  <div class="card-container">
-    <div *ngFor="let student of filterSkills()" class="card">
-      <h3>{{ student.name }}</h3>
-      <p><strong>Skills:</strong> {{ student.skills }}</p>
-      <p><strong>Availability:</strong> {{ student.availability }}</p>
-      <p><strong>Location:</strong> {{ student.location || 'N/A' }}</p>
-      <p><strong>Interests:</strong> {{ student.interests || 'N/A' }}</p>
-      <div class="card-buttons">
-        <button (click)="editStudent(student)">Edit Skills</button>
-        <button (click)="sendRequest(student)">Send Request</button>
-        <button (click)="deleteStudent(student)">Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Display Matches -->
-  <div *ngIf="matches.length > 0">
-    <h3>Matches:</h3>
-    <ul>
-      <li *ngFor="let match of matches">{{ match.name }}: {{ match.skills }} - {{ match.availability }}</li>
-    </ul>
-    <button (click)="clearMatches()">Clear Matches</button>
-  </div>
+<div *ngIf="profileData.length === 0">
+  <p>No profiles available. Please add some profiles.</p>
 </div>

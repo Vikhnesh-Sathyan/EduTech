@@ -1,181 +1,188 @@
+const http = require('http');
 const express = require('express');
-const mysql = require('mysql2');
-const bodyParser = require('body-parser');
+const mysql = require('mysql2'); // Using mysql2 without promises
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
-const fileUpload = require('express-fileupload'); // Moved above to initialize first
+const fileUpload = require('express-fileupload');
+const { Server } = require('socket.io');
 require('dotenv').config();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } }); // Setup socket.io
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json()); // Parse application/json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload()); // Now correctly placed after initialization
+app.use(fileUpload()); // Correct placement
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Directory to store uploaded files
-const UPLOAD_DIR = path.join(__dirname, 'uploads');
-// MySQL database connection
-const db = mysql.createConnection({
+// MySQL database connection pool
+const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '1234',
-    database: 'edutech'
+    database: 'edutech',
+    waitForConnections: true,
+    connectionLimit: 10,  // Optional: limits the number of connections in the pool
+    queueLimit: 0          // Optional: disables queue limit
 });
 
-db.connect((err) => {
+// Test MySQL connection
+db.getConnection((err, connection) => {
     if (err) {
         console.error('Database connection error:', err);
-        throw err;
+        process.exit(1); // Exit process if database connection fails
     }
     console.log('Database connected!');
+    connection.release(); // Release connection back to the pool
 });
 
 // Teacher Sign-Up
 app.post('/api/teacher-signup', async (req, res) => {
-    const { username, email, password, confirmPassword } = req.body;
+  const { username, email, password, confirmPassword } = req.body;
 
-    // Validate passwords
-    if (password !== confirmPassword) {
-        return res.status(400).send('Passwords do not match');
-    }
+  // Validate passwords
+  if (password !== confirmPassword) {
+      return res.status(400).send('Passwords do not match');
+  }
 
-    try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-        // SQL query to insert a new teacher
-        const sql = 'INSERT INTO teachers (username, email, password) VALUES (?, ?, ?)';
-        db.query(sql, [username, email, hashedPassword], (err, result) => {
-            if (err) {
-                console.error('Database error during teacher sign-up:', err);
-                return res.status(500).send('Server error');
-            }
-            res.send('Sign-up successful');
-        });
-    } catch (error) {
-        console.error('Error during teacher sign-up:', error);
-        res.status(500).send('Server error');
-    }
+      // SQL query to insert a new teacher
+      const sql = 'INSERT INTO teachers (username, email, password) VALUES (?, ?, ?)';
+      db.query(sql, [username, email, hashedPassword], (err, result) => {
+          if (err) {
+              console.error('Database error during teacher sign-up:', err);
+              return res.status(500).send('Server error');
+          }
+          res.send('Sign-up successful');
+      });
+  } catch (error) {
+      console.error('Error during teacher sign-up:', error);
+      res.status(500).send('Server error');
+  }
 });
 
 // Teacher Sign-In
 app.post('/api/teacher-signin', async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    // SQL query to fetch teacher by email
-    const sql = 'SELECT * FROM teachers WHERE email = ?';
-    db.query(sql, [email], async (err, results) => {
-        if (err) {
-            console.error('Database error during teacher sign-in:', err);
-            return res.status(500).send('Server error');
-        }
+  // SQL query to fetch teacher by email
+  const sql = 'SELECT * FROM teachers WHERE email = ?';
+  db.query(sql, [email], async (err, results) => {
+      if (err) {
+          console.error('Database error during teacher sign-in:', err);
+          return res.status(500).send('Server error');
+      }
 
-        if (results.length > 0) {
-            const teacher = results[0];
-            const match = await bcrypt.compare(password, teacher.password);
-            if (match) {
-                // Send a success response with user data
-                res.json({
-                    user: {
-                        id: teacher.id,
-                        username: teacher.username,
-                        email: teacher.email
-                    },
-                    redirectUrl: '/t-dashboard' // Add redirect URL
-                });
-            } else {
-                res.status(401).send('Incorrect password');
-            }
-        } else {
-            res.status(404).send('Teacher not found');
-        }
-    });
+      if (results.length > 0) {
+          const teacher = results[0];
+          const match = await bcrypt.compare(password, teacher.password);
+          if (match) {
+              // Send a success response with user data
+              res.json({
+                  user: {
+                      id: teacher.id,
+                      username: teacher.username,
+                      email: teacher.email
+                  },
+                  redirectUrl: '/t-dashboard' // Add redirect URL
+              });
+          } else {
+              res.status(401).send('Incorrect password');
+          }
+      } else {
+          res.status(404).send('Teacher not found');
+      }
+  });
 });
 
 
 // Handle Student Sign-Up
+// Handle Student Sign-Up
 app.post('/api/student-signup', async (req, res) => {
-    const { username, email, password, confirmPassword } = req.body;
+  const { username, email, password, confirmPassword } = req.body;
 
-    // Validate password and confirm password
-    if (password !== confirmPassword) {
-        return res.status(400).send('Passwords do not match');
-    }
+  // Validate password and confirm password
+  if (password !== confirmPassword) {
+      return res.status(400).send('Passwords do not match');
+  }
 
-    try {
-        // Check if email already exists
-        const emailCheckSql = 'SELECT * FROM user WHERE email = ?';
-        db.query(emailCheckSql, [email], async (err, results) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).send('Server error');
-            }
+  try {
+      // Check if email already exists
+      const emailCheckSql = 'SELECT * FROM user WHERE email = ?';
+      db.query(emailCheckSql, [email], async (err, results) => {
+          if (err) {
+              console.error('Database error:', err);
+              return res.status(500).send('Server error');
+          }
 
-            if (results.length > 0) {
-                return res.status(409).send('Email is already registered');
-            }
+          if (results.length > 0) {
+              return res.status(409).send('Email is already registered');
+          }
 
-            // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10);
+          // Hash the password
+          const hashedPassword = await bcrypt.hash(password, 10);
 
-            // SQL query to insert a new student
-            const sql = 'INSERT INTO user (username, email, password) VALUES (?, ?, ?)';
-            db.query(sql, [username, email, hashedPassword], (err, result) => {
-                if (err) {
-                    console.error('Database error during student sign-up:', err);
-                    return res.status(500).send('Server error');
-                }
-                res.status(201).send('Sign-up successful');
-            });
-        });
-    } catch (error) {
-        console.error('Error during student sign-up:', error);
-        res.status(500).send('Server error');
-    }
+          // SQL query to insert a new student
+          const sql = 'INSERT INTO user (username, email, password) VALUES (?, ?, ?)';
+          db.query(sql, [username, email, hashedPassword], (err, result) => {
+              if (err) {
+                  console.error('Database error during student sign-up:', err);
+                  return res.status(500).send('Server error');
+              }
+              res.status(201).send('Sign-up successful');
+          });
+      });
+  } catch (error) {
+      console.error('Error during student sign-up:', error);
+      res.status(500).send('Server error');
+  }
 });
 
 
 
 // Handle Student Sign-In
 app.post('/api/student-signin', async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    // SQL query to fetch student by email
-    const sql = 'SELECT * FROM user WHERE email = ?';
-    db.query(sql, [email], async (err, results) => {
-        if (err) {
-            console.error('Database error during student sign-in:', err);
-            return res.status(500).send('Server error');
-        }
+  // SQL query to fetch student by email
+  const sql = 'SELECT * FROM user WHERE email = ?';
+  db.query(sql, [email], async (err, results) => {
+      if (err) {
+          console.error('Database error during student sign-in:', err);
+          return res.status(500).send('Server error');
+      }
 
-        if (results.length > 0) {
-            const student = results[0];
-            // Compare the password with the hashed password
-            const match = await bcrypt.compare(password, student.password);
-            if (match) {
-                res.json({
-                    user: {
-                        id: student.id,
-                        username: student.username,
-                        email: student.email
-                    }
-                });
-            } else {
-                return res.status(401).send('Incorrect password');
-            }
-        } else {
-            return res.status(404).send('Student not found');
-        }
-    });
-});
+      if (results.length > 0) {
+          const student = results[0];
+          // Compare the password with the hashed password
+          const match = await bcrypt.compare(password, student.password);
+          if (match) {
+              res.json({
+                  user: {
+                      id: student.id,
+                      username: student.username,
+                      email: student.email
+                  }
+              });
+          } else {
+              return res.status(401).send('Incorrect password');
+          }
+      } else {
+          return res.status(404).send('Student not found');
+      }
+  });
+}); 
+
 
 
 // Parent Sign-Up
@@ -241,82 +248,62 @@ app.post('/api/parent-signin', async (req, res) => {
 });
 
 
-  
-  
-app.post('/api/students', (req, res) => {
+
+ app.post('/api/students', (req, res) => {
   const { student_name, dob, gender, email, phone, address, guardian_name, grade, parent_id } = req.body;
-
-  // Insert the new student into the database
   const query = 'INSERT INTO students (student_name, dob, gender, email, phone, address, guardian_name, grade, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  
   db.query(query, [student_name, dob, gender, email, phone, address, guardian_name, grade, parent_id], (err, result) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error: ' + err });
+      }
+      res.status(201).json({ message: 'Student created', id: result.insertId });
+  });
+});
+
+app.get('/api/students', (req, res) => {
+  console.log('GET request received at /api/students'); // Debug log
+  const query = 'SELECT * FROM students';
+
+  db.query(query, (err, results) => {
     if (err) {
-      return res.status(500).json({ error: 'Database error: ' + err });
+      return res.status(500).json({ error: 'Database query error: ' + err });
     }
-    res.status(201).json({ message: 'Student created', id: result.insertId });
+    res.status(200).json(results);
   });
 });
 
   
 
-
-// Endpoint to handle music applications
-app.post('/api/music', (req, res) => {
-    const { name, email, course, experience, class: className, notes } = req.body;
-
-    const sql = `INSERT INTO music (name, email, course, experience, class, notes) 
-                 VALUES (?, ?, ?, ?, ?, ?)`;
-    db.query(sql, [name, email, course, experience, className, notes], (err, result) => {
-        if (err) {
-            console.error('Error inserting application:', err);
-            return res.status(500).json({ error: 'Error inserting application' }); // Return JSON on error
-        }
-
-        // Insert notification
-        const notificationMessage = `New application submitted by ${name}`;
-        const notificationSql = `INSERT INTO notifications (message, is_read) VALUES (?, ?)`;
-        db.query(notificationSql, [notificationMessage, false], (err, notificationResult) => {
-            if (err) {
-                console.error('Error inserting notification:', err);
-                return res.status(500).json({ error: 'Error inserting notification' }); // Return JSON on error
-            }
-
-            // Ensure the response is a JSON object
-            res.status(200).json({ message: 'Application and notification created successfully' }); // Return JSON
-        });
-    });
-});
-// Endpoint to mark a notification as read
 app.get('/api/notifications', (req, res) => {
-    const sqlQuery = 'SELECT * FROM notifications'; // Adjust the table name
-  
-    db.query(sqlQuery, (err, results) => {
+  const sqlQuery = 'SELECT * FROM notifications';
+
+  db.query(sqlQuery, (err, results) => {
       if (err) {
-        console.error('Error fetching notifications:', err);
-        return res.status(500).json({ error: 'Failed to fetch notifications' });
+          console.error('Error fetching notifications:', err);
+          return res.status(500).json({ error: 'Failed to fetch notifications' });
       }
-  
-      res.status(200).json(results); // Send the notifications back to the client
-    });
+      res.status(200).json(results);
   });
-  
-  // Route to mark a notification as read
-  app.put('/api/notifications/:id', (req, res) => {
-    const notificationId = req.params.id;
-    const sqlUpdateQuery = 'UPDATE notifications SET is_read = 1 WHERE id = ?';
-  
-    db.query(sqlUpdateQuery, [notificationId], (err, results) => {
+});
+
+// Route to Mark Notification as Read
+app.put('/api/notifications/:id', (req, res) => {
+  const notificationId = req.params.id;
+  const sqlUpdateQuery = 'UPDATE notifications SET is_read = 1 WHERE id = ?';
+
+  db.query(sqlUpdateQuery, [notificationId], (err, results) => {
       if (err) {
-        console.error('Error updating notification:', err);
-        return res.status(500).json({ error: 'Failed to update notification' });
+          console.error('Error updating notification:', err);
+          return res.status(500).json({ error: 'Failed to update notification' });
       }
-  
+
       if (results.affectedRows === 0) {
-        return res.status(404).json({ error: 'Notification not found' });
+          return res.status(404).json({ error: 'Notification not found' });
       }
-  
       res.status(200).json({ message: 'Notification marked as read' });
-    });
   });
+});
   
 
 
@@ -429,40 +416,6 @@ app.delete('/api/delete-content/:grade/:filename', (req, res) => {
 
             console.log('File deleted successfully'); // Log success
             res.status(200).json({ message: 'File deleted successfully' }); // Send JSON response
-        });
-    });
-});
-
-
-
-
-
-// API endpoint to insert user profile data
-app.post('/api/swap', (req, res) => {
-    console.log('Received data:', req.body); // Log the incoming data
-
-    const { name, skills, interests, availability } = req.body;
-
-    const sql = 'INSERT INTO swap (name, skills, interests, availability) VALUES (?, ?, ?, ?)';
-    
-    // Insert the swap data into the database
-    db.query(sql, [name, skills, interests, availability], (err, results) => {
-        if (err) {
-            console.error('Error inserting data:', JSON.stringify(err)); // Enhanced logging
-            return res.status(500).json({ error: 'Error saving user profile.' }); // Return JSON on error
-        }
-
-        // Insert a notification
-        const notificationMessage = `New swap request submitted by ${name}`;
-        const notificationSql = 'INSERT INTO notifications (message, is_read) VALUES (?, ?)';
-        db.query(notificationSql, [notificationMessage, false], (err, notificationResult) => {
-            if (err) {
-                console.error('Error inserting notification:', JSON.stringify(err)); // Enhanced logging
-                return res.status(500).json({ error: 'Error inserting notification.' }); // Return JSON on error
-            }
-
-            // Ensure the response is a JSON object
-            res.status(201).json({ message: 'User profile saved successfully!', id: results.insertId }); // Return JSON
         });
     });
 });
@@ -747,7 +700,6 @@ app.post('/api/messages', (req, res) => {
     });
   });
   
-  // Node.js route to fetch messages by recipient (student ID)
   // Backend route to fetch messages by recipient (student ID)
 app.get('/api/messages/:recipient', (req, res) => {
     const recipient = req.params.recipient;
@@ -770,7 +722,118 @@ app.get('/api/messages/:recipient', (req, res) => {
   });
   
   
+
+  app.post('/api/profiles', (req, res) => {
+    console.log('Received Data:', req.body);
   
+    const {
+      name, skillsOffered, skillsWanted, availability,
+      startTime, endTime, interests, experienceLevel, location
+    } = req.body;
+  
+    console.log('Name:', name);
+    console.log('Skills Offered:', skillsOffered);
+    console.log('Skills Wanted:', skillsWanted);
+  
+    const convertTo24Hour = (timeStr) => {
+      const [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+  
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+  
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    };
+  
+    const formattedStartTime = convertTo24Hour(startTime);
+    const formattedEndTime = convertTo24Hour(endTime);
+  
+    const sql = `
+      INSERT INTO profiles 
+      (name, skills_offered, skills_wanted, availability, start_time, end_time, interests, experience_level, location) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+      name, skillsOffered ?? null, skillsWanted ?? null, availability ?? null,
+      formattedStartTime, formattedEndTime, interests ?? null,
+      experienceLevel ?? null, location ?? null
+    ];
+  
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error('SQL Error:', err.message);
+        return res.status(500).json({ error: 'Failed to insert profile data.' });
+      }
+      res.status(201).json({ id: result.insertId, ...req.body });
+    });
+  });
+  
+  // Fetch all profiles
+  app.get('/api/profiles', (req, res) => {
+    const sql = 'SELECT * FROM profiles';
+  
+    db.query(sql, (err, rows) => {
+      if (err) {
+        console.error('SQL Error:', err.message);
+        return res.status(500).json({ error: 'Failed to fetch profiles.' });
+      }
+      res.json(rows);
+    });
+  });
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  // Store call logs in SQL
+  const saveCallLog = async (caller, receiver, status) => {
+    try {
+      const query = "INSERT INTO call_logs (caller, receiver, status) VALUES (?, ?, ?)";
+      await db.query(query, [caller, receiver, status]);
+      console.log(`Call log saved: ${caller} to ${receiver} - Status: ${status}`);
+    } catch (error) {
+      console.error('Error saving call log:', error);
+    }
+  };
+  
+  // Socket.IO connection handling
+  io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+  
+    socket.on('offer', (data) => {
+      console.log('Received offer:', data);
+      socket.broadcast.emit('offer', data);
+    });
+  
+    socket.on('answer', (data) => {
+      console.log('Received answer:', data);
+      socket.broadcast.emit('answer', data);
+    });
+  
+    socket.on('ice-candidate', (data) => {
+      console.log('Received ICE candidate:', data);
+      socket.broadcast.emit('ice-candidate', data);
+    });
+  
+    socket.on('call-ended', async (data) => {
+      console.log('Call ended:', data);
+      await saveCallLog(data.caller, data.receiver, 'completed');
+    });
+  
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+    });
+  });
+  
+
   
   
 

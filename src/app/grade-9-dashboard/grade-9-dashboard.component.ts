@@ -11,6 +11,7 @@ import { StudentserviceService, Student } from '../studentservice.service'; // E
   imports: [CommonModule, HttpClientModule],
   templateUrl: './grade-9-dashboard.component.html',
   styleUrls: ['./grade-9-dashboard.component.css'], // Correct property name
+  providers:[StudentserviceService]
 })
 export class Grade9DashboardComponent implements OnInit {
   // Initialize student data object
@@ -135,6 +136,8 @@ export class Grade9DashboardComponent implements OnInit {
   studytools(): void {
     this.router.navigate(['studytools']);
   }
+
+
 
   navigateToTodoList(): void {
     this.router.navigate(['todo-list']);

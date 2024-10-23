@@ -1,23 +1,102 @@
 <div class="profile-container">
-    <h2>Create Your Profile</h2>
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <h2>Create or Update Your Profile</h2>
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" formControlName="name" required />
+      <small *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched">
+        Name is required.
+      </small>
+    </div>
+
+    <div>
+      <label for="skillsOffered">Skills Offered:</label>
+      <textarea id="skillsOffered" formControlName="skillsOffered" rows="3" required></textarea>
+      <small *ngIf="profileForm.get('skillsOffered')?.invalid && profileForm.get('skillsOffered')?.touched">
+        Please provide at least one skill you can offer.
+      </small>
+    </div>
+
+    <div>
+      <label for="skillsWanted">Skills Wanted:</label>
+      <textarea id="skillsWanted" formControlName="skillsWanted" rows="3"></textarea>
+    </div>
+
+    <div>
+      <label for="availability">Availability:</label>
+      <select id="availability" formControlName="availability">
+        <option value="">Select Availability</option>
+        <option *ngFor="let option of ['Weekdays - Mornings', 'Weekdays - Afternoons', 'Weekdays - Evenings', 'Weekends - Mornings', 'Weekends - Afternoons', 'Weekends - Evenings', 'Flexible']">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label>Start Time:</label>
       <div>
-        <label for="name">Name:</label>
-        <input id="name" formControlName="name" required />
+        <select formControlName="startHour" required>
+          <option value="">Hour</option>
+          <option *ngFor="let hour of hours">{{ hour }}</option>
+        </select>
+
+        <select formControlName="startMinute" required>
+          <option value="">Minute</option>
+          <option *ngFor="let minute of minutes">{{ minute }}</option>
+        </select>
+
+        <select formControlName="startAmPm" required>
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
       </div>
+    </div>
+
+    <div>
+      <label>End Time:</label>
       <div>
-        <label for="skills">Skills:</label>
-        <input id="skills" formControlName="skills" required />
+        <select formControlName="endHour" required>
+          <option value="">Hour</option>
+          <option *ngFor="let hour of hours">{{ hour }}</option>
+        </select>
+
+        <select formControlName="endMinute" required>
+          <option value="">Minute</option>
+          <option *ngFor="let minute of minutes">{{ minute }}</option>
+        </select>
+
+        <select formControlName="endAmPm" required>
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
       </div>
+    </div>
+
+    <div>
+      <label for="interests">Interests:</label>
+      <input id="interests" formControlName="interests" />
+    </div>
+
+    <div>
+      <label>Experience Level:</label>
       <div>
-        <label for="interests">Interests:</label>
-        <input id="interests" formControlName="interests" />
+        <input type="radio" id="beginner" value="Beginner" formControlName="experienceLevel" />
+        <label for="beginner">Beginner</label>
+
+        <input type="radio" id="intermediate" value="Intermediate" formControlName="experienceLevel" />
+        <label for="intermediate">Intermediate</label>
+
+        <input type="radio" id="advanced" value="Advanced" formControlName="experienceLevel" />
+        <label for="advanced">Advanced</label>
       </div>
-      <div>
-        <label for="availability">Availability:</label>
-        <input id="availability" formControlName="availability" />
-      </div>
-      <button type="submit" [disabled]="profileForm.invalid">Save Profile</button>
-      <button type="button" (click)="navigateToSkillList()">Go to Skill List</button>
-    </form>
+    </div>
+
+    <div>
+      <label for="location">Location:</label>
+      <input id="location" formControlName="location" />
+    </div>
+
+    <button type="submit" [disabled]="profileForm.invalid">Save Profile</button>
+    <button type="button" (click)="navigateToSkillList()">Go to Skill List</button>
+  </form>
 </div>

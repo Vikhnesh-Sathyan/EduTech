@@ -1,81 +1,50 @@
-.flashcard-container {
-  max-width: 600px;
-  margin: 20px auto;
+/* Card Styling */
+.card {
+  background-color: transparent; /* No background color */
+  border: 1px solid #ccc; /* Optional subtle border */
+  border-radius: 8px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  transition: transform 0.3s ease-in-out;
 }
 
-.flashcard {
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 5px;
+.card:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
-.flashcard h4 {
-  margin: 0;
-}
-
-.flashcard button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
+/* Button Styling */
+.button {
+  background-color: transparent; /* Remove button background color */
+  color: black; /* Change text color if needed */
+  border: 1px solid #7d8aa2; /* Optional border for button */
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+  font-size: 18px; /* Increase font size */
 }
 
-.flashcard button:hover {
-  background-color: #0056b3;
-}
-.flashcard-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #e0e7ff;
+.button:hover {
+  background-color: transparent; /* Remove background color on hover */
+  color: #5a677a; /* Change text color on hover if needed */
 }
 
-.flashcard {
-  width: 300px;
-  height: 400px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  text-align: center;
-}
-
-.stack {
+/* Optional: Form Group Styling */
+.form-group {
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
 }
 
-.controls {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-button {
-  padding: 10px;
-  border: none;
-  background-color: #4f46e5;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #3b37cc;
-}
-
-.answer {
+.form-group label {
+  margin-bottom: 5px;
   font-weight: bold;
-  margin: 10px 0;
+  font-size: 18px; /* Increase font size */
+}
+
+.form-group input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 18px; /* Increase font size for input fields */
 }

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ChallengeService } from './challenge.service';
+import { SkillSwapService } from './skill-swap.service';
 
-describe('ChallengeService', () => {
-  let service: ChallengeService;
+describe('SkillSwapService', () => {
+  let service: SkillSwapService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ChallengeService);
+    service = TestBed.inject(SkillSwapService);
   });
 
   it('should be created', () => {

@@ -37,6 +37,7 @@ import { StudyTipsComponent } from './study-tips/study-tips.component';
 import { TipsComponent } from './tips/tips.component';
 import { MessagesComponent } from './messages/messages.component';
 import { StudentMessagesComponent } from './student-messages/student-messages.component';
+import { VideoCallComponent } from './video-call/video-call.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -54,6 +55,7 @@ export const routes: Routes = [
   {path:'todo-list',component:TodoListComponent},
   {path:'user-profile',component:UserProfileComponent},
   {path:'skill-list',component:SkillListComponent},
+  {path:'video-call',component:VideoCallComponent},
   {path:'studentgenerated',component:StudentgeneratedComponent},
   { path: 'student-login/curriculum', component: CurriculumComponent },
   {path:  'student-login/music',component:MusicComponent},

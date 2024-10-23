@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Student {
   student_name: string;
@@ -15,15 +17,12 @@ export interface Student {
   providedIn: 'root'
 })
 export class StudentserviceService {
-  private students: Student[] = []; // Initialize an array to hold student data
+  private apiUrl = 'http://localhost:3000/api/students'; // Your API endpoint
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  setStudentData(student: Student): void {
-    this.students.push(student); // Add student data to the array
-  }
-
-  getStudentData(): Student[] {
-    return this.students; // Return the list of students
+  // Fetch students from the API
+  fetchStudents(): Observable<Student[]> {
+    return this.http.get<Student[]>(this.apiUrl);
   }
 }

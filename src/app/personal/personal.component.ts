@@ -37,51 +37,62 @@ export class PersonalComponent {
   isPhoneValid(): boolean {
     return this.phonePattern.test(this.studentData.phone);
   }
+  
 
   constructor(private router: Router, private http: HttpClient, private studentService: StudentService) {}
 
   handleSubmit() {
     console.log('Submitting data:', this.studentData); // Log the data being sent
-  
-    if (this.isEmailValid() && this.isPhoneValid()) { // Validate email and phone
+
+    if (this.isFormValid()) { // Validate the form
       this.http.post(this.apiUrl, this.studentData)
-        .subscribe(response => {
-          console.log('Data submitted successfully:', response);
-          this.studentService.setStudentData(this.studentData); // Set the student data here
-          
-          // Determine the route based on the selected grade
-          let dashboardRoute = '';
-          switch (this.studentData.grade) {
-            case '9':
-              dashboardRoute = 'student-login/dashboard/grade-9';
-              break;
-            case '10':
-              dashboardRoute = 'student-login/dashboard/grade-10';
-              break;
-            case '11':
-              dashboardRoute = 'student-login/dashboard/grade-11';
-              break;
-            case '12':
-              dashboardRoute = 'student-login/dashboard/grade-12';
-              break;
-            default:
-              console.error('Invalid grade selected');
-              return; // Exit if grade is not valid
-          }
-  
-          // Navigate to the corresponding grade dashboard
-          this.router.navigate([dashboardRoute], {
-            queryParams: {
-              name: this.studentData.student_name,
-              grade: this.studentData.grade
+        .subscribe({
+          next: (response) => {
+            console.log('Data submitted successfully:', response);
+            this.studentService.setStudentData(this.studentData); // Set the student data here
+            
+            // Determine the route based on the selected grade
+            const dashboardRoute = this.getDashboardRoute(this.studentData.grade);
+            if (dashboardRoute) {
+              // Navigate to the corresponding grade dashboard
+              this.router.navigate([dashboardRoute], {
+                queryParams: {
+                  name: this.studentData.student_name,
+                  grade: this.studentData.grade
+                }
+              });
             }
-          }); // Navigate after successful submission
-        }, error => {
-          console.error('Error submitting data:', error);
+          },
+          error: (error) => {
+            console.error('Error submitting data:', error);
+          }
         });
     } else {
       console.error('Invalid email or phone number.'); // Error handling
     }
   }
-  
+
+  isFormValid(): boolean {
+    // Check if required fields are filled and if email and phone are valid
+    return this.studentData.student_name.trim() !== '' &&
+           this.studentData.dob.trim() !== '' &&
+           this.isEmailValid() &&
+           this.isPhoneValid();
+  }
+
+  getDashboardRoute(grade: string): string | null {
+    switch (grade) {
+      case '9':
+        return 'student-login/dashboard/grade-9';
+      case '10':
+        return 'student-login/dashboard/grade-10';
+      case '11':
+        return 'student-login/dashboard/grade-11';
+      case '12':
+        return 'student-login/dashboard/grade-12';
+      default:
+        console.error('Invalid grade selected');
+        return null; // Return null for invalid grade
+    }
+  }
 }
