@@ -76,9 +76,10 @@
                     <td>{{ content.description }}</td>
                     <td>{{ content.type }}</td>
                     <td>
-                      <a class="btn btn-link" [href]="content.fileUrl" download>Download</a>
-                      <button class="btn btn-danger" (click)="deleteContent(content)">Delete</button>
-                    </td>
+                      <a class="btn btn-link" [href]="content.fileUrl" download>
+                        <i class="fas fa-download"></i> 
+                      </a>
+                     </td>
                   </tr>
                 </tbody>
               </table>

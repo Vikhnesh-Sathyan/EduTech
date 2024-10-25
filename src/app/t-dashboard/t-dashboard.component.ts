@@ -37,6 +37,14 @@ export class TDashboardComponent implements OnInit {
   goToStudytips(): void {
     this.router.navigate(['study-tips']);
   }
+
+  navigateTogeneratequestion(): void {
+    this.router.navigate(['generate-question']);
+  }
+  
+  navigateToBankSubmission(): void {
+    this.router.navigate(['teacher-review']); // Adjust the route as necessary
+  }
   // Fetch the list of students when the component loads
   ngOnInit(): void {
     const studentData = this.studentService.getStudentData();

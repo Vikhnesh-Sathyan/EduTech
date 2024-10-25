@@ -1,0 +1,66 @@
+/* Container styling */
+.questions-list {
+    width: 90%; /* Default width for smaller screens */
+    width: 800px; /* Limit max width */
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 12px;
+    height: 700px;
+}
+
+/* Title styling */
+.questions-list h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Dropdown styling */
+.questions-list select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+/* Question card styling */
+.questions-list div[ngFor] {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Answer section (non-selectable) */
+.answer {
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    user-select: none; /* Prevent text selection */
+}
+
+.no-select {
+    user-select: none; /* Block copy */
+}
+
+/* Practice Button */
+.practice-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #0984e3;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.practice-btn:hover {
+    background-color: #74b9ff;
+}

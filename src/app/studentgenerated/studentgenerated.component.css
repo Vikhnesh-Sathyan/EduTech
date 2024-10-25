@@ -283,3 +283,13 @@ a:hover {
     color: #6c757d; /* Muted gray color */
     font-style: italic; /* Italic for emphasis */
 }
+.btn {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  
+  .btn i {
+    margin-right: 5px; /* Space between the icon and text */
+  }
+  

@@ -8,18 +8,11 @@ import { TeacherLoginComponent } from './teacher-login/teacher-login.component';
 import { TDashboardComponent } from './t-dashboard/t-dashboard.component';
 import { ParentLoginComponent } from './parent-login/parent-login.component';
 import { PDashboardComponent } from './p-dashboard/p-dashboard.component';
-import { CurriculumComponent } from './curriculum/curriculum.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MusicComponent } from './music/music.component';
 import { NotificationsComponent } from './notifications/notifications.component';
-import { MusiccourseComponent } from './musiccourse/musiccourse.component';
 import { StudentlistComponent } from './studentlist/studentlist.component';
-import { CoursedetailComponent } from './coursedetail/coursedetail.component';
-import { CourseexamComponent } from './courseexam/courseexam.component';
-import { CertificateComponent } from './certificate/certificate.component';
-import { Task2Component } from './task2/task2.component';
-import { Task3Component } from './task3/task3.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { StudentgeneratedComponent } from './studentgenerated/studentgenerated.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -38,6 +31,11 @@ import { TipsComponent } from './tips/tips.component';
 import { MessagesComponent } from './messages/messages.component';
 import { StudentMessagesComponent } from './student-messages/student-messages.component';
 import { VideoCallComponent } from './video-call/video-call.component';
+import { GenerateQuestionComponent } from './generate-question/generate-question.component';
+import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { CodingComponent } from './coding/coding.component';
+import { StudentSubmissionComponent } from './student-submission/student-submission.component';
+import { TeacherReviewComponent } from './teacher-review/teacher-review.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -57,22 +55,21 @@ export const routes: Routes = [
   {path:'skill-list',component:SkillListComponent},
   {path:'video-call',component:VideoCallComponent},
   {path:'studentgenerated',component:StudentgeneratedComponent},
-  { path: 'student-login/curriculum', component: CurriculumComponent },
+  // { path: 'student-login/curriculum', component: CurriculumComponent },
+  {path:'code-editor',component:CodeEditorComponent},
   {path:  'student-login/music',component:MusicComponent},
   {path:'notifications',component:NotificationsComponent},
   {path:'tips',component:TipsComponent},
-  {path:'musiccourse',component:MusiccourseComponent},
-  {path:'coursedetail',component:CoursedetailComponent},
-  {path:'courseexam',component:CourseexamComponent},
-  {path:'task2',component:Task2Component},
-  {path:'task3',component:Task3Component},
-  {path:'certificate',component:CertificateComponent},
   {path:'forgot-password',component:ForgotPasswordComponent},
   {path:'reset-password',component:ResetPasswordComponent},
   { path: 'teacher-login', component: TeacherLoginComponent },
   { path: 'teacher-login/t-dashboard', component: TDashboardComponent },
   {path:'studentlist',component:StudentlistComponent},
   {path:'study-tips',component:StudyTipsComponent},
+  { path: 'generate-question', component: GenerateQuestionComponent },
+  {path:'Coding',component:CodingComponent},
+  {path:'student-submission',component:StudentSubmissionComponent},
+  {path:'teacher-review',component:TeacherReviewComponent},
   {path:'messages',component:MessagesComponent},
   { path: 'resources', component: ResourcesComponent }, // Ensure ResourcesComponent handles child routes if needed
   { path: 'parent-login', component: ParentLoginComponent },

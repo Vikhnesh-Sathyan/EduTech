@@ -146,4 +146,15 @@ export class Grade9DashboardComponent implements OnInit {
   navigateToskillswap(): void {
     this.router.navigate(['user-profile']);
   }
+  navigateToCodeEditor(): void {
+    this.router.navigate(['code-editor']); // Navigate to code editor route
+  }
+
+  navigateToCoding(): void {
+    this.router.navigate(['Coding']); 
+  }
+  navigateToQuestionbank(): void {
+    this.router.navigate(['student-submission']); 
+  }
+
 }

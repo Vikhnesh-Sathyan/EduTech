@@ -1,0 +1,15 @@
+<div class="question-form">
+  <h2>Generate Coding Questions</h2>
+  <div *ngFor="let question of questions; let i = index">
+      <textarea [(ngModel)]="question.question_text" placeholder="Enter coding question" required></textarea>
+      <input [(ngModel)]="question.answer" placeholder="Enter answer" required />
+      <select [(ngModel)]="question.difficulty_level">
+          <option value="">Select Difficulty Level</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+      </select>
+      <button *ngIf="i === questions.length - 1" (click)="addQuestion()">+ Add Question</button>
+  </div>
+  <button (click)="submitQuestions()">Submit All Questions</button>
+</div>

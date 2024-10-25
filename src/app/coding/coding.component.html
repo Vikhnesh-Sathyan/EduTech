@@ -1,0 +1,30 @@
+<div class="questions-list">
+    <h2>Web Devolpment Coding Questions</h2>
+
+    <select [(ngModel)]="selectedLevel" (change)="filterQuestions()">
+        <option value="">All Levels</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+    </select>
+
+    <!-- Display questions if available -->
+    <div *ngFor="let question of filteredQuestions">
+        <h3>{{ question.question_text }}</h3>
+
+        <!-- Prevent copying for answer section -->
+        <p class="answer" (contextmenu)="disableCopy($event)">
+            Answer: <span class="no-select">{{ question.answer }}</span>
+        </p>
+
+        <p>Difficulty: {{ question.difficulty_level }}</p>
+
+        <!-- Practice Button -->
+        <button class="practice-btn" (click)="navigateToCodeEditor(question)">Practice</button>
+    </div>
+
+    <!-- Show message if no questions are available -->
+    <div *ngIf="filteredQuestions.length === 0">
+        <p>No questions available for the selected difficulty level.</p>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<h2>Submit Your Idea</h2>
+<form (ngSubmit)="submit()">
+  <input 
+    type="text" 
+    placeholder="Enter your name" 
+    [(ngModel)]="studentName" 
+    name="name" 
+    required 
+  />
+
+  <input 
+    type="number" 
+    placeholder="Enter your class (9, 10, 11, 12)" 
+    [(ngModel)]="className" 
+    name="class" 
+    required 
+    min="9" 
+    max="12" 
+  />
+
+  <textarea 
+    placeholder="Enter your submission" 
+    [(ngModel)]="submissionText" 
+    name="submission" 
+    required>
+  </textarea>
+
+  <button type="submit">Submit</button>
+</form>
+
+<p *ngIf="message">{{ message }}</p>
+
+<h3>Your Submissions</h3>
+<div *ngFor="let submission of submissions" class="submission">
+  <p><strong>Question:</strong> {{ submission.text }}</p>
+  <p><strong>Class:</strong> {{ submission.className }}</p>
+  <span [ngClass]="getStatusClass(submission.status)">
+    {{ submission.status | titlecase }}
+  </span>
+</div>

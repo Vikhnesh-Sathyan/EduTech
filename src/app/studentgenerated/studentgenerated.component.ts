@@ -48,7 +48,6 @@ export class StudentgeneratedComponent {
   uploading: boolean = false;
   successMessage: string | null = null;
 
-  // Store search queries for each grade
   searchQuery: { [key: number]: string } = {};
 
   onFileSelected(event: any) {
@@ -114,20 +113,13 @@ export class StudentgeneratedComponent {
     );
   }
 
-  deleteContent(content: UploadedContent) {
-    const fileName = content.fileUrl.substring(content.fileUrl.lastIndexOf('/') + 1);
-    const grade = content.grade;
-
-    this.http.delete(`http://localhost:3000/api/delete-content/${grade}/${fileName}`).subscribe(
-      () => {
-        this.gradeContents[grade] = this.gradeContents[grade].filter(
-          (c) => c.fileUrl !== content.fileUrl
-        );
-      },
-      (error) => {
-        console.error('Error deleting content:', error);
-      }
-    );
+  downloadFile(fileUrl: string) {
+    const a = document.createElement('a');
+    a.href = fileUrl;
+    a.download = fileUrl.substring(fileUrl.lastIndexOf('/') + 1); // Extract the filename from the URL
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   resetForm() {

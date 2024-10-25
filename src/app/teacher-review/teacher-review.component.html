@@ -1,0 +1,18 @@
+<h2>Review Submissions</h2>
+
+<div *ngFor="let submission of submissions" class="submission">
+  <p>
+    <strong>{{ submission.studentName }}:</strong> {{ submission.text }}
+    <span [ngClass]="submission.status">{{ submission.status }}</span>
+  </p>
+  <button 
+    (click)="updateSubmissionStatus(submission.id, 'approved')" 
+    [disabled]="submission.status !== 'pending'">
+    Approve
+  </button>
+  <button 
+    (click)="updateSubmissionStatus(submission.id, 'rejected')" 
+    [disabled]="submission.status !== 'pending'">
+    Reject
+  </button>
+</div>

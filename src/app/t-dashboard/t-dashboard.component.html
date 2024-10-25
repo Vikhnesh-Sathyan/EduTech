@@ -16,14 +16,24 @@
             <i class="fas fa-comments"></i> Study-tips
           </button>
         </li>
-                <li><a routerLink="/teacher-login/t-dashboard/schedule"><i class="fas fa-calendar-alt"></i> Schedule</a></li>
-                <li>
+        <li>
+          <button class="btn-link" (click)="navigateTogeneratequestion()">
+            <i class="fas fa-calendar-alt"></i> Question Generation
+          </button>
+        </li>
+                        <li>
                   <button class="nav-button" (click)="onMessageClick()">
                     <i class="fas fa-envelope"></i> Messages
                   </button>
                 </li>
                         <li><a routerLink="/teacher-login/t-dashboard/parent-communication"><i class="fas fa-users"></i> Parent Communication</a></li>
-        <li><a routerLink="/teacher-login/t-dashboard/gradebook"><i class="fas fa-book-open"></i> Gradebook</a></li>
+
+                        <li>
+                          <button class="nav-button" (click)="navigateToBankSubmission()">
+                            <i class="fas fa-envelope"></i> Question Bank
+                          </button>
+                        </li>
+                        >        
       </ul>
     </nav>
   

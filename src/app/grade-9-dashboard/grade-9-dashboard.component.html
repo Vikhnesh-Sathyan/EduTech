@@ -8,7 +8,6 @@
           <li><button (click)="navigateToProfile()">My Profile</button></li>
           <li><button (click)="navigateTomessages()">Messages</button></li>
 
-          <!-- <button (click)="navigateToTodoList()">Todo List</button> -->
   
                   <li><a (click)="studytools()"><i class="fas fa-edit"></i> Study Tools</a></li>
   
@@ -25,7 +24,8 @@
             </li>
             <!-- <li><a (click)="Extracurriculm()"><i class="fas fa-users"></i> Extra Curriculum</a></li> -->
             <li><a (click)="tips()"><i class="fas fa-users"></i> Study Tips</a></li>
-
+          
+            
             <li><a (click)="signOut()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
           </ul>
         </ul>
@@ -60,13 +60,23 @@
         <h2>Challenges</h2>
         <div class="finance-cards">
           <div class="card">
-            <p>Coding</p>
+            <li>
+              <a (click)="navigateToCoding()">
+                <i class="fas fa-users"></i> Coding
+              </a>
+            </li>
           </div>
+          
           <div class="card">
-            <p>Quiz</p>
-          </div>
+            <li>
+              <a (click)="navigateToQuestionbank()">
+                <i class="fas fa-users"></i> Question Bank 
+              </a>
+            </li>          </div>
           <div class="card">
-            <p (click)="Extracurriculm()" class="extra-curriculum">Extra Curriculum</p>
+            <!-- <p (click)="Extracurriculm()" class="extra-curriculum">Extra Curriculum</p> -->
+                       <button (click)="navigateToTodoList()">Todo List</button>
+
           </div>
         </div>
       </section>

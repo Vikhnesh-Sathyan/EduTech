@@ -88,11 +88,13 @@ export class TodoListComponent implements OnInit {
   deleteTodo(id: number): void {
     this.todoService.deleteTodo(id).subscribe(
       () => {
-        this.loadTodos(); // Reload todos after deletion
+        // Remove the todo from the local array without reloading
+        this.todos = this.todos.filter(todo => todo.id !== id);
       },
       (error) => {
         console.error('Error deleting todo:', error);
       }
     );
   }
+  
 }

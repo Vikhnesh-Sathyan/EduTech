@@ -1,19 +1,17 @@
+// src/app/forgot-password.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'  // Ensure this service is available globally
+  providedIn: 'root',
 })
 export class ForgotPasswordService {
-  email: string = '';  // Initialize the email property
-  message: string = '';  // Initialize the message property
+  private apiUrl = 'http://localhost:3000/api/reset-password'; // Backend API URL
 
   constructor(private http: HttpClient) {}
 
-  // Define the API endpoint and use HttpClient to send requests
-  resetPassword(email: string, newPassword: string): Observable<any> {
-    const payload = { email, newPassword };
-    return this.http.post('/api/reset-password', payload);  // Replace with your actual API endpoint
+  resetPassword(email: string, password: string): Observable<any> {
+    return this.http.post(this.apiUrl, { email, password });
   }
 }

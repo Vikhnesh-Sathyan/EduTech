@@ -107,7 +107,6 @@ app.post('/api/teacher-signin', async (req, res) => {
 
 
 // Handle Student Sign-Up
-// Handle Student Sign-Up
 app.post('/api/student-signup', async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
@@ -147,8 +146,6 @@ app.post('/api/student-signup', async (req, res) => {
       res.status(500).send('Server error');
   }
 });
-
-
 
 // Handle Student Sign-In
 app.post('/api/student-signin', async (req, res) => {
@@ -423,47 +420,65 @@ app.delete('/api/delete-content/:grade/:filename', (req, res) => {
 
 
 
+// Create a transporter object using the default SMTP transport
+//FORGOT PASSWORD
+
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER, // Use email from environment variables
-        pass: process.env.EMAIL_PASS, // Use app password from environment variables
-    },
+  service: 'gmail',
+  auth: {
+      user: process.env.EMAIL_USER, // Your Gmail address
+      pass: process.env.EMAIL_PASS,   // Your App Password
+  },
 });
 
 // Forgot password endpoint
 app.post('/api/forgot-password', (req, res) => {
-    const { email } = req.body;
+  const { email } = req.body;
 
-    // Check if email is provided
-    if (!email) {
-        return res.status(400).send({ error: 'Email is required' });
-    }
+  // Check if email is provided
+  if (!email) {
+      return res.status(400).send({ error: 'Email is required' });
+  }
 
-    // Validate email format with regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).send({ error: 'Invalid email format' });
-    }
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+      return res.status(400).send({ error: 'Invalid email format' });
+  }
 
-    // Setup email data
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Password Reset Link',
-        text: `Click the following link to reset your password: http://localhost:4200/reset-password?email=${encodeURIComponent(email)}`,
-    };
+  // Setup email data
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset Link',
+      text: `Click the following link to reset your password: http://localhost:4200/reset-password?email=${encodeURIComponent(email)}`,
+  };
 
-    // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email:', error);
-            return res.status(500).send({ error: 'Error sending email' });
-        }
-        console.log('Email sent:', info.response);
-        return res.status(200).send({ message: 'Password reset link sent to your email.' });
-    });
+  // Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error('Error sending email:', error);
+          return res.status(500).send({ error: 'Error sending email' });
+      }
+      console.log('Email sent:', info.response);
+      return res.status(200).send({ message: 'Password reset link sent to your email.' });
+  });
 });
+
+// Reset password endpoint
+app.post('/api/reset-password', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
+  }
+
+  console.log('Reset password request received:', req.body);
+
+  // Simulate successful password reset
+  return res.status(200).json({ message: 'Password has been reset successfully.' });
+});
+
   
   
 
@@ -471,20 +486,23 @@ app.post('/api/forgot-password', (req, res) => {
 
 // Get all To-Do Items
 app.get('/api/todos', (req, res) => {
-    db.query('SELECT * FROM ToDoList ORDER BY dueDate ASC', (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
+  db.query('SELECT * FROM ToDoList ORDER BY dueDate ASC', (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+    res.json(results);
   });
+});
+
   
   // Create a new To-Do Item
-// POST route to create a new to-do item
 app.post('/api/todos', (req, res) => {
     const { title, description, dueDate } = req.body;
     
     // Insert the new to-do item into the database
     db.query(
-      'INSERT INTO ToDoList (title, description, due_date) VALUES (?, ?, ?)',
+      'INSERT INTO ToDoList (title, description, dueDate) VALUES (?, ?, ?)',
       [title, description, dueDate],
       (err, result) => {
         if (err) {
@@ -835,7 +853,121 @@ app.get('/api/messages/:recipient', (req, res) => {
   
 
   
-  
+
+  app.post('/api/questions', (req, res) => {
+    const questions = req.body;
+    console.log('Received questions:', questions);  // Debugging log
+
+    const sql = 'INSERT INTO questions (question_text, answer, difficulty_level) VALUES ?';
+    const values = questions.map(q => [q.question_text, q.answer, q.difficulty_level]);
+
+    db.query(sql, [values], (err, result) => {
+        if (err) {
+            console.error('Error inserting questions:', err);
+            return res.status(500).json({ error: 'Error inserting questions.' });
+        }
+        console.log('Questions inserted:', result);  // Confirm insertion
+        res.json({ message: 'Questions submitted successfully!' });
+    });
+});
+
+
+  // Route to fetch questions by difficulty level
+  app.get('/api/questions', (req, res) => {
+    const level = req.query.level;
+    
+    // Log the incoming query parameter
+    console.log('Difficulty level:', level);
+
+    let sql = 'SELECT * FROM questions';
+    const params = [];
+
+    if (level) {
+        sql += ' WHERE difficulty_level = ?';
+        params.push(level);
+    }
+
+    console.log('Executing SQL:', sql, 'with params:', params);  // Debugging log
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.error('Error fetching questions:', err);  // Log error if any
+            return res.status(500).send('Error fetching questions.');
+        }
+        
+        console.log('Fetched questions from DB:', results);  // Log DB results
+        res.json(results);  // Send results to frontend
+    });
+});
+
+
+
+
+
+
+// Route to submit a new submission
+app.post('/submissions', (req, res) => {
+  console.log('Received submission:', req.body);
+
+  const { text, studentName, className } = req.body;
+
+  if (!text || !studentName || !className) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  const sql = 'INSERT INTO submissions (text, studentName, className, status) VALUES (?, ?, ?, "pending")';
+  db.query(sql, [text, studentName, className], (error, results) => {
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.status(201).json({ id: results.insertId, message: 'Submission created successfully' });
+  });
+});
+
+// Route to get submissions for a specific student
+app.get('/submissions/:studentName', (req, res) => {
+  const { studentName } = req.params;
+
+  const sql = 'SELECT id, text, status FROM submissions WHERE studentName = ?';
+  db.query(sql, [studentName], (error, results) => {
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.status(200).json(results);
+  });
+});
+
+
+
+
+
+
+
+// Route: Approve or reject a submission
+app.patch('/submissions/:id', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const validStatuses = ['approved', 'rejected'];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Invalid status' });
+  }
+
+  const sql = 'UPDATE submissions SET status = ? WHERE id = ?';
+  db.query(sql, [status, id], (error, results) => {
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Submission not found' });
+    }
+    res.status(200).json({ message: 'Submission status updated successfully' });
+  });
+});
+ 
 
 
 

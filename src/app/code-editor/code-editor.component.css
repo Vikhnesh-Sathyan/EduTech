@@ -1,0 +1,143 @@
+/* Reset body margin & ensure full height */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Fira Code', monospace;
+  background: radial-gradient(circle at center, #1e1e1e, #0f0f0f);
+}
+
+/* Full-screen container */
+.editor-container {
+  height: 100vh;
+  width: 1550px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.editor-container:hover {
+  transform: scale(1.01);
+}
+
+/* Header section styling */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: linear-gradient(90deg, #ff5722, #ff8a50);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+h2 {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Language Selector */
+.language-selector label {
+  margin-right: 8px;
+  font-weight: bold;
+  color: #ffccbc;
+}
+.language-selector select {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffccbc;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.language-selector select:hover {
+  background-color: #ffe0b2;
+  transform: scale(1.05);
+}
+
+/* Main Content Layout */
+.main-content {
+  display: flex;
+  height: 100%;
+  background: linear-gradient(to right, #2d2d2d, #1e1e1e);
+  border-radius: 0 0 12px 12px;
+}
+
+/* Code Area Styling */
+.code-area {
+  width: 50%;
+  padding: 20px;
+  background-color: #2d2d2d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px solid #ff5722;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+textarea {
+  width: 90%;
+  height: 60%;
+  margin-top: 20px;
+  border-radius: 15px;
+  border: 2px dashed #ff8a50;
+  background-color: #1e1e1e;
+  color: #fff;
+  font-size: 16px;
+  padding: 25px;
+  resize: none;
+  transition: box-shadow 0.3s ease;
+}
+textarea:focus {
+  box-shadow: 0 0 10px #ff8a50;
+}
+
+/* Run Button Styling */
+.run-btn {
+  margin-top: 15px;
+  background-color: #ff5722;
+  border: none;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.run-btn:hover {
+  background-color: #e64a19;
+  transform: scale(1.1);
+}
+
+/* Output Section Styling */
+.output-section {
+  width: 50%;
+  padding: 20px;
+  background-color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-left: 2px solid #ff5722;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.output-section h3 {
+  margin-bottom: 10px;
+  color: #ff8a50;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+iframe {
+  width: 100%;
+  height: 80%;
+  border: 2px solid #ff5722;
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+}
+iframe:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px #ff8a50;
+}
