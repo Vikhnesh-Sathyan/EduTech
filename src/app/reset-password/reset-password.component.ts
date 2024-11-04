@@ -45,12 +45,14 @@ export class ResetPasswordComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
+    // Check if the form is valid
     if (this.resetPasswordForm.invalid) {
       return;
     }
 
     const { password, confirmPassword } = this.resetPasswordForm.value;
 
+    // Check if the passwords match
     if (password !== confirmPassword) {
       this.errorMessage = 'Passwords do not match!';
       return;
@@ -59,10 +61,12 @@ export class ResetPasswordComponent implements OnInit {
     // Call service to reset the password
     this.forgotPasswordService.resetPassword(this.email, password).subscribe(
       (response: any) => {
+        // Successful response
         this.successMessage = 'Password reset successful!';
         setTimeout(() => this.router.navigate(['/parent-login']), 3000); // Redirect after 3 seconds
       },
       (error: any) => {
+        // Handle error response
         this.errorMessage = 'Password reset failed. Please try again.';
       }
     );

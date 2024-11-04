@@ -4,7 +4,8 @@
     type="text" 
     placeholder="Enter your name" 
     [(ngModel)]="studentName" 
-    name="name" 
+    name="name"
+    id="name" 
     required 
   />
 
@@ -16,16 +17,18 @@
     required 
     min="9" 
     max="12" 
+    id="class"
   />
 
   <textarea 
     placeholder="Enter your submission" 
     [(ngModel)]="submissionText" 
     name="submission" 
+    id="submission"
     required>
   </textarea>
 
-  <button type="submit">Submit</button>
+  <button type="submit" id="submit">Submit</button>
 </form>
 
 <p *ngIf="message">{{ message }}</p>

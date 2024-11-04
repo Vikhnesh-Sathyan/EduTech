@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SubmissionService } from '../submission.service'; // Adjust the import path as necessary
+import { SubmissionService } from '../submission.service'; // Adjust the import path if necessary
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http'; // Import HttpClient
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-teacher-review',
@@ -14,16 +14,16 @@ import { HttpClientModule, HttpClient } from '@angular/common/http'; // Import H
 export class TeacherReviewComponent implements OnInit {
   submissions: any[] = [];
 
-  constructor(private submissionService: SubmissionService, private http: HttpClient) {} // Inject HttpClient
+  constructor(private submissionService: SubmissionService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.getSubmissions();
   }
 
-  // Method to get all submissions
   getSubmissions(): void {
     this.submissionService.getSubmissions().subscribe(
       (data: any[]) => {
+        console.log('Fetched submissions:', data); // Debug log
         this.submissions = data;
       },
       (error: any) => {
@@ -32,13 +32,12 @@ export class TeacherReviewComponent implements OnInit {
     );
   }
 
-  // Update the status of a submission
   updateSubmissionStatus(id: number, status: string) {
-    this.http.patch(`http://localhost:3000/submissions/${id}`, { status }) // Make sure to use this.http
+    this.http.patch(`http://localhost:3000/submissions/${id}`, { status })
       .subscribe({
         next: () => {
           console.log('Status updated successfully');
-          this.getSubmissions(); // Refresh the submissions
+          this.getSubmissions(); // Refresh the submissions list
         },
         error: (err) => {
           console.error('Error updating status:', err);

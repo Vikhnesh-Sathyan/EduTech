@@ -1,26 +1,28 @@
 <div class="editor-container">
-    <header>
-      <h2>🌐 Interactive Coding Platform</h2>
-      <div class="language-selector">
-        <label for="language">Language:</label>
-        <select [(ngModel)]="language" id="language">
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="javascript">JavaScript</option>
-        </select>
+  <header>
+    <h2>Code Editor</h2>
+    <div class="language-selector">
+      <label for="language">Select Language:</label>
+      <select id="language" [(ngModel)]="language">
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="javascript">JavaScript</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="code-area">
+      <textarea [(ngModel)]="code" rows="10"></textarea>
+      <button class="run-btn" (click)="runCode()">Run</button>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
       </div>
-    </header>
-  
-    <main class="main-content">
-      <div class="code-area">
-        <textarea [(ngModel)]="code" rows="10" placeholder="Write your code here..."></textarea>
-        <button class="run-btn" (click)="runCode()">Run Code 🚀</button>
-      </div>
-  
-      <div class="output-section">
-        <h3>Live Output:</h3>
-        <iframe #iframeOutput></iframe>
-      </div>
-    </main>
+    </div>
+
+    <div class="output-section">
+      <h3>Output:</h3>
+      <iframe #iframeOutput></iframe>
+    </div>
   </div>
-  
+</div>

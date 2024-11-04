@@ -338,3 +338,14 @@ button:hover {
     border-radius: 50%; /* Ensure circular shape for the image */
     object-fit: cover; /* Cover the area while maintaining aspect ratio */
 }
+
+.dynamic-date {
+    color: #128fe1; /* Light blue color */
+    font-weight: bold; /* Make the text bold */
+    transition: color 0.5s ease; /* Smooth color transition */
+  }
+  
+  .dynamic-date:hover {
+    color: #e74c3c; /* Change to red when hovered */
+  }
+  

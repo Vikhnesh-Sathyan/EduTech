@@ -466,18 +466,51 @@ app.post('/api/forgot-password', (req, res) => {
 });
 
 // Reset password endpoint
-app.post('/api/reset-password', (req, res) => {
-  const { email, password } = req.body;
+app.post('/api/reset-password', async (req, res) => {
+  const { email, newPassword, confirmPassword } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required.' });
+  // Validate input
+  if (!email || !newPassword || !confirmPassword) {
+      return res.status(400).json({ error: 'Email and passwords are required' });
   }
 
-  console.log('Reset password request received:', req.body);
+  if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+  }
 
-  // Simulate successful password reset
-  return res.status(200).json({ message: 'Password has been reset successfully.' });
+  try {
+      // Check if parent exists by email
+      const sqlSelect = 'SELECT * FROM parents WHERE email = ?';
+      db.query(sqlSelect, [email], async (err, results) => {
+          if (err) {
+              console.error('Database error:', err);
+              return res.status(500).json({ error: 'Database error' });
+          }
+
+          if (results.length === 0) {
+              return res.status(404).json({ error: 'Parent not found' });
+          }
+
+          // Hash the new password
+          const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+          // SQL query to update the password
+          const sqlUpdate = 'UPDATE parents SET password = ? WHERE email = ?';
+          db.query(sqlUpdate, [hashedPassword, email], (err, result) => {
+              if (err) {
+                  console.error('Error updating password:', err);
+                  return res.status(500).json({ error: 'Failed to update password' });
+              }
+              res.status(200).json({ message: 'Password reset successful' });
+          });
+      });
+  } catch (error) {
+      console.error('Error during password reset:', error);
+      res.status(500).json({ error: 'Server error' });
+  }
 });
+
+
 
   
   
@@ -823,34 +856,29 @@ app.get('/api/messages/:recipient', (req, res) => {
   };
   
   // Socket.IO connection handling
+  app.get('/', (req, res) => {
+    res.send('WebRTC signaling server is running.');
+  });
+  
   io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+    console.log('A user connected');
   
-    socket.on('offer', (data) => {
-      console.log('Received offer:', data);
-      socket.broadcast.emit('offer', data);
+    socket.on('offer', (offer) => {
+      socket.broadcast.emit('offer', offer); // Send offer to other users
     });
   
-    socket.on('answer', (data) => {
-      console.log('Received answer:', data);
-      socket.broadcast.emit('answer', data);
+    socket.on('answer', (answer) => {
+      socket.broadcast.emit('answer', answer); // Send answer to other users
     });
   
-    socket.on('ice-candidate', (data) => {
-      console.log('Received ICE candidate:', data);
-      socket.broadcast.emit('ice-candidate', data);
-    });
-  
-    socket.on('call-ended', async (data) => {
-      console.log('Call ended:', data);
-      await saveCallLog(data.caller, data.receiver, 'completed');
+    socket.on('ice-candidate', (candidate) => {
+      socket.broadcast.emit('ice-candidate', candidate); // Send ice candidate to other users
     });
   
     socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
+      console.log('A user disconnected');
     });
   });
-  
 
   
 
@@ -926,11 +954,9 @@ app.post('/submissions', (req, res) => {
 });
 
 // Route to get submissions for a specific student
-app.get('/submissions/:studentName', (req, res) => {
-  const { studentName } = req.params;
-
-  const sql = 'SELECT id, text, status FROM submissions WHERE studentName = ?';
-  db.query(sql, [studentName], (error, results) => {
+app.get('/submissions', (req, res) => {
+  const sql = 'SELECT id, text, status, studentName, className FROM submissions';
+  db.query(sql, (error, results) => {
     if (error) {
       console.error('Database error:', error);
       return res.status(500).json({ error: 'Database error' });
@@ -938,12 +964,6 @@ app.get('/submissions/:studentName', (req, res) => {
     res.status(200).json(results);
   });
 });
-
-
-
-
-
-
 
 // Route: Approve or reject a submission
 app.patch('/submissions/:id', (req, res) => {

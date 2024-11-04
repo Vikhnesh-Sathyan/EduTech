@@ -5,8 +5,8 @@
       </div>
       <nav>
         <ul>
-          <li><button (click)="navigateToProfile()">My Profile</button></li>
-          <li><button (click)="navigateTomessages()">Messages</button></li>
+          <li><button (click)="navigateToProfile()" class="fas fa-user-circle"> My Profile</button></li>
+          <li><button (click)="navigateTomessages()"  class="fas fa-envelope"> Messages</button></li>
 
   
                   <li><a (click)="studytools()"><i class="fas fa-edit"></i> Study Tools</a></li>
@@ -35,8 +35,10 @@
     <main class="main-content">
       <header class="header">
         <div class="date">
-          <p>September 25, 2024</p>
+          <p class="dynamic-date">{{ currentDate | date: 'MMMM d, y' }}</p>
         </div>
+        
+        
         <div class="search-bar">
           <input type="text" placeholder="Search">
         </div>
@@ -57,22 +59,26 @@
       </section>
   
       <section class="finance-section">
-        <h2>Challenges</h2>
+        <h2>Activities</h2>
         <div class="finance-cards">
           <div class="card">
-            <li>
+            <!-- <li>
               <a (click)="navigateToCoding()">
                 <i class="fas fa-users"></i> Coding
               </a>
-            </li>
+            </li> -->
+            <button (click)="navigateToCoding()"> Coding</button>
+
           </div>
           
           <div class="card">
-            <li>
+            <!-- <li>
               <a (click)="navigateToQuestionbank()">
                 <i class="fas fa-users"></i> Question Bank 
               </a>
-            </li>          </div>
+            </li>  -->
+            <button (click)="navigateToQuestionbank()">Question Bank</button>       
+            </div>
           <div class="card">
             <!-- <p (click)="Extracurriculm()" class="extra-curriculum">Extra Curriculum</p> -->
                        <button (click)="navigateToTodoList()">Todo List</button>
@@ -95,7 +101,7 @@
         </div>
       </section>
   
-      <aside class="sidebar-content">
+      <!-- <aside class="sidebar-content">
         <section class="course-instructors">
           <h2>Course Instructors</h2>
           <div class="instructors">
@@ -119,5 +125,5 @@
             <a href="#">See more</a>
           </div>
         </section>
-      </aside>
+      </aside> -->
     </main>

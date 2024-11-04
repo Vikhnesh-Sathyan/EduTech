@@ -1,23 +1,116 @@
+/* Container for each submission */
 .submission {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+  background: linear-gradient(135deg, #e0eafc, #cfdef3);
+  border-left: 6px solid #2196F3;
+  padding: 30px 20px; /* Increased padding for better spacing */
+  margin-bottom: 30px; /* More space between submissions */
+  border-radius: 12px;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 200px; /* Increased height for a roomier look */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Align content nicely */
+}
+
+/* Submission hover effect */
+.submission:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Stronger hover shadow */
+}
+
+/* Header for student name */
+.submission strong {
+  font-size: 1.5rem; /* Slightly larger font */
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 10px; /* Add spacing below student name */
+}
+
+/* Submission text spacing */
+.submission p {
+  flex: 1; /* Allow the text to take available space */
+  font-size: 2rem;
+  line-height: 1.5;
+  color: #444;
+}
+
+/* Submission status label */
+.submission span {
+  display: inline-block;
+  padding: 8px 12px; /* Larger padding for labels */
+  border-radius: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Status styles */
+.approved {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.rejected {
+  background-color: #f44336;
+  color: white;
+}
+
+.pending {
+  background-color: #ff9800;
+  color: white;
+}
+
+/* Buttons section */
+button {
+  background: #2196F3;
+  border: none;
+  color: white;
+  padding: 12px 18px; /* Bigger buttons for better usability */
+  margin-top: 15px;
+  margin-right: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem; /* Slightly larger font */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for buttons */
+button:hover {
+  background-color: #1976D2;
+  transform: scale(1.05); /* Subtle scaling effect */
+}
+
+/* Disabled button */
+button[disabled] {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+
+/* Horizontal line between sections */
+.submission::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.05);
+  bottom: 0;
+  left: 0;
+}
+
+/* Submission spacing */
+.submission + .submission {
+  margin-top: 30px; /* Increased spacing between cards */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .submission {
+    padding: 20px;
+    min-height: 180px;
   }
-  
+
   button {
-    margin-right: 5px;
+    padding: 10px 12px;
+    font-size: 0.85rem;
   }
-  
-  .approved {
-    color: green;
-  }
-  
-  .rejected {
-    color: red;
-  }
-  
-  .pending {
-    color: orange;
-  }
-  
+}

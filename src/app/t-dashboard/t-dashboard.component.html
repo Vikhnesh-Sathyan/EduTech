@@ -11,29 +11,34 @@
         <li><a routerLink="/teacher-login/t-dashboard/grades"><i class="fas fa-clipboard-list"></i> Grades</a></li>
         <li><a (click)="goToResources()"><i class="fas fa-book"></i> Resources</a></li>
         <li><a routerLink="/teacher-login/t-dashboard/alerts"><i class="fas fa-exclamation-triangle"></i> Alerts</a></li>
-        <li>
+        <!-- <li>
           <button class="challenge-btn" (click)="goToStudytips()">
             <i class="fas fa-comments"></i> Study-tips
           </button>
-        </li>
-        <li>
+        </li> -->
+        <li><a (click)="goToStudytips()"><i class="fas fa-book"></i>Study-tips</a></li>
+        <li><a (click)="navigateTogeneratequestion()"><i class="fas fa-lightbulb"></i>Question Generation</a></li>
+
+        <!-- <li>
           <button class="btn-link" (click)="navigateTogeneratequestion()">
             <i class="fas fa-calendar-alt"></i> Question Generation
           </button>
-        </li>
-                        <li>
+        </li> -->
+        <li><a (click)="onMessageClick()"><i class="fas fa-envelope"></i>Messages</a></li>
+
+                <!-- <li>
                   <button class="nav-button" (click)="onMessageClick()">
                     <i class="fas fa-envelope"></i> Messages
                   </button>
-                </li>
-                        <li><a routerLink="/teacher-login/t-dashboard/parent-communication"><i class="fas fa-users"></i> Parent Communication</a></li>
+                </li> -->
+                        <!-- <li><a routerLink="/teacher-login/t-dashboard/parent-communication"><i class="fas fa-users"></i> Parent Communication</a></li> -->
 
                         <li>
                           <button class="nav-button" (click)="navigateToBankSubmission()">
                             <i class="fas fa-envelope"></i> Question Bank
                           </button>
                         </li>
-                        >        
+                               
       </ul>
     </nav>
   

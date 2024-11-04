@@ -25,6 +25,7 @@ export class Grade9DashboardComponent implements OnInit {
     guardian_name: '',
     grade: ''
   };
+  currentDate: Date = new Date(); // Initialize with the current date
 
   name: string | undefined;
   userProfileImg: string | undefined;
@@ -156,5 +157,9 @@ export class Grade9DashboardComponent implements OnInit {
   navigateToQuestionbank(): void {
     this.router.navigate(['student-submission']); 
   }
-
+  updateDate(): void {
+    setInterval(() => {
+      this.currentDate = new Date();
+    }, 24 * 60 * 60 * 1000); // Every 24 hours
+  }
 }

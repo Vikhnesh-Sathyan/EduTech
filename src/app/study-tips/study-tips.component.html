@@ -34,9 +34,9 @@
     <label for="topic">Topic:</label>
     <input id="topic" type="text" [(ngModel)]="newTopic" placeholder="Enter topic" />
 
-    <textarea [(ngModel)]="newTip" placeholder="Enter your study tip here" rows="4"></textarea>
+    <textarea [(ngModel)]="newTip" placeholder="Enter your study tip here" rows="4" id="text"></textarea>
 
-    <button (click)="addTip()" 
+    <button (click)="addTip()" id="tip"
             [disabled]="!newSubject.trim() || !newTopic.trim() || !newTip.trim()">
         Add Tip
     </button>
