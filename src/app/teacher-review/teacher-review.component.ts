@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SubmissionService } from '../submission.service'; // Adjust the import path if necessary
+import { SubmissionService } from '../submission.service'; 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
