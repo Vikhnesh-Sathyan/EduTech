@@ -44,6 +44,7 @@
     "swiper": "^11.1.9",
     "tone": "^15.0.4",
     "tslib": "^2.3.0",
+    "webpack": "^5.96.1",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {

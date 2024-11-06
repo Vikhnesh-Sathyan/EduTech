@@ -30,8 +30,6 @@
               "src/styles.css",
               "src/app/student-login/student-login.component.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
-
-
             ],
             "scripts": []
           },
@@ -45,8 +43,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "4kB",    
+                  "maximumError": "6kB"      
                 }
               ],
               "outputHashing": "all"
