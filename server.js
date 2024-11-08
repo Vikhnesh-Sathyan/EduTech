@@ -19,8 +19,9 @@ const io = new Server(server, { cors: { origin: "*" } }); // Setup socket.io
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload()); // Correct placement
+// app.use(fileUpload()); // Correct placement
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // MySQL database connection pool
 const db = mysql.createPool({
@@ -620,53 +621,55 @@ app.get('/api/flashcards', (req, res) => {
 
 
 // Route for uploading notes along with a file
+// Endpoint to handle note posting
 app.post('/api/notes', (req, res) => {
-    const { noteContent, classId } = req.body;
-    const file = req.files ? req.files.file : null; // Get uploaded file
-  
-    if (!noteContent || !classId) {
-      return res.status(400).json({ message: 'Note content or classId is missing' });
-    }
-  
-    let filePath = null;
-  
-    if (file) {
-      const fileName = `${Date.now()}-${file.name}`; // Create unique filename
-      filePath = path.join(UPLOAD_DIR, fileName);
-  
-      // Save the uploaded file
-      file.mv(filePath, (err) => {
-        if (err) {
-          console.error('File upload failed:', err);
-          return res.status(500).json({ message: 'File upload failed' });
-        }
-  
-        // Insert note with file path into the database
-        insertNoteIntoDB(noteContent, classId, filePath, res);
-      });
-    } else {
-      // Insert note without file
-      insertNoteIntoDB(noteContent, classId, null, res);
-    }
-  });
-  
-  // Helper function to insert a note into the database
-  function insertNoteIntoDB(noteContent, classId, filePath, res) {
-    const query = 'INSERT INTO notes (content, class_id, file_path) VALUES (?, ?, ?)';
-    db.query(query, [noteContent, classId, filePath], (err, result) => {
-      if (err) {
-        console.error('Failed to insert note:', err);
-        return res.status(500).json({ message: 'Database error' });
-      }
-      res.status(201).json({
-        message: 'Note saved successfully',
-        id: result.insertId,
-        classId,
-        filePath,
-      });
-    });
+  console.log('Request body:', req.body);
+  console.log('Uploaded file:', req.files ? req.files.file : null);
+
+  const { noteContent, classId } = req.body;
+  const file = req.files ? req.files.file : null;
+
+  // Check for required fields
+  if (!noteContent || !classId) {
+    return res.status(400).json({ message: 'Note content or classId is missing' });
   }
+
+  let filePath = null;
   
+  // If a file is included, save it
+  if (file) {
+    const fileName = `${Date.now()}-${file.name}`;
+    filePath = path.join(UPLOAD_DIR, fileName);
+    file.mv(filePath, (err) => {
+      if (err) {
+        console.error('File upload failed:', err);
+        return res.status(500).json({ message: 'File upload failed' });
+      }
+      insertNoteIntoDB(noteContent, classId, filePath, res);
+    });
+  } else {
+    insertNoteIntoDB(noteContent, classId, null, res);
+  }
+});
+
+
+// Helper function to insert a note into the database
+function insertNoteIntoDB(noteContent, classId, filePath, res) {
+  const query = 'INSERT INTO notes (content, class_id, file_path) VALUES (?, ?, ?)';
+  db.query(query, [noteContent, classId, filePath], (err, result) => {
+    if (err) {
+      console.error('Failed to insert note:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+    res.status(201).json({
+      message: 'Note saved successfully',
+      id: result.insertId,
+      classId,
+      filePath,
+    });
+  });
+}
+
  // Fetch notes for a specific class
 app.get('/api/notes/class/:classId', (req, res) => {
     const classId = req.params.classId;
