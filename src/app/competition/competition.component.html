@@ -1,0 +1,71 @@
+<div class="dsa-container">
+    <div class="code-input-section">
+        <h2>DSA Code Input</h2>
+        <select [(ngModel)]="selectedAlgorithm" class="algorithm-select">
+            <option value="bubble-sort">Bubble Sort</option>
+            <option value="binary-search">Binary Search</option>
+            <option value="quick-sort">Quick Sort</option>
+            <option value="merge-sort">Merge Sort</option>
+            <option value="insertion-sort">Insertion Sort</option>
+            <option value="selection-sort">Selection Sort</option>
+            <option value="dfs">Depth-First Search</option>
+            <!-- Add more algorithms as needed -->
+        </select>
+        <textarea 
+            [(ngModel)]="dsaCode" 
+            placeholder="Paste your DSA code here..."
+            rows="10"
+            class="code-textarea">
+        </textarea>
+        <button (click)="analyzeDSACode()" class="analyze-btn">
+            Analyze & Visualize
+        </button>
+        <button (click)="reset()" class="reset-btn">
+            Reset
+        </button>
+    </div>
+
+    <div class="algorithm-code-section">
+        <h3>Algorithm Code</h3>
+        <pre>{{ getAlgorithmCode() }}</pre>
+    </div>
+
+    <div class="visualization-section">
+        <div class="controls">
+            <button (click)="stopAnimation()" [disabled]="!isAnimating">Stop</button>
+            <button (click)="adjustSpeed(false)" [disabled]="isAnimating">Slow Down</button>
+        </div>
+
+        <div class="visualization-area">
+            <!-- Bubble Sort Visualization -->
+            <div *ngIf="currentAnimation.length && !currentAnimation[0].hasOwnProperty('left')" class="array-visualization">
+                <div *ngFor="let num of currentAnimation[currentStep].array; let i = index" 
+                     class="array-element"
+                     [style.height.px]="num * 2"
+                     [class.comparing]="currentAnimation[currentStep].comparing.includes(i)"
+                     [class.swapped]="currentAnimation[currentStep].swapped && currentAnimation[currentStep].comparing.includes(i)">
+                    {{num}}
+                </div>
+            </div>
+
+            <!-- Binary Search Visualization -->
+            <div *ngIf="currentAnimation.length && currentAnimation[0].hasOwnProperty('left')" class="binary-search-visualization">
+                <div *ngFor="let num of currentAnimation[currentStep].array; let i = index" 
+                     class="array-element"
+                     [class.left-pointer]="i === currentAnimation[currentStep].left"
+                     [class.right-pointer]="i === currentAnimation[currentStep].right"
+                     [class.mid-pointer]="i === currentAnimation[currentStep].mid">
+                    {{num}}
+                </div>
+            </div>
+        </div>
+
+        <div class="explanation-section">
+            <h3>Explanation</h3>
+            <p>{{explanation}}</p>
+            <div class="step-counter" *ngIf="currentAnimation.length">
+                Step {{currentStep + 1}} of {{currentAnimation.length}}
+            </div>
+        </div>
+    </div>
+</div>

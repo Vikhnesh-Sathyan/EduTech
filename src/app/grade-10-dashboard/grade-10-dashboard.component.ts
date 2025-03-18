@@ -9,7 +9,7 @@ import { StudentserviceService, Student } from '../studentservice.service'; // E
   standalone: true,
   imports: [CommonModule, HttpClientModule],
   templateUrl: './grade-10-dashboard.component.html',
-  styleUrl: './grade-10-dashboard.component.css'
+  styleUrl: './grade-10-dashboard.component.css',
 })
 export class Grade10DashboardComponent {
   studentData: Student = { // Initialize student data

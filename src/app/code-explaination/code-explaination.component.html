@@ -1,0 +1,50 @@
+<div>
+    <h1>Code Conversion Tool</h1>
+    <label for="language">Select Language:</label>
+    <select id="language" [(ngModel)]="language">
+        <option value="Python">Python to JavaScript</option>
+        <option value="JavaScript">JavaScript to Python</option>
+        <option value="Java">Java to Python</option>
+    </select>
+    <textarea [(ngModel)]="inputCode" placeholder="Enter your code here..."></textarea>
+    <button (click)="convertCode(inputCode)">Convert Code</button>
+    <button (click)="resetFields()">Reset</button>
+    <button (click)="downloadConvertedCode()">Download Converted Code</button>
+    
+    <h2>Comparison:</h2>
+    <div style="display: flex;">
+        <div style="flex: 1; margin-right: 10px;">
+            <h3>Original Code ({{ language }})</h3>
+            <pre><code class="{{ language === 'Python' ? 'language-python' : language === 'JavaScript' ? 'language-javascript' : 'language-java' }}">{{ inputCode }}</code></pre>
+        </div>
+        <div style="flex: 1;">
+            <h3>Converted Code ({{ language === 'Python' ? 'JavaScript' : language === 'JavaScript' ? 'Python' : 'Python' }})</h3>
+            <pre><code class="{{ language === 'Python' ? 'language-javascript' : language === 'JavaScript' ? 'language-python' : 'language-python' }}">{{ convertedCode }}</code></pre>
+        </div>
+    </div>
+
+    <h2>Language-Specific Features</h2>
+    <div *ngIf="language === 'Python'">
+        <ul>
+            <li>Python uses indentation to define code blocks.</li>
+            <li>Dynamic typing allows variables to change types.</li>
+            <li>Commonly used for data science and machine learning.</li>
+        </ul>
+    </div>
+    <div *ngIf="language === 'JavaScript'">
+        <ul>
+            <li>JavaScript uses curly braces to define code blocks.</li>
+            <li>Supports asynchronous programming with promises and async/await.</li>
+            <li>Widely used for web development and front-end frameworks.</li>
+        </ul>
+    </div>
+    <div *ngIf="language === 'Java'">
+        <ul>
+            <li>Java requires explicit type declarations for variables.</li>
+            <li>Object-oriented programming is a core principle.</li>
+            <li>Commonly used for enterprise applications and Android development.</li>
+        </ul>
+    </div>
+
+    
+</div>

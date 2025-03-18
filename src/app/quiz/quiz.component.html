@@ -1,0 +1,41 @@
+<div class="upload-questions-container">
+    <h1 class="text-xl font-bold mb-4">Upload Aptitude Questions</h1>
+    <form [formGroup]="questionForm" (ngSubmit)="submit()">
+      <div formArrayName="questions" *ngFor="let question of questions.controls; let i = index">
+        <div [formGroupName]="i" class="question-form">
+          <h3>Question {{ i + 1 }}</h3>
+          <div class="form-group">
+            <label>Question</label>
+            <textarea formControlName="question" placeholder="Enter the question"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Option A</label>
+            <input type="text" formControlName="optionA" placeholder="Enter Option A" />
+          </div>
+          <div class="form-group">
+            <label>Option B</label>
+            <input type="text" formControlName="optionB" placeholder="Enter Option B" />
+          </div>
+          <div class="form-group">
+            <label>Option C</label>
+            <input type="text" formControlName="optionC" placeholder="Enter Option C" />
+          </div>
+          <div class="form-group">
+            <label>Option D</label>
+            <input type="text" formControlName="optionD" placeholder="Enter Option D" />
+          </div>
+          <div class="form-group">
+            <label>Correct Option (A, B, C, or D)</label>
+            <input type="text" formControlName="correctOption" placeholder="Enter Correct Option" />
+          </div>
+          <button type="button" class="btn-remove" (click)="removeQuestion(i)" *ngIf="questions.length > 1">
+            Remove Question
+          </button>
+          <hr />
+        </div>
+      </div>
+      <button type="button" class="btn-add" (click)="addQuestion()">Add Another Question</button>
+      <button type="submit" class="btn-submit">Submit Questions</button>
+    </form>
+  </div>
+  

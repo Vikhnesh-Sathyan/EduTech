@@ -1,0 +1,19 @@
+<!-- view-insights.component.html -->
+<div>
+  <h2>View Interview Insights</h2>
+  <label for="companyName">Company Name</label>
+  <input type="text" id="companyName" [(ngModel)]="companyName" name="companyName">
+
+  <button (click)="fetchInsights()">Fetch Insights</button>
+
+  <div *ngIf="insights">
+    <h3>Common Questions</h3>
+    <p>{{ insights.common_questions }}</p>
+
+    <h3>Aptitude Test Types</h3>
+    <p>{{ insights.aptitude_test_types }}</p>
+
+    <h3>Mock Feedback</h3>
+    <p>{{ insights.mock_feedback }}</p>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 const http = require('http');
+const axios = require('axios');
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const mysql = require('mysql2'); // Using mysql2 without promises
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -10,6 +12,11 @@ const nodemailer = require('nodemailer');
 const fileUpload = require('express-fileupload');
 const { Server } = require('socket.io');
 require('dotenv').config();
+const { Configuration, OpenAIApi } = require('openai');
+const { exec } = require("child_process");
+const { spawn } = require('child_process');
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -23,15 +30,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
+
 // MySQL database connection pool
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '1234',
     database: 'edutech',
-    waitForConnections: true,
-    connectionLimit: 10,  // Optional: limits the number of connections in the pool
-    queueLimit: 0          // Optional: disables queue limit
 });
 
 // Test MySQL connection
@@ -95,7 +100,7 @@ app.post('/api/teacher-signin', async (req, res) => {
                       username: teacher.username,
                       email: teacher.email
                   },
-                  redirectUrl: '/t-dashboard' // Add redirect URL
+                  redirectUrl: '/teacher-register' // Add redirect URL
               });
           } else {
               res.status(401).send('Incorrect password');
@@ -421,7 +426,6 @@ app.delete('/api/delete-content/:grade/:filename', (req, res) => {
 
 
 
-// Create a transporter object using the default SMTP transport
 //FORGOT PASSWORD
 
 const transporter = nodemailer.createTransport({
@@ -620,7 +624,6 @@ app.get('/api/flashcards', (req, res) => {
 
 
 
-// Route for uploading notes along with a file
 // Endpoint to handle note posting
 app.post('/api/notes', (req, res) => {
   console.log('Request body:', req.body);
@@ -836,55 +839,6 @@ app.get('/api/messages/:recipient', (req, res) => {
   });
   
 
-
-
-
-
-
-
-
-
-
-
-
-  // Store call logs in SQL
-  const saveCallLog = async (caller, receiver, status) => {
-    try {
-      const query = "INSERT INTO call_logs (caller, receiver, status) VALUES (?, ?, ?)";
-      await db.query(query, [caller, receiver, status]);
-      console.log(`Call log saved: ${caller} to ${receiver} - Status: ${status}`);
-    } catch (error) {
-      console.error('Error saving call log:', error);
-    }
-  };
-  
-  // Socket.IO connection handling
-  app.get('/', (req, res) => {
-    res.send('WebRTC signaling server is running.');
-  });
-  
-  io.on('connection', (socket) => {
-    console.log('A user connected');
-  
-    socket.on('offer', (offer) => {
-      socket.broadcast.emit('offer', offer); // Send offer to other users
-    });
-  
-    socket.on('answer', (answer) => {
-      socket.broadcast.emit('answer', answer); // Send answer to other users
-    });
-  
-    socket.on('ice-candidate', (candidate) => {
-      socket.broadcast.emit('ice-candidate', candidate); // Send ice candidate to other users
-    });
-  
-    socket.on('disconnect', () => {
-      console.log('A user disconnected');
-    });
-  });
-
-  
-
   app.post('/api/questions', (req, res) => {
     const questions = req.body;
     console.log('Received questions:', questions);  // Debugging log
@@ -994,7 +948,702 @@ app.patch('/submissions/:id', (req, res) => {
 
 
 
+
+
+// Teacher Registration Route
+app.post('/api/teacher/register', upload.fields([{ name: 'resume' }, { name: 'certification' }]), (req, res) => {
+  const { name, email, qualification } = req.body;
+  const resume = req.files['resume'] ? req.files['resume'][0].path : null;
+  const certification = req.files['certification'] ? req.files['certification'][0].path : null;
+
+  if (!name || !email || !qualification) {
+    return res.status(400).json({ message: 'Required fields are missing' });
+  }
+
+  const query = 'INSERT INTO teacher (name, email, qualification, resume, certification, status) VALUES (?, ?, ?, ?, ?, "pending")';
+
+  db.query(query, [name, email, qualification, resume, certification], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Error registering teacher' });
+    }
+    res.json({ message: 'Teacher registered successfully' });
+  });
+});
+
+// Define the route to get all teachers with "pending" status
+app.get('/api/admin/all-teachers', (req, res) => {
+  const query = 'SELECT id, name, email, qualification, resume, certification, status FROM teacher WHERE status = "pending"';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching teacher details:', err);
+      return res.status(500).json({ message: 'Error fetching teacher details' });
+    }
+    res.json(results);
+  });
+});
+
+
+
+
+
+// Backend API to update teacher status (approve/reject)
+app.put('/api/admin/teacher/:id/status', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const query = 'UPDATE teacher SET status = ? WHERE id = ?';
+  db.query(query, [status, id], (err, result) => {
+    if (err) {
+      console.error('Error updating teacher status:', err);
+      return res.status(500).send('Error updating teacher status');
+    }
+    res.send(`Teacher status updated to ${status}`);
+  });
+});
+
+
+
+
+
+
+
+// app.post('/login', (req, res) => {
+//   const { username, password } = req.body;
+//   if (username === 'placementteam' && password === 'team123') {
+//     res.status(200).send({ message: 'Login successful' });
+//   } else {
+//     res.status(404).send({ message: 'User not found.' });
+//   }
+// });
+
+// Register a user
+app.post('/register', (req, res) => {
+  const {
+    name, email, password, role,
+    studentId, classYear, department,
+    parentName, contactNumber, employeeId,
+    designation, experience, linkedinProfile
+  } = req.body;
+
+  // Ensure required fields are provided
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ message: 'Missing required fields.' });
+  }
+
+  // Hash the password before saving
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error hashing password.', error: err });
+    }
+
+    // SQL query to insert user data
+    const query = `
+      INSERT INTO users (name, email, password, role, student_id, class_year, department, parent_name, contact_number, employee_id, designation, experience, linkedin_profile, is_approved) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FALSE)
+    `;
+
+    const values = [
+      name, email, hashedPassword, role,
+      studentId || null, classYear || null, department || null,
+      parentName || null, contactNumber || null, employeeId || null,
+      designation || null, experience || null, linkedinProfile || null
+    ];
+
+    // Execute the query to insert the user
+    db.query(query, values, (dbError, result) => {
+      if (dbError) {
+        console.error(dbError);
+        return res.status(500).json({ message: 'Error registering user.', error: dbError });
+      }
+
+      // Success message
+      res.status(201).json({
+        message: 'Registration successful. Awaiting admin approval.',
+        userId: result.insertId
+      });
+    });
+  });
+});
+
+// Fetch pending approvals for admin
+app.get('/pending-approvals', (req, res) => {
+  const query = 'SELECT * FROM users WHERE is_approved = FALSE';
+
+  db.query(query, (dbError, users) => {
+    if (dbError) {
+      console.error(dbError);
+      return res.status(500).json({ message: 'Error fetching pending approvals.', error: dbError });
+    }
+
+    res.status(200).json(users);
+  });
+});
+
+// Approve or reject a user
+app.post('/approve-user', (req, res) => {
+  const { userId, isApproved } = req.body;
+
+  if (typeof isApproved !== 'boolean' || !userId) {
+    return res.status(400).json({ message: 'Invalid input.' });
+  }
+
+  // Update the approval status in the database
+  const query = 'UPDATE users SET is_approved = ? WHERE id = ?';
+  const values = [isApproved, userId];
+
+  db.query(query, values, (dbError) => {
+    if (dbError) {
+      console.error(dbError);
+      return res.status(500).json({ message: 'Error approving/rejecting user.', error: dbError });
+    }
+
+    res.status(200).json({
+      message: `User ${isApproved ? 'approved' : 'rejected'} successfully.`
+    });
+  });
+});
+
+
+// Login route
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if email and password are provided
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
+
+  // Query the database to find the user by email
+  const query = 'SELECT * FROM users WHERE email = ?';
+  db.query(query, [email], async (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Error logging in.' });
+    }
+
+    // Check if no user was found
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const user = result[0];
+
+    // Check if user is approved
+    if (!user.is_approved) {
+      return res.status(403).json({ message: 'Your account is awaiting admin approval.' });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials.' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+
+    res.status(200).json({
+      message: 'Login successful.',
+      token,
+      user: { id: user.id, name: user.name, role: user.role },
+    });
+  });
+});
+
+// Middleware to verify token
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(401).json({ message: 'Access token is required.' });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token.' });
+    }
+    req.user = user;
+    next();
+  });
+}
+
+// Protected route example
+app.get('/dashboard', authenticateToken, (req, res) => {
+  res.status(200).json({ message: `Welcome, user ${req.user.id}!`, user: req.user });
+});
+
+
+
+// POST endpoint to insert data into resumes table
+app.post('/api/resume', (req, res) => {
+  const { student_id, name, email, phone, education, experience, skills, summary } = req.body;
+
+  // Insert query
+  const query = `
+      INSERT INTO resumes (student_id, name, email, phone, education, experience, skills, summary)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  // Execute query
+  db.query(query, [student_id, name, email, phone, education, experience, skills, summary], (err, result) => {
+      if (err) {
+          console.error('Database error:', err);
+          return res.status(500).send({
+              message: 'Error saving resume',
+              error: err.sqlMessage || err.message
+          });
+      }
+      res.status(200).send({
+          message: 'Resume saved successfully',
+          resumeId: result.insertId
+      });
+  });
+});
+
+
+
+app.post('/api/resume/ai-suggestions', (req, res) => {
+  const { section, input } = req.body;
+
+  if (!section || !input) {
+    return res.status(400).json({ error: 'Input text is required' });
+  }
+
+  const aiResponse = {
+    suggestion: `Suggested text for ${section} based on input: ${input}`
+  };
+  res.json(aiResponse);
+});
+
+
+app.post('/api/coverletter', (req, res) => {
+  const { name, role, experience, skills, company } = req.body;
+  res.json({ suggestion: `This is a sample suggestion for ${role} at ${company}.` });
+});
+
+
+
+app.post('/upload-aptitude', upload.single('pdf'), (req, res) => {
+  const companyName = req.body.company_name;
+  const filePath = req.file.path;  // Path to the uploaded PDF
+
+  const query = 'INSERT INTO aptitude_questions (company_name, file_path) VALUES (?, ?)';
+  db.query(query, [companyName, filePath], (err, result) => {
+      if (err) {
+          return res.status(500).send('Error uploading file');
+      }
+      res.status(200).send('File uploaded successfully');
+  });
+});
+
+
+// API to get aptitude questions for a specific company
+app.get('/get-aptitude/:company_name', (req, res) => {
+  const companyName = req.params.company_name;
+
+  const query = 'SELECT file_path FROM aptitude_questions WHERE company_name = ?';
+  db.query(query, [companyName], (err, result) => {
+      if (err) {
+          return res.status(500).send('Error fetching questions');
+      }
+      if (result.length === 0) {
+          return res.status(404).send('No aptitude questions found for this company');
+      }
+      res.status(200).json(result[0]);  // Sending file path
+  });
+});
+
+
+
+
+// Share a template with students
+app.post('/api/share-template', async (req, res) => {
+  const { studentIds, templateId } = req.body;
+
+  if (!studentIds || studentIds.length === 0 || !templateId) {
+    return res.status(400).json({ error: 'Student IDs and template ID are required' });
+  }
+
+  try {
+    // Loop through the selected students and associate them with the template
+    for (const studentId of studentIds) {
+      await db.query(
+        'INSERT INTO shared_templates (student_id, template_id) VALUES (?, ?)',
+        [studentId, templateId]
+      );
+    }
+
+    res.status(201).json({ message: 'Template shared successfully with selected students' });
+  } catch (error) {
+    console.error('Error sharing template:', error);
+    res.status(500).json({ error: 'Failed to share template' });
+  }
+});
+
+
+// Fetch all students for the placement officer
+app.get('/api/students', async (req, res) => {
+  try {
+    // Query to get all students
+    const [students] = await db.query('SELECT id, name, email FROM students');
+    
+    if (students.length === 0) {
+      return res.status(404).json({ message: 'No students found' });
+    }
+
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+});
+
+
+
+app.post('/upload-insights', (req, res) => {
+  const { company_name, common_questions, aptitude_test_types, mock_feedback } = req.body;
+
+  const query = `
+      INSERT INTO interview_insights (company_name, common_questions, aptitude_test_types, mock_feedback)
+      VALUES (?, ?, ?, ?)
+  `;
+  db.query(query, [company_name, common_questions, aptitude_test_types, mock_feedback], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).send('Error saving interview insights');
+      }
+      res.status(200).send('Interview insights uploaded successfully');
+  });
+});
+
+
+// API to fetch interview insights by company
+app.get('/get-insights/:company_name', (req, res) => {
+  const companyName = req.params.company_name;
+
+  const query = `
+      SELECT common_questions, aptitude_test_types, mock_feedback 
+      FROM interview_insights WHERE company_name = ?
+  `;
+  db.query(query, [companyName], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).send('Error fetching interview insights');
+      }
+      if (result.length === 0) {
+          return res.status(404).send('No interview insights found for this company');
+      }
+      res.status(200).json(result[0]);
+  });
+});
+
+
+
+
+// POST endpoint to add a new mock interview question
+app.post('/api/mock-interview/questions', async (req, res) => {
+  const { interviewType, question } = req.body;
+
+  // Validate request body
+  if (!interviewType || !question) {
+    return res.status(400).json({ message: 'Both interview type and question are required.' });
+  }
+
+  try {
+    // Insert question into the database
+    const [result] = await db.execute(
+      'INSERT INTO mock_interview_questions (interview_type, question) VALUES (?, ?)',
+      [interviewType, question]
+    );
+
+    // Check if the insertion was successful
+    if (result.affectedRows > 0) {
+      return res.status(201).json({ success: true, questionId: result.insertId });
+    } else {
+      return res.status(500).json({ message: 'Failed to add the question.' });
+    }
+  } catch (error) {
+    console.error('Database error during insertion:', error.message);
+    return res.status(500).json({ message: 'Database error. Please try again later.' });
+  }
+});
+
+// GET endpoint to fetch mock interview questions by type
+app.get('/api/mock-interview/questions/:type', (req, res) => {
+  const interviewType = req.params.type; // Extract the parameter from the URL path
+
+  // SQL query to fetch questions
+  const query = `
+    SELECT question 
+    FROM mock_interview_questions 
+    WHERE interview_type = ?
+  `;
+
+  // Execute the query
+  db.query(query, [interviewType], (err, result) => {
+    if (err) {
+      console.error('Database query failed:', err.message);
+      return res.status(500).send('Failed to fetch questions. Please try again later.');
+    }
+
+    if (result.length === 0) {
+      return res.status(404).send('No questions found for the specified type.');
+    }
+
+    // Respond with the questions
+    res.status(200).json({ questions: result.map(row => row.question) });
+  });
+});
+
+
+app.get('/api/problems', (req, res) => {
+  const query = 'SELECT * FROM problems ORDER BY company';
+  pool.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).send('Error retrieving problems.');
+    }
+    res.json(results);
+  });
+});
+
+// Endpoint to add a new problem
+app.post('/api/problems', (req, res) => {
+  const { title, description, company, difficulty } = req.body;
+  const query = 'INSERT INTO problems (title, description, company, difficulty) VALUES (?, ?, ?, ?)';
+  pool.query(query, [title, description, company, difficulty], (err, result) => {
+    if (err) {
+      return res.status(500).send('Error adding problem.');
+    }
+    res.status(201).json({ message: 'Problem added successfully' });
+  });
+});
+
+
+
+
+
+
+// POST route for adding jobs
+app.post('/api/jobs', (req, res) => {
+  const { jobTitle, companyName, timeLimit, salaryRange, jobLocation, jobType, qualifications, experienceLevel, contactInfo, jobDescription } = req.body;
+
+  const query = `
+    INSERT INTO Jobs (jobTitle, companyName, timeLimit, salaryRange, jobLocation, jobType, qualifications, experienceLevel, contactInfo, jobDescription) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    query,
+    [jobTitle, companyName, timeLimit, salaryRange, jobLocation, jobType, qualifications, experienceLevel, contactInfo, jobDescription],
+    (err, result) => {
+      if (err) {
+        console.error('Error adding job:', err);
+        return res.status(500).send('Error adding job');
+      }
+      res.status(201).send('Job added successfully');
+    }
+  );
+});
+
+
+
+// API endpoint to fetch all jobs
+app.get('/api/jobs', (req, res) => {
+  const query = `
+    SELECT jobTitle, companyName, timeLimit, salaryRange, jobLocation, jobType, qualifications, experienceLevel, contactInfo, jobDescription
+    FROM jobs
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query failed:', err.message);
+      return res.status(500).send('Failed to fetch jobs. Please try again later.');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('No jobs found.');
+    }
+
+    // Respond with the jobs
+    res.status(200).json(results);
+  });
+});
+
+
+
+app.post('/api/alerts', (req, res) => {
+  const { title, message, sender } = req.body;
+
+  if (!title || !message || !sender) {
+      return res.status(400).send({ error: 'All fields are required.' });
+  }
+
+  const query = 'INSERT INTO alerts (title, message, sender) VALUES (?, ?, ?)';
+  db.query(query, [title, message, sender], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).send({ error: 'Failed to send alert.' });
+      }
+      res.status(201).send({ message: 'Alert sent successfully!' });
+  });
+});
+
+// API to fetch all alerts
+app.get('/api/alerts', (req, res) => {
+  const query = 'SELECT * FROM alerts ORDER BY created_at DESC';
+  db.query(query, (err, results) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).send({ error: 'Failed to fetch alerts.' });
+      }
+      res.send(results);
+  });
+});
+
+
+app.post('/summarize', async (req, res) => {
+  try {
+      const { text } = req.body;
+      const response = await axios.post('http://localhost:5000/summarize', { text });
+      res.json(response.data);
+  } catch (error) {
+      console.error('Error in summarization:', error);
+      res.status(500).send('Error in summarization');
+  }
+});
+
+
+
+app.post('/api/shortlisted-students', (req, res) => {
+  const { student_id, student_name, branch, company_name, job_title, next_round_name, next_round_date } = req.body;
+
+  // Log received data for debugging
+  console.log('Received data:', req.body);
+
+  // Validate required fields
+  if (!student_id || !student_name || !branch || !company_name || !job_title || !next_round_name || !next_round_date) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  const query = `
+    INSERT INTO shortlisted_students 
+    (student_id, student_name, branch, company_name, job_title, next_round_name, next_round_date) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  // Execute the database query
+  db.query(
+    query,
+    [student_id, student_name, branch, company_name, job_title, next_round_name, next_round_date],
+    (err, results) => {
+      if (err) {
+        console.error('Error inserting data:', err);
+        return res.status(500).json({ error: 'Failed to add shortlisted details.' });
+      }
+
+      // Send success response
+      res.status(201).json({ message: 'Shortlisted student details added successfully!' });
+    }
+  );
+});
+
+
+
+
+
+
+// API route to get shortlisted students
+app.get('/api/shortlisted-students', (req, res) => {
+  const query = `
+    SELECT student_id, student_name, branch, company_name, job_title, next_round_name, next_round_date
+    FROM shortlisted_students
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching shortlisted details:', err);
+      return res.status(500).json({ error: 'Failed to fetch shortlisted details.' });
+    }
+    res.status(200).json(results); // Return all shortlisted student details
+  });
+});
+
+// Endpoint to upload quiz questions
+app.post('/api/upload-questions', (req, res) => {
+  const { questions } = req.body;
+
+  // Validate input data
+  if (!questions || !Array.isArray(questions)) {
+    console.error('Invalid input: Questions should be an array.');
+    return res.status(400).send({ error: 'Questions should be an array.' });
+  }
+
+  const query = `
+    INSERT INTO quiz_questions (question, option_a, option_b, option_c, option_d, correct_option)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  let hasError = false; // Track if there are errors during insertion
+
+  questions.forEach((q) => {
+    const { question, optionA, optionB, optionC, optionD, correctOption } = q;
+
+    // Validate fields for each question
+    if (!question || !optionA || !optionB || !optionC || !optionD || !correctOption) {
+      console.error('Missing required fields for question:', q);
+      hasError = true;
+      return;
+    }
+
+    // Execute the query
+    db.query(
+      query,
+      [question, optionA, optionB, optionC, optionD, correctOption],
+      (err, result) => {
+        if (err) {
+          console.error('Database error:', err.message);
+          hasError = true;
+        } else {
+          console.log('Inserted question ID:', result.insertId);
+        }
+      }
+    );
+  });
+
+  // Send appropriate response
+  if (hasError) {
+    return res.status(500).send({ error: 'Some questions could not be inserted.' });
+  }
+
+  res.status(201).send({ message: 'Questions uploaded successfully!' });
+});
+
+
+
+app.get('/api/get-questions', (req, res) => {
+  const query = 'SELECT id, question, option_a AS optionA, option_b AS optionB, option_c AS optionC, option_d AS optionD FROM quiz_questions';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching questions:', err);
+      return res.status(500).send({ error: 'Failed to fetch questions.' });
+    }
+    res.status(200).send({ questions: results });
+  });
+});
+
+
+require("dotenv").config();
+// const express = require("express");
+// const cors = require("cors");
+const bodyParser = require("body-parser");
+
+app.use(cors());
+app.use(bodyParser.json());
+
+
 // Start the server
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });

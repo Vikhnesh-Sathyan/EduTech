@@ -1,0 +1,83 @@
+/* Container styling */
+.container {
+    width: 100%;
+    height: 900px;
+    max-width: 1000px; /* Increased width for better display */
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Header styling */
+  h2, h3 {
+    text-align: center;
+    color: #444;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  /* Styling the select dropdown */
+  select {
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    font-size: 10px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    background-color: #f7f7f7;
+  }
+  
+  /* Student list and checkbox alignment */
+  .student-list {
+    /* height:1000px; */
+    display: flex;
+    flex-direction: row;
+    gap: 5px; /* Add spacing between student rows */
+  }
+  
+  .student-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .student-item:hover {
+    background-color: #f0f8ff;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 15px;
+    transform: scale(1.2); /* Increase checkbox size for better visibility */
+  }
+  
+  /* Share button styling */
+  button {
+    display: inline-block;
+    width: calc(100% - 20px);
+    margin: 20px auto;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Subtle enlarge effect */
+  }
+  
+ 

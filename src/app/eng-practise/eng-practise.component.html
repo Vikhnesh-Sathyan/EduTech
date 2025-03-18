@@ -1,0 +1,31 @@
+<div class="container">
+    <h1>{{ title }}</h1>
+
+    <section>
+        <h2>Pronunciation Practice</h2>
+        <button (click)="toggleRecording()">
+            {{ isRecording ? 'Stop Recording' : 'Start Recording' }}
+        </button>
+        <p *ngIf="spokenText"><strong>You said:</strong> "{{ spokenText }}"</p>
+        <p *ngIf="feedbackMessage" class="feedback">{{ feedbackMessage }}</p>
+        <button (click)="downloadAudio()" *ngIf="sessionEnded">⬇️ Download Recording</button>
+    </section>
+
+    <section *ngIf="spokenText">
+        <h3>Filler Word Count</h3>
+        <ul>
+            <li *ngFor="let word of fillerWords">
+                <strong>{{ word }}:</strong> {{ fillerCount[word] || 0 }}
+            </li>
+        </ul>
+    </section>
+
+    <section *ngIf="sessionEnded">
+        <h2>Performance Summary</h2>
+        <p>{{ feedbackMessage }}</p>
+        <h3>Speech Rating</h3>
+        <span *ngFor="let star of [].constructor(speechRating); let i = index">
+            ⭐
+        </span>
+    </section>
+</div>

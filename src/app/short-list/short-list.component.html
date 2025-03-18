@@ -1,0 +1,29 @@
+<h1>Shortlist Students</h1>
+<div *ngIf="shortlistedDetails.length > 0; else noData">
+  <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #ddd;">
+    <thead>
+      <tr style="background-color: #f2f2f2;">
+        <th style="padding: 8px; border: 1px solid #ddd;">Student Name</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Company Name</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Job Title</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Branch</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Next Round</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Next Round Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of shortlistedDetails">
+        <td style="padding: 8px; border: 1px solid #ddd;">{{ detail.student_name }}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">{{ detail.company_name }}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">{{ detail.job_title }}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">{{ detail.branch }}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">{{ detail.next_round_name }}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">{{ detail.next_round_date | date }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noData>
+  <p>No shortlisted details available.</p>
+</ng-template>

@@ -5,12 +5,12 @@ import { AuthService } from '../authservice/authservice.component';
 import { HttpClientModule, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { StudentserviceService, Student } from '../studentservice.service'; // Ensure correct path
 
-@Component({
+@Component({ 
   selector: 'app-grade-9-dashboard',
   standalone: true,
   imports: [CommonModule, HttpClientModule],
   templateUrl: './grade-9-dashboard.component.html',
-  styleUrls: ['./grade-9-dashboard.component.css'], // Correct property name
+  styleUrls: ['./grade-9-dashboard.component.css'],// Correct property name
   providers:[StudentserviceService]
 })
 export class Grade9DashboardComponent implements OnInit {

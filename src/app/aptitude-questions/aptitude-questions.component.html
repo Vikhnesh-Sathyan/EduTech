@@ -1,0 +1,18 @@
+<!-- student-dashboard.component.html -->
+<div>
+    <h2>Aptitude Questions</h2>
+    <label for="companyName">Company Name</label>
+    <input type="text" [(ngModel)]="companyName" name="companyName">
+    
+    <button (click)="getAptitudeQuestions()" [disabled]="isLoading">
+      {{ isLoading ? 'Fetching...' : 'Fetch Questions' }}
+    </button>
+  
+    <div *ngIf="isLoading">Loading...</div>
+  
+    <div *ngIf="aptitudeFilePath">
+      <h3>Aptitude Questions for {{ companyName }}</h3>
+      <a [href]="aptitudeFilePath" download>Download PDF</a>
+    </div>
+  </div>
+  

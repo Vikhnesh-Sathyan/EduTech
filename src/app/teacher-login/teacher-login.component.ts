@@ -120,7 +120,7 @@ export class TeacherLoginComponent implements OnInit {
               const parsedResponse = JSON.parse(response);
               if (parsedResponse && parsedResponse.user) {
                 sessionStorage.setItem('loggedInUser', JSON.stringify(parsedResponse.user));
-                this.router.navigate(['teacher-login/t-dashboard']);
+                this.router.navigate(['teacher-register']);
               }
             } catch (e) {
               console.error('Error parsing response:', e);

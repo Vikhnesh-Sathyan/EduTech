@@ -1,0 +1,59 @@
+/* General Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1E1E2F; /* Darker background */
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+  }
+  
+  /* Table Head */
+  thead {
+    background-color: #4A148C; /* Dark purple for a modern look */
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  th {
+    padding: 18px;
+    border: 1px solid #6A1B9A;
+    text-align: left;
+    letter-spacing: 1px;
+    font-size: 1.5rem;
+    color:red;
+  }
+  
+  /* Table Body */
+  tbody tr {
+    transition: background 0.3s ease-in-out;
+    background: #29293D; /* Dark but readable */
+  }
+  
+  td {
+    padding: 18px;
+    border: 1px solid #444;
+    color: #EAEAEA; /* Brighter text */
+  }
+  
+  /* Hover Effect */
+  tbody tr:hover {
+    background-color: #38384D;
+    transform: scale(1.02);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    table {
+      font-size: 1.2rem;
+    }
+    
+    th, td {
+      padding: 14px;
+    }
+  }
+  

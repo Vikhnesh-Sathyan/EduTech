@@ -1,0 +1,141 @@
+<div class="container">
+  <!-- Left: Resume Form -->
+  <div class="form-container">
+    <h2>Resume Builder</h2>
+
+    <!-- Profile Picture Section -->
+    <div class="form-group">
+      <label for="profilePicture">Profile Picture</label>
+      <div class="profile-picture-container">
+        <div class="profile-picture-preview" *ngIf="resume.profilePicture">
+          <img [src]="resume.profilePicture" alt="Profile Picture Preview">
+        </div>
+        <div class="profile-picture-upload">
+          <input 
+            type="file" 
+            id="profilePicture" 
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            class="form-control">
+          <small class="text-muted">Supported formats: JPG, PNG. Max size: 5MB</small>
+        </div>
+      </div>
+      <div class="error-message" *ngIf="validationErrors['profilePicture']">
+        {{ validationErrors['profilePicture'] }}
+      </div>
+    </div>
+
+    <label>Job Position:</label>
+    <input type="text" [(ngModel)]="resume.jobPosition">
+
+    <label>First Name:</label>
+    <input type="text" [(ngModel)]="resume.firstName" (ngModelChange)="validateField('firstName', $event)">
+    <div class="error-message" *ngIf="validationErrors['firstName']">{{ validationErrors['firstName'] }}</div>
+
+    <label>Last Name:</label>
+    <input type="text" [(ngModel)]="resume.lastName" (ngModelChange)="validateField('lastName', $event)">
+    <div class="error-message" *ngIf="validationErrors['lastName']">{{ validationErrors['lastName'] }}</div>
+
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="resume.email" (ngModelChange)="validateField('email', $event)">
+    <div class="error-message" *ngIf="validationErrors['email']">{{ validationErrors['email'] }}</div>
+
+    <label>Phone:</label>
+    <input type="text" [(ngModel)]="resume.phone" (ngModelChange)="validateField('phone', $event)">
+    <div class="error-message" *ngIf="validationErrors['phone']">{{ validationErrors['phone'] }}</div>
+
+    <label>Address:</label>
+    <input type="text" [(ngModel)]="resume.address">
+
+    <label>Headline:</label>
+    <input type="text" [(ngModel)]="resume.headline">
+
+    <h3>Education</h3>
+    <div *ngFor="let edu of resume.education; let i = index">
+      <input type="text" placeholder="Degree" [(ngModel)]="edu.degree" (ngModelChange)="validateEducation(i, 'degree', $event)">
+      <div class="error-message" *ngIf="validationErrors['education-' + i + '-degree']">{{ validationErrors['education-' + i + '-degree'] }}</div>
+      <input type="text" placeholder="Institution" [(ngModel)]="edu.institution" (ngModelChange)="validateEducation(i, 'institution', $event)">
+      <div class="error-message" *ngIf="validationErrors['education-' + i + '-institution']">{{ validationErrors['education-' + i + '-institution'] }}</div>
+      <input type="text" placeholder="Year" [(ngModel)]="edu.year" (ngModelChange)="validateEducation(i, 'year', $event)">
+      <div class="error-message" *ngIf="validationErrors['education-' + i + '-year']">{{ validationErrors['education-' + i + '-year'] }}</div>
+    </div>
+    <button (click)="addEducation()">+ Add Education</button>
+
+    <h3>Experience</h3>
+    <div *ngFor="let exp of resume.experience; let i = index">
+      <input type="text" placeholder="Job Title" [(ngModel)]="exp.jobTitle" (ngModelChange)="validateExperience(i, 'jobTitle', $event)">
+      <div class="error-message" *ngIf="validationErrors['experience-' + i + '-jobTitle']">{{ validationErrors['experience-' + i + '-jobTitle'] }}</div>
+      <input type="text" placeholder="Company" [(ngModel)]="exp.company" (ngModelChange)="validateExperience(i, 'company', $event)">
+      <div class="error-message" *ngIf="validationErrors['experience-' + i + '-company']">{{ validationErrors['experience-' + i + '-company'] }}</div>
+      <input type="text" placeholder="Duration" [(ngModel)]="exp.duration" (ngModelChange)="validateExperience(i, 'duration', $event)">
+      <div class="error-message" *ngIf="validationErrors['experience-' + i + '-duration']">{{ validationErrors['experience-' + i + '-duration'] }}</div>
+      <textarea placeholder="Description" [(ngModel)]="exp.description"></textarea>
+    </div>
+    <button (click)="addExperience()">+ Add Experience</button>
+
+    <h3>Skills</h3>
+    <div *ngFor="let skill of resume.skills; let i = index">
+      <input type="text" placeholder="Skill" [(ngModel)]="resume.skills[i]" (ngModelChange)="validateSkills()">
+    </div>
+    <div class="error-message" *ngIf="validationErrors['skills']">{{ validationErrors['skills'] }}</div>
+    <button (click)="addSkill()">+ Add Skill</button>
+
+    <h3>Projects</h3>
+    <div *ngFor="let proj of resume.projects">
+      <input type="text" placeholder="Title" [(ngModel)]="proj.title">
+      <input type="text" placeholder="Technologies" [(ngModel)]="proj.technologies">
+      <textarea placeholder="Description" [(ngModel)]="proj.description"></textarea>
+    </div>
+    <button (click)="addProject()">+ Add Project</button>
+  </div>
+
+  <!-- Right: Live Resume Preview -->
+  <div class="preview-container">
+    <div class="resume-preview">
+      <div class="header">
+        <img *ngIf="resume.profilePicture" [src]="resume.profilePicture" alt="Profile Picture">
+        <h2>{{ resume.firstName }} {{ resume.lastName }}</h2>
+        <p>{{ resume.jobPosition }}</p>
+        <p>{{ resume.headline }}</p>
+      </div>
+
+      <div class="contact-info">
+        <p>Email: {{ resume.email }}</p>
+        <p>Phone: {{ resume.phone }}</p>
+        <p>Address: {{ resume.address }}</p>
+      </div>
+
+      <h3>Education</h3>
+      <ul>
+        <li *ngFor="let edu of resume.education">
+          <b>{{ edu.degree }}</b> at {{ edu.institution }} ({{ edu.year }})
+        </li>
+      </ul>
+
+      <h3>Experience</h3>
+      <ul>
+        <li *ngFor="let exp of resume.experience">
+          <b>{{ exp.jobTitle }}</b> at {{ exp.company }} ({{ exp.duration }})
+          <p>{{ exp.description }}</p>
+        </li>
+      </ul>
+
+      <h3>Skills</h3>
+      <ul>
+        <li *ngFor="let skill of resume.skills">{{ skill }}</li>
+      </ul>
+
+      <h3>Projects</h3>
+      <ul>
+        <li *ngFor="let proj of resume.projects">
+          <b>{{ proj.title }}</b> - {{ proj.technologies }}
+          <p>{{ proj.description }}</p>
+        </li>
+      </ul>
+    </div>
+    <button class="preview-pdf-btn" (click)="openPDFPreview()">
+      <i class="fas fa-file-pdf"></i>
+      Preview PDF
+    </button>
+  </div>
+</div>

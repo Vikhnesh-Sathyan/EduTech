@@ -1,0 +1,29 @@
+<div class="dashboard">
+  <h1>Interview Questions</h1>
+
+  <div class="interview-type">
+    <label for="interviewType">Select Interview Type: </label>
+    <select id="interviewType" (change)="changeInterviewType($event)">
+      <option value="">Select Interview Type</option>
+      <option value="technical">Technical</option>
+      <option value="hr">HR</option>
+      <option value="behavioral">Behavioral</option>
+    </select>
+  </div>
+
+  <div class="mock-interview-questions">
+    <h3>Mock Interview Questions</h3>
+    <div *ngIf="questions.length > 0; else noQuestions">
+      <ul>
+        <li *ngFor="let question of questions">{{ question }}</li>
+      </ul>
+    </div>
+    <ng-template #noQuestions>
+      <p>No questions available for this interview type. Please try another.</p>
+    </ng-template>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div>

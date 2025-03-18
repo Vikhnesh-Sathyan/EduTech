@@ -4,7 +4,6 @@ import { FrontNavComponent } from './front-nav/front-nav.component';
 import { FeaturesComponent } from './features/features.component';
 import { AboutComponent } from './about/about.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
-import { TestimonialsComponent } from './testimonials/testimonials.component';
 import { AdvertisementComponent } from './advertisement/advertisement.component';
 import { ServicesComponent } from './services/services.component';
 import { TeamComponent } from './team/team.component';
@@ -15,8 +14,8 @@ import { FooterComponent } from './footer/footer.component';
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [FrontNavComponent,HeroComponent,FeaturesComponent,AboutComponent,ContactUsComponent,TestimonialsComponent,AdvertisementComponent,ServicesComponent
-    ,TeamComponent,CtaComponent,CurriculumComponent,ClientsComponent,FooterComponent],
+  imports: [FrontNavComponent,HeroComponent,FeaturesComponent,AboutComponent,ContactUsComponent,AdvertisementComponent,ServicesComponent
+    ,TeamComponent,CtaComponent,ClientsComponent,FooterComponent],
   
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'

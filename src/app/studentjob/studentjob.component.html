@@ -1,0 +1,60 @@
+<div class="jobs-container">
+    <h2>Available Jobs</h2>
+  
+    <div *ngIf="jobs.length > 0; else noJobs">
+      <table class="jobs-table">
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Salary</th>
+            <th>Type</th>
+            <th>Qualifications</th>
+            <th>Experience Level</th>
+            <th>Contact</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobs">
+            <td>{{ job.jobTitle }}</td>
+            <td>{{ job.companyName }}</td>
+            <td>{{ job.jobLocation }}</td>
+            <td>{{ job.salaryRange }}</td>
+            <td>{{ job.jobType }}</td>
+            <td>{{ job.qualifications }}</td>
+            <td>{{ job.experienceLevel }}</td>
+            <td>{{ job.contactInfo }}</td>
+            <td>{{ job.jobDescription }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <ng-template #noJobs>
+      <p>No jobs available at the moment.</p>
+    </ng-template>
+  </div>
+  
+  <style>
+    .jobs-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  
+    .jobs-table th, .jobs-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  
+    .jobs-table th {
+      background-color: #f2f2f2;
+    }
+  
+    .jobs-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+  

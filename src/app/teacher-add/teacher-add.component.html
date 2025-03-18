@@ -1,0 +1,30 @@
+<div class="admin-approval">
+  <h2>Teacher Registrations</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Resume</th>
+        <th>Qualification</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let teacher of teachers">
+        <td><input type="checkbox" [(ngModel)]="teacher.selected" /></td>
+        <td>{{ teacher.name }}</td>
+        <td>{{ teacher.email }}</td>
+        <td>
+          <a *ngIf="teacher.resume" [href]="teacher.resume" download="{{ teacher.name }}_resume.pdf">Download Resume</a>
+        </td>
+        <td>{{ teacher.qualification }}</td>
+        <td>{{ teacher.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button type="button" (click)="bulkApprove()" [disabled]="!hasSelectedTeachers()">Approve Selected</button>
+  <button type="button" (click)="bulkReject()" [disabled]="!hasSelectedTeachers()">Reject Selected</button>
+</div>

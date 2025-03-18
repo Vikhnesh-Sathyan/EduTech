@@ -1,0 +1,20 @@
+/* app.component.css */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1, h2 {
+    text-align: center;
+  }
+  
+  section {
+    margin-bottom: 30px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+  

@@ -1,0 +1,14 @@
+<!-- upload-aptitude.component.html -->
+<div>
+    <h2>Upload Aptitude Questions</h2>
+    <form (ngSubmit)="onSubmit()">
+      <label for="companyName">Company Name</label>
+      <input type="text" id="companyName" [(ngModel)]="companyName" name="companyName" required>
+  
+      <label for="pdfFile">Choose PDF</label>
+      <input type="file" id="pdfFile" (change)="onFileChange($event)" required>
+  
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+  

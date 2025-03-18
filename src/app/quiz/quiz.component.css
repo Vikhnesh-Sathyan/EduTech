@@ -1,0 +1,50 @@
+.upload-questions-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  textarea,
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .btn-remove {
+    background-color: #dc3545;
+  }
+  
+  .btn-remove:hover {
+    background-color: #a71d2a;
+  }
+  
+  hr {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+  }
+  

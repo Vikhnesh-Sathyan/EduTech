@@ -1,8 +1,9 @@
 <nav class="navbar">
-  <a href="#" class="logo">EduTech</a>
+<!-- logo.component.html -->
+<a href="#" class="logo" (click)="onLogoClick($event)">EduTech</a>
   <ul class="nav-links">
     <li><a href="#features"><i class="fas fa-cogs"></i> Features</a></li>
-    <li><a href="#testimonials"><i class="fas fa-users"></i> Testimonials</a></li>
+    <li><a (click)="goToCollege()"><i class="fas fa-users"></i> College</a></li>
     <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
     <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
     <li>

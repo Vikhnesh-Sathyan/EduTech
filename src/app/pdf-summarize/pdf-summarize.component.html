@@ -1,0 +1,211 @@
+<div class="container">
+  <nav class="navbar">
+    <div class="nav-content">
+      <div class="nav-brand">EduTech Summarizer</div>
+      <ul class="nav-links">
+        <li><a routerLink="/summarize">Text Summarizer</a></li>
+        <li><a routerLink="/pdf-summarize" class="active">PDF Summarizer</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <h2>PDF Summarizer</h2>
+
+  <div class="upload-section">
+    <div class="file-upload-container">
+      <input type="file" id="pdfFile" (change)="onFileSelected($event)" accept=".pdf" class="file-input" #fileInput>
+      <label for="pdfFile" class="file-label">
+        <span class="upload-icon">📄</span>
+        <span>Drop PDF here or click to upload</span>
+      </label>
+    </div>
+    <div *ngIf="selectedFile" class="selected-file">
+      <span>{{ selectedFile.name }}</span>
+      <button (click)="clearFile()" class="clear-btn">✕</button>
+    </div>
+    <div *ngIf="documentType !== 'general'" class="document-type">
+      <span class="badge">{{ documentType | titlecase }} Document</span>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Processing PDF...</p>
+  </div>
+
+  <div *ngIf="summary" class="results-container">
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button 
+        [class.active]="activeTab === 'summary'"
+        (click)="switchTab('summary')"
+        class="tab-btn">
+        Summary
+      </button>
+      <button 
+        [class.active]="activeTab === 'structure'"
+        (click)="switchTab('structure')"
+        class="tab-btn">
+        Document Structure
+      </button>
+      <button 
+        [class.active]="activeTab === 'analysis'"
+        (click)="switchTab('analysis')"
+        class="tab-btn">
+        Analysis
+      </button>
+    </div>
+
+    <!-- Summary Tab -->
+    <div *ngIf="activeTab === 'summary'" class="tab-content">
+      <div class="summary-section">
+        <h3>Document Summary</h3>
+        <p [innerHTML]="highlightKeywords(summary)"></p>
+        <button *ngIf="summary.length > 300" (click)="toggleSummary()" class="toggle-btn">
+          {{ showFullSummary ? 'Show Less' : 'Show More' }}
+        </button>
+      </div>
+
+      <!-- Resume-specific content -->
+      <div *ngIf="documentType === 'resume'" class="specialized-content">
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <h4>Experience Mentions</h4>
+            <p>{{ metrics.experience_mentions || 0 }}</p>
+          </div>
+          <div class="metric-item">
+            <h4>Skill Mentions</h4>
+            <p>{{ metrics.skill_mentions || 0 }}</p>
+          </div>
+          <div class="metric-item">
+            <h4>Skills</h4>
+            <ul>
+              <li *ngFor="let skill of skills">{{ skill }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Educational content-specific content -->
+      <div *ngIf="documentType === 'educational'" class="specialized-content">
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <h4>Concepts</h4>
+            <p>{{ metrics.concept_mentions || 0 }}</p>
+          </div>
+          <div class="metric-item">
+            <h4>Examples</h4>
+            <p>{{ metrics.example_mentions || 0 }}</p>
+          </div>
+          <div class="metric-item">
+            <h4>Exercises</h4>
+            <p>{{ metrics.exercise_mentions || 0 }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Structure Tab -->
+    <div *ngIf="activeTab === 'structure'" class="tab-content">
+      <!-- Resume structure -->
+      <div *ngIf="documentType === 'resume'" class="structure-section">
+        <h3>Resume Sections</h3>
+        <div class="section-list">
+          <div class="section-item" [class.present]="structure.experience_section">
+            Experience Section
+          </div>
+          <div class="section-item" [class.present]="structure.education_section">
+            Education Section
+          </div>
+          <div class="section-item" [class.present]="structure.skills_section">
+            Skills Section
+          </div>
+        </div>
+      </div>
+
+      <!-- Educational structure -->
+      <div *ngIf="documentType === 'educational'" class="structure-section">
+        <h3>Document Structure</h3>
+        <div class="chapters-list" *ngIf="structure.chapters?.length">
+          <h4>Chapters</h4>
+          <ul>
+            <li *ngFor="let chapter of structure.chapters">{{ chapter }}</li>
+          </ul>
+        </div>
+        <div class="features">
+          <div class="feature-item">
+            <span class="feature-label">Has Summary:</span>
+            <span class="feature-value">{{ structure.has_summary ? 'Yes' : 'No' }}</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-label">Has Exercises:</span>
+            <span class="feature-label">Has Exercises:</span>
+            <span class="feature-value">{{ structure.has_exercises ? 'Yes' : 'No' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- General structure -->
+      <div *ngIf="documentType === 'general'" class="structure-section">
+        <h3>Document Structure</h3>
+        <div class="metrics-section">
+          <p>Total Pages: {{ metrics.total_pages }}</p>
+          <p>Average Words per Page: {{ metrics.average_words_per_page }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Tab -->
+    <div *ngIf="activeTab === 'analysis'" class="tab-content">
+      <div class="analysis-section">
+        <h3>Text Analysis</h3>
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <h4>Reading Time</h4>
+            <p>{{ readingTime }}</p>
+          </div>
+          <div class="metric-item">
+            <h4>Complexity Score</h4>
+            <p>{{ complexity.score || 'N/A' }}</p>
+          </div>
+          <div class="metric-item">
+            <h4>Readability</h4>
+            <p>{{ readability.score || 'N/A' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="keywords-section">
+        <h3>Key Terms</h3>
+        <div class="keywords-grid">
+          <div *ngFor="let keyword of keywords" class="keyword-item">
+            <h4>{{ keyword.word }}</h4>
+            <p>{{ keyword.definition }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button (click)="generateAudio()" class="action-btn">
+        Generate Audio
+      </button>
+      <button (click)="downloadPDF()" class="action-btn">
+        Download PDF
+      </button>
+    </div>
+
+    <audio *ngIf="audioUrl" controls [src]="audioUrl">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+</div>
+
+<style>
+.highlight {
+  background-color: yellow; /* Highlight color */
+  font-weight: bold; /* Bold text */
+  border-radius: 3px; /* Rounded corners */
+  padding: 2px; /* Padding around the text */
+}
+</style>

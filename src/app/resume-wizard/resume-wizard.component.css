@@ -1,0 +1,355 @@
+.container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.form-container {
+  flex: 1;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 100vh;
+  background: white;
+  margin-bottom: 20px;
+}
+
+.preview-container {
+  flex: 1;
+  min-width: 50%;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.resume-preview {
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+}
+
+.header img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+  margin-bottom: 15px;
+}
+
+.header h2 {
+  margin: 10px 0 5px;
+  font-size: 28px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.header p {
+  margin: 5px 0;
+  color: #7f8c8d;
+  font-size: 18px;
+}
+
+.contact-info {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.contact-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #34495e;
+}
+
+h3 {
+  color: #2c3e50;
+  font-size: 22px;
+  margin: 25px 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+ul li b {
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+ul li p {
+  margin: 8px 0 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Form Fields Styling */
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-container textarea {
+  min-height: 100px;
+  resize: vertical;
+  max-height: 200px;
+}
+
+/* Section Styling */
+.section {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #007bff;
+}
+
+/* Education and Experience Items */
+.education-item,
+.experience-item {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+/* Skills Section */
+.skills-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.skill-item {
+  background: #e9ecef;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Projects Section */
+.project-item {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+/* Buttons */
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 30px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: auto;
+  min-width: 200px;
+}
+
+button:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: translateY(0);
+  background: #003366;
+}
+
+/* PDF Preview Button Specific Styling */
+.preview-pdf-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #28a745;
+  padding: 15px 40px;
+  font-size: 18px;
+  z-index: 1000;
+  min-width: 250px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.preview-pdf-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.preview-pdf-btn:active {
+  transform: translateY(0);
+  background: #1e7e34;
+}
+
+.preview-pdf-btn i {
+  font-size: 20px;
+}
+
+/* Add/Remove Buttons */
+.add-remove-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.add-button,
+.remove-button {
+  padding: 8px 15px;
+  font-size: 14px;
+  min-width: auto;
+}
+
+/* Profile Picture Section */
+.profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-picture-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #ddd;
+  background-color: #f8f9fa;
+}
+
+.profile-picture-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-picture-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.profile-picture-upload input[type="file"] {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  width: 100%;
+}
+
+/* Error Messages */
+.error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background-color: #f8d7da;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .preview-container {
+    min-width: 100%;
+  }
+
+  .form-container,
+  .preview-container {
+    max-height: none;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

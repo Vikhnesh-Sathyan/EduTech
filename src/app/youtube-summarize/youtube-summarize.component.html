@@ -1,0 +1,28 @@
+<div class="container">
+    <h2>YouTube Video Summarizer</h2>
+    <div class="input-section">
+      <input type="text" [(ngModel)]="videoUrl" placeholder="Enter YouTube video link" class="text-input" />
+      <button (click)="summarizeVideo()" [disabled]="isLoading" class="primary-btn">
+        {{ isLoading ? 'Processing...' : 'Summarize Video' }}
+      </button>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Processing video...</p>
+    </div>
+  
+    <div *ngIf="summary" class="results-container">
+      <h3>Video Summary</h3>
+      <p [innerHTML]="summary"></p>
+      <button (click)="downloadSummary()" class="secondary-btn">Download Summary </button>
+    </div>
+</div>
+  
+<style>
+/* Add any specific styles for the YouTube summarizer here */
+.highlight {
+    background-color: yellow; /* Change to your preferred highlight color */
+    font-weight: bold; /* Optional: make the text bold */
+}
+</style>

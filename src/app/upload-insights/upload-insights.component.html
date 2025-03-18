@@ -1,0 +1,20 @@
+<!-- upload-insights.component.html -->
+<div>
+    <h2>Upload Interview Insights</h2>
+    <form (ngSubmit)="onSubmit()">
+      <label for="companyName">Company Name</label>
+      <input type="text" id="companyName" [(ngModel)]="companyName" name="companyName" required>
+  
+      <label for="commonQuestions">Common Questions</label>
+      <textarea id="commonQuestions" [(ngModel)]="commonQuestions" name="commonQuestions" required></textarea>
+  
+      <label for="aptitudeTestTypes">Aptitude Test Types</label>
+      <textarea id="aptitudeTestTypes" [(ngModel)]="aptitudeTestTypes" name="aptitudeTestTypes" required></textarea>
+  
+      <label for="mockFeedback">Mock Feedback</label>
+      <textarea id="mockFeedback" [(ngModel)]="mockFeedback" name="mockFeedback"></textarea>
+  
+      <button type="submit">Upload Insights</button>
+    </form>
+  </div>
+  

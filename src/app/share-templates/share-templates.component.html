@@ -1,0 +1,32 @@
+<div class="container">
+  <h2>Send Sample Photo to Students</h2>
+
+  <!-- Company Name Input -->
+  <label for="companyName">Company Name:</label>
+  <input type="text" [(ngModel)]="companyName" id="companyName" placeholder="Enter company name" />
+
+  <!-- Photo Upload -->
+  <label for="templatePhoto">Upload a Photo:</label>
+  <input type="file" id="templatePhoto" (change)="onFileChange($event)" />
+
+  <!-- Display photo preview -->
+  <div *ngIf="selectedFile">
+    <h3>Selected Photo:</h3>
+    <img [src]="photoPreview" alt="Selected Photo" style="max-width: 300px;" />
+  </div>
+
+  <!-- Select Students -->
+  <h3>Select Students</h3>
+  <div class="student-list">
+    <div class="student-item" *ngFor="let student of students">
+      <input
+        type="checkbox"
+        [(ngModel)]="selectedStudents[student.id]"
+        [value]="student.id"
+      />
+      {{ student.name }} ({{ student.email }})
+    </div>
+  </div>
+
+  <button (click)="shareTemplate()">Send Sample Photo</button>
+</div>

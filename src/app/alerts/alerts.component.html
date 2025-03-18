@@ -1,0 +1,9 @@
+<div class="alerts-container">
+    <h2>Alerts</h2>
+    <div *ngFor="let alert of alerts" class="alert">
+      <h3>{{ alert.title }}</h3>
+      <p>{{ alert.message }}</p>
+      <small>Sent by: {{ alert.sender }} on {{ alert.created_at | date }}</small>
+    </div>
+  </div>
+  

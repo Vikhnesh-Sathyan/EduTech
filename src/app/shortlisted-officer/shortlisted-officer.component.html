@@ -1,0 +1,52 @@
+<form (ngSubmit)="addShortlistedStudent()">
+    <input
+      type="text"
+      [(ngModel)]="student.student_id"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Student ID"
+      required
+    />
+    <input
+      type="text"
+      [(ngModel)]="student.student_name"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Student Name"
+      required
+    />
+    <input
+      type="text"
+      [(ngModel)]="student.branch"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Branch"
+      required
+    />
+    <input
+      type="text"
+      [(ngModel)]="student.company_name"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Company Name"
+      required
+    />
+    <input
+      type="text"
+      [(ngModel)]="student.job_title"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Job Title"
+      required
+    />
+    <input
+      type="text"
+      [(ngModel)]="student.next_round_name"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Next Round Name"
+      required
+    />
+    <input
+      type="date"
+      [(ngModel)]="student.next_round_date"
+      [ngModelOptions]="{ standalone: true }"
+      required
+    />
+    <button type="submit">Submit</button>
+  </form>
+  

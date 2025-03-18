@@ -1,0 +1,73 @@
+<body>
+  <!-- Header Navigation -->
+  <header class="navbar">
+      <div class="navbar-container">
+          <h1>Student Dashboard</h1>
+          <nav>
+              <a class="nav-link" (click)="navigateToquiz()">Quiz</a>
+              <a class="nav-link" (click)="navigateToengpractise()">Speech Practice</a>
+              <a class="nav-link" (click)="navigateTostudentjob()">Jobs</a>
+              <a class="nav-link" (click)="navigateTointerview()">Mock Interview</a>
+              <a class="nav-link" (click)="navigateTocompetition()">DSA Visualizer</a>
+              <a class="nav-link" (click)="navigateToshortlist()">List</a>
+              <a class="nav-link" (click)="navigateTocode()">Code</a>
+              <a class="nav-link" (click)="navigateTosummarize()">Summarize</a>
+
+          </nav>
+      </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+          <h2>Welcome to AJCE</h2>
+          <p>Amal Jyothi College Of Engineering</p>
+      </section>
+
+      <!-- Cards Section -->
+      <section class="cards">
+          <div class="card">
+              <div class="card-icon">📄</div>
+              <h3 (click)="navigateToWizard()" class="clickable">Resume Builder</h3>
+              <p>Create and manage your professional resume</p>
+              <div class="card-actions">
+                  <a class="button primary" (click)="navigateTocoverletter()">Create Cover Letter</a>
+              </div>
+          </div>
+          <div class="card">
+              <div class="card-icon">📚</div>
+              <h3>Aptitude Training</h3>
+              <p>Practice and improve your aptitude skills</p>
+              <div class="card-actions">
+                  <a class="button primary" (click)="navigateToaptitude()">Start Practice</a>
+              </div>
+          </div>
+          <div class="card">
+              <div class="card-icon">📊</div>
+              <h3>Performance Insights</h3>
+              <p>Track your progress and performance</p>
+              <div class="card-actions">
+                  <a class="button primary" (click)="navigateToView()">View Insights</a>
+              </div>
+          </div>
+      </section>
+
+      <!-- Announcements Section -->
+      <section class="announcements">
+          <div class="section-header">
+              <h2>Announcements</h2>
+              <a class="view-all" (click)="navigateToalerts()">View All Alerts</a>
+          </div>
+          <ul class="announcement-list">
+              <li>
+                  <span class="announcement-date">Dec 22</span>
+                  <a href="#">Web Development workshop on Dec 22nd</a>
+              </li>
+              <li>
+                  <span class="announcement-date">Dec 15</span>
+                  <a href="#">Final Exams schedule released</a>
+              </li>
+          </ul>
+      </section>
+  </main>

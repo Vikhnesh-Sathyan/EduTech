@@ -1,0 +1,52 @@
+.admin-page {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  h2 {
+    color: #333;
+  }
+  
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .users-table th,
+  .users-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .approve-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .reject-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .message {
+    color: green;
+    margin: 10px 0;
+  }
+  
+  .loading {
+    color: #666;
+  }
+  
+  .no-users {
+    color: #777;
+    font-size: 16px;
+  }
+  

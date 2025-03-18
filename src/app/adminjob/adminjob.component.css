@@ -1,0 +1,89 @@
+/* General styles for the student dashboard */
+.student-dashboard {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    height: 600px; /* Ensure enough height for visibility */
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #007bff #e9f7ff; /* For Firefox */
+}
+
+/* Custom scrollbar for WebKit browsers (Chrome, Safari) */
+.student-dashboard::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.student-dashboard::-webkit-scrollbar-track {
+    background: #e9f7ff; /* Background of the scrollbar track */
+}
+
+.student-dashboard::-webkit-scrollbar-thumb {
+    background-color: #007bff; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+
+/* Header styles */
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+/* No jobs message styles */
+.no-jobs {
+    text-align: center;
+    color: #ff0000; /* Red color for no jobs message */
+    font-size: 1.2em;
+}
+
+/* Job card styles */
+.job-card {
+    border: 1px solid #ccc;
+    border-radius: 10px; /* More rounded corners */
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+/* Add job form styles */
+.add-job-form {
+    margin-top: 20px;
+    padding: 30px; /* Increased padding for a more spacious feel */
+    border: 1px solid #007bff; /* Blue border */
+    border-radius: 20px; /* More rounded corners */
+    background-color: #e9f7ff; /* Light blue background */
+    max-width: 600px; /* Set a max width for the form */
+    margin-left: auto; /* Center the form */
+    margin-right: auto; /* Center the form */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+/* Form label styles */
+label {
+    display: block;
+    margin: 15px 0 5px; /* Increased margin for better spacing */
+}
+
+/* Input and textarea styles */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 15px; /* Increased padding for better usability */
+    border: 1px solid #ccc;
+    border-radius: 10px; /* More rounded corners */
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+/* Button styles */
+button {
+    background-color: #007bff; /* Blue background */
+    color: white;
+    padding: 12px 20px; /* Increased padding for a larger button */
+    border: none;
+    border-radius: 10px; /* More rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

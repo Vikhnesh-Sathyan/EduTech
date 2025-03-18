@@ -1,0 +1,60 @@
+<div class="student-dashboard">
+  <h1>Available Jobs</h1>
+  
+  <!-- Display No Jobs Message -->
+  <div *ngIf="jobs.length === 0" class="no-jobs">
+    <p>No jobs available at the moment.</p>
+  </div>
+
+  <!-- Display Jobs -->
+  <!-- <div *ngFor="let job of jobs" class="job-card">
+    <h2>{{ job.jobTitle }}</h2>
+    <p><strong>Company:</strong> {{ job.companyName }}</p>
+    <p><strong>Time Limit:</strong> {{ job.timeLimit }}</p>
+    <p><strong>Salary Range:</strong> {{ job.salaryRange }}</p>
+    <p><strong>Location:</strong> {{ job.jobLocation }}</p>
+    <p><strong>Type:</strong> {{ job.jobType }}</p>
+    <p><strong>Qualifications:</strong> {{ job.qualifications }}</p>
+    <p><strong>Experience Level:</strong> {{ job.experienceLevel }}</p>
+    <p><strong>Contact Info:</strong> {{ job.contactInfo }}</p>
+    <p><strong>Description:</strong> {{ job.jobDescription }}</p>
+  </div> -->
+
+  <!-- Add Job Form -->
+  <div class="add-job-form">
+    <h2>Add a New Job</h2>
+    <form (ngSubmit)="addJob()">
+      <label for="jobTitle">Job Title</label>
+      <input type="text" id="jobTitle" [(ngModel)]="newJob.jobTitle" name="jobTitle" required />
+
+      <label for="companyName">Company Name</label>
+      <input type="text" id="companyName" [(ngModel)]="newJob.companyName" name="companyName" required />
+
+      <label for="timeLimit">Time Limit</label>
+      <input type="text" id="timeLimit" [(ngModel)]="newJob.timeLimit" name="timeLimit" required />
+
+      <label for="salaryRange">Salary Range</label>
+      <input type="text" id="salaryRange" [(ngModel)]="newJob.salaryRange" name="salaryRange" required />
+
+      <label for="jobLocation">Location</label>
+      <input type="text" id="jobLocation" [(ngModel)]="newJob.jobLocation" name="jobLocation" required />
+
+      <label for="jobType">Job Type</label>
+      <input type="text" id="jobType" [(ngModel)]="newJob.jobType" name="jobType" required />
+
+      <label for="qualifications">Qualifications</label>
+      <input type="text" id="qualifications" [(ngModel)]="newJob.qualifications" name="qualifications" required />
+
+      <label for="experienceLevel">Experience Level</label>
+      <input type="text" id="experienceLevel" [(ngModel)]="newJob.experienceLevel" name="experienceLevel" required />
+
+      <label for="contactInfo">Contact Info</label>
+      <input type="text" id="contactInfo" [(ngModel)]="newJob.contactInfo" name="contactInfo" required />
+
+      <label for="jobDescription">Job Description</label>
+      <textarea id="jobDescription" [(ngModel)]="newJob.jobDescription" name="jobDescription" required></textarea>
+
+      <button type="submit">Add Job</button>
+    </form>
+  </div>
+</div>

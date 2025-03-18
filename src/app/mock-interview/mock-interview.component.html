@@ -1,0 +1,46 @@
+<div class="mock-interview">
+  <h2>Mock Interview</h2>
+
+  <div>
+    <label for="interviewType">Choose Interview Type:</label>
+    <select id="interviewType" [(ngModel)]="interviewType">
+      <option value="">Select</option>
+      <option value="technical">Technical</option>
+      <option value="hr">HR</option>
+      <option value="behavioral">Behavioral</option>
+    </select>
+  </div>
+
+  <button (click)="onStartMockInterview()">Start Mock Interview</button>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="questions.length">
+    <h3>Interview Questions:</h3>
+    <ul>
+      <li *ngFor="let question of questions">{{ question }}</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <h3>Add a New Question</h3>
+  <div>
+    <label for="newQuestion">New Question:</label>
+    <input id="newQuestion" [(ngModel)]="question" type="text" placeholder="Enter question here">
+  </div>
+
+  <div>
+    <button (click)="onAddQuestion()">Add Question</button>
+  </div>
+
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div>

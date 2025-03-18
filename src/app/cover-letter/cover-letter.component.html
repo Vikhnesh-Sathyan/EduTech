@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="form-section">
+    <h2>Cover Letter Generator</h2>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="formProgress"></div>
+      <span class="progress-text">{{ formProgress | number:'1.0-0' }}% Complete</span>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="showError" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="coverLetterForm" class="cover-letter-form">
+      <div class="form-group">
+        <label>Name:</label>
+        <input formControlName="name" placeholder="Your full name" />
+      </div>
+
+      <div class="form-group">
+        <label>Role:</label>
+        <input formControlName="role" placeholder="Desired position" />
+      </div>
+
+      <div class="form-group">
+        <label>Experience (years):</label>
+        <input type="number" formControlName="experience" placeholder="Years of experience" />
+        <div *ngIf="coverLetterForm.get('experience')!.invalid && (coverLetterForm.get('experience')!.dirty || coverLetterForm.get('experience')!.touched)" class="error-message">
+          <span *ngIf="coverLetterForm.get('experience')!.errors?.['required']">Experience is required.</span>
+          <span *ngIf="coverLetterForm.get('experience')!.errors?.['min']">Experience must be at least 0.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Skills:</label>
+        <input formControlName="skills" placeholder="Your key skills" />
+      </div>
+
+      <div class="form-group">
+        <label>Company:</label>
+        <input formControlName="company" placeholder="Target company" />
+      </div>
+
+      <div class="button-group">
+        <button (click)="generateCoverLetter()" [disabled]="!coverLetterForm.valid">Generate</button>
+          <span *ngIf="loading" class="loading-spinner"></span>
+        <button (click)="clearForm()" class="clear-btn">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="cover-letter-section" *ngIf="generatedCoverLetter">
+    <div class="controls">
+      <button (click)="toggleEditing()" class="edit-btn">
+        {{ isEditing ? 'Cancel Edit' : 'Edit Cover Letter' }}
+      </button>
+      <button (click)="togglePreviewMode()" class="preview-btn">
+        {{ isPreviewMode ? 'Exit Preview' : 'Preview' }}
+      </button>
+      <button (click)="downloadCoverLetter()" class="download-btn">Download</button>
+    </div>
+
+    <div class="stats">
+      <span>Characters: {{ characterCount }}</span>
+      <span>Words: {{ wordCount }}</span>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <!-- Display the cover letter -->
+    <div *ngIf="!isEditing && !isPreviewMode" class="cover-letter-content">
+      <pre>{{ generatedCoverLetter }}</pre>
+    </div>
+
+    <!-- Preview mode -->
+    <div *ngIf="isPreviewMode" class="preview-content">
+      <div class="preview-header">
+        <h3>Preview</h3>
+      </div>
+      <div class="preview-body">
+        {{ generatedCoverLetter }}
+      </div>
+    </div>
+
+    <!-- Edit mode -->
+    <div *ngIf="isEditing" class="edit-content">
+      <textarea [(ngModel)]="generatedCoverLetter" rows="10" cols="50"></textarea>
+    </div>
+
+    <!-- Saved Versions -->
+    <div class="saved-versions" *ngIf="savedVersions.length > 0">
+      <h3>Saved Versions</h3>
+      <div class="version-list">
+        <div *ngFor="let version of savedVersions" class="version-item">
+          <div class="version-info">
+            <span>Version {{ version.id }}</span>
+            <span>{{ version.timestamp | date:'short' }}</span>
+            <span *ngIf="version.confidence" class="confidence">
+              Confidence: {{ version.confidence | number:'1.0-1' }}%
+            </span>
+          </div>
+          <button (click)="loadVersion(version)">Load</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

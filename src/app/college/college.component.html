@@ -1,0 +1,39 @@
+<form (ngSubmit)="register()">
+  <h3>Registration</h3>
+  <input type="text" placeholder="Name" [(ngModel)]="user.name" name="name" required />
+  <input type="email" placeholder="Email" [(ngModel)]="user.email" name="email" required />
+  <input type="password" placeholder="Password" [(ngModel)]="user.password" name="password" required />
+
+  <!-- Role Dropdown -->
+  <select [(ngModel)]="user.role" name="role" required>
+    <option value="Student">Student</option>
+    <option value="Placement Officer">Placement Officer</option>
+
+
+  </select>
+
+  <!-- Student-Specific Fields -->
+  <div *ngIf="user.role === 'Student'">
+    <input type="text" placeholder="Student ID" [(ngModel)]="user.studentId" name="studentId" required />
+    <input type="text" placeholder="Class/Year" [(ngModel)]="user.classYear" name="classYear" required />
+    <input type="text" placeholder="Department" [(ngModel)]="user.department" name="department" required />
+    <input type="text" placeholder="Parent Name" [(ngModel)]="user.parentName" name="parentName" />
+    <input type="text" placeholder="Contact Number" [(ngModel)]="user.contactNumber" name="contactNumber" />
+  </div>
+
+  <!-- Placement Officer-Specific Fields -->
+  <div *ngIf="user.role === 'Placement Officer'">
+    <input type="text" placeholder="Employee ID" [(ngModel)]="user.employeeId" name="employeeId" required />
+    <input type="text" placeholder="Designation" [(ngModel)]="user.designation" name="designation" required />
+    <input type="number" placeholder="Experience (Years)" [(ngModel)]="user.experience" name="experience" required />
+    <input type="text" placeholder="LinkedIn Profile" [(ngModel)]="user.linkedinProfile" name="linkedinProfile" />
+  </div>
+  
+
+  <button type="submit" [disabled]="!formValid()">Register</button>
+  
+  <!-- Login Button -->
+  <button type="button" (click)="navigateToLogin()">Login</button>
+  <button type="button" (click)="navigateToplacementteam()">Placement Team</button>
+
+</form>

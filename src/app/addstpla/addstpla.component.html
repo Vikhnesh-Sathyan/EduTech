@@ -1,0 +1,37 @@
+<div class="admin-page">
+  <h2>Pending User Approvals</h2>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading">Loading pending approvals...</div>
+
+  <!-- Feedback Message -->
+  <div *ngIf="message" class="message">{{ message }}</div>
+
+  <!-- Pending Users Table -->
+  <table *ngIf="!loading && pendingUsers.length > 0" class="users-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of pendingUsers">
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button (click)="handleApproval(user.id, true)" class="approve-btn">Approve</button>
+          <button (click)="handleApproval(user.id, false)" class="reject-btn">Reject</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No Pending Users Message -->
+  <div *ngIf="!loading && pendingUsers.length === 0" class="no-users">
+    No users pending approval.
+  </div>
+</div>

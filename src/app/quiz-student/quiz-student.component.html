@@ -1,0 +1,42 @@
+<div class="quiz-container">
+  <div class="quiz-card" *ngIf="!isQuizFinished">
+    <h2 class="quiz-title">Quiz</h2>
+    <h3 class="question">{{ questions[currentQuestionIndex]?.question }}</h3>
+
+    <div class="options">
+      <button 
+        class="option-btn" 
+        *ngFor="let option of ['A', 'B', 'C', 'D']" 
+        [class.selected]="selectedOption === option" 
+        [class.correct]="showFeedback && option === questions[currentQuestionIndex]?.correctOption"
+        [class.incorrect]="showFeedback && selectedOption === option && option !== questions[currentQuestionIndex]?.correctOption"
+        (click)="selectOption(option)">
+        {{ option }}: {{ questions[currentQuestionIndex]?.options?.[option] }}
+      </button>
+    </div>
+
+    <p *ngIf="showFeedback">
+      <span *ngIf="selectedOption === correctAnswer" class="correct">
+        ✅ Your answer is correct!
+      </span>
+      <span *ngIf="selectedOption !== correctAnswer" class="incorrect">
+        ❌ Your answer was incorrect.
+        <br>
+        ✅ <strong>Correct Answer:</strong> {{ correctAnswer }} - {{ questions[currentQuestionIndex]?.options[correctAnswer] || 'Not Provided' }}
+      </span>
+    </p>
+
+    <div class="timer">
+      ⏳ <strong>Time left: {{ timeLeft }}s</strong>
+    </div>
+
+    <button class="next-btn" (click)="nextQuestion()" [disabled]="!selectedOption">
+      NEXT QUESTION
+    </button>
+  </div>
+
+  <div class="quiz-card" *ngIf="isQuizFinished">
+    <h2 class="quiz-title">Quiz Completed</h2>
+    <p>🎉 Well done! You have finished the quiz.</p>
+  </div>
+</div>

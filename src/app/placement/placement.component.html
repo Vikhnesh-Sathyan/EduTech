@@ -1,0 +1,53 @@
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <h1>Placement Officer Dashboard</h1>
+    <nav>
+      <a href="#">Home</a>
+      <!-- <a (click)="navigateToproblems()"> Problems</a> -->
+      <a href="#">Settings</a>
+      <a href="#">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a h3 (click)="navigateToaptitude()">Aptitude</a>
+          <li><a href="#">Student Profiles</a></li>
+        <li><a href="#">Job Postings</a></li>
+        <li><a h3 (click)="navigateToinsights()">insights</a>
+
+          <li><a h3 (click)="navigateToalerts()">Placement Alert</a>
+          </ul>
+    </aside>
+
+    <!-- Main Section -->
+    <main class="main-section">
+      <div class="welcome-section">
+        <h2>Welcome, Placement Officer!</h2>
+        <p>Here you can manage student profiles, job postings, and interview schedules.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3 (click)="navigateTosharetemplates()" style="cursor: pointer;">
+          </h3>        
+          <a h3 (click)="navigateTosharetemplates()">View Profiles</a>
+        </div>
+        <div class="card">
+          <h3>Job Postings</h3>
+          <p>Create and manage job postings for companies.</p>
+          <a href="#">View Job Postings</a>
+        </div>
+        <div class="card">
+          <h3>Short Listed Students</h3>
+          <p>Organize and schedule interviews for students.</p>
+          <a  (click)="navigateToshortlist()">Short List</a>
+          </div>
+      </div>
+    </main>
+  </div>
+

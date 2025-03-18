@@ -1,0 +1,56 @@
+
+<div class="main-container">
+  <nav>
+    <div class="logo">
+      <div class="logo-image">
+        <img src="assets/logo.png" alt="Logo">
+      </div>
+    </div>
+    <div class="menu-items">
+      <ul class="navLinks">
+        <li class="navList active">
+          <a routerLink="/dashboard/overview">
+            <span class="links">Dashboard</span>
+          </a>
+        </li>
+        <li class="navList">
+          <a routerLink="/dashboard/content">
+            <button (click)="addTeacher()">Add Teacher</button>
+          </a>
+        </li>
+        <li class="navList">
+          <a routerLink="/dashboard/analytics">
+            <button (click)="addstpla()">Add Student and officer</button>
+          </a>
+        </li>
+        <li class="navList">
+          <a routerLink="/dashboard/likes">
+            <button (click)="addadminjob()">Add Job</button>
+          </a>
+        </li>
+        <li class="navList">
+          <a routerLink="/dashboard/comments">
+            <span class="links">Comments</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="bottom-link">
+        <li>
+          <a href="#">
+            <span class="links">Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="links">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="content">
+    <h1>Welcome to the Dashboard</h1>
+    <p>This is the main content area.</p>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div>
+    <h1>Coding Practice Portal</h1>
+    
+    <!-- Add New Problem Section -->
+    <mat-card>
+      <h2>Add New Problem</h2>
+      <input [(ngModel)]="newProblem.title" placeholder="Title" />
+      <input [(ngModel)]="newProblem.description" placeholder="Description" />
+      <input [(ngModel)]="newProblem.company" placeholder="Company" />
+      <input [(ngModel)]="newProblem.difficulty" placeholder="Difficulty" />
+      <button (click)="addProblem()">Add Problem</button>
+    </mat-card>
+  
+    <!-- Practice Problems Section -->
+    <mat-card>
+      <!-- <h2>Practice Coding Problems</h2> -->
+      <!-- <div *ngFor="let company of getUniqueCompanies()">
+        <h3>{{ company }}</h3>
+        <div *ngFor="let problem of getProblemsByCompany(company)">
+          <mat-card>
+            <h4>{{ problem.title }}</h4>
+            <p>{{ problem.description }}</p>
+            <p><strong>Difficulty:</strong> {{ problem.difficulty }}</p>
+          </mat-card>
+        </div>
+      </div> -->
+    </mat-card>
+  </div>
+  
