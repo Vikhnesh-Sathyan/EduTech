@@ -29,4 +29,3 @@ node server.js
 # Frontend
 cd frontend
 npm install
-ng serve --open
