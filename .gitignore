@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Angular build/cache files
+.angular/
+dist/
+
+# IDE files
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
