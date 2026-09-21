@@ -1,11 +1,11 @@
 // Handles the login form and login API call
-
 import { Component } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormBuilder,
   Validators
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 @Component({
@@ -24,7 +24,9 @@ export class Login {
 
   constructor(
     private fb: FormBuilder,
-    private auth: Auth
+    private auth: Auth,
+    private router: Router
+
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,20 +51,22 @@ export class Login {
       email: email!,
       password: password!
     }).subscribe({
-      next: (response: any) => {
+   next: (response: any) => {
 
-        localStorage.setItem(
-          'token',
-          response.token
-        );
+  localStorage.setItem(
+    'token',
+    response.token
+  );
 
-        localStorage.setItem(
-          'user',
-          JSON.stringify(response.user)
-        );
+  localStorage.setItem(
+    'user',
+    JSON.stringify(response.user)
+  );
 
-        this.message = response.message;
-      },
+  if (response.user.role === 'student') {
+    this.router.navigate(['/student-dashboard']);
+  }
+},
 
       error: (error) => {
         this.errorMessage =
