@@ -1,1 +1,21 @@
-<p>student-dashboard works!</p>
+<div class="dashboard-layout">
+
+  <app-sidebar></app-sidebar>
+
+  <main class="dashboard-content">
+
+    <app-topbar></app-topbar>
+
+    <section class="dashboard-main">
+
+    <app-welcome-section
+       [userName]="userName">
+    </app-welcome-section>
+
+    <app-current-focus></app-current-focus>
+
+    </section>
+
+  </main>
+
+</div>

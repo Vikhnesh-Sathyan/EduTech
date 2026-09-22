@@ -1,0 +1,37 @@
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  padding: 24px 18px;
+  box-sizing: border-box;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navigation a {
+  padding: 12px 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logout-section {
+  margin-top: auto;
+}
+
+.logout-section button {
+  width: 100%;
+  padding: 12px 14px;
+  cursor: pointer;
+}

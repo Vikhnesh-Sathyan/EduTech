@@ -1,0 +1,24 @@
+.topbar {
+  height: 64px;
+  padding: 0 32px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.topbar-actions button {
+  padding: 8px 12px;
+  cursor: pointer;
+}

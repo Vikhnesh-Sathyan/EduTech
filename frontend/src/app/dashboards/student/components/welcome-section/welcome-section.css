@@ -1,0 +1,19 @@
+.welcome-section {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 32px;
+}
+
+.description {
+  margin: 0;
+  font-size: 16px;
+}

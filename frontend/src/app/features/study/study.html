@@ -1,0 +1,60 @@
+<section class="study-page">
+
+  <div class="page-header">
+
+    <p class="eyebrow">
+      Learning
+    </p>
+
+    <h1>
+      Study
+    </h1>
+
+    <p>
+      Choose a subject and continue your learning journey.
+    </p>
+
+  </div>
+
+
+  <section class="subjects-section">
+
+    <div class="section-header">
+
+      <h2>
+        Your Subjects
+      </h2>
+
+      <p>
+        Select a subject to start learning.
+      </p>
+
+    </div>
+
+
+    <div class="subject-list">
+
+      @for (subject of subjects; track subject.id) {
+
+        <button
+          type="button"
+          class="subject-card"
+          [routerLink]="['/study', subject.id]"
+        >
+          <span class="subject-name">
+            {{ subject.name }}
+          </span>
+
+          <span class="subject-action">
+            Start Learning
+          </span>
+
+        </button>
+
+      }
+
+    </div>
+
+  </section>
+
+</section>
