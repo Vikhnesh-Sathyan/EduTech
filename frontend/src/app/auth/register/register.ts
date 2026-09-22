@@ -8,10 +8,12 @@ import {
 } from '@angular/forms';
 import { Auth } from '../../services/auth';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })

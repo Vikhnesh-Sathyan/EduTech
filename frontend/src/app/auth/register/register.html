@@ -1,77 +1,297 @@
 <div class="register-page">
 
-  <div class="register-card">
+  <!-- =================================================
+       LEFT BRAND / PRODUCT SECTION
+       ================================================= -->
 
-    <h1>Create your account</h1>
+  <section class="register-showcase">
 
-    <p class="subtitle">
-      Start your personalized learning and career journey.
-    </p>
+    <div class="showcase-content">
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Brand -->
+      <a routerLink="/" class="showcase-brand">
+        <span class="brand-mark">E</span>
+        <span>EduTech</span>
+      </a>
 
-      <div class="form-group">
-        <label for="name">Full name</label>
 
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          placeholder="Enter your name"
-        >
-      </div>
+      <!-- Main content -->
+      <div class="showcase-main">
 
-      <div class="form-group">
-        <label for="email">Email</label>
+        <span class="eyebrow">
+          YOUR JOURNEY STARTS HERE
+        </span>
 
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Enter your email"
-        >
-      </div>
+        <h2>
+          Build skills.
+          <span>Build your future.</span>
+        </h2>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Minimum 8 characters"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="confirmPassword">Confirm password</label>
-
-        <input
-          id="confirmPassword"
-          type="password"
-          formControlName="confirmPassword"
-          placeholder="Confirm your password"
-        >
-      </div>
-
-      @if (errorMessage) {
-        <p class="error-message">
-          {{ errorMessage }}
+        <p>
+          Create your EduTech account and get a focused
+          learning experience designed around your skills,
+          goals, and career direction.
         </p>
-      }
 
-      @if (message) {
-        <p class="success-message">
-          {{ message }}
+
+        <!-- Simple journey indicator -->
+
+        <div class="journey">
+
+          <div class="journey-item active">
+
+            <span class="journey-number">
+              01
+            </span>
+
+            <div>
+              <strong>Create your account</strong>
+              <span>Set up your profile</span>
+            </div>
+
+          </div>
+
+
+          <div class="journey-line"></div>
+
+
+          <div class="journey-item">
+
+            <span class="journey-number">
+              02
+            </span>
+
+            <div>
+              <strong>Discover your path</strong>
+              <span>Learn based on your goals</span>
+            </div>
+
+          </div>
+
+
+          <div class="journey-line"></div>
+
+
+          <div class="journey-item">
+
+            <span class="journey-number">
+              03
+            </span>
+
+            <div>
+              <strong>Build your future</strong>
+              <span>Prepare for real opportunities</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Footer -->
+
+      <div class="showcase-footer">
+
+        <span class="status-dot"></span>
+
+        <span>
+          Built for focused learning and career growth.
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =================================================
+       RIGHT REGISTER SECTION
+       ================================================= -->
+
+  <section class="register-section">
+
+    <div class="register-card">
+
+      <!-- Mobile brand -->
+
+      <div class="mobile-brand">
+
+        <span class="brand-mark">E</span>
+
+        <span>EduTech</span>
+
+      </div>
+
+
+      <!-- Heading -->
+
+      <div class="register-heading">
+
+        <span class="welcome-label">
+          GET STARTED
+        </span>
+
+        <h1>
+          Create your account
+        </h1>
+
+        <p class="subtitle">
+          Start your personalized learning and career journey.
         </p>
-      }
 
-      <button type="submit">
-        Create account
-      </button>
+      </div>
 
-    </form>
 
-  </div>
+      <!-- Form -->
+
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+      >
+
+        <!-- Full name -->
+
+        <div class="form-group">
+
+          <label for="name">
+            Full name
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Enter your full name"
+          >
+
+        </div>
+
+
+        <!-- Email -->
+
+        <div class="form-group">
+
+          <label for="email">
+            Email address
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="you@example.com"
+          >
+
+        </div>
+
+
+        <!-- Password -->
+
+        <div class="form-group">
+
+          <label for="password">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Minimum 8 characters"
+          >
+
+        </div>
+
+
+        <!-- Confirm password -->
+
+        <div class="form-group">
+
+          <label for="confirmPassword">
+            Confirm password
+          </label>
+
+          <input
+            id="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Re-enter your password"
+          >
+
+        </div>
+
+
+        <!-- Error -->
+
+        @if (errorMessage) {
+
+          <p class="error-message">
+            {{ errorMessage }}
+          </p>
+
+        }
+
+
+        <!-- Success -->
+
+        @if (message) {
+
+          <p class="success-message">
+            {{ message }}
+          </p>
+
+        }
+
+
+        <!-- Submit -->
+
+        <button
+          type="submit"
+          class="register-button"
+        >
+
+          <span>
+            Create account
+          </span>
+
+          <span class="button-arrow">
+            →
+          </span>
+
+        </button>
+
+      </form>
+
+
+      <!-- Login -->
+
+      <div class="register-footer">
+
+        <span>
+          Already have an account?
+        </span>
+
+        <a routerLink="/login">
+          Sign in
+        </a>
+
+      </div>
+
+
+      <!-- Terms -->
+
+      <p class="terms">
+        By creating an account, you agree to our
+        <a href="#">Terms</a>
+        and
+        <a href="#">Privacy Policy</a>.
+      </p>
+
+    </div>
+
+  </section>
 
 </div>

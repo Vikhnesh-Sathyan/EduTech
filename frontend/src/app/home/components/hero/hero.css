@@ -1,0 +1,123 @@
+.hero {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 28px;
+  background: #fafaf9;
+  box-sizing: border-box;
+}
+
+
+.hero-content {
+  max-width: 850px;
+
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 20px;
+
+  color: #6b6b68;
+
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  margin: 0;
+
+  color: #171717;
+
+  font-size: clamp(48px, 7vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  font-weight: 700;
+}
+
+.hero-description {
+  max-width: 620px;
+
+  margin: 28px auto 0;
+
+  color: #666662;
+
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  margin-top: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 46px;
+  padding: 0 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.primary-button {
+  background: #171717;
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #2b2b2b;
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: #292929;
+
+  border: 1px solid #dededb;
+}
+
+.secondary-button:hover {
+  border-color: #bdbdb8;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+
+  .hero {
+    min-height: 600px;
+    padding: 64px 20px;
+  }
+
+  h1 {
+    font-size: 48px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+}
