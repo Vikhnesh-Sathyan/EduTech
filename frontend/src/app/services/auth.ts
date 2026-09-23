@@ -34,4 +34,10 @@ getMe() {
   return this.http.get(`${this.apiUrl}/me`);
 }
 
+// Logs out the current user
+logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+}
+
 }
