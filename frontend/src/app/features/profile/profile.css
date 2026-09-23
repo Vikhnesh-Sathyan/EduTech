@@ -164,9 +164,10 @@
 
 .form-group input:disabled,
 .form-group textarea:disabled {
-  background: #f8f8f8;
+  background: #f7f7f7;
   color: #333333;
   cursor: default;
+  opacity: 1;
 }
 
 .form-group textarea {

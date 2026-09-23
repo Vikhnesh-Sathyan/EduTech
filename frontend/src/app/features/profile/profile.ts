@@ -36,51 +36,82 @@ export class Profile implements OnInit {
   ) {
 
     this.profileForm = this.fb.group({
+
+      // Account information - read-only
+      name: [{ value: '', disabled: true }],
+      email: [{ value: '', disabled: true }],
+
+      // Profile information - editable
       highest_qualification: ['', Validators.required],
       department: ['', Validators.required],
       study_year: ['', Validators.required],
       career_goal: ['', Validators.required],
       learning_goals: ['', Validators.required]
+
     });
 
   }
+
 
   // Load the student's profile when the page opens
   ngOnInit() {
     this.loadProfile();
   }
 
+
   // Load the authenticated student's existing profile
   loadProfile() {
 
     this.profileService.getProfile().subscribe({
+
       next: (response: any) => {
 
         const profile = response.profile;
 
         this.savedProfile = {
-          highest_qualification: profile.highest_qualification || '',
-          department: profile.department || '',
-          study_year: profile.study_year || '',
-          career_goal: profile.career_goal || '',
-          learning_goals: profile.learning_goals || ''
+
+          // Read-only account information
+          name: profile.name || '',
+          email: profile.email || '',
+
+          // Editable profile information
+          highest_qualification:
+            profile.highest_qualification || '',
+
+          department:
+            profile.department || '',
+
+          study_year:
+            profile.study_year || '',
+
+          career_goal:
+            profile.career_goal || '',
+
+          learning_goals:
+            profile.learning_goals || ''
+
         };
 
         this.profileForm.patchValue(this.savedProfile);
 
         // Profile starts in view mode
         this.profileForm.disable();
+
       },
 
       error: (error) => {
+
         this.errorMessage =
           error.error?.message || 'Failed to load profile.';
+
       }
+
     });
 
   }
 
-  // Enable profile editing
+
+  // Enable only the editable profile fields
   editProfile() {
 
     this.message = '';
@@ -88,8 +119,14 @@ export class Profile implements OnInit {
 
     this.editMode = true;
 
-    this.profileForm.enable();
+    this.profileForm.controls.highest_qualification.enable();
+    this.profileForm.controls.department.enable();
+    this.profileForm.controls.study_year.enable();
+    this.profileForm.controls.career_goal.enable();
+    this.profileForm.controls.learning_goals.enable();
+
   }
+
 
   // Cancel editing and restore the last saved values
   cancelEdit() {
@@ -99,37 +136,60 @@ export class Profile implements OnInit {
 
     this.profileForm.patchValue(this.savedProfile);
 
+    // Return to view mode
     this.profileForm.disable();
 
     this.editMode = false;
+
   }
 
-  // Save the student's profile
+
+  // Save the student's editable profile information
   onSubmit() {
 
     this.message = '';
     this.errorMessage = '';
 
     if (this.profileForm.invalid) {
+
       this.errorMessage =
         'Please complete all required profile details.';
+
       return;
+
     }
 
-    this.profileService.saveProfile(
-      this.profileForm.getRawValue() as {
-        highest_qualification: string;
-        department: string;
-        study_year: string;
-        career_goal: string;
-        learning_goals: string;
-      }
-    ).subscribe({
+
+    // Send only editable profile fields to the backend
+    const profileData = {
+
+      highest_qualification:
+        this.profileForm.controls.highest_qualification.value || '',
+
+      department:
+        this.profileForm.controls.department.value || '',
+
+      study_year:
+        this.profileForm.controls.study_year.value || '',
+
+      career_goal:
+        this.profileForm.controls.career_goal.value || '',
+
+      learning_goals:
+        this.profileForm.controls.learning_goals.value || ''
+
+    };
+
+
+    this.profileService.saveProfile(profileData).subscribe({
 
       next: (response: any) => {
 
-        // Keep the newly saved values
-        this.savedProfile = this.profileForm.getRawValue();
+        // Keep the newly saved profile values
+        this.savedProfile = {
+          ...this.savedProfile,
+          ...profileData
+        };
 
         this.message = response.message;
 
@@ -137,11 +197,14 @@ export class Profile implements OnInit {
         this.profileForm.disable();
 
         this.editMode = false;
+
       },
 
       error: (error) => {
+
         this.errorMessage =
           error.error?.message || 'Failed to save profile.';
+
       }
 
     });

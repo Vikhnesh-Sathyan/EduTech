@@ -47,13 +47,68 @@
     (ngSubmit)="onSubmit()"
   >
 
-    <!-- Academic Information -->
+    <!-- Personal Information -->
     <div class="form-section">
 
       <div class="section-header">
 
         <div>
           <p class="section-label">01</p>
+
+          <h2>Personal Information</h2>
+
+          <p>
+            Your account information.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <!-- Name -->
+        <div class="form-group">
+
+          <label for="name">
+            Name
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            formControlName="name"          >
+
+        </div>
+
+
+        <!-- Email -->
+        <div class="form-group">
+
+          <label for="email">
+            Email
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Academic Information -->
+    <div class="form-section">
+
+      <div class="section-header">
+
+        <div>
+          <p class="section-label">02</p>
 
           <h2>Academic Information</h2>
 
@@ -128,7 +183,7 @@
       <div class="section-header">
 
         <div>
-          <p class="section-label">02</p>
+          <p class="section-label">03</p>
 
           <h2>Career Direction</h2>
 
@@ -164,7 +219,7 @@
       <div class="section-header">
 
         <div>
-          <p class="section-label">03</p>
+          <p class="section-label">04</p>
 
           <h2>Learning Goals</h2>
 
