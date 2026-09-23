@@ -3,25 +3,29 @@
    ===================================================== */
 
 .profile-page {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 40px 24px 60px;
 }
 
 
 /* =====================================================
-   HEADER
+   PROFILE HEADER
    ===================================================== */
 
 .profile-header {
-  margin-bottom: 36px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
 .eyebrow {
   margin: 0 0 8px;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .profile-header h1 {
@@ -33,6 +37,31 @@
 .description {
   margin: 0;
   font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   EDIT BUTTON
+   ===================================================== */
+
+.edit-button {
+  flex-shrink: 0;
+  padding: 11px 20px;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.edit-button:hover {
+  background: #f5f5f5;
+  border-color: #c8c8c8;
 }
 
 
@@ -43,7 +72,7 @@
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 
@@ -53,7 +82,7 @@
 
 .form-section {
   padding: 28px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #e6e6e6;
   border-radius: 16px;
   background: #ffffff;
 }
@@ -62,14 +91,23 @@
   margin-bottom: 24px;
 }
 
+.section-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
 .section-header h2 {
   margin: 0 0 6px;
   font-size: 20px;
+  line-height: 1.3;
 }
 
 .section-header p {
   margin: 0;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 
@@ -99,7 +137,7 @@
 }
 
 .form-group label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -108,12 +146,15 @@
   width: 100%;
   box-sizing: border-box;
   padding: 13px 14px;
-  border: 1px solid #dcdcdc;
+  border: 1px solid #dedede;
   border-radius: 10px;
   background: #ffffff;
   font: inherit;
+  font-size: 14px;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .form-group input:focus,
@@ -121,9 +162,16 @@
   border-color: #222222;
 }
 
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background: #f8f8f8;
+  color: #333333;
+  cursor: default;
+}
+
 .form-group textarea {
-  resize: vertical;
   min-height: 130px;
+  resize: vertical;
 }
 
 
@@ -131,40 +179,63 @@
    MESSAGES
    ===================================================== */
 
-.success-message {
+.success-message,
+.error-message {
+  margin: 0 0 20px;
   margin: 0;
   padding: 12px 14px;
-  border-radius: 8px;
+  border-radius: 9px;
   font-size: 14px;
 }
 
+.success-message {
+  background: #f1f8f3;
+}
+
 .error-message {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  background: #fff2f2;
 }
 
 
 /* =====================================================
-   ACTIONS
+   FORM ACTIONS
    ===================================================== */
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
 }
 
-.form-actions button {
-  padding: 13px 24px;
-  border: none;
+.cancel-button,
+.save-button {
+  padding: 12px 22px;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 
-.form-actions button:disabled {
+.cancel-button {
+  border: 1px solid #d8d8d8;
+  background: #ffffff;
+}
+
+.cancel-button:hover {
+  background: #f5f5f5;
+}
+
+.save-button {
+  border: 1px solid #151515;
+  background: #151515;
+  color: #ffffff;
+}
+
+.save-button:hover {
+  background: #2a2a2a;
+}
+
+.save-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -180,8 +251,17 @@
     padding: 28px 16px 40px;
   }
 
+  .profile-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .profile-header h1 {
     font-size: 26px;
+  }
+
+  .edit-button {
+    width: 100%;
   }
 
   .form-section {
@@ -196,7 +276,12 @@
     grid-column: auto;
   }
 
-  .form-actions button {
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-button,
+  .save-button {
     width: 100%;
   }
 }

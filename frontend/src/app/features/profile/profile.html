@@ -1,16 +1,46 @@
 <section class="profile-page">
 
+  <!-- Profile Header -->
   <div class="profile-header">
-    <p class="eyebrow">Student Profile</p>
 
-    <h1>Build your learning profile</h1>
+    <div>
+      <p class="eyebrow">Student Profile</p>
 
-    <p class="description">
-      Keep your academic background, career goals, and learning goals up to date.
-    </p>
+      <h1>Your Profile</h1>
+
+      <p class="description">
+        Manage your academic background, career direction, and learning goals.
+      </p>
+    </div>
+
+    @if (!editMode) {
+      <button
+        type="button"
+        class="edit-button"
+        (click)="editProfile()"
+      >
+        Edit Profile
+      </button>
+    }
+
   </div>
 
 
+  <!-- Profile Messages -->
+  @if (message) {
+    <p class="success-message">
+      {{ message }}
+    </p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+  }
+
+
+  <!-- Profile Form -->
   <form
     class="profile-form"
     [formGroup]="profileForm"
@@ -21,13 +51,25 @@
     <div class="form-section">
 
       <div class="section-header">
-        <h2>Academic Information</h2>
-        <p>Tell us about your current educational background.</p>
+
+        <div>
+          <p class="section-label">01</p>
+
+          <h2>Academic Information</h2>
+
+          <p>
+            Your current educational background.
+          </p>
+        </div>
+
       </div>
+
 
       <div class="form-grid">
 
+        <!-- Highest Qualification -->
         <div class="form-group">
+
           <label for="qualification">
             Highest Qualification
           </label>
@@ -38,10 +80,13 @@
             formControlName="highest_qualification"
             placeholder="e.g. MCA"
           >
+
         </div>
 
 
+        <!-- Department -->
         <div class="form-group">
+
           <label for="department">
             Department
           </label>
@@ -52,10 +97,13 @@
             formControlName="department"
             placeholder="e.g. Computer Applications"
           >
+
         </div>
 
 
+        <!-- Study Year -->
         <div class="form-group">
+
           <label for="studyYear">
             Study Year
           </label>
@@ -66,6 +114,7 @@
             formControlName="study_year"
             placeholder="e.g. Final Year"
           >
+
         </div>
 
       </div>
@@ -77,9 +126,19 @@
     <div class="form-section">
 
       <div class="section-header">
-        <h2>Career Direction</h2>
-        <p>Choose the direction you currently want to work toward.</p>
+
+        <div>
+          <p class="section-label">02</p>
+
+          <h2>Career Direction</h2>
+
+          <p>
+            The career direction you currently want to work toward.
+          </p>
+        </div>
+
       </div>
+
 
       <div class="form-group">
 
@@ -103,9 +162,19 @@
     <div class="form-section">
 
       <div class="section-header">
-        <h2>Learning Goals</h2>
-        <p>What do you want to improve or achieve?</p>
+
+        <div>
+          <p class="section-label">03</p>
+
+          <h2>Learning Goals</h2>
+
+          <p>
+            The skills and areas you want to improve.
+          </p>
+        </div>
+
       </div>
+
 
       <div class="form-group">
 
@@ -125,31 +194,30 @@
     </div>
 
 
-    <!-- Messages -->
-    @if (message) {
-      <p class="success-message">
-        {{ message }}
-      </p>
+    <!-- Edit Actions -->
+    @if (editMode) {
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelEdit()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="profileForm.invalid"
+        >
+          Save Changes
+        </button>
+
+      </div>
+
     }
-
-    @if (errorMessage) {
-      <p class="error-message">
-        {{ errorMessage }}
-      </p>
-    }
-
-
-    <!-- Actions -->
-    <div class="form-actions">
-
-      <button
-        type="submit"
-        [disabled]="profileForm.invalid"
-      >
-        Save Profile
-      </button>
-
-    </div>
 
   </form>
 
