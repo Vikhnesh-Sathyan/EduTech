@@ -16,6 +16,8 @@ import { authGuard } from './guards/auth.guard';
 
 import { StudentDashboard } from './dashboards/student/student-dashboard/student-dashboard';
 
+import { Profile } from './features/profile/profile';
+
 // ==================== STUDY ====================
 
 import { Study } from './features/study/study';
@@ -57,7 +59,11 @@ export const routes: Routes = [
   component: StudentDashboard,
   canActivate: [authGuard]
   },
-
+  {
+    path: 'profile',
+  component: Profile,
+  canActivate: [authGuard]
+  },
 
   // ==================== STUDY ROUTES ====================
 

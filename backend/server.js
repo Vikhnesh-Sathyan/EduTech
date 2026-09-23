@@ -10,6 +10,7 @@ const db = require("./config/db");
 
 // Import application routes
 const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 // Create Express application
 const app = express();
@@ -33,8 +34,15 @@ app.get("/", (req, res) => {
     res.send("EduTech Backend is running");
 });
 
-// Authentication routes
+// ==================== AUTHENTICATION ROUTES ====================
+
+// Handles registration, login and authenticated user information
 app.use("/api/auth", authRoutes);
+
+// ==================== PROFILE ROUTES ====================
+
+// Handles the authenticated student's profile
+app.use("/api/profile", profileRoutes);
 
 // ==================== START SERVER ====================
 

@@ -1,0 +1,156 @@
+<section class="profile-page">
+
+  <div class="profile-header">
+    <p class="eyebrow">Student Profile</p>
+
+    <h1>Build your learning profile</h1>
+
+    <p class="description">
+      Keep your academic background, career goals, and learning goals up to date.
+    </p>
+  </div>
+
+
+  <form
+    class="profile-form"
+    [formGroup]="profileForm"
+    (ngSubmit)="onSubmit()"
+  >
+
+    <!-- Academic Information -->
+    <div class="form-section">
+
+      <div class="section-header">
+        <h2>Academic Information</h2>
+        <p>Tell us about your current educational background.</p>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="qualification">
+            Highest Qualification
+          </label>
+
+          <input
+            id="qualification"
+            type="text"
+            formControlName="highest_qualification"
+            placeholder="e.g. MCA"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label for="department">
+            Department
+          </label>
+
+          <input
+            id="department"
+            type="text"
+            formControlName="department"
+            placeholder="e.g. Computer Applications"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label for="studyYear">
+            Study Year
+          </label>
+
+          <input
+            id="studyYear"
+            type="text"
+            formControlName="study_year"
+            placeholder="e.g. Final Year"
+          >
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Career Information -->
+    <div class="form-section">
+
+      <div class="section-header">
+        <h2>Career Direction</h2>
+        <p>Choose the direction you currently want to work toward.</p>
+      </div>
+
+      <div class="form-group">
+
+        <label for="careerGoal">
+          Career Goal
+        </label>
+
+        <input
+          id="careerGoal"
+          type="text"
+          formControlName="career_goal"
+          placeholder="e.g. Full Stack Developer"
+        >
+
+      </div>
+
+    </div>
+
+
+    <!-- Learning Goals -->
+    <div class="form-section">
+
+      <div class="section-header">
+        <h2>Learning Goals</h2>
+        <p>What do you want to improve or achieve?</p>
+      </div>
+
+      <div class="form-group">
+
+        <label for="learningGoals">
+          Your Learning Goals
+        </label>
+
+        <textarea
+          id="learningGoals"
+          rows="5"
+          formControlName="learning_goals"
+          placeholder="Describe the skills or areas you want to improve..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <!-- Messages -->
+    @if (message) {
+      <p class="success-message">
+        {{ message }}
+      </p>
+    }
+
+    @if (errorMessage) {
+      <p class="error-message">
+        {{ errorMessage }}
+      </p>
+    }
+
+
+    <!-- Actions -->
+    <div class="form-actions">
+
+      <button
+        type="submit"
+        [disabled]="profileForm.invalid"
+      >
+        Save Profile
+      </button>
+
+    </div>
+
+  </form>
+
+</section>
