@@ -28,4 +28,10 @@ export class Auth {
   }) {
     return this.http.post(`${this.apiUrl}/login`, data);
   }
+
+  // Get the currently logged-in user's information
+getMe() {
+  return this.http.get(`${this.apiUrl}/me`);
+}
+
 }

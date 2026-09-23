@@ -10,6 +10,8 @@ import { Register } from './auth/register/register';
 
 import { Login } from './auth/login/login';
 
+import { authGuard } from './guards/auth.guard';
+
 // ==================== STUDENT ====================
 
 import { StudentDashboard } from './dashboards/student/student-dashboard/student-dashboard';
@@ -52,7 +54,8 @@ export const routes: Routes = [
   // Student dashboard
   {
     path: 'student-dashboard',
-    component: StudentDashboard
+  component: StudentDashboard,
+  canActivate: [authGuard]
   },
 
 

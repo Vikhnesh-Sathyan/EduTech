@@ -156,7 +156,39 @@ const login = async (req, res) => {
     }
 };
 
+
+// getMe → fetch the logged-in user's information from the database.
+
+const getMe = (req, res) => {
+    const sql = `
+        SELECT id, name, email, role, status, created_at
+        FROM users
+        WHERE id = ?
+    `;
+
+    db.query(sql, [req.user.id], (err, result) => {
+        if (err) {
+            console.error("Get user failed:", err.message);
+
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            user: result[0]
+        });
+    });
+};
+
 module.exports = {
     register,
     login,
+    getMe
 };
