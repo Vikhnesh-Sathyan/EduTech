@@ -1,19 +1,40 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-  //Gets the token from the browser.
+  const router = inject(Router);
+
+  // Gets the token from the browser.
   const token = localStorage.getItem('token');
 
-  //If a token exists, we want to attach it to the request.
+  let request = req;
+
+  // If a token exists, attach it to the request.
   if (token) {
-    const authReq = req.clone({  //re.clone - creates a modified copy of the request.
+    request = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}` //backend receives the JWT.
+        Authorization: `Bearer ${token}`
       }
     });
-    return next(authReq);
   }
-//If there is no token, the original request is sent without an Authorization header.
-  return next(req);
+
+  return next(request).pipe(
+
+    catchError((error) => {
+
+      // Token is invalid or expired.
+      if (error.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+
+        router.navigate(['/login']);
+      }
+
+      return throwError(() => error);
+    })
+
+  );
 };
