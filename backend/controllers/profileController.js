@@ -3,21 +3,21 @@ const db = require("../config/db");
 
 const getProfile = (req, res) => {
 
-    const sql = `
-        SELECT
-            u.id,
-            u.name,
-            u.email,
-            sp.highest_qualification,
-            sp.department,
-            sp.study_year,
-            sp.career_goal,
-            sp.learning_goals
-        FROM users u
-        LEFT JOIN student_profiles sp
-            ON u.id = sp.user_id
-        WHERE u.id = ?
-    `;
+const sql = `
+    SELECT
+        sp.id,
+        u.name,
+        u.email,
+        sp.education_program_id,
+        sp.department_id,
+        sp.education_year_id,
+        sp.career_goal,
+        sp.learning_goals
+    FROM student_profiles sp
+    INNER JOIN users u
+        ON u.id = sp.user_id
+    WHERE sp.user_id = ?
+`;
 
     db.query(sql, [req.user.id], (err, result) => {
 
@@ -45,42 +45,41 @@ const getProfile = (req, res) => {
 const saveProfile = (req, res) => {
 
     const {
-        highest_qualification,
-        department,
-        study_year,
+    education_program_id,
+    department_id,
+    education_year_id,
+    career_goal,
+    learning_goals
+} = req.body;
+
+const sql = `
+    INSERT INTO student_profiles
+    (
+        user_id,
+        education_program_id,
+        department_id,
+        education_year_id,
         career_goal,
         learning_goals
-    } = req.body;
-
-    const sql = `
-        INSERT INTO student_profiles
-        (
-            user_id,
-            highest_qualification,
-            department,
-            study_year,
-            career_goal,
-            learning_goals
-        )
-        VALUES (?, ?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-            highest_qualification = VALUES(highest_qualification),
-            department = VALUES(department),
-            study_year = VALUES(study_year),
-            career_goal = VALUES(career_goal),
-            learning_goals = VALUES(learning_goals)
-    `;
+    )
+    VALUES (?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+        education_program_id = VALUES(education_program_id),
+        department_id = VALUES(department_id),
+        education_year_id = VALUES(education_year_id),
+        career_goal = VALUES(career_goal),
+        learning_goals = VALUES(learning_goals)
+`;
 
     db.query(
-        sql,
-        [
-            req.user.id,
-            highest_qualification,
-            department,
-            study_year,
-            career_goal,
-            learning_goals
-        ],
+      [
+         req.user.id,
+        education_program_id,
+        department_id,
+        education_year_id,
+        career_goal,
+        learning_goals
+      ],
         (err) => {
 
             if (err) {

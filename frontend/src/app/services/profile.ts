@@ -18,13 +18,13 @@ export class Profile {
   }
 
   // Create or update the authenticated student's profile
-  saveProfile(data: {
-    highest_qualification: string;
-    department: string;
-    study_year: string;
-    career_goal: string;
-    learning_goals: string;
-  }) {
-    return this.http.put(`${this.apiUrl}`, data);
-  }
+saveProfile(data: {
+  education_program_id: number;
+  department_id: number;
+  education_year_id: number;
+  career_goal: string;
+  learning_goals: string;
+}) {
+  return this.http.put(`${this.apiUrl}`, data);
+}
 }

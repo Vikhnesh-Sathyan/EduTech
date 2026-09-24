@@ -12,24 +12,33 @@ const db = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 
-// ==================== EDUCATION ROUTES ====================
+// ==================== ADMIN ROUTES ====================
 
+// Admin education program routes
 const educationProgramRoutes =
     require("./routes/educationProgramRoutes");
 
-// ==================== ADMIN DEPARTMENT ROUTES ====================
+// Admin department routes
 const departmentRoutes =
     require("./routes/departmentRoutes");
 
-// ==================== ADMIN EDUCATION YEAR ROUTES ====================
+// Admin education year routes
 const educationYearRoutes =
     require("./routes/educationYearRoutes");
 
-// ==================== ADMIN SUBJECT ROUTES ====================
-
+// Admin subject routes
 const subjectRoutes =
     require("./routes/subjectRoutes");
 
+// ==================== STUDENT ROUTES ====================
+
+// Student education lookup routes
+const educationRoutes =
+    require("./routes/educationRoutes");
+
+// Student subject routes
+const studentSubjectRoutes =
+    require("./routes/studentSubjectRoutes");
 
 // Create Express application
 const app = express();
@@ -64,7 +73,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 
 
-// ==================== ADMIN EDUCATION ROUTES ====================
+// =====================================================
+// ==================== ADMIN ROUTES ====================
+// =====================================================
 
 // Handles admin education program configuration
 app.use(
@@ -72,15 +83,11 @@ app.use(
     educationProgramRoutes
 );
 
-// ==================== ADMIN DEPARTMENT ROUTES ====================
-
 // Handles admin department configuration
 app.use(
     "/api/admin/departments",
     departmentRoutes
 );
-
-// ==================== ADMIN EDUCATION YEAR ROUTES ====================
 
 // Handles admin education year configuration
 app.use(
@@ -88,12 +95,27 @@ app.use(
     educationYearRoutes
 );
 
-// ==================== ADMIN SUBJECT ROUTES ====================
-
 // Handles admin subject configuration
 app.use(
     "/api/admin/subjects",
     subjectRoutes
+);
+
+
+// =====================================================
+// =================== STUDENT ROUTES ==================
+// =====================================================
+
+// Handles student education lookup
+app.use(
+    "/api/education",
+    educationRoutes
+);
+
+// Handles student subject selection
+app.use(
+    "/api/student/subjects",
+    studentSubjectRoutes
 );
 
 
