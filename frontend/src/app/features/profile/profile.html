@@ -125,53 +125,73 @@
 
         <!-- Highest Qualification -->
         <div class="form-group">
-
-          <label for="qualification">
-            Highest Qualification
+          <label for="educationProgram">
+              Education Program
           </label>
 
-          <input
-            id="qualification"
-            type="text"
-            formControlName="highest_qualification"
-            placeholder="e.g. MCA"
-          >
+        <select
+          id="educationProgram"
+          formControlName="education_program_id"
+          (change)="onProgramChange()"
+      >
+    <option [ngValue]="null">
+      Select education program
+    </option>
 
-        </div>
+    @for (program of programs; track program.id) {
+      <option [ngValue]="program.id">
+        {{ program.name }}
+      </option>
+    }
+  </select>
+</div>
 
 
         <!-- Department -->
-        <div class="form-group">
+     <div class="form-group">
+  <label for="department">
+    Department
+  </label>
 
-          <label for="department">
-            Department
-          </label>
+  <select
+    id="department"
+    formControlName="department_id"
+    (change)="onDepartmentChange()"
+  >
+    <option [ngValue]="null">
+      Select department
+    </option>
 
-          <input
-            id="department"
-            type="text"
-            formControlName="department"
-            placeholder="e.g. Computer Applications"
-          >
-
-        </div>
+    @for (department of departments; track department.id) {
+      <option [ngValue]="department.id">
+        {{ department.name }}
+      </option>
+    }
+  </select>
+</div>
 
 
         <!-- Study Year -->
-        <div class="form-group">
+  <div class="form-group">
+  <label for="educationYear">
+    Education Year
+  </label>
 
-          <label for="studyYear">
-            Study Year
-          </label>
+  <select
+    id="educationYear"
+    formControlName="education_year_id"
+  >
+    <option [ngValue]="null">
+      Select education year
+    </option>
 
-          <input
-            id="studyYear"
-            type="text"
-            formControlName="study_year"
-            placeholder="e.g. Final Year"
-          >
-
-        </div>
+    @for (year of years; track year.id) {
+      <option [ngValue]="year.id">
+        {{ year.name }}
+      </option>
+    }
+  </select>
+</div>
 
       </div>
 

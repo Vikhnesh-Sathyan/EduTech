@@ -4,7 +4,9 @@ const express = require("express");
 
 const {
     getAvailableSubjects,
-    selectSubject
+    getSelectedSubjects,
+    selectSubject,
+    removeSubject,
 } = require("../controllers/studentSubjectController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -29,6 +31,20 @@ router.post(
     roleMiddleware("student"),
     selectSubject
 );
+// Get subjects already selected by the authenticated student
+router.get(
+    "/selected",
+    authMiddleware,
+    roleMiddleware("student"),
+    getSelectedSubjects
+);
 
+// Remove a selected subject
+router.delete(
+    "/:subjectId",
+    authMiddleware,
+    roleMiddleware("student"),
+    removeSubject
+);
 
 module.exports = router;
