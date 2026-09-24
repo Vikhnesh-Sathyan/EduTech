@@ -21,6 +21,16 @@ const educationProgramRoutes =
 const departmentRoutes =
     require("./routes/departmentRoutes");
 
+// ==================== ADMIN EDUCATION YEAR ROUTES ====================
+const educationYearRoutes =
+    require("./routes/educationYearRoutes");
+
+// ==================== ADMIN SUBJECT ROUTES ====================
+
+const subjectRoutes =
+    require("./routes/subjectRoutes");
+
+
 // Create Express application
 const app = express();
 
@@ -70,6 +80,21 @@ app.use(
     departmentRoutes
 );
 
+// ==================== ADMIN EDUCATION YEAR ROUTES ====================
+
+// Handles admin education year configuration
+app.use(
+    "/api/admin/education-years",
+    educationYearRoutes
+);
+
+// ==================== ADMIN SUBJECT ROUTES ====================
+
+// Handles admin subject configuration
+app.use(
+    "/api/admin/subjects",
+    subjectRoutes
+);
 
 
 // ==================== START SERVER ====================
