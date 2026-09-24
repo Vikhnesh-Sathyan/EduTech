@@ -31,8 +31,18 @@ export class Profile implements OnInit {
   profileForm;
 
   constructor(
+      // Tool to help build and manage the form fields easily
+
     private fb: FormBuilder,
+
+      // Service used to talk to the server (get/save profile data)
+
     private profileService: ProfileService
+
+      // Both tools are now saved as this.fb and this.profileService,
+      // so they can be used anywhere else in this class
+      // private - means only this class can use it
+
   ) {
 
     this.profileForm = this.fb.group({

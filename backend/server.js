@@ -12,6 +12,15 @@ const db = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 
+// ==================== EDUCATION ROUTES ====================
+
+const educationProgramRoutes =
+    require("./routes/educationProgramRoutes");
+
+// ==================== ADMIN DEPARTMENT ROUTES ====================
+const departmentRoutes =
+    require("./routes/departmentRoutes");
+
 // Create Express application
 const app = express();
 
@@ -43,6 +52,25 @@ app.use("/api/auth", authRoutes);
 
 // Handles the authenticated student's profile
 app.use("/api/profile", profileRoutes);
+
+
+// ==================== ADMIN EDUCATION ROUTES ====================
+
+// Handles admin education program configuration
+app.use(
+    "/api/admin/education-programs",
+    educationProgramRoutes
+);
+
+// ==================== ADMIN DEPARTMENT ROUTES ====================
+
+// Handles admin department configuration
+app.use(
+    "/api/admin/departments",
+    departmentRoutes
+);
+
+
 
 // ==================== START SERVER ====================
 
