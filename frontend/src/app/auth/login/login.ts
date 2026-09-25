@@ -65,9 +65,11 @@ export class Login {
     JSON.stringify(response.user)
   );
 
-  if (response.user.role === 'student') {
-    this.router.navigate(['/student-dashboard']);
-  }
+if (response.user.role === 'student') {
+  this.router.navigate(['/student-dashboard']);
+} else if (response.user.role === 'admin') {
+  this.router.navigate(['/admin-dashboard']);
+}
 },
 
       error: (error) => {
