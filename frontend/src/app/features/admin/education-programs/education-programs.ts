@@ -3,7 +3,7 @@
 // It loads programs from the backend and manages the page state
 // for viewing, creating, editing, and activating/deactivating programs.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 
 import {
   ReactiveFormsModule,
@@ -36,7 +36,8 @@ export class EducationPrograms implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private programService: AdminEducationProgram
+    private programService: AdminEducationProgram,
+    private cdr: ChangeDetectorRef
   ) {
     this.programForm = this.fb.group({
       name: ['', Validators.required],
@@ -44,27 +45,40 @@ export class EducationPrograms implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.loadPrograms();
-  }
+
+ ngOnInit() {
+
+  console.log('EDUCATION PROGRAMS COMPONENT CREATED');
+
+  this.loadPrograms();
+
+}
 
   // Load all education programs from the backend
-  loadPrograms() {
+loadPrograms() {
 
-    this.programService.getPrograms().subscribe({
+  this.programService.getPrograms().subscribe({
 
-      next: (response: any) => {
-        this.programs = response.programs;
-      },
+    next: (response: any) => {
 
-      error: (error) => {
-        this.errorMessage =
-          error.error?.message ||
-          'Failed to load education programs.';
-      }
 
-    });
-  }
+      this.programs = response.programs;
+      
+      this.cdr.detectChanges();
+
+
+    },
+
+    error: (error) => {
+
+      this.errorMessage =
+        error.error?.message ||
+        'Failed to load education programs.';
+
+    }
+
+  });
+}
 
   // Submit the form to create or update a program
   onSubmit() {

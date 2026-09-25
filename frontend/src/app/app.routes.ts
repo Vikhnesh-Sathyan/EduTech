@@ -34,6 +34,9 @@ import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
 // Admin education program management page
 import { EducationPrograms } from './features/admin/education-programs/education-programs';
 
+// Admin department management page
+import { Departments } from './features/admin/departments/departments';
+
 export const routes: Routes = [
 
   // ==================== PUBLIC ROUTES ====================
@@ -118,6 +121,11 @@ export const routes: Routes = [
     {
       path: 'education-programs',
       component: EducationPrograms
+    },
+
+    {
+      path: 'departments',
+      component: Departments
     }
   ]
 }

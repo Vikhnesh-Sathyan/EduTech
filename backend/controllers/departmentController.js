@@ -56,6 +56,46 @@ const createDepartment = (req, res) => {
     );
 };
 
+// Get all departments with their education program names
+const getDepartments = (req, res) => {
+
+    const sql = `
+        SELECT
+            d.id,
+            d.education_program_id,
+            d.name,
+            d.status,
+            d.created_at,
+            d.updated_at,
+            p.name AS program_name
+        FROM departments d
+        INNER JOIN education_programs p
+            ON p.id = d.education_program_id
+        ORDER BY p.name ASC, d.name ASC
+    `;
+
+    db.query(
+        sql,
+        (err, result) => {
+
+            if (err) {
+
+                console.error(
+                    "All departments fetch failed:",
+                    err.message
+                );
+
+                return res.status(500).json({
+                    message: "Failed to fetch departments"
+                });
+            }
+
+            res.status(200).json({
+                departments: result
+            });
+        }
+    );
+};
 
 // Get departments for an education program
 const getDepartmentsByProgram = (req, res) => {
@@ -208,6 +248,7 @@ const updateDepartmentStatus = (req, res) => {
 
 module.exports = {
     createDepartment,
+    getDepartments,
     getDepartmentsByProgram,
     updateDepartment,
     updateDepartmentStatus

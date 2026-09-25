@@ -4,6 +4,7 @@ const express = require("express");
 
 const {
     createDepartment,
+    getDepartments,
     getDepartmentsByProgram,
     updateDepartment,
     updateDepartmentStatus
@@ -23,6 +24,13 @@ router.post(
     createDepartment
 );
 
+// Get all departments for admin management
+router.get(
+    "/",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getDepartments
+);
 
 // Get departments for an education program
 router.get(

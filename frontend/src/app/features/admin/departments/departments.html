@@ -1,0 +1,191 @@
+<!--
+  USE:
+  Provides the admin interface for creating and viewing
+  education departments linked to education programs.
+-->
+
+<section class="departments-page">
+
+  <!-- Page heading -->
+  <div class="page-heading">
+
+    <p class="eyebrow">
+      EDUCATION
+    </p>
+
+    <h1>
+      Departments
+    </h1>
+
+    <p class="intro">
+      Configure the departments available within each education program.
+    </p>
+
+  </div>
+
+
+  <!-- Feedback messages -->
+  @if (message) {
+
+    <p class="success-message">
+      {{ message }}
+    </p>
+
+  }
+
+  @if (errorMessage) {
+
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+
+  }
+
+
+  <!-- Add department -->
+  <section class="form-card">
+
+    <p class="section-label">
+      NEW DEPARTMENT
+    </p>
+
+    <h2>
+      Add Department
+    </h2>
+
+
+    <form
+      [formGroup]="departmentForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <!-- Education program -->
+      <div class="form-field">
+
+        <label for="education-program">
+          Education Program
+        </label>
+
+        <select
+          id="education-program"
+          formControlName="education_program_id"
+        >
+
+          <option [ngValue]="null">
+            Select an education program
+          </option>
+
+          @for (program of programs; track program.id) {
+
+            <option [ngValue]="program.id">
+              {{ program.name }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- Department name -->
+      <div class="form-field">
+
+        <label for="department-name">
+          Department Name
+        </label>
+
+        <input
+          id="department-name"
+          type="text"
+          formControlName="name"
+          placeholder="Example: Computer Applications"
+        />
+
+      </div>
+
+
+      <!-- Submit -->
+      <button
+        type="submit"
+      >
+        Add Department
+      </button>
+
+    </form>
+
+  </section>
+
+
+  <!-- Existing departments -->
+  <section class="list-card">
+
+    <div class="list-header">
+
+      <div>
+
+        <p class="section-label">
+          CONFIGURED DEPARTMENTS
+        </p>
+
+        <h2>
+          Departments
+        </h2>
+
+      </div>
+
+      <span>
+        {{ departments.length }} departments
+      </span>
+
+    </div>
+
+
+    @if (departments.length === 0) {
+
+      <div class="empty-state">
+
+        <p>
+          No departments have been configured yet.
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="department-list">
+
+        @for (
+          department of departments;
+          track department.id
+        ) {
+
+          <article class="department-item">
+
+            <div class="department-info">
+
+              <h3>
+                {{ department.name }}
+              </h3>
+
+              <p>
+                {{ department.program_name }}
+              </p>
+
+            </div>
+
+            <span class="status">
+              {{ department.status }}
+            </span>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+</section>

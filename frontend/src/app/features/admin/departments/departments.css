@@ -1,0 +1,321 @@
+/* =====================================================
+   USE:
+   Styles the admin Departments page.
+   Keeps the layout consistent with the other
+   education configuration pages.
+   ===================================================== */
+
+.departments-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+
+/* =====================================================
+   PAGE HEADING
+   ===================================================== */
+
+.page-heading {
+  margin-bottom: 48px;
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 10px;
+
+  color: #777;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.page-heading h1 {
+  margin: 0;
+
+  color: #171717;
+
+  font-family: Georgia, serif;
+  font-size: 42px;
+  line-height: 1.15;
+}
+
+.intro {
+  margin: 14px 0 0;
+
+  color: #777;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   CARDS
+   ===================================================== */
+
+.form-card,
+.list-card {
+  padding: 32px;
+
+  background: #fff;
+
+  border: 1px solid #deded9;
+  border-radius: 14px;
+}
+
+.form-card {
+  margin-bottom: 40px;
+}
+
+.form-card h2,
+.list-card h2 {
+  margin: 0 0 28px;
+
+  color: #171717;
+
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+
+/* =====================================================
+   FORM
+   ===================================================== */
+
+.form-field {
+  margin-bottom: 24px;
+}
+
+.form-field label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #222;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+
+  min-height: 48px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #d7d7d2;
+  border-radius: 8px;
+
+  color: #222;
+
+  font: inherit;
+
+  outline: none;
+}
+
+.form-field select {
+  cursor: pointer;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: #555;
+}
+
+.form-field input::placeholder {
+  color: #aaa;
+}
+
+
+/* =====================================================
+   BUTTON
+   ===================================================== */
+
+button {
+  min-height: 46px;
+
+  padding: 0 22px;
+
+  background: #222;
+
+  border: 0;
+  border-radius: 7px;
+
+  color: #fff;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+button:hover {
+  background: #111;
+}
+
+
+/* =====================================================
+   FEEDBACK
+   ===================================================== */
+
+.success-message,
+.error-message {
+  margin: 0 0 24px;
+
+  padding: 12px 16px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+}
+
+.success-message {
+  background: #f1f5f1;
+  color: #35523a;
+}
+
+.error-message {
+  background: #f8f1f1;
+  color: #713b3b;
+}
+
+
+/* =====================================================
+   DEPARTMENT LIST
+   ===================================================== */
+
+.list-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 24px;
+}
+
+.list-header h2 {
+  margin-bottom: 0;
+}
+
+.list-header > span {
+  color: #777;
+
+  font-size: 12px;
+}
+
+.department-list {
+  border-top: 1px solid #e5e5e0;
+}
+
+.department-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding: 20px 4px;
+
+  border-bottom: 1px solid #e5e5e0;
+}
+
+.department-info h3 {
+  margin: 0 0 6px;
+
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.department-info p {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 12px;
+}
+
+.status {
+  flex-shrink: 0;
+
+  padding: 5px 9px;
+
+  border: 1px solid #ddd;
+  border-radius: 20px;
+
+  color: #666;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty-state {
+  padding: 40px 20px;
+
+  border-top: 1px solid #e5e5e0;
+
+  text-align: center;
+}
+
+.empty-state p {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+  .departments-page {
+    padding: 32px 20px 60px;
+  }
+
+  .page-heading h1 {
+    font-size: 34px;
+  }
+
+  .form-card,
+  .list-card {
+    padding: 24px;
+  }
+
+  .list-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .department-item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+}
