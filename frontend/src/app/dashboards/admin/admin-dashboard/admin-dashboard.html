@@ -8,13 +8,68 @@
 
     <section class="dashboard-content">
 
-      <p class="eyebrow">ADMINISTRATION</p>
+      <div class="page-heading">
+        <p class="eyebrow">ADMINISTRATION</p>
 
-      <h1>Platform Overview</h1>
+        <h1>Platform Overview</h1>
 
-      <p class="intro">
-        Manage EduTech education configuration and platform operations.
-      </p>
+        <p class="intro">
+          Manage EduTech education configuration and platform operations.
+        </p>
+      </div>
+
+
+      <div class="overview-section">
+
+        <div class="section-heading">
+          <h2>Education Configuration</h2>
+
+          <p>
+            Overview of the education structure currently configured on the platform.
+          </p>
+        </div>
+
+
+        <div class="overview-grid">
+
+          <article class="overview-card">
+            <span class="card-label">Programs</span>
+
+            <strong>{{ overview.programs }}</strong>
+
+            <p>Education programs</p>
+          </article>
+
+
+          <article class="overview-card">
+            <span class="card-label">Departments</span>
+
+            <strong>{{ overview.departments }}</strong>
+
+            <p>Configured departments</p>
+          </article>
+
+
+          <article class="overview-card">
+            <span class="card-label">Education Years</span>
+
+            <strong>{{ overview.education_years }}</strong>
+
+            <p>Available study years</p>
+          </article>
+
+
+          <article class="overview-card">
+            <span class="card-label">Subjects</span>
+
+            <strong>{{ overview.subjects }}</strong>
+
+            <p>Configured subjects</p>
+          </article>
+
+        </div>
+
+      </div>
 
     </section>
 

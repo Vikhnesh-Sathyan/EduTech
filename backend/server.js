@@ -30,6 +30,10 @@ const educationYearRoutes =
 const subjectRoutes =
     require("./routes/subjectRoutes");
 
+// Admin dashboard overview routes
+const adminOverviewRoutes =
+    require("./routes/adminOverviewRoutes");
+
 // ==================== STUDENT ROUTES ====================
 
 // Student education lookup routes
@@ -99,6 +103,12 @@ app.use(
 app.use(
     "/api/admin/subjects",
     subjectRoutes
+);
+
+// Handles admin dashboard overview statistics
+app.use(
+    "/api/admin/overview",
+    adminOverviewRoutes
 );
 
 
