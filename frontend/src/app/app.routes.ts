@@ -37,6 +37,8 @@ import { EducationPrograms } from './features/admin/education-programs/education
 // Admin department management page
 import { Departments } from './features/admin/departments/departments';
 
+import { EducationYears } from './features/admin/education-years/education-years';
+
 export const routes: Routes = [
 
   // ==================== PUBLIC ROUTES ====================
@@ -126,7 +128,12 @@ export const routes: Routes = [
     {
       path: 'departments',
       component: Departments
-    }
+    },
+
+    {
+      path: 'education-years',
+      component: EducationYears
+    },
   ]
 }
 

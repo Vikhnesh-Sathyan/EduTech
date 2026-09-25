@@ -1,0 +1,362 @@
+/* =====================================================
+   EDUCATION YEARS PAGE
+   ===================================================== */
+
+.education-years-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+
+/* =====================================================
+   PAGE HEADING
+   ===================================================== */
+
+.page-heading {
+  margin-bottom: 36px;
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: #7b7f87;
+}
+
+.page-heading h1 {
+  margin: 0;
+
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+
+  color: #17181c;
+}
+
+.intro {
+  margin: 10px 0 0;
+
+  max-width: 620px;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  color: #777b83;
+}
+
+
+/* =====================================================
+   MESSAGES
+   ===================================================== */
+
+.success-message,
+.error-message {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+}
+
+.success-message {
+  background: #edf8f1;
+  color: #247044;
+}
+
+.error-message {
+  background: #fff1f1;
+  color: #b42323;
+}
+
+
+/* =====================================================
+   FORM CARD
+   ===================================================== */
+
+.form-card,
+.list-card {
+  background: #ffffff;
+
+  border: 1px solid #e8e8eb;
+  border-radius: 18px;
+
+  padding: 28px;
+
+  box-shadow: 0 8px 30px rgba(20, 20, 20, 0.04);
+}
+
+.form-card {
+  margin-bottom: 28px;
+}
+
+.form-card h2,
+.list-card h2 {
+  margin: 0 0 24px;
+
+  font-size: 21px;
+  font-weight: 650;
+
+  color: #191a1e;
+}
+
+
+/* =====================================================
+   FORM
+   ===================================================== */
+
+form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #35373c;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dcdde1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  color: #1c1d21;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field input::placeholder {
+  color: #a3a5aa;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: #17181c;
+
+  box-shadow: 0 0 0 3px rgba(23, 24, 28, 0.07);
+}
+
+
+/* =====================================================
+   BUTTON
+   ===================================================== */
+
+form button {
+  width: fit-content;
+
+  min-height: 46px;
+
+  padding: 0 22px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #17181c;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+form button:hover {
+  opacity: 0.9;
+}
+
+form button:active {
+  transform: translateY(1px);
+}
+
+
+/* =====================================================
+   LIST HEADER
+   ===================================================== */
+
+.list-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 20px;
+}
+
+.list-header h2 {
+  margin-bottom: 0;
+}
+
+.list-header > span {
+  flex-shrink: 0;
+
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  background: #f4f4f5;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #666970;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty-state {
+  padding: 40px 20px;
+
+  text-align: center;
+
+  border: 1px dashed #dcdde1;
+  border-radius: 12px;
+}
+
+.empty-state p {
+  margin: 0;
+
+  font-size: 14px;
+  color: #85878d;
+}
+
+
+/* =====================================================
+   EDUCATION YEAR LIST
+   ===================================================== */
+
+.year-list {
+  display: flex;
+  flex-direction: column;
+
+  border-top: 1px solid #eeeeef;
+}
+
+.year-item {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 4px;
+
+  border-bottom: 1px solid #eeeeef;
+}
+
+.year-info {
+  min-width: 0;
+}
+
+.year-info h3 {
+  margin: 0 0 6px;
+
+  font-size: 15px;
+  font-weight: 650;
+
+  color: #202126;
+}
+
+.year-info p {
+  margin: 0 0 5px;
+
+  font-size: 13px;
+
+  color: #777a81;
+}
+
+.year-info small {
+  font-size: 12px;
+
+  color: #999ba1;
+}
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+.status {
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: #edf8f1;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: capitalize;
+
+  color: #247044;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+  .education-years-page {
+    padding: 32px 20px 60px;
+  }
+
+  .page-heading h1 {
+    font-size: 30px;
+  }
+
+  .form-card,
+  .list-card {
+    padding: 22px;
+  }
+
+  .list-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .year-item {
+    align-items: flex-start;
+  }
+
+}

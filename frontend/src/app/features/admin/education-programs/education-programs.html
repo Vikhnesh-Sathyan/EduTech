@@ -139,13 +139,13 @@
       </div>
 
       <span class="program-count">
-        {{ programs.length }} programs
+        {{ programs().length }} programs
       </span>
 
     </div>
 
 
-    @if (programs.length === 0) {
+    @if (programs().length === 0) {
 
       <div class="empty-state">
 
@@ -163,7 +163,7 @@
 
       <div class="program-list">
 
-        @for (program of programs; track program.id) {
+        @for (program of programs(); track program.id) {
 
           <article class="program-card">
 

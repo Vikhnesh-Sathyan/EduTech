@@ -3,7 +3,7 @@
 // It loads programs from the backend and manages the page state
 // for viewing, creating, editing, and activating/deactivating programs.
 
-import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 import {
   ReactiveFormsModule,
@@ -24,7 +24,8 @@ import { AdminEducationProgram } from '../../../services/admin-education-program
 })
 export class EducationPrograms implements OnInit {
 
-  programs: any[] = [];
+  // Signal holding the list of programs — auto-updates the UI
+  programs = signal<any[]>([]);
 
   message = '';
   errorMessage = '';
@@ -36,8 +37,7 @@ export class EducationPrograms implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private programService: AdminEducationProgram,
-    private cdr: ChangeDetectorRef
+    private programService: AdminEducationProgram
   ) {
     this.programForm = this.fb.group({
       name: ['', Validators.required],
@@ -45,40 +45,27 @@ export class EducationPrograms implements OnInit {
     });
   }
 
-
- ngOnInit() {
-
-  console.log('EDUCATION PROGRAMS COMPONENT CREATED');
-
-  this.loadPrograms();
-
-}
+  ngOnInit() {
+    this.loadPrograms();
+  }
 
   // Load all education programs from the backend
-loadPrograms() {
+  loadPrograms() {
 
-  this.programService.getPrograms().subscribe({
+    this.programService.getPrograms().subscribe({
 
-    next: (response: any) => {
+      next: (response: any) => {
+        this.programs.set(response.programs);
+      },
 
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message ||
+          'Failed to load education programs.';
+      }
 
-      this.programs = response.programs;
-      
-      this.cdr.detectChanges();
-
-
-    },
-
-    error: (error) => {
-
-      this.errorMessage =
-        error.error?.message ||
-        'Failed to load education programs.';
-
-    }
-
-  });
-}
+    });
+  }
 
   // Submit the form to create or update a program
   onSubmit() {
@@ -108,11 +95,8 @@ loadPrograms() {
       ).subscribe({
 
         next: (response: any) => {
-
           this.message = response.message;
-
           this.resetForm();
-
           this.loadPrograms();
         },
 
@@ -131,11 +115,8 @@ loadPrograms() {
     this.programService.createProgram(data).subscribe({
 
       next: (response: any) => {
-
         this.message = response.message;
-
         this.resetForm();
-
         this.loadPrograms();
       },
 
@@ -180,9 +161,7 @@ loadPrograms() {
     ).subscribe({
 
       next: (response: any) => {
-
         this.message = response.message;
-
         this.loadPrograms();
       },
 
@@ -197,7 +176,6 @@ loadPrograms() {
 
   // Exit edit mode and clear the form
   resetForm() {
-
     this.editMode = false;
     this.editingProgramId = null;
 

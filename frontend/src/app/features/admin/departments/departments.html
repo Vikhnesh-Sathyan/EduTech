@@ -75,9 +75,10 @@
             Select an education program
           </option>
 
-          @for (program of programs; track program.id) {
+          @for (program of programs(); track program.id) {
 
             <option [ngValue]="program.id">
+
               {{ program.name }}
             </option>
 
@@ -135,13 +136,13 @@
       </div>
 
       <span>
-        {{ departments.length }} departments
+        {{ departments().length }} departments
       </span>
 
     </div>
 
 
-    @if (departments.length === 0) {
+    @if (departments().length === 0) {
 
       <div class="empty-state">
 
@@ -156,7 +157,7 @@
       <div class="department-list">
 
         @for (
-          department of departments;
+          department of departments();
           track department.id
         ) {
 

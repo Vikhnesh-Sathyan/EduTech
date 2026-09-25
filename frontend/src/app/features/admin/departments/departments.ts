@@ -6,7 +6,7 @@
 import {
   Component,
   OnInit,
-  ChangeDetectorRef
+  signal
 } from '@angular/core';
 
 import {
@@ -29,21 +29,21 @@ import { AdminEducationProgram } from '../../../services/admin-education-program
 })
 export class Departments implements OnInit {
 
-  programs: any[] = [];
-  departments: any[] = [];
+  // List of departments, shown in the table/list
+  departments = signal<any[]>([]);
+
+  // List of programs, used for the dropdown
+  programs = signal<any[]>([]);
 
   message = '';
   errorMessage = '';
 
   departmentForm;
 
-
   constructor(
     private fb: FormBuilder,
     private departmentService: AdminDepartment,
     private adminEducationService: AdminEducationProgram,
-    private cdr: ChangeDetectorRef
-
   ) {
 
     this.departmentForm = this.fb.group({
@@ -65,40 +65,29 @@ export class Departments implements OnInit {
 
   }
 
-
   ngOnInit() {
-
     this.loadPrograms();
     this.loadDepartments();
-
   }
 
-
   // Load all configured departments
-loadDepartments() {
+  loadDepartments() {
 
-  this.departmentService.getDepartments().subscribe({
+    this.departmentService.getDepartments().subscribe({
 
-    next: (response: any) => {
+      next: (response: any) => {
+        this.departments.set(response.departments);
+      },
 
-      this.departments = response.departments;
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message ||
+          'Failed to load departments.';
+      }
 
-      this.cdr.detectChanges();
+    });
 
-    },
-
-    error: (error) => {
-
-      this.errorMessage =
-        error.error?.message ||
-        'Failed to load departments.';
-
-    }
-
-  });
-
-}
-
+  }
 
   // Load active education programs for the department dropdown
   loadPrograms() {
@@ -106,23 +95,18 @@ loadDepartments() {
     this.adminEducationService.getPrograms().subscribe({
 
       next: (response: any) => {
-
-        this.programs = response.programs;
-
+        this.programs.set(response.programs);
       },
 
       error: (error) => {
-
         this.errorMessage =
           error.error?.message ||
           'Failed to load education programs.';
-
       }
 
     });
 
   }
-
 
   // Create a department under the selected education program
   onSubmit() {
@@ -131,45 +115,31 @@ loadDepartments() {
     this.errorMessage = '';
 
     if (this.departmentForm.invalid) {
-
       this.errorMessage =
         'Please select a program and enter a department name.';
-
       return;
-
     }
-
 
     const {
       education_program_id,
       name
     } = this.departmentForm.getRawValue();
 
-
     this.departmentService.createDepartment({
-
       education_program_id: education_program_id!,
       name: name!.trim()
-
     }).subscribe({
 
       next: (response: any) => {
-
         this.message = response.message;
-
         this.departmentForm.reset();
-
-        // Reload departments after successful creation
-        this.loadDepartments();
-
+        this.loadDepartments();   // reload list after successful creation
       },
 
       error: (error) => {
-
         this.errorMessage =
           error.error?.message ||
           'Failed to create department.';
-
       }
 
     });

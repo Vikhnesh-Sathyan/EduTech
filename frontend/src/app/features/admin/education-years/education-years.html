@@ -1,0 +1,240 @@
+<!--
+  USE:
+  Provides the admin interface for creating and viewing
+  education years linked to departments.
+-->
+
+<section class="education-years-page">
+
+  <div class="page-heading">
+    <p class="eyebrow">EDUCATION</p>
+
+    <h1>Education Years</h1>
+
+    <p class="intro">
+      Configure the education years available within each department.
+    </p>
+  </div>
+
+
+  @if (message) {
+    <p class="success-message">
+      {{ message }}
+    </p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+  }
+
+
+  <!-- ==================== ADD EDUCATION YEAR ==================== -->
+
+  <section class="form-card">
+
+    <p class="section-label">
+      NEW EDUCATION YEAR
+    </p>
+
+    <h2>Add Education Year</h2>
+
+
+    <form
+      [formGroup]="educationYearForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <!-- Education Program -->
+
+      <div class="form-field">
+
+        <label for="education-program">
+          Education Program
+        </label>
+
+        <select
+          id="education-program"
+          formControlName="education_program_id"
+          (change)="onProgramChange()"
+        >
+
+          <option [ngValue]="null">
+            Select an education program
+          </option>
+
+          @for (
+            program of programs;
+            track program.id
+          ) {
+
+            <option [ngValue]="program.id">
+              {{ program.name }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- Department -->
+
+      <div class="form-field">
+
+        <label for="department">
+          Department
+        </label>
+
+        <select
+          id="department"
+          formControlName="department_id"
+        >
+
+          <option [ngValue]="null">
+            Select a department
+          </option>
+
+          @for (
+            department of departments;
+            track department.id
+          ) {
+
+            <option [ngValue]="department.id">
+              {{ department.name }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- Year Name -->
+
+      <div class="form-field">
+
+        <label for="year-name">
+          Education Year
+        </label>
+
+        <input
+          id="year-name"
+          type="text"
+          formControlName="name"
+          placeholder="Example: First Year"
+        />
+
+      </div>
+
+
+      <!-- Year Order -->
+
+      <div class="form-field">
+
+        <label for="year-order">
+          Year Order
+        </label>
+
+        <input
+          id="year-order"
+          type="number"
+          formControlName="year_order"
+          min="1"
+          placeholder="Example: 1"
+        />
+
+      </div>
+
+
+      <button type="submit">
+        Add Education Year
+      </button>
+
+    </form>
+
+  </section>
+
+
+
+  <!-- ==================== CONFIGURED YEARS ==================== -->
+
+  <section class="list-card">
+
+    <div class="list-header">
+
+      <div>
+
+        <p class="section-label">
+          CONFIGURED EDUCATION YEARS
+        </p>
+
+        <h2>Education Years</h2>
+
+      </div>
+
+      <span>
+        {{ years.length }} years
+      </span>
+
+    </div>
+
+
+    @if (years.length === 0) {
+
+      <div class="empty-state">
+
+        <p>
+          No education years have been configured yet.
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="year-list">
+
+        @for (
+          year of years;
+          track year.id
+        ) {
+
+          <article class="year-item">
+
+            <div class="year-info">
+
+              <h3>
+                {{ year.name }}
+              </h3>
+
+              <p>
+                {{ year.program_name }}
+                ·
+                {{ year.department_name }}
+              </p>
+
+              <small>
+                Year : {{ year.year_order }}
+              </small>
+
+            </div>
+
+
+            <span class="status">
+              {{ year.status }}
+            </span>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+</section>

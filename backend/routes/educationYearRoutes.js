@@ -4,11 +4,11 @@ const express = require("express");
 
 const {
     createEducationYear,
+    getEducationYears,
     getEducationYearsByDepartment,
     updateEducationYear,
     updateEducationYearStatus
 } = require("../controllers/educationYearController");
-
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
@@ -23,6 +23,13 @@ router.post(
     createEducationYear
 );
 
+// Get all education years for admin management
+router.get(
+    "/",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getEducationYears
+);
 
 // Get education years for a department
 router.get(
@@ -31,6 +38,7 @@ router.get(
     roleMiddleware("admin"),
     getEducationYearsByDepartment
 );
+
 
 
 // Update an education year
@@ -49,6 +57,8 @@ router.patch(
     roleMiddleware("admin"),
     updateEducationYearStatus
 );
+
+
 
 
 module.exports = router;
