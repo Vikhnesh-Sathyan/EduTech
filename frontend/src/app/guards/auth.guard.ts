@@ -1,4 +1,5 @@
-//t allows us to decide whether a user can enter a route.
+//it allows us to decide whether a user can enter a route.
+//Is the user logged in?
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 

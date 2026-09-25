@@ -4,8 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-subject',
   imports: [],
-  templateUrl: './subject.html',
-  styleUrl: './subject.css'
+  templateUrl: './subject-learning.html',
+  styleUrl: './subject-learning.css'
 })
 export class Subject {
 

@@ -1,0 +1,163 @@
+/* =====================================================
+   STUDENT SUBJECTS
+   ===================================================== */
+
+.subjects-section {
+  margin-top: 32px;
+}
+
+
+/* ==================== HEADER ==================== */
+
+.section-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+
+.section-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #777;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.section-header p {
+  margin: 6px 0 0;
+  color: #777;
+}
+
+
+/* ==================== MESSAGES ==================== */
+
+.success-message,
+.error-message {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.success-message {
+  background: #eef8f1;
+  color: #246b3a;
+}
+
+.error-message {
+  background: #fff0f0;
+  color: #a33a3a;
+}
+
+
+/* ==================== SUBJECT GROUP ==================== */
+
+.subject-group {
+  margin-bottom: 32px;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.group-header h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.group-header span {
+  font-size: 13px;
+  color: #777;
+}
+
+
+/* ==================== SUBJECT LIST ==================== */
+
+.subject-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subject-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 18px 20px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+
+  background: #fff;
+}
+
+.subject-item h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.subject-item p {
+  margin: 5px 0 0;
+  color: #777;
+  font-size: 13px;
+}
+
+
+/* ==================== BUTTON ==================== */
+
+.subject-item button {
+  flex-shrink: 0;
+
+  padding: 9px 16px;
+
+  border: 1px solid #222;
+  border-radius: 7px;
+
+  background: #222;
+  color: #fff;
+
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.subject-item button:hover {
+  opacity: 0.85;
+}
+
+
+/* ==================== SELECTED SUBJECT ==================== */
+
+.subject-item.selected {
+  background: #fafafa;
+}
+
+.subject-item.selected button {
+  background: transparent;
+  color: #222;
+}
+
+
+/* ==================== EMPTY STATE ==================== */
+
+.empty-message {
+  margin: 0;
+  padding: 20px;
+
+  border: 1px dashed #ddd;
+  border-radius: 10px;
+
+  color: #777;
+  font-size: 14px;
+}

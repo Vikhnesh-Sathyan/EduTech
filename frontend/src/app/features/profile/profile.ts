@@ -12,10 +12,12 @@ import { Profile as ProfileService } from '../../services/profile';
 
 import { Education } from '../../services/education';
 
+import { StudentSubjects } from './components/student-subjects/student-subjects';
+
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule , StudentSubjects],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })

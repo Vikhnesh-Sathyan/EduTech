@@ -1,0 +1,128 @@
+  <!-- student Subject Selection Page-->
+
+
+<section class="subjects-section">
+
+  <div class="section-header">
+    <p class="section-label">03</p>
+
+    <div>
+      <h2>Your Subjects</h2>
+      <p>Select the subjects you want to study.</p>
+    </div>
+  </div>
+
+
+  <!-- Messages -->
+
+  @if (message) {
+    <p class="success-message">
+      {{ message }}
+    </p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+  }
+
+
+  <!-- Available Subjects -->
+
+  <div class="subject-group">
+
+    <div class="group-header">
+      <h3>Available Subjects</h3>
+      <span>{{ availableSubjects.length }} available</span>
+    </div>
+
+    @if (availableSubjects.length === 0) {
+
+      <p class="empty-message">
+        No subjects are currently available.
+      </p>
+
+    } @else {
+
+      <div class="subject-list">
+
+        @for (subject of availableSubjects; track subject.id) {
+
+          <div class="subject-item">
+
+            <div>
+              <h4>{{ subject.name }}</h4>
+
+              @if (subject.description) {
+                <p>{{ subject.description }}</p>
+              }
+            </div>
+
+            <button
+              type="button"
+              (click)="selectSubject(subject.id)"
+            >
+              Select
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+
+  <!-- Selected Subjects -->
+
+  <div class="subject-group">
+
+    <div class="group-header">
+      <h3>Selected Subjects</h3>
+      <span>{{ selectedSubjects.length }} selected</span>
+    </div>
+
+    @if (selectedSubjects.length === 0) {
+
+      <p class="empty-message">
+        You haven't selected any subjects yet.
+      </p>
+
+    } @else {
+
+      <div class="subject-list">
+
+        @for (subject of selectedSubjects; track subject.id) {
+
+          <div class="subject-item selected">
+
+            <div>
+              <h4>{{ subject.name }}</h4>
+
+              @if (subject.description) {
+                <p>{{ subject.description }}</p>
+              }
+            </div>
+
+            <button
+              type="button"
+              (click)="removeSubject(subject.subject_id)"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+</section>

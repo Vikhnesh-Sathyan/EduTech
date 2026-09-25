@@ -23,4 +23,15 @@ export class StudentSubject {
       subject_id: subjectId
     });
   }
+
+// Get subjects already selected by the authenticated student
+getSelectedSubjects() {
+  return this.http.get(`${this.apiUrl}/selected`);
+}
+
+// Remove a selected subject
+removeSubject(subjectId: number) {
+  return this.http.delete(`${this.apiUrl}/${subjectId}`);
+}
+
 }
