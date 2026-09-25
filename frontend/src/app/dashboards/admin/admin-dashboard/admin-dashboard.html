@@ -1,70 +1,124 @@
+<!--
+  USE:
+  Displays the main Admin Dashboard workspace.
+  The dashboard includes the sidebar, topbar, and platform overview.
+-->
+
 <div class="admin-dashboard">
 
+  <!-- Admin navigation -->
   <app-sidebar></app-sidebar>
 
+
+  <!-- Main dashboard area -->
   <main class="main-content">
 
+    <!-- Admin dashboard header -->
     <app-topbar></app-topbar>
 
+
+    <!-- Dashboard content -->
     <section class="dashboard-content">
 
       <div class="page-heading">
-        <p class="eyebrow">ADMINISTRATION</p>
 
-        <h1>Platform Overview</h1>
+        <p class="eyebrow">
+          ADMINISTRATION
+        </p>
+
+        <h1>
+          Platform Overview
+        </h1>
 
         <p class="intro">
           Manage EduTech education configuration and platform operations.
         </p>
+
       </div>
 
 
       <div class="overview-section">
 
         <div class="section-heading">
-          <h2>Education Configuration</h2>
+
+          <h2>
+            Education Configuration
+          </h2>
 
           <p>
             Overview of the education structure currently configured on the platform.
           </p>
+
         </div>
 
 
         <div class="overview-grid">
 
           <article class="overview-card">
-            <span class="card-label">Programs</span>
 
-            <strong>{{ overview.programs }}</strong>
+            <span class="card-label">
+              Programs
+            </span>
 
-            <p>Education programs</p>
+            <strong>
+              {{ overview.programs }}
+            </strong>
+
+            <p>
+              Education programs
+            </p>
+
           </article>
 
 
           <article class="overview-card">
-            <span class="card-label">Departments</span>
 
-            <strong>{{ overview.departments }}</strong>
+            <span class="card-label">
+              Departments
+            </span>
 
-            <p>Configured departments</p>
+            <strong>
+              {{ overview.departments }}
+            </strong>
+
+            <p>
+              Configured departments
+            </p>
+
           </article>
 
 
           <article class="overview-card">
-            <span class="card-label">Education Years</span>
 
-            <strong>{{ overview.education_years }}</strong>
+            <span class="card-label">
+              Education Years
+            </span>
 
-            <p>Available study years</p>
+            <strong>
+              {{ overview.education_years }}
+            </strong>
+
+            <p>
+              Available study years
+            </p>
+
           </article>
 
 
           <article class="overview-card">
-            <span class="card-label">Subjects</span>
 
-            <strong>{{ overview.subjects }}</strong>
+            <span class="card-label">
+              Subjects
+            </span>
 
-            <p>Configured subjects</p>
+            <strong>
+              {{ overview.subjects }}
+            </strong>
+
+            <p>
+              Configured subjects
+            </p>
+
           </article>
 
         </div>

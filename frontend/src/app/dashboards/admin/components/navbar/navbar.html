@@ -1,0 +1,94 @@
+<!--
+  USE:
+  Displays the main navigation for admin management pages.
+  The navbar provides access to the admin dashboard and
+  education configuration sections.
+-->
+
+<header class="admin-navbar">
+
+  <div class="navbar-inner">
+
+    <!-- EduTech brand -->
+    <a
+      routerLink="/admin-dashboard"
+      class="brand"
+    >
+      EduTech
+    </a>
+
+
+    <!-- Main navigation -->
+    <nav class="navigation">
+
+      <a
+        routerLink="/admin-dashboard"
+        class="nav-link"
+      >
+        Overview
+      </a>
+
+
+      <div class="navigation-group">
+
+        <span class="group-label">
+          Education
+        </span>
+
+        <a
+          routerLink="/admin/education-programs"
+          class="nav-link"
+        >
+          Programs
+        </a>
+
+        <a
+          routerLink="/admin/departments"
+          class="nav-link"
+        >
+          Departments
+        </a>
+
+        <a
+          routerLink="/admin/education-years"
+          class="nav-link"
+        >
+          Education Years
+        </a>
+
+        <a
+          routerLink="/admin/subjects"
+          class="nav-link"
+        >
+          Subjects
+        </a>
+
+      </div>
+
+    </nav>
+
+
+    <!-- Admin identity -->
+    <div class="admin-profile">
+
+      <div class="avatar">
+        A
+      </div>
+
+      <div class="admin-details">
+
+        <strong>
+          Administrator
+        </strong>
+
+        <span>
+          Platform Admin
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>

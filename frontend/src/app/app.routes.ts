@@ -28,6 +28,11 @@ import { Subject } from './features/study/subject-learning/subject-learning';
 
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 
+// Shared layout used by all admin pages
+import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
+
+// Admin education program management page
+import { EducationPrograms } from './features/admin/education-programs/education-programs';
 
 export const routes: Routes = [
 
@@ -89,16 +94,32 @@ export const routes: Routes = [
   },
 
 
-  // ==================== ADMIN ROUTES ====================
+ // ==================== ADMIN ROUTES ====================
 
-  // Admin dashboard
-  {
-    path: 'admin-dashboard',
-    component: AdminDashboard,
-    canActivate: [
-      authGuard,
-      adminRoleGuard
-    ]
-  }
+// Admin dashboard keeps its own sidebar + topbar layout
+{
+  path: 'admin-dashboard',
+  component: AdminDashboard,
+  canActivate: [
+    authGuard,
+    adminRoleGuard
+  ]
+},
+
+// Admin management pages use the navbar-only layout
+{
+  path: 'admin',
+  component: AdminLayout,
+  canActivate: [
+    authGuard,
+    adminRoleGuard
+  ],
+  children: [
+    {
+      path: 'education-programs',
+      component: EducationPrograms
+    }
+  ]
+}
 
 ];

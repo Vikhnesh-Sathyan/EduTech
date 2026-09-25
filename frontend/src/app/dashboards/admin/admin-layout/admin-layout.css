@@ -1,0 +1,16 @@
+/* =====================================================
+   USE:
+   Styles the shared navbar-only layout for admin
+   management pages.
+   ===================================================== */
+
+.admin-layout {
+  min-height: 100vh;
+
+  background: #f7f7f5;
+}
+
+.main-content {
+  width: 100%;
+  box-sizing: border-box;
+}

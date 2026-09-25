@@ -1,7 +1,12 @@
+// USE:
+// Displays the main Admin Dashboard with its own sidebar and topbar.
+// This page is the main workspace for monitoring EduTech administration.
+
 import { Component, OnInit } from '@angular/core';
 
 import { Sidebar } from '../components/sidebar/sidebar';
 import { Topbar } from '../components/topbar/topbar';
+
 import { AdminOverview } from '../../../services/admin-overview';
 
 @Component({
@@ -31,17 +36,22 @@ export class AdminDashboard implements OnInit {
     this.loadOverview();
   }
 
+  // Load the real education configuration counts for the dashboard
   loadOverview() {
+
     this.adminOverviewService.getOverview().subscribe({
+
       next: (response: any) => {
         this.overview = response.overview;
       },
+
       error: (error) => {
         console.error(
           'Failed to load admin overview:',
           error
         );
       }
+
     });
   }
 }

@@ -1,0 +1,234 @@
+<!--
+  USE:
+  Displays the admin Education Programs management page.
+  The admin can view, create, edit, and activate/deactivate programs.
+-->
+
+<section class="programs-page">
+
+  <!-- Page heading -->
+  <header class="page-header">
+
+    <div>
+      <p class="eyebrow">EDUCATION</p>
+
+      <h1>Education Programs</h1>
+
+      <p class="intro">
+        Configure the education programs available to students on EduTech.
+      </p>
+    </div>
+
+  </header>
+
+
+  <!-- Success message -->
+  @if (message) {
+    <p class="success-message">
+      {{ message }}
+    </p>
+  }
+
+
+  <!-- Error message -->
+  @if (errorMessage) {
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+  }
+
+
+  <!-- Create / Edit form -->
+  <section class="form-section">
+
+    <div class="section-heading">
+
+      <div>
+        <p class="section-label">
+          {{ editMode ? 'EDIT PROGRAM' : 'NEW PROGRAM' }}
+        </p>
+
+        <h2>
+          {{ editMode ? 'Update Education Program' : 'Add Education Program' }}
+        </h2>
+      </div>
+
+    </div>
+
+
+    <form
+      [formGroup]="programForm"
+      (ngSubmit)="onSubmit()"
+      class="program-form"
+    >
+
+      <div class="form-field">
+
+        <label for="name">
+          Program Name
+        </label>
+
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Example: Master of Computer Applications"
+        >
+
+      </div>
+
+
+      <div class="form-field">
+
+        <label for="description">
+          Description
+        </label>
+
+        <textarea
+          id="description"
+          rows="4"
+          formControlName="description"
+          placeholder="Describe the education program..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="primary-button"
+        >
+          {{ editMode ? 'Update Program' : 'Add Program' }}
+        </button>
+
+
+        @if (editMode) {
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="resetForm()"
+          >
+            Cancel
+          </button>
+
+        }
+
+      </div>
+
+    </form>
+
+  </section>
+
+
+  <!-- Existing programs -->
+  <section class="programs-section">
+
+    <div class="section-heading">
+
+      <div>
+        <p class="section-label">
+          CONFIGURED PROGRAMS
+        </p>
+
+        <h2>
+          Education Programs
+        </h2>
+      </div>
+
+      <span class="program-count">
+        {{ programs.length }} programs
+      </span>
+
+    </div>
+
+
+    @if (programs.length === 0) {
+
+      <div class="empty-state">
+
+        <h3>
+          No education programs yet
+        </h3>
+
+        <p>
+          Add your first education program using the form above.
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="program-list">
+
+        @for (program of programs; track program.id) {
+
+          <article class="program-card">
+
+            <div class="program-information">
+
+              <div class="program-title-row">
+
+                <h3>
+                  {{ program.name }}
+                </h3>
+
+                <span
+                  class="status"
+                  [class.active]="program.status === 'active'"
+                  [class.inactive]="program.status === 'inactive'"
+                >
+                  {{ program.status }}
+                </span>
+
+              </div>
+
+
+              @if (program.description) {
+
+                <p>
+                  {{ program.description }}
+                </p>
+
+              }
+
+            </div>
+
+
+            <div class="program-actions">
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="editProgram(program)"
+              >
+                Edit
+              </button>
+
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="toggleProgramStatus(program)"
+              >
+                {{ program.status === 'active'
+                  ? 'Deactivate'
+                  : 'Activate'
+                }}
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+</section>
