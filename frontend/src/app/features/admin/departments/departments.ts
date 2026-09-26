@@ -108,42 +108,48 @@ export class Departments implements OnInit {
 
   }
 
-  // Create a department under the selected education program
   onSubmit() {
 
-    this.message = '';
-    this.errorMessage = '';
+  // Clear old messages
+  this.message = '';
+  this.errorMessage = '';
 
-    if (this.departmentForm.invalid) {
-      this.errorMessage =
-        'Please select a program and enter a department name.';
-      return;
-    }
-
-    const {
-      education_program_id,
-      name
-    } = this.departmentForm.getRawValue();
-
-    this.departmentService.createDepartment({
-      education_program_id: education_program_id!,
-      name: name!.trim()
-    }).subscribe({
-
-      next: (response: any) => {
-        this.message = response.message;
-        this.departmentForm.reset();
-        this.loadDepartments();   // reload list after successful creation
-      },
-
-      error: (error) => {
-        this.errorMessage =
-          error.error?.message ||
-          'Failed to create department.';
-      }
-
-    });
-
+  // Check if the form is valid
+  if (this.departmentForm.invalid) {
+    this.errorMessage =
+      'Please select a program and enter a department name.';
+    return;
   }
 
+  // Get form values
+  const {
+    education_program_id,
+    name
+  } = this.departmentForm.getRawValue();
+
+  // Send department data to backend
+  this.departmentService.createDepartment({
+    education_program_id: education_program_id!,
+    name: name!.trim()
+  }).subscribe({
+
+    // If department is created successfully
+    next: (response: any) => {
+      this.message = response.message;
+      this.departmentForm.reset();
+
+      // Refresh department list
+      this.loadDepartments();
+    },
+
+    // If API request fails
+    error: (error) => {
+      this.errorMessage =
+        error.error?.message ||
+        'Failed to create department.';
+    }
+
+  });
+
+}
 }

@@ -1,0 +1,307 @@
+<!--
+  USE:
+  Provides the admin interface for creating and viewing
+  subjects linked to education years.
+-->
+
+<section class="subjects-page">
+
+  <div class="page-heading">
+
+    <p class="eyebrow">
+      EDUCATION
+    </p>
+
+    <h1>
+      Subjects
+    </h1>
+
+    <p class="intro">
+      Configure the subjects available within each education year.
+    </p>
+
+  </div>
+
+
+  @if (message) {
+
+    <p class="success-message">
+      {{ message }}
+    </p>
+
+  }
+
+
+  @if (errorMessage) {
+
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+
+  }
+
+
+
+  <!-- ==================== ADD SUBJECT ==================== -->
+
+  <section class="form-card">
+
+    <p class="section-label">
+      NEW SUBJECT
+    </p>
+
+    <h2>
+      Add Subject
+    </h2>
+
+
+    <form
+      [formGroup]="subjectForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+
+      <!-- Education Program -->
+
+      <div class="form-field">
+
+        <label for="education-program">
+          Education Program
+        </label>
+
+        <select
+          id="education-program"
+          formControlName="education_program_id"
+          (change)="onProgramChange()"
+        >
+
+          <option [ngValue]="null">
+            Select an education program
+          </option>
+
+
+          @for (
+            program of programs;
+            track program.id
+          ) {
+
+            <option [ngValue]="program.id">
+              {{ program.name }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Department -->
+
+      <div class="form-field">
+
+        <label for="department">
+          Department
+        </label>
+
+        <select
+          id="department"
+          formControlName="department_id"
+          (change)="onDepartmentChange()"
+        >
+
+          <option [ngValue]="null">
+            Select a department
+          </option>
+
+
+          @for (
+            department of departments;
+            track department.id
+          ) {
+
+            <option [ngValue]="department.id">
+              {{ department.name }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Education Year -->
+
+      <div class="form-field">
+
+        <label for="education-year">
+          Education Year
+        </label>
+
+        <select
+          id="education-year"
+          formControlName="education_year_id"
+        >
+
+          <option [ngValue]="null">
+            Select an education year
+          </option>
+
+
+          @for (
+            year of years;
+            track year.id
+          ) {
+
+            <option [ngValue]="year.id">
+              {{ year.name }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Subject Name -->
+
+      <div class="form-field">
+
+        <label for="subject-name">
+          Subject Name
+        </label>
+
+        <input
+          id="subject-name"
+          type="text"
+          formControlName="name"
+          placeholder="Example: Java Programming"
+        />
+
+      </div>
+
+
+
+      <!-- Description -->
+
+      <div class="form-field">
+
+        <label for="subject-description">
+          Description
+        </label>
+
+        <textarea
+          id="subject-description"
+          formControlName="description"
+          rows="4"
+          placeholder="Briefly describe what this subject covers."
+        ></textarea>
+
+      </div>
+
+
+
+      <button type="submit">
+        Add Subject
+      </button>
+
+    </form>
+
+  </section>
+
+
+
+  <!-- ==================== CONFIGURED SUBJECTS ==================== -->
+
+  <section class="list-card">
+
+    <div class="list-header">
+
+      <div>
+
+        <p class="section-label">
+          CONFIGURED SUBJECTS
+        </p>
+
+        <h2>
+          Subjects
+        </h2>
+
+      </div>
+
+
+      <span>
+        {{ subjects.length }} subjects
+      </span>
+
+    </div>
+
+
+
+    @if (subjects.length === 0) {
+
+      <div class="empty-state">
+
+        <p>
+          No subjects have been configured yet.
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="subject-list">
+
+        @for (
+          subject of subjects;
+          track subject.id
+        ) {
+
+          <article class="subject-item">
+
+            <div class="subject-info">
+
+              <h3>
+                {{ subject.name }}
+              </h3>
+
+              <p>
+                {{ subject.program_name }}
+                ·
+                {{ subject.department_name }}
+                ·
+                {{ subject.year_name }}
+              </p>
+
+
+              @if (subject.description) {
+
+                <small>
+                  {{ subject.description }}
+                </small>
+
+              }
+
+            </div>
+
+
+            <span class="status">
+              {{ subject.status }}
+            </span>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+</section>
