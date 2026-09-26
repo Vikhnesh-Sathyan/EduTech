@@ -4,6 +4,7 @@ const express = require("express");
 
 const {
     createSubject,
+    getSubjects,
     getSubjectsByYear,
     updateSubject,
     updateSubjectStatus
@@ -30,6 +31,15 @@ router.get(
     authMiddleware,
     roleMiddleware("admin"),
     getSubjectsByYear
+);
+
+// Get all subjects for admin management
+
+router.get(
+    "/",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getSubjects
 );
 
 

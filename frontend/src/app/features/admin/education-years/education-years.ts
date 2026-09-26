@@ -3,7 +3,7 @@
 // Admin can select an education program and department,
 // create an education year, and view all configured years.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 import {
   ReactiveFormsModule,
@@ -28,7 +28,7 @@ export class EducationYears implements OnInit {
 
   programs: any[] = [];
   departments: any[] = [];
-  years: any[] = [];
+  years = signal<any[]>([]);
 
   message = '';
   errorMessage = '';
@@ -149,7 +149,7 @@ export class EducationYears implements OnInit {
 
         next: (response: any) => {
 
-          this.years = response.years;
+          this.years.set(response.years);
 
         },
 

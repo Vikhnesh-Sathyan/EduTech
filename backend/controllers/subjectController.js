@@ -65,6 +65,57 @@ const createSubject = (req, res) => {
     );
 };
 
+// Get all subjects with their education year, department and program names
+const getSubjects = (req, res) => {
+
+    const sql = `
+        SELECT
+            s.id,
+            s.education_year_id,
+            s.name,
+            s.description,
+            s.status,
+            s.created_at,
+            s.updated_at,
+            ey.name AS year_name,
+            d.name AS department_name,
+            p.name AS program_name
+        FROM subjects s
+        INNER JOIN education_years ey
+            ON ey.id = s.education_year_id
+        INNER JOIN departments d
+            ON d.id = ey.department_id
+        INNER JOIN education_programs p
+            ON p.id = d.education_program_id
+        ORDER BY
+            p.name ASC,
+            d.name ASC,
+            ey.year_order ASC,
+            s.name ASC
+    `;
+
+    db.query(
+        sql,
+        (err, result) => {
+
+            if (err) {
+
+                console.error(
+                    "All subjects fetch failed:",
+                    err.message
+                );
+
+                return res.status(500).json({
+                    message: "Failed to fetch subjects"
+                });
+            }
+
+            res.status(200).json({
+                subjects: result
+            });
+        }
+    );
+};
 
 // Get subjects for an education year
 const getSubjectsByYear = (req, res) => {
@@ -228,6 +279,7 @@ const updateSubjectStatus = (req, res) => {
 
 module.exports = {
     createSubject,
+    getSubjects,
     getSubjectsByYear,
     updateSubject,
     updateSubjectStatus

@@ -177,13 +177,13 @@
       </div>
 
       <span>
-        {{ years.length }} years
+        {{ years().length }} years
       </span>
 
     </div>
 
 
-    @if (years.length === 0) {
+    @if (years().length === 0) {
 
       <div class="empty-state">
 
@@ -198,7 +198,7 @@
       <div class="year-list">
 
         @for (
-          year of years;
+          year of years();
           track year.id
         ) {
 
