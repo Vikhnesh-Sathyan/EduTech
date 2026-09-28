@@ -189,10 +189,19 @@ const login = async (req, res) => {
         }
 
         const sql = `
-            SELECT id, name, email, password, role, status
-            FROM users
-            WHERE email = ?
-        `;
+            SELECT
+            u.id,
+            u.name,
+            u.email,
+            u.password,
+            u.role,
+            u.status,
+            mp.verification_status
+        FROM users u
+        LEFT JOIN mentor_profiles mp
+        ON mp.user_id = u.id
+        WHERE u.email = ?
+    `;
 
         db.query(sql, [email], async (err, result) => {
             if (err) {
@@ -246,7 +255,8 @@ const login = async (req, res) => {
                     id: user.id,
                     name: user.name,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    verificationStatus: user.verification_status || null
                 }
             });
         });

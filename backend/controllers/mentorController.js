@@ -152,8 +152,52 @@ const saveMentorProfile = (req, res) => {
     );
 };
 
+// Submit mentor profile for admin verification
+const submitForVerification = (req, res) => {
+
+    const sql = `
+        UPDATE mentor_profiles
+        SET
+            verification_status = 'pending',
+            verification_note = NULL
+        WHERE user_id = ?
+    `;
+
+    db.query(
+        sql,
+        [req.user.id],
+        (err, result) => {
+
+            if (err) {
+
+                console.error(
+                    "Mentor verification submission failed:",
+                    err.message
+                );
+
+                return res.status(500).json({
+                    message: "Failed to submit profile for verification"
+                });
+            }
+
+            if (result.affectedRows === 0) {
+
+                return res.status(404).json({
+                    message: "Mentor profile not found"
+                });
+            }
+
+            res.status(200).json({
+                message:
+                    "Profile submitted for verification successfully"
+            });
+
+        }
+    );
+};
 
 module.exports = {
     getMentorProfile,
-    saveMentorProfile
+    saveMentorProfile,
+    submitForVerification
 };

@@ -100,9 +100,13 @@
             for admin review.
           </p>
 
-          <span class="card-info">
-            Awaiting review
-          </span>
+        <button
+          type="button"
+        class="card-action verification-card-action"
+        (click)="continueVerification()"
+      >
+          Continue Verification →
+      </button>
 
         </article>
 
@@ -193,5 +197,69 @@
     </div>
 
   </main>
+
+
+  <!-- Verification Popup -->
+
+  <div
+    class="verification-overlay"
+    *ngIf="showVerificationPopup"
+  >
+
+    <div class="verification-modal">
+
+      <div class="verification-icon">
+        ✓
+      </div>
+
+      <p class="verification-label">
+        MENTOR VERIFICATION
+      </p>
+
+      <h2>
+        Your account is not verified yet
+      </h2>
+
+      <p class="verification-message">
+        Complete your mentor verification to unlock
+        student mentoring features.
+      </p>
+
+      <div class="verification-note">
+
+        <strong>
+          What happens next?
+        </strong>
+
+        <span>
+          Complete your professional profile and submit
+          your information for admin review.
+        </span>
+
+      </div>
+
+      <div class="verification-actions">
+
+        <button
+          type="button"
+          class="primary-verification-action"
+          (click)="continueVerification()"
+        >
+          Continue Verification
+        </button>
+
+        <button
+          type="button"
+          class="secondary-verification-action"
+          (click)="closeVerificationPopup()"
+        >
+          Maybe Later
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>

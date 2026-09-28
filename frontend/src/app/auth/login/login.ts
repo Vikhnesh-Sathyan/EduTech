@@ -59,7 +59,7 @@ next: (response: any) => {
     'token',
     response.token
   );
-
+// Store logged-in user information
   localStorage.setItem(
     'user',
     JSON.stringify(response.user)

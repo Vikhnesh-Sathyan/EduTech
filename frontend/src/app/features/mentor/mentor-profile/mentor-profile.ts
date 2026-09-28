@@ -27,6 +27,9 @@ export class MentorProfile implements OnInit {
   name = signal('');
   email = signal('');
 
+  // Verification status
+  verificationStatus = signal('pending');
+
   // Success and error messages
   message = signal('');
   errorMessage = signal('');
@@ -96,6 +99,10 @@ export class MentorProfile implements OnInit {
         // Update account information
         this.name.set(profile.name || '');
         this.email.set(profile.email || '');
+
+        this.verificationStatus.set(
+  profile.verification_status || 'pending'
+);
 
         // Put database values into the form
         this.profileForm.patchValue({
@@ -227,4 +234,37 @@ export class MentorProfile implements OnInit {
 
   }
 
+  // Submit mentor profile for admin verification
+submitForVerification(): void {
+
+  this.message.set('');
+  this.errorMessage.set('');
+
+  this.mentorService
+    .submitForVerification()
+    .subscribe({
+
+      next: (response: any) => {
+
+        this.verificationStatus.set('pending');
+
+        this.message.set(
+          response.message ||
+          'Profile submitted for verification'
+        );
+
+      },
+
+      error: (error: any) => {
+
+        this.errorMessage.set(
+          error.error?.message ||
+          'Failed to submit profile for verification'
+        );
+
+      }
+
+    });
+
+}
 }

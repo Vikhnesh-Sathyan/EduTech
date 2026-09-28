@@ -318,7 +318,77 @@
       </div>
 
     </section>
+      
+      <!-- Verification & Review -->
 
+      <section class="profile-section">
+
+        <div class="section-heading">
+
+          <h2>Verification & Review</h2>
+
+        <p>
+           Submit your professional profile for admin verification.
+        </p>
+
+    </div>
+
+
+  <div class="verification-card">
+
+    <div class="verification-content">
+
+      <span class="verification-label">
+        VERIFICATION STATUS
+      </span>
+
+      <h3>
+        @if (verificationStatus() === 'approved') {
+          Verified
+        } @else if (verificationStatus() === 'rejected') {
+          Verification Rejected
+        } @else {
+          Pending Review
+        }
+      </h3>
+
+      <p>
+
+        @if (verificationStatus() === 'approved') {
+
+          Your mentor profile has been verified by the admin.
+
+        } @else if (verificationStatus() === 'rejected') {
+
+          Your verification needs changes. Please review the admin feedback and update your profile.
+
+        } @else {
+
+          Submit your professional profile for admin verification.
+
+        }
+
+      </p>
+
+      <!-- Submit for verification -->
+
+      @if (verificationStatus() !== 'approved') {
+
+        <button
+          type="button"
+          class="verification-button"
+          (click)="submitForVerification()"
+        >
+          Submit for Verification
+        </button>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>
 
     <!-- Save -->
 

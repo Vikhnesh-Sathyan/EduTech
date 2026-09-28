@@ -281,6 +281,13 @@
   color: #94a3b8;
 }
 
+.verification-card-action {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
 
 /* =========================================================
    Activity Section
@@ -421,6 +428,8 @@
 
   transform: translateY(-1px);
 }
+
+
 
 
 /* =========================================================

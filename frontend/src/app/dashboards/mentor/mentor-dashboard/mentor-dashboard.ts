@@ -1,7 +1,7 @@
 // Provides the main overview for the mentor
-
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 
 import { Sidebar } from '../components/sidebar/sidebar';
 
@@ -12,7 +12,8 @@ import { Sidebar } from '../components/sidebar/sidebar';
 
   imports: [
     RouterLink,
-    Sidebar
+    Sidebar,
+    NgIf
   ],
 
   templateUrl: './mentor-dashboard.html',
@@ -24,9 +25,16 @@ export class MentorDashboard implements OnInit {
   // Stores the greeting based on the current time
   greeting = '';
 
+  // Controls whether the verification popup is visible
+  showVerificationPopup = false;
+
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
 
     this.setGreeting();
+
+    this.checkVerificationStatus();
 
   }
 
@@ -49,6 +57,47 @@ export class MentorDashboard implements OnInit {
       this.greeting = 'Good evening';
 
     }
+
+  }
+
+
+  // Checks the mentor verification status
+  private checkVerificationStatus(): void {
+
+    const storedUser = localStorage.getItem('user');
+
+    if (!storedUser) {
+      return;
+    }
+
+    const user = JSON.parse(storedUser);
+
+    if (
+      user.role === 'mentor' &&
+      user.verificationStatus !== 'approved'
+    ) {
+
+      this.showVerificationPopup = true;
+
+    }
+
+  }
+
+
+  // Opens the mentor profile for verification
+  continueVerification(): void {
+
+    this.showVerificationPopup = false;
+
+    this.router.navigate(['/mentor-profile']);
+
+  }
+
+
+  // Closes the popup
+  closeVerificationPopup(): void {
+
+    this.showVerificationPopup = false;
 
   }
 

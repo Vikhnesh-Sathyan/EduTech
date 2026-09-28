@@ -4,7 +4,8 @@ const express = require("express");
 
 const {
     getMentorProfile,
-    saveMentorProfile
+    saveMentorProfile,
+    submitForVerification
 } = require("../controllers/mentorController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -24,6 +25,14 @@ router.put(
     authMiddleware,
     roleMiddleware("mentor"),
     saveMentorProfile
+);
+
+// Submit mentor profile for verification
+router.put(
+    "/profile/submit",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    submitForVerification
 );
 
 module.exports = router;

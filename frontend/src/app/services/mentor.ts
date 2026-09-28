@@ -32,4 +32,12 @@ export class Mentor {
   }) {
     return this.http.put(`${this.apiUrl}/profile`, data);
   }
+
+  // Submit the mentor profile for admin verification
+submitForVerification() {
+  return this.http.put(
+    `${this.apiUrl}/profile/submit`,
+    {}
+  );
+}
 }
