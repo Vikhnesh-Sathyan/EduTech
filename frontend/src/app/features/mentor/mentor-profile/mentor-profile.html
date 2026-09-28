@@ -2,71 +2,104 @@
 
 <div class="mentor-profile">
 
-  <!-- Page header -->
-  <section class="profile-header">
-    <p class="eyebrow">MENTOR PROFILE</p>
+  <!-- ==========================================
+       PAGE HEADER
+  =========================================== -->
 
-    <h1>Professional Profile</h1>
+  <section class="profile-header">
+
+    <p class="eyebrow">
+      MENTOR PROFILE
+    </p>
+
+    <h1>
+      Professional Profile
+    </h1>
 
     <p>
-      Add your professional information so students can understand
-      your experience and areas of expertise.
+      Add your professional information so students can
+      understand your experience and areas of expertise.
     </p>
+
   </section>
 
 
-  <!-- Success / error messages -->
+  <!-- ==========================================
+       SUCCESS / ERROR MESSAGES
+  =========================================== -->
 
   @if (message()) {
+
     <div class="success-message">
       {{ message() }}
     </div>
+
   }
 
+
   @if (errorMessage()) {
+
     <div class="error-message">
       {{ errorMessage() }}
     </div>
+
   }
 
 
-  <!-- Profile form -->
+  <!-- ==========================================
+       PROFILE FORM
+  =========================================== -->
 
   <form
     [formGroup]="profileForm"
     (ngSubmit)="saveProfile()"
   >
 
-    <!-- Personal information -->
+
+    <!-- ==========================================
+         PERSONAL INFORMATION
+    =========================================== -->
 
     <section class="profile-section">
 
       <div class="section-heading">
-        <h2>Personal Information</h2>
+
+        <h2>
+          Personal Information
+        </h2>
 
         <p>
           Your account information.
         </p>
+
       </div>
 
 
       <div class="profile-grid">
 
         <div class="profile-field">
-          <span>Name</span>
+
+          <span>
+            Name
+          </span>
 
           <strong>
             {{ name() || 'Loading...' }}
           </strong>
+
         </div>
 
 
         <div class="profile-field">
-          <span>Email</span>
+
+          <span>
+            Email
+          </span>
 
           <strong>
             {{ email() || 'Loading...' }}
           </strong>
+
         </div>
 
       </div>
@@ -74,22 +107,29 @@
     </section>
 
 
-    <!-- Professional information -->
+    <!-- ==========================================
+         PROFESSIONAL INFORMATION
+    =========================================== -->
 
     <section class="profile-section">
 
       <div class="section-heading">
-        <h2>Professional Information</h2>
+
+        <h2>
+          Professional Information
+        </h2>
 
         <p>
           Tell students about your professional background.
         </p>
+
       </div>
 
 
       <div class="form-grid">
 
-        <!-- Professional title -->
+
+        <!-- Professional Title -->
 
         <div class="form-field">
 
@@ -108,9 +148,11 @@
             profileForm.get('professional_title')?.touched &&
             profileForm.get('professional_title')?.invalid
           ) {
+
             <small>
               Professional title is required.
             </small>
+
           }
 
         </div>
@@ -135,9 +177,11 @@
             profileForm.get('specialization')?.touched &&
             profileForm.get('specialization')?.invalid
           ) {
+
             <small>
               Specialization is required.
             </small>
+
           }
 
         </div>
@@ -182,7 +226,7 @@
       </div>
 
 
-      <!-- Bio -->
+      <!-- Professional Bio -->
 
       <div class="form-field full-width">
 
@@ -202,20 +246,30 @@
     </section>
 
 
-    <!-- Professional links -->
+    <!-- ==========================================
+         PROFESSIONAL LINKS
+    =========================================== -->
 
     <section class="profile-section">
 
       <div class="section-heading">
-        <h2>Professional Links</h2>
+
+        <h2>
+          Professional Links
+        </h2>
 
         <p>
-          Add links that help students learn more about your professional background.
+          Add links that help students learn more about
+          your professional background.
         </p>
+
       </div>
 
 
       <div class="form-grid">
+
+
+        <!-- LinkedIn -->
 
         <div class="form-field">
 
@@ -232,6 +286,8 @@
 
         </div>
 
+
+        <!-- GitHub -->
 
         <div class="form-field">
 
@@ -253,22 +309,30 @@
     </section>
 
 
-    <!-- Availability -->
+    <!-- ==========================================
+         AVAILABILITY
+    =========================================== -->
 
     <section class="profile-section">
 
       <div class="section-heading">
 
-        <h2>Availability</h2>
+        <h2>
+          Availability
+        </h2>
 
         <p>
-          Set the days and time when you are available for mentoring.
+          Set the days and time when you are available
+          for mentoring.
         </p>
 
       </div>
 
 
       <div class="form-grid">
+
+
+        <!-- Available Days -->
 
         <div class="form-field">
 
@@ -286,6 +350,8 @@
         </div>
 
 
+        <!-- Start Time -->
+
         <div class="form-field">
 
           <label for="availability_start_time">
@@ -300,6 +366,8 @@
 
         </div>
 
+
+        <!-- End Time -->
 
         <div class="form-field">
 
@@ -318,79 +386,151 @@
       </div>
 
     </section>
-      
-      <!-- Verification & Review -->
 
-      <section class="profile-section">
 
-        <div class="section-heading">
+    <!-- ==========================================
+         VERIFICATION & REVIEW
+    =========================================== -->
 
-          <h2>Verification & Review</h2>
+    <section class="profile-section">
+
+      <div class="section-heading">
+
+        <h2>
+          Verification & Review
+        </h2>
 
         <p>
-           Submit your professional profile for admin verification.
+          Submit your professional profile for admin verification.
         </p>
 
-    </div>
+      </div>
 
 
-  <div class="verification-card">
+      <div class="verification-card">
 
-    <div class="verification-content">
+        <div class="verification-content">
 
-      <span class="verification-label">
-        VERIFICATION STATUS
-      </span>
 
-      <h3>
-        @if (verificationStatus() === 'approved') {
-          Verified
-        } @else if (verificationStatus() === 'rejected') {
-          Verification Rejected
-        } @else {
-          Pending Review
-        }
-      </h3>
+          <!-- Status label -->
 
-      <p>
+          <span class="verification-label">
+            VERIFICATION STATUS
+          </span>
 
-        @if (verificationStatus() === 'approved') {
 
-          Your mentor profile has been verified by the admin.
+          <!-- Status -->
 
-        } @else if (verificationStatus() === 'rejected') {
+          <h3>
 
-          Your verification needs changes. Please review the admin feedback and update your profile.
+            @if (verificationStatus() === 'approved') {
 
-        } @else {
+              Verified
 
-          Submit your professional profile for admin verification.
+            } @else if (verificationStatus() === 'rejected') {
 
-        }
+              Verification Rejected
 
-      </p>
+            } @else {
 
-      <!-- Submit for verification -->
+              Pending Review
 
-      @if (verificationStatus() !== 'approved') {
+            }
 
-        <button
-          type="button"
-          class="verification-button"
-          (click)="submitForVerification()"
-        >
-          Submit for Verification
-        </button>
+          </h3>
 
-      }
 
-    </div>
+          <!-- Status description -->
 
-  </div>
+          <p>
 
-</section>
+            @if (verificationStatus() === 'approved') {
 
-    <!-- Save -->
+              Your mentor profile has been verified by the admin.
+
+            } @else if (verificationStatus() === 'rejected') {
+
+              Your verification needs changes.
+              Please review the admin feedback and update
+              your profile.
+
+            } @else {
+
+              Submit your professional profile for admin verification.
+
+            }
+
+          </p>
+
+
+          <!-- ==========================================
+               ADMIN FEEDBACK
+          =========================================== -->
+
+          @if (
+            verificationStatus() === 'rejected' &&
+            verificationNote()
+          ) {
+
+            <div class="admin-feedback">
+
+              <div class="feedback-header">
+
+                <div>
+
+                  <span class="feedback-label">
+                    ADMIN FEEDBACK
+                  </span>
+
+                  <h4>
+                    Changes requested
+                  </h4>
+
+                </div>
+
+
+                <span class="feedback-icon">
+                  !
+                </span>
+
+              </div>
+
+
+              <p class="feedback-text">
+                {{ verificationNote() }}
+              </p>
+
+            </div>
+
+          }
+
+
+          <!-- ==========================================
+               SUBMIT FOR VERIFICATION
+          =========================================== -->
+
+          @if (verificationStatus() !== 'approved') {
+
+            <button
+              type="button"
+              class="verification-button"
+              (click)="submitForVerification()"
+            >
+              Submit for Verification
+            </button>
+
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         SAVE PROFILE
+    =========================================== -->
 
     <div class="profile-actions">
 

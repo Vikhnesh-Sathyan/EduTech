@@ -23,18 +23,39 @@ import { Mentor } from '../../../services/mentor';
 })
 export class MentorProfile implements OnInit {
 
-  // Mentor account information
+  // ==========================================
+  // MENTOR ACCOUNT INFORMATION
+  // ==========================================
+
   name = signal('');
+
   email = signal('');
 
-  // Verification status
+
+  // ==========================================
+  // VERIFICATION INFORMATION
+  // ==========================================
+
+  // Stores current verification status
   verificationStatus = signal('pending');
 
-  // Success and error messages
+  // Stores admin feedback/rejection reason
+  verificationNote = signal('');
+
+
+  // ==========================================
+  // SUCCESS AND ERROR MESSAGES
+  // ==========================================
+
   message = signal('');
+
   errorMessage = signal('');
 
-  // Mentor profile form
+
+  // ==========================================
+  // MENTOR PROFILE FORM
+  // ==========================================
+
   profileForm;
 
 
@@ -43,7 +64,7 @@ export class MentorProfile implements OnInit {
     private mentorService: Mentor
   ) {
 
-    // Create the form
+    // Create the mentor profile form
     this.profileForm = this.fb.group({
 
       professional_title: [
@@ -79,6 +100,10 @@ export class MentorProfile implements OnInit {
   }
 
 
+  // ==========================================
+  // PAGE INITIALIZATION
+  // ==========================================
+
   // Load mentor profile when page opens
   ngOnInit(): void {
 
@@ -87,79 +112,112 @@ export class MentorProfile implements OnInit {
   }
 
 
-  // Get mentor profile from backend
+  // ==========================================
+  // LOAD MENTOR PROFILE
+  // ==========================================
+
   loadProfile(): void {
 
-    this.mentorService.getProfile().subscribe({
+    this.mentorService
+      .getProfile()
+      .subscribe({
 
-      next: (response: any) => {
+        next: (response: any) => {
 
-        const profile = response.profile;
+          const profile = response.profile;
 
-        // Update account information
-        this.name.set(profile.name || '');
-        this.email.set(profile.email || '');
 
-        this.verificationStatus.set(
-  profile.verification_status || 'pending'
-);
+          // ------------------------------------------
+          // Account information
+          // ------------------------------------------
 
-        // Put database values into the form
-        this.profileForm.patchValue({
+          this.name.set(
+            profile.name || ''
+          );
 
-          professional_title:
-            profile.professional_title || '',
+          this.email.set(
+            profile.email || ''
+          );
 
-          specialization:
-            profile.specialization || '',
 
-          bio:
-            profile.bio || '',
+          // ------------------------------------------
+          // Verification information
+          // ------------------------------------------
 
-          experience_years:
-            profile.experience_years ?? null,
+          this.verificationStatus.set(
+            profile.verification_status || 'pending'
+          );
 
-          skills:
-            profile.skills || '',
+          this.verificationNote.set(
+            profile.verification_note || ''
+          );
 
-          linkedin_url:
-            profile.linkedin_url || '',
 
-          github_url:
-            profile.github_url || '',
+          // ------------------------------------------
+          // Put database values into the form
+          // ------------------------------------------
 
-          availability_days:
-            profile.availability_days || '',
+          this.profileForm.patchValue({
 
-          availability_start_time:
-            profile.availability_start_time || '',
+            professional_title:
+              profile.professional_title || '',
 
-          availability_end_time:
-            profile.availability_end_time || ''
+            specialization:
+              profile.specialization || '',
 
-        });
+            bio:
+              profile.bio || '',
 
-      },
+            experience_years:
+              profile.experience_years ?? null,
 
-      error: (error: any) => {
+            skills:
+              profile.skills || '',
 
-        this.errorMessage.set(
-          error.error?.message ||
-          'Failed to load mentor profile'
-        );
+            linkedin_url:
+              profile.linkedin_url || '',
 
-      }
+            github_url:
+              profile.github_url || '',
 
-    });
+            availability_days:
+              profile.availability_days || '',
+
+            availability_start_time:
+              profile.availability_start_time || '',
+
+            availability_end_time:
+              profile.availability_end_time || ''
+
+          });
+
+        },
+
+
+        error: (error: any) => {
+
+          this.errorMessage.set(
+            error.error?.message ||
+            'Failed to load mentor profile'
+          );
+
+        }
+
+      });
 
   }
 
 
-  // Save mentor profile
+  // ==========================================
+  // SAVE MENTOR PROFILE
+  // ==========================================
+
   saveProfile(): void {
 
     this.message.set('');
+
     this.errorMessage.set('');
+
 
     // Stop if required fields are missing
     if (this.profileForm.invalid) {
@@ -207,7 +265,7 @@ export class MentorProfile implements OnInit {
     };
 
 
-    // Send data to backend
+    // Send profile data to backend
     this.mentorService
       .saveProfile(profileData)
       .subscribe({
@@ -220,6 +278,7 @@ export class MentorProfile implements OnInit {
           );
 
         },
+
 
         error: (error: any) => {
 
@@ -234,37 +293,53 @@ export class MentorProfile implements OnInit {
 
   }
 
-  // Submit mentor profile for admin verification
-submitForVerification(): void {
 
-  this.message.set('');
-  this.errorMessage.set('');
+  // ==========================================
+  // SUBMIT FOR VERIFICATION
+  // ==========================================
 
-  this.mentorService
-    .submitForVerification()
-    .subscribe({
+  submitForVerification(): void {
 
-      next: (response: any) => {
+    this.message.set('');
 
-        this.verificationStatus.set('pending');
+    this.errorMessage.set('');
 
-        this.message.set(
-          response.message ||
-          'Profile submitted for verification'
-        );
 
-      },
+    this.mentorService
+      .submitForVerification()
+      .subscribe({
 
-      error: (error: any) => {
+        next: (response: any) => {
 
-        this.errorMessage.set(
-          error.error?.message ||
-          'Failed to submit profile for verification'
-        );
+          // Update status
+          this.verificationStatus.set(
+            'pending'
+          );
 
-      }
+          // Clear old admin rejection note
+          this.verificationNote.set('');
 
-    });
 
-}
+          // Show success message
+          this.message.set(
+            response.message ||
+            'Profile submitted for verification'
+          );
+
+        },
+
+
+        error: (error: any) => {
+
+          this.errorMessage.set(
+            error.error?.message ||
+            'Failed to submit profile for verification'
+          );
+
+        }
+
+      });
+
+  }
+
 }

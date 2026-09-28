@@ -32,5 +32,6 @@ export const adminRoleGuard: CanActivateFn = () => {
   }
 
   // Logged-in but not an admin
-  return router.createUrlTree(['/student-dashboard']);
+  return router.createUrlTree(['/login']);
+
 };

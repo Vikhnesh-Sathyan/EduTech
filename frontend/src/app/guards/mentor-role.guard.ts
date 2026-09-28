@@ -32,5 +32,5 @@ export const mentorRoleGuard: CanActivateFn = () => {
   }
 
   // Logged-in but not a mentor
-  return router.createUrlTree(['/student-dashboard']);
+  return router.createUrlTree(['/login']);
 };

@@ -46,6 +46,9 @@ import { EducationYears } from './features/admin/education-years/education-years
 // Admin subject management page
 import { Subjects } from './features/admin/subjects/subjects';
 
+import { MentorVerification } from './features/admin/mentor-verification/mentor-verification';
+
+
 // ==================== MENTOR ====================
 
 import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
@@ -156,6 +159,11 @@ export const routes: Routes = [
       {
         path: 'subjects',
         component: Subjects
+      },
+
+      {
+        path: 'mentor-verification',
+        component: MentorVerification,
       }
 
     ]

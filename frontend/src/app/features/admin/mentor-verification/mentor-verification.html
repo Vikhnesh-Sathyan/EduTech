@@ -1,0 +1,532 @@
+<div class="mentor-verification-page">
+
+  <!-- ================================
+       Page Header
+  ================================= -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Mentor Verification</h1>
+
+      <p>
+        Review mentor profiles waiting for verification.
+      </p>
+    </div>
+
+    <span class="pending-count">
+      {{ mentors().length }} Pending
+    </span>
+
+  </div>
+
+
+  <!-- ================================
+       Loading
+  ================================= -->
+
+  @if (loading()) {
+
+    <div class="state-message">
+      Loading mentor profiles...
+    </div>
+
+  }
+
+
+  <!-- ================================
+       Error
+  ================================= -->
+
+  @if (errorMessage()) {
+
+    <div class="state-message error">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- ================================
+       Empty State
+  ================================= -->
+
+  @if (!loading() && !errorMessage() && mentors().length === 0) {
+
+    <div class="empty-state">
+
+      <h2>No pending mentors</h2>
+
+      <p>
+        All mentor profiles have been reviewed.
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ================================
+       Mentor List
+  ================================= -->
+
+  @if (!loading() && mentors().length > 0) {
+
+    <div class="mentor-list">
+
+      @for (mentor of mentors(); track mentor.id) {
+
+        <article class="mentor-card">
+
+          <!-- Mentor Identity -->
+
+          <div class="mentor-identity">
+
+            <div class="mentor-avatar">
+              {{ mentor.name.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="mentor-info">
+
+              <h2>
+                {{ mentor.name }}
+              </h2>
+
+              <p>
+                {{ mentor.email }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- Professional Information -->
+
+          <div class="mentor-professional">
+
+            <strong>
+              {{ mentor.professional_title || 'Title not provided' }}
+            </strong>
+
+            <span>
+              {{ mentor.specialization || 'Specialization not provided' }}
+            </span>
+
+          </div>
+
+
+          <!-- Status -->
+
+          <span class="status-badge">
+            Pending
+          </span>
+
+
+          <!-- Details -->
+
+          <button
+            type="button"
+            class="details-button"
+            (click)="viewDetails(mentor)"
+          >
+            View Details
+          </button>
+
+        </article>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- ================================
+       Mentor Details
+  ================================= -->
+
+  @if (selectedMentor()) {
+
+    <div class="mentor-details-page">
+
+      <!-- Back -->
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="selectedMentor.set(null)"
+      >
+        ← Back to Verification
+      </button>
+
+
+      <!-- ================================
+           Details Header
+      ================================= -->
+
+      <div class="details-header">
+
+        <div class="details-identity">
+
+          <div class="details-avatar">
+            {{ selectedMentor()!.name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div>
+
+            <h2>
+              {{ selectedMentor()!.name }}
+            </h2>
+
+            <p>
+              {{ selectedMentor()!.email }}
+            </p>
+
+          </div>
+
+        </div>
+
+        <span class="status-badge">
+          Pending Review
+        </span>
+
+      </div>
+
+
+      <!-- ================================
+           Professional Information
+      ================================= -->
+
+      <section class="details-section">
+
+        <h3>Professional Information</h3>
+
+        <div class="details-grid">
+
+          <div>
+
+            <span>Professional Title</span>
+
+            <strong>
+              {{ selectedMentor()!.professional_title || 'Not provided' }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>Specialization</span>
+
+            <strong>
+              {{ selectedMentor()!.specialization || 'Not provided' }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>Experience</span>
+
+            <strong>
+
+              @if (selectedMentor()!.experience_years !== null) {
+
+                {{ selectedMentor()!.experience_years }} years
+
+              } @else {
+
+                Not provided
+
+              }
+
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>Skills</span>
+
+            <strong>
+              {{ selectedMentor()!.skills || 'Not provided' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================
+           About Mentor
+      ================================= -->
+
+      <section class="details-section">
+
+        <h3>About the Mentor</h3>
+
+        <p class="details-text">
+          {{ selectedMentor()!.bio || 'No bio provided.' }}
+        </p>
+
+      </section>
+
+
+      <!-- ================================
+           Availability
+      ================================= -->
+
+      <section class="details-section">
+
+        <h3>Availability</h3>
+
+        <div class="details-grid">
+
+          <div>
+
+            <span>Available Days</span>
+
+            <strong>
+              {{ selectedMentor()!.availability_days || 'Not provided' }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>Available Time</span>
+
+            <strong>
+
+              @if (
+                selectedMentor()!.availability_start_time &&
+                selectedMentor()!.availability_end_time
+              ) {
+
+                {{ selectedMentor()!.availability_start_time }}
+                -
+                {{ selectedMentor()!.availability_end_time }}
+
+              } @else {
+
+                Not provided
+
+              }
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================
+           Professional Links
+      ================================= -->
+
+      <section class="details-section">
+
+        <h3>Professional Links</h3>
+
+        <div class="details-grid">
+
+          <!-- LinkedIn -->
+
+          <div>
+
+            <span>LinkedIn</span>
+
+            @if (selectedMentor()!.linkedin_url) {
+
+              <a
+                [href]="selectedMentor()!.linkedin_url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View LinkedIn Profile
+              </a>
+
+            } @else {
+
+              <strong>
+                Not provided
+              </strong>
+
+            }
+
+          </div>
+
+
+          <!-- GitHub -->
+
+          <div>
+
+            <span>GitHub</span>
+
+            @if (selectedMentor()!.github_url) {
+
+              <a
+                [href]="selectedMentor()!.github_url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View GitHub Profile
+              </a>
+
+            } @else {
+
+              <strong>
+                Not provided
+              </strong>
+
+            }
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================
+           Review Actions
+      ================================= -->
+
+      <div class="details-actions">
+
+        <!-- Reject -->
+
+        <button
+          type="button"
+          class="reject-button"
+          (click)="openRejectModal()"
+        >
+          Reject
+        </button>
+
+
+        <!-- Approve -->
+
+        <button
+          type="button"
+          class="approve-button"
+          (click)="approveMentor()"
+        >
+          Approve Mentor
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================
+         Rejection Modal
+    ================================= -->
+
+    @if (showRejectModal()) {
+
+      <div class="modal-overlay">
+
+        <div class="reject-modal">
+
+          <!-- Modal Header -->
+
+          <div class="modal-header">
+
+            <div>
+
+              <span class="modal-label">
+                MENTOR REVIEW
+              </span>
+
+              <h2>
+                Reject Mentor Profile
+              </h2>
+
+              <p>
+                Provide a clear reason so the mentor can
+                update their profile and resubmit.
+              </p>
+
+            </div>
+
+
+            <!-- Close -->
+
+            <button
+              type="button"
+              class="modal-close"
+              (click)="closeRejectModal()"
+              aria-label="Close rejection modal"
+            >
+              ×
+            </button>
+
+          </div>
+
+
+          <!-- Modal Body -->
+
+          <div class="modal-body">
+
+            <label for="rejectionReason">
+              Rejection reason
+            </label>
+
+            <textarea
+              id="rejectionReason"
+              rows="5"
+              placeholder="Example: Please add a detailed professional bio and update your skills."
+              [value]="rejectionReason()"
+              (input)="rejectionReason.set($any($event.target).value)"
+            ></textarea>
+
+            <span class="field-hint">
+              This feedback will be visible to the mentor.
+            </span>
+
+          </div>
+
+
+          <!-- Modal Actions -->
+
+          <div class="modal-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              (click)="closeRejectModal()"
+            >
+              Cancel
+            </button>
+
+
+            <button
+              type="button"
+              class="confirm-reject-button"
+              [disabled]="!rejectionReason().trim()"
+              (click)="rejectMentor()"
+            >
+              Reject Mentor
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>

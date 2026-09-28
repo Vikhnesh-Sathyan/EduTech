@@ -49,6 +49,7 @@ const studentSubjectRoutes =
 // Mentor profile routes
 const mentorRoutes = require("./routes/mentorRoutes");
 
+const adminMentorRoutes = require("./routes/adminMentorRoutes");
 
 // Create Express application
 const app = express();
@@ -136,6 +137,9 @@ app.use(
     "/api/student/subjects",
     studentSubjectRoutes
 );
+
+
+app.use("/api/admin/mentors", adminMentorRoutes);
 
 
 // ==================== START SERVER ====================
