@@ -224,6 +224,125 @@
         </div>
 
 
+        <!-- Account type -->
+
+        <div class="account-type">
+
+          <div class="account-type-heading">
+
+            <label>
+              Choose your account
+            </label>
+
+            <span>
+              Select how you want to use EduTech.
+            </span>
+
+          </div>
+
+
+          <div
+            class="account-options"
+            role="radiogroup"
+            aria-label="Account type"
+          >
+
+            <!-- Student -->
+
+            <label
+              class="account-option"
+              [class.selected]="
+                registerForm.get('role')?.value === 'student'
+              "
+            >
+
+              <input
+                type="radio"
+                formControlName="role"
+                value="student"
+              >
+
+              <div class="account-option-content">
+
+                <div class="account-option-top">
+
+                  <strong>
+                    Student
+                  </strong>
+
+                  <span class="selection-indicator"></span>
+
+                </div>
+
+                <p>
+                  Learn, practice and build your career skills.
+                </p>
+
+              </div>
+
+            </label>
+
+
+            <!-- Mentor -->
+
+            <label
+              class="account-option"
+              [class.selected]="
+                registerForm.get('role')?.value === 'mentor'
+              "
+            >
+
+              <input
+                type="radio"
+                formControlName="role"
+                value="mentor"
+              >
+
+              <div class="account-option-content">
+
+                <div class="account-option-top">
+
+                  <strong>
+                    Mentor
+                  </strong>
+
+                  <span class="selection-indicator"></span>
+
+                </div>
+
+                <p>
+                  Guide students and share your professional expertise.
+                </p>
+
+              </div>
+
+            </label>
+
+          </div>
+
+
+          <!-- Mentor verification information -->
+
+          @if (registerForm.get('role')?.value === 'mentor') {
+
+            <div class="mentor-note">
+
+              <strong>
+                Mentor verification required
+              </strong>
+
+              <p>
+                Mentor accounts need professional verification
+                before student mentoring features are unlocked.
+              </p>
+
+            </div>
+
+          }
+
+        </div>
+
+
         <!-- Error -->
 
         @if (errorMessage) {
@@ -285,9 +404,13 @@
 
       <p class="terms">
         By creating an account, you agree to our
-        <a href="#">Terms</a>
+        <a href="#">
+          Terms
+        </a>
         and
-        <a href="#">Privacy Policy</a>.
+        <a href="#">
+          Privacy Policy
+        </a>.
       </p>
 
     </div>

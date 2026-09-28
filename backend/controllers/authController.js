@@ -3,74 +3,177 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db");
 
+// Handles user registration
+
 const register = async (req, res) => {
+
     try {
-        const { name, email, password } = req.body;
+
+        const {
+            name,
+            email,
+            password,
+            role
+        } = req.body;
+
 
         // Validate required registration data
-if (!name || !email || !password) {
-    return res.status(400).json({
-        message: "Name, email and password are required"
-    });
-}
 
-// Validate password length
-if (password.length < 8) {
-    return res.status(400).json({
-        message: "Password must be at least 8 characters"
-    });
-}
+        if (!name || !email || !password) {
 
-        const checkUserSql = "SELECT id FROM users WHERE email = ?";
+            return res.status(400).json({
+                message:
+                    "Name, email and password are required"
+            });
 
-        db.query(checkUserSql, [email], async (err, result) => {
-            if (err) {
-                console.error("User check failed:", err.message);
+        }
 
-                return res.status(500).json({
-                    message: "Database error"
-                });
-            }
 
-            if (result.length > 0) {
-                return res.status(409).json({
-                    message: "Email already registered"
-                });
-            }
+        // Validate account type
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+        if (
+            role !== "student" &&
+            role !== "mentor"
+        ) {
 
-            const insertUserSql = `
-                INSERT INTO users (name, email, password)
-                VALUES (?, ?, ?)
-            `;
+            return res.status(400).json({
+                message:
+                    "Invalid account type"
+            });
 
-            db.query(
-                insertUserSql,
-                [name, email, hashedPassword],
-                (err, result) => {
-                    if (err) {
-                        console.error("User registration failed:", err.message);
+        }
 
-                        return res.status(500).json({
-                            message: "Registration failed"
-                        });
-                    }
 
-                    res.status(201).json({
-                        message: "User registered successfully",
-                        userId: result.insertId
+        // Validate password length
+
+        if (password.length < 8) {
+
+            return res.status(400).json({
+                message:
+                    "Password must be at least 8 characters"
+            });
+
+        }
+
+
+        // Check whether email already exists
+
+        const checkUserSql =
+            "SELECT id FROM users WHERE email = ?";
+
+
+        db.query(
+            checkUserSql,
+            [email],
+            async (err, result) => {
+
+                if (err) {
+
+                    console.error(
+                        "User check failed:",
+                        err.message
+                    );
+
+                    return res.status(500).json({
+                        message:
+                            "Database error"
                     });
+
                 }
-            );
-        });
+
+
+                // Stop duplicate registration
+
+                if (result.length > 0) {
+
+                    return res.status(409).json({
+                        message:
+                            "Email already registered"
+                    });
+
+                }
+
+
+                // Hash password before storing it
+
+                const hashedPassword =
+                    await bcrypt.hash(password, 10);
+
+
+                // Insert new user
+
+                const insertUserSql = `
+                    INSERT INTO users
+                    (
+                        name,
+                        email,
+                        password,
+                        role
+                    )
+                    VALUES (?, ?, ?, ?)
+                `;
+
+
+                db.query(
+                    insertUserSql,
+                    [
+                        name,
+                        email,
+                        hashedPassword,
+                        role
+                    ],
+                    (err, result) => {
+
+                        if (err) {
+
+                            console.error(
+                                "User registration failed:",
+                                err.message
+                            );
+
+                            return res.status(500).json({
+                                message:
+                                    "Registration failed"
+                            });
+
+                        }
+
+
+                        // Registration successful
+
+                        res.status(201).json({
+
+                            message:
+                                "User registered successfully",
+
+                            userId:
+                                result.insertId,
+
+                            role:
+                                role
+
+                        });
+
+                    }
+                );
+
+            }
+        );
+
     } catch (error) {
-        console.error("Registration error:", error.message);
+
+        console.error(
+            "Registration error:",
+            error.message
+        );
 
         res.status(500).json({
-            message: "Something went wrong"
+            message:
+                "Something went wrong"
         });
+
     }
+
 };
 
 // Handles user login and generates a JWT

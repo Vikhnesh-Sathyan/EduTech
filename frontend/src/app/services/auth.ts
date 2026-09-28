@@ -12,32 +12,45 @@ export class Auth {
 
   constructor(private http: HttpClient) {}
 
-  // Register a new student
+
+  // Register a new student or mentor
   register(data: {
     name: string;
     email: string;
     password: string;
+    role: string;
   }) {
-    return this.http.post(`${this.apiUrl}/register`, data);
+    return this.http.post(
+      `${this.apiUrl}/register`,
+      data
+    );
   }
+
 
   // Login an existing user
   login(data: {
     email: string;
     password: string;
   }) {
-    return this.http.post(`${this.apiUrl}/login`, data);
+    return this.http.post(
+      `${this.apiUrl}/login`,
+      data
+    );
   }
 
-  // Get the currently logged-in user's information
-getMe() {
-  return this.http.get(`${this.apiUrl}/me`);
-}
 
-// Logs out the current user
-logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-}
+  // Get the currently logged-in user's information
+  getMe() {
+    return this.http.get(
+      `${this.apiUrl}/me`
+    );
+  }
+
+
+  // Logs out the current user
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
 
 }
