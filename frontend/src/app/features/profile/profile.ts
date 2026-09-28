@@ -342,6 +342,8 @@ editProfile() {
     this.message = '';
     this.errorMessage = '';
 
+    
+
     if (this.profileForm.invalid) {
 
       this.errorMessage =

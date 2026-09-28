@@ -5,6 +5,7 @@ const db = require("../config/db");
 
 
 // Get subjects available for the student's education year
+// Get subjects available for the student's education year
 const getAvailableSubjects = (req, res) => {
 
     const sql = `
@@ -18,6 +19,12 @@ const getAvailableSubjects = (req, res) => {
             ON s.education_year_id = sp.education_year_id
         WHERE sp.user_id = ?
           AND s.status = 'active'
+          AND NOT EXISTS (
+              SELECT 1
+              FROM student_subjects ss
+              WHERE ss.student_id = sp.user_id
+                AND ss.subject_id = s.id
+          )
         ORDER BY s.name ASC
     `;
 

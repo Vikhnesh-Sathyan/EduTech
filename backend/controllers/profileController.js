@@ -42,48 +42,54 @@ const sql = `
 };
 
 // Creates or updates the authenticated student's profile
+// Creates or updates the authenticated student's profile
 const saveProfile = (req, res) => {
 
     const {
-    education_program_id,
-    department_id,
-    education_year_id,
-    career_goal,
-    learning_goals
-} = req.body;
-
-const sql = `
-    INSERT INTO student_profiles
-    (
-        user_id,
         education_program_id,
         department_id,
         education_year_id,
         career_goal,
         learning_goals
-    )
-    VALUES (?, ?, ?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE
-        education_program_id = VALUES(education_program_id),
-        department_id = VALUES(department_id),
-        education_year_id = VALUES(education_year_id),
-        career_goal = VALUES(career_goal),
-        learning_goals = VALUES(learning_goals)
-`;
+    } = req.body;
+
+    const sql = `
+        INSERT INTO student_profiles
+        (
+            user_id,
+            education_program_id,
+            department_id,
+            education_year_id,
+            career_goal,
+            learning_goals
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+
+        ON DUPLICATE KEY UPDATE
+            education_program_id = VALUES(education_program_id),
+            department_id = VALUES(department_id),
+            education_year_id = VALUES(education_year_id),
+            career_goal = VALUES(career_goal),
+            learning_goals = VALUES(learning_goals)
+    `;
 
     db.query(
-      [
-         req.user.id,
-        education_program_id,
-        department_id,
-        education_year_id,
-        career_goal,
-        learning_goals
-      ],
+        sql,
+        [
+            req.user.id,
+            education_program_id,
+            department_id,
+            education_year_id,
+            career_goal,
+            learning_goals
+        ],
         (err) => {
 
             if (err) {
-                console.error("Profile save failed:", err.message);
+                console.error(
+                    "Profile save failed:",
+                    err.message
+                );
 
                 return res.status(500).json({
                     message: "Profile save failed"

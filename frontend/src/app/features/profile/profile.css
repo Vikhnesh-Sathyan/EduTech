@@ -3,11 +3,10 @@
    ===================================================== */
 
 .profile-page {
-  max-width: 960px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 40px 24px 60px;
+  padding: 48px 28px 80px;
 }
-
 
 /* =====================================================
    PROFILE HEADER
@@ -17,29 +16,37 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.profile-header > div {
+  max-width: 680px;
 }
 
 .eyebrow {
-  margin: 0 0 8px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  margin: 0 0 10px;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .profile-header h1 {
   margin: 0 0 10px;
-  font-size: 32px;
-  line-height: 1.2;
+  color: #111827;
+  font-size: 38px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .description {
   margin: 0;
+  color: #6b7280;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
-
 
 /* =====================================================
    EDIT BUTTON
@@ -47,23 +54,26 @@
 
 .edit-button {
   flex-shrink: 0;
-  padding: 11px 20px;
-  border: 1px solid #d8d8d8;
+  padding: 12px 20px;
+  border: 1px solid #d1d5db;
   border-radius: 10px;
   background: #ffffff;
+  color: #111827;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+
   transition:
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .edit-button:hover {
-  background: #f5f5f5;
-  border-color: #c8c8c8;
+  background: #f9fafb;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
 }
-
 
 /* =====================================================
    FORM
@@ -72,44 +82,46 @@
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
-
 
 /* =====================================================
    FORM SECTIONS
    ===================================================== */
 
 .form-section {
-  padding: 28px;
-  border: 1px solid #e6e6e6;
-  border-radius: 16px;
+  padding: 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
   background: #ffffff;
 }
 
 .section-header {
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 
 .section-label {
-  margin: 0 0 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  margin: 0 0 7px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
 }
 
 .section-header h2 {
-  margin: 0 0 6px;
+  margin: 0 0 7px;
+  color: #111827;
   font-size: 20px;
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .section-header p {
   margin: 0;
+  color: #6b7280;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
-
 
 /* =====================================================
    FORM GRID
@@ -117,14 +129,15 @@
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
 }
+
+/* Education year occupies the full row */
 
 .form-grid .form-group:last-child {
   grid-column: 1 / -1;
 }
-
 
 /* =====================================================
    FORM GROUP
@@ -137,44 +150,89 @@
 }
 
 .form-group label {
+  color: #374151;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 650;
 }
 
+/* =====================================================
+   INPUTS
+   ===================================================== */
+
 .form-group input,
+.form-group select,
 .form-group textarea {
   width: 100%;
   box-sizing: border-box;
+
   padding: 13px 14px;
-  border: 1px solid #dedede;
-  border-radius: 10px;
+
+  border: 1px solid #dfe3e8;
+  border-radius: 11px;
+
   background: #ffffff;
+  color: #111827;
+
   font: inherit;
   font-size: 14px;
+
   outline: none;
+
   transition:
     border-color 0.2s ease,
+    box-shadow 0.2s ease,
     background 0.2s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #222222;
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
 }
 
+/* Focus */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+/* Disabled fields */
+
 .form-group input:disabled,
+.form-group select:disabled,
 .form-group textarea:disabled {
-  background: #f7f7f7;
-  color: #333333;
+  background: #f8fafc;
+  color: #374151;
+  border-color: #e5e7eb;
   cursor: default;
   opacity: 1;
 }
 
+/* Textarea */
+
 .form-group textarea {
-  min-height: 130px;
+  min-height: 140px;
   resize: vertical;
+  line-height: 1.6;
 }
 
+/* =====================================================
+   VALIDATION
+   ===================================================== */
+
+.form-group input.ng-invalid.ng-touched,
+.form-group select.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched {
+  border-color: #dc2626;
+}
+
+.form-group input.ng-invalid.ng-touched:focus,
+.form-group select.ng-invalid.ng-touched:focus,
+.form-group textarea.ng-invalid.ng-touched:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+}
 
 /* =====================================================
    MESSAGES
@@ -182,21 +240,24 @@
 
 .success-message,
 .error-message {
-  margin: 0 0 20px;
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 9px;
+  margin: 0 0 18px;
+  padding: 13px 15px;
+  border-radius: 10px;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .success-message {
-  background: #f1f8f3;
+  border: 1px solid #d7eadc;
+  background: #f5faf6;
+  color: #27613a;
 }
 
 .error-message {
-  background: #fff2f2;
+  border: 1px solid #f0d4d4;
+  background: #fff7f7;
+  color: #a12b2b;
 }
-
 
 /* =====================================================
    FORM ACTIONS
@@ -205,60 +266,77 @@
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
+  padding-top: 4px;
 }
 
 .cancel-button,
 .save-button {
-  padding: 12px 22px;
+  min-width: 120px;
+  padding: 12px 20px;
   border-radius: 10px;
+
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 650;
+
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
+/* Cancel */
+
 .cancel-button {
-  border: 1px solid #d8d8d8;
+  border: 1px solid #d1d5db;
   background: #ffffff;
+  color: #374151;
 }
 
 .cancel-button:hover {
-  background: #f5f5f5;
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
+/* Save */
+
 .save-button {
-  border: 1px solid #151515;
-  background: #151515;
+  border: 1px solid #111827;
+  background: #111827;
   color: #ffffff;
 }
 
-.save-button:hover {
-  background: #2a2a2a;
+.save-button:hover:not(:disabled) {
+  background: #1f2937;
+  transform: translateY(-1px);
 }
 
 .save-button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.45;
 }
-
 
 /* =====================================================
    RESPONSIVE
    ===================================================== */
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
 
   .profile-page {
-    padding: 28px 16px 40px;
+    padding: 32px 18px 60px;
   }
 
   .profile-header {
     align-items: flex-start;
     flex-direction: column;
+    gap: 20px;
   }
 
   .profile-header h1 {
-    font-size: 26px;
+    font-size: 30px;
   }
 
   .edit-button {
@@ -266,7 +344,8 @@
   }
 
   .form-section {
-    padding: 20px;
+    padding: 22px;
+    border-radius: 15px;
   }
 
   .form-grid {
@@ -284,5 +363,32 @@
   .cancel-button,
   .save-button {
     width: 100%;
+  }
+}
+
+/* =====================================================
+   SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 430px) {
+
+  .profile-page {
+    padding: 24px 14px 48px;
+  }
+
+  .profile-header h1 {
+    font-size: 27px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .form-section {
+    padding: 18px;
+  }
+
+  .section-header h2 {
+    font-size: 18px;
   }
 }
