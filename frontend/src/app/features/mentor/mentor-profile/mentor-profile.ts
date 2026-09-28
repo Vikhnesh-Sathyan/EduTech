@@ -14,6 +14,7 @@ import {
 
 import { Mentor } from '../../../services/mentor';
 
+
 @Component({
   selector: 'app-mentor-profile',
   standalone: true,
@@ -21,6 +22,8 @@ import { Mentor } from '../../../services/mentor';
   templateUrl: './mentor-profile.html',
   styleUrl: './mentor-profile.css'
 })
+
+
 export class MentorProfile implements OnInit {
 
   // ==========================================
@@ -30,6 +33,25 @@ export class MentorProfile implements OnInit {
   name = signal('');
 
   email = signal('');
+
+
+  // ==========================================
+  // AVAILABILITY DAYS
+  // ==========================================
+
+  // Days displayed in the weekly availability selector
+  days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+
+  // Stores the days selected by the mentor
+  selectedDays: string[] = [];
 
 
   // ==========================================
@@ -58,6 +80,10 @@ export class MentorProfile implements OnInit {
 
   profileForm;
 
+
+  // ==========================================
+  // CONSTRUCTOR
+  // ==========================================
 
   constructor(
     private fb: FormBuilder,
@@ -89,6 +115,9 @@ export class MentorProfile implements OnInit {
 
       github_url: [''],
 
+      // This field is still kept because
+      // the backend expects availability_days.
+      // The actual UI selection is handled by selectedDays.
       availability_days: [''],
 
       availability_start_time: [''],
@@ -154,6 +183,26 @@ export class MentorProfile implements OnInit {
 
 
           // ------------------------------------------
+          // Load availability days
+          // ------------------------------------------
+
+          // Convert the database string:
+          //
+          // "Monday, Wednesday, Friday"
+          //
+          // into:
+          //
+          // ["Monday", "Wednesday", "Friday"]
+
+          this.selectedDays = profile.availability_days
+            ? profile.availability_days
+                .split(',')
+                .map((day: string) => day.trim())
+                .filter((day: string) => day.length > 0)
+            : [];
+
+
+          // ------------------------------------------
           // Put database values into the form
           // ------------------------------------------
 
@@ -180,6 +229,8 @@ export class MentorProfile implements OnInit {
             github_url:
               profile.github_url || '',
 
+            // Keep the database value here.
+            // The visible day buttons use selectedDays.
             availability_days:
               profile.availability_days || '',
 
@@ -209,6 +260,48 @@ export class MentorProfile implements OnInit {
 
 
   // ==========================================
+  // TOGGLE AVAILABILITY DAY
+  // ==========================================
+
+  // Called when the mentor clicks a day button
+  toggleDay(day: string): void {
+
+    // Check whether the day is already selected
+    if (this.selectedDays.includes(day)) {
+
+      // Remove the selected day
+      this.selectedDays =
+        this.selectedDays.filter(
+          selectedDay => selectedDay !== day
+        );
+
+    } else {
+
+      // Add the day
+      this.selectedDays = [
+        ...this.selectedDays,
+        day
+      ];
+
+    }
+
+  }
+
+
+  // ==========================================
+  // CHECK SELECTED DAY
+  // ==========================================
+
+  // Used by HTML to know whether
+  // a particular day should appear selected
+  isDaySelected(day: string): boolean {
+
+    return this.selectedDays.includes(day);
+
+  }
+
+
+  // ==========================================
   // SAVE MENTOR PROFILE
   // ==========================================
 
@@ -229,7 +322,10 @@ export class MentorProfile implements OnInit {
     }
 
 
+    // ------------------------------------------
     // Prepare form data
+    // ------------------------------------------
+
     const profileData = {
 
       professional_title:
@@ -253,8 +349,17 @@ export class MentorProfile implements OnInit {
       github_url:
         this.profileForm.value.github_url || '',
 
+      // Convert selected days array into
+      // one string for the backend/database.
+      //
+      // ["Monday", "Wednesday", "Friday"]
+      //
+      // becomes:
+      //
+      // "Monday, Wednesday, Friday"
+
       availability_days:
-        this.profileForm.value.availability_days || '',
+        this.selectedDays.join(', '),
 
       availability_start_time:
         this.profileForm.value.availability_start_time || '',
@@ -265,12 +370,24 @@ export class MentorProfile implements OnInit {
     };
 
 
+    // ------------------------------------------
     // Send profile data to backend
+    // ------------------------------------------
+
     this.mentorService
       .saveProfile(profileData)
       .subscribe({
 
         next: (response: any) => {
+
+          // Keep the form field synchronized
+          this.profileForm.patchValue({
+
+            availability_days:
+              this.selectedDays.join(', ')
+
+          });
+
 
           this.message.set(
             response.message ||
@@ -297,49 +414,136 @@ export class MentorProfile implements OnInit {
   // ==========================================
   // SUBMIT FOR VERIFICATION
   // ==========================================
+// ==========================================
+// SUBMIT FOR VERIFICATION
+// ==========================================
 
-  submitForVerification(): void {
+submitForVerification(): void {
 
-    this.message.set('');
-
-    this.errorMessage.set('');
-
-
-    this.mentorService
-      .submitForVerification()
-      .subscribe({
-
-        next: (response: any) => {
-
-          // Update status
-          this.verificationStatus.set(
-            'pending'
-          );
-
-          // Clear old admin rejection note
-          this.verificationNote.set('');
+  this.message.set('');
+  this.errorMessage.set('');
 
 
-          // Show success message
-          this.message.set(
-            response.message ||
-            'Profile submitted for verification'
-          );
+  // ==========================================
+  // CHECK REQUIRED PROFILE INFORMATION
+  // ==========================================
 
-        },
+  const professionalTitle =
+    this.profileForm.value.professional_title?.trim() || '';
+
+  const specialization =
+    this.profileForm.value.specialization?.trim() || '';
+
+  const bio =
+    this.profileForm.value.bio?.trim() || '';
+
+  const skills =
+    this.profileForm.value.skills?.trim() || '';
+
+  const experience =
+    this.profileForm.value.experience_years;
+
+  const startTime =
+    this.profileForm.value.availability_start_time || '';
+
+  const endTime =
+    this.profileForm.value.availability_end_time || '';
 
 
-        error: (error: any) => {
+  // ==========================================
+  // FIND MISSING INFORMATION
+  // ==========================================
 
-          this.errorMessage.set(
-            error.error?.message ||
-            'Failed to submit profile for verification'
-          );
+  const missingFields: string[] = [];
 
-        }
 
-      });
-
+  if (!professionalTitle) {
+    missingFields.push('Professional Title');
   }
+
+  if (!specialization) {
+    missingFields.push('Specialization');
+  }
+
+  if (!bio) {
+    missingFields.push('Professional Bio');
+  }
+
+  if (!skills) {
+    missingFields.push('Skills');
+  }
+
+if (
+  experience === null ||
+  experience === undefined
+) {
+  missingFields.push('Experience');
+}
+
+  if (this.selectedDays.length === 0) {
+    missingFields.push('Available Days');
+  }
+
+  if (!startTime) {
+    missingFields.push('Start Time');
+  }
+
+  if (!endTime) {
+    missingFields.push('End Time');
+  }
+
+
+  // ==========================================
+  // STOP IF PROFILE IS INCOMPLETE
+  // ==========================================
+
+  if (missingFields.length > 0) {
+
+    this.errorMessage.set(
+      `Please complete: ${missingFields.join(', ')}.`
+    );
+
+    return;
+  }
+
+
+  // ==========================================
+  // SUBMIT PROFILE
+  // ==========================================
+
+  this.mentorService
+    .submitForVerification()
+    .subscribe({
+
+      next: (response: any) => {
+
+        // Update verification status
+        this.verificationStatus.set('pending');
+
+
+        // Clear old rejection feedback
+        this.verificationNote.set('');
+
+
+        // Show success message
+        this.message.set(
+          response.message ||
+          'Profile submitted for verification'
+        );
+
+      },
+
+      error: (error: any) => {
+
+        this.errorMessage.set(
+          error.error?.message ||
+          'Failed to submit profile for verification'
+        );
+
+      }
+
+    });
+
+}
 
 }
