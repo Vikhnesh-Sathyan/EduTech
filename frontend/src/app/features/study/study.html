@@ -1,5 +1,7 @@
+
 <section class="study-page">
 
+  <!-- Page Header -->
   <div class="page-header">
 
     <p class="eyebrow">
@@ -11,49 +13,192 @@
     </h1>
 
     <p>
-      Choose a subject and continue your learning journey.
+      Continue building your skills through focused learning.
     </p>
 
   </div>
 
 
+  <!-- ==========================================
+       CONTINUE LEARNING
+  ========================================== -->
+
+  <section class="learning-section">
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          Your Learning
+        </p>
+
+        <h2>
+          Continue your learning journey
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <!-- No learning progress yet -->
+    <div class="empty-learning">
+
+      <div class="empty-icon">
+        →
+      </div>
+
+      <div>
+
+        <h3>
+          No active learning yet
+        </h3>
+
+        <p>
+          Choose a subject below to start your learning journey.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       EXPLORE SUBJECTS
+  ========================================== -->
+
   <section class="subjects-section">
 
     <div class="section-header">
 
-      <h2>
-        Your Subjects
-      </h2>
+      <div>
 
-      <p>
-        Select a subject to start learning.
-      </p>
+        <p class="section-label">
+          Explore
+        </p>
 
-    </div>
+        <h2>
+          Subjects
+        </h2>
 
+        <p>
+          Choose a subject to begin learning.
+        </p>
 
-    <div class="subject-list">
-
-      @for (subject of subjects; track subject.id) {
-
-        <button
-          type="button"
-          class="subject-card"
-          [routerLink]="['/study', subject.id]"
-        >
-          <span class="subject-name">
-            {{ subject.name }}
-          </span>
-
-          <span class="subject-action">
-            Start Learning
-          </span>
-
-        </button>
-
-      }
+      </div>
 
     </div>
+
+
+    <!-- ==========================================
+         LOADING STATE
+    ========================================== -->
+
+    @if (loading()) {
+
+      <div class="state-message">
+
+        <p>
+          Loading your subjects...
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- ==========================================
+         ERROR STATE
+    ========================================== -->
+
+    @else if (errorMessage()) {
+
+      <div class="state-message error-state">
+
+        <p>
+          {{ errorMessage() }}
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- ==========================================
+         EMPTY STATE
+    ========================================== -->
+
+    @else if (subjects().length === 0) {
+
+      <div class="state-message empty-state">
+
+        <h3>
+          No subjects available yet
+        </h3>
+
+        <p>
+          Subjects for your education year
+          have not been added yet.
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- ==========================================
+         SUBJECTS
+    ========================================== -->
+
+    @else {
+
+      <div class="subject-list">
+
+        @for (subject of subjects(); track subject.id) {
+
+          <button
+            type="button"
+            class="subject-card"
+            [routerLink]="['/study', subject.id]"
+          >
+
+            <div class="subject-content">
+
+              <h3>
+                {{ subject.name }}
+              </h3>
+
+              @if (subject.description) {
+
+                <p>
+                  {{ subject.description }}
+                </p>
+
+              } @else {
+
+                <p>
+                  Start learning
+                </p>
+
+              }
+
+            </div>
+
+
+            <span class="subject-arrow">
+              →
+            </span>
+
+          </button>
+
+        }
+
+      </div>
+
+    }
 
   </section>
 

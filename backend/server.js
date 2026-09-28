@@ -44,6 +44,10 @@ const educationRoutes =
 const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
+// ==================== STUDY ROUTES ====================
+
+const studyRoutes = require("./routes/studyRoutes");
+
 // ==================== MENTOR ROUTES ====================
 
 // Mentor profile routes
@@ -138,8 +142,14 @@ app.use(
     studentSubjectRoutes
 );
 
-
+// Admin mentor verification routes
 app.use("/api/admin/mentors", adminMentorRoutes);
+
+
+// =================== STUDY ROUTES ==================
+
+// Student study routes
+app.use("/api/study", studyRoutes);
 
 
 // ==================== START SERVER ====================

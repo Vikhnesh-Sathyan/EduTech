@@ -1,15 +1,130 @@
 <section class="subject-page">
 
-  <p class="eyebrow">
-    Study
-  </p>
+  <!-- ==========================================
+       LOADING STATE
+  ========================================== -->
 
-  <h1>
-    Subject
-  </h1>
+  @if (loading()) {
 
-  <p>
-    Subject ID: {{ subjectId }}
-  </p>
+    <div class="state-message">
+
+      <p>
+        Loading subject...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ==========================================
+       ERROR STATE
+  ========================================== -->
+
+  @else if (errorMessage()) {
+
+    <div class="state-message error-state">
+
+      <p>
+        {{ errorMessage() }}
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ==========================================
+       SUBJECT
+  ========================================== -->
+
+  @else if (subject()) {
+
+    <div class="subject-header">
+
+      <p class="eyebrow">
+        Study
+      </p>
+
+      <h1>
+        {{ subject().name }}
+      </h1>
+
+      @if (subject().description) {
+
+        <p class="subject-description">
+          {{ subject().description }}
+        </p>
+
+      }
+
+    </div>
+
+
+    <!-- ==========================================
+         LEARNING STATUS
+    ========================================== -->
+
+    <section class="learning-card">
+
+      <div>
+
+        <p class="section-label">
+          Your Learning
+        </p>
+
+        <h2>
+          Ready to begin
+        </h2>
+
+        <p>
+          Start learning this subject step by step
+          and build your understanding through
+          focused practice.
+        </p>
+
+      </div>
+
+      <div class="status">
+
+        <span class="status-dot"></span>
+
+        Not started
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         GETTING STARTED
+    ========================================== -->
+
+    <section class="start-section">
+
+      <p class="section-label">
+        Getting Started
+      </p>
+
+      <h2>
+        Build your foundation
+      </h2>
+
+      <p>
+        Before starting your personalized learning
+        path, we will understand your current
+        knowledge of this subject.
+      </p>
+
+      <button
+        type="button"
+        class="start-button"
+      >
+        Start Diagnostic
+      </button>
+
+    </section>
+
+  }
 
 </section>
