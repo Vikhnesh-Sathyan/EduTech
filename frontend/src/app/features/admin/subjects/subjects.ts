@@ -3,7 +3,7 @@
 // Admin can select a program, department and education year,
 // create a subject, and view all configured subjects.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 import {
   ReactiveFormsModule,
@@ -27,10 +27,11 @@ import { AdminEducationYear } from '../../../services/admin-education-year';
 })
 export class Subjects implements OnInit {
 
-  programs: any[] = [];
-  departments: any[] = [];
-  years: any[] = [];
-  subjects: any[] = [];
+  // Lists are signals so the UI updates automatically
+  programs = signal<any[]>([]);
+  departments = signal<any[]>([]);
+  years = signal<any[]>([]);
+  subjects = signal<any[]>([]);
 
   message = '';
   errorMessage = '';
@@ -80,10 +81,8 @@ export class Subjects implements OnInit {
   }
 
   ngOnInit() {
-
     this.loadPrograms();
     this.loadSubjects();
-
   }
 
 
@@ -95,17 +94,13 @@ export class Subjects implements OnInit {
       .subscribe({
 
         next: (response: any) => {
-
-          this.programs = response.programs;
-
+          this.programs.set(response.programs);
         },
 
         error: (error) => {
-
           this.errorMessage =
             error.error?.message ||
             'Failed to load education programs.';
-
         }
 
       });
@@ -125,8 +120,8 @@ export class Subjects implements OnInit {
     this.subjectForm.controls.department_id.setValue(null);
     this.subjectForm.controls.education_year_id.setValue(null);
 
-    this.departments = [];
-    this.years = [];
+    this.departments.set([]);
+    this.years.set([]);
 
     if (!programId) {
       return;
@@ -137,18 +132,13 @@ export class Subjects implements OnInit {
       .subscribe({
 
         next: (response: any) => {
-
-          this.departments =
-            response.departments;
-
+          this.departments.set(response.departments);
         },
 
         error: (error) => {
-
           this.errorMessage =
             error.error?.message ||
             'Failed to load departments.';
-
         }
 
       });
@@ -168,7 +158,7 @@ export class Subjects implements OnInit {
     this.subjectForm.controls.education_year_id
       .setValue(null);
 
-    this.years = [];
+    this.years.set([]);
 
     if (!departmentId) {
       return;
@@ -179,18 +169,13 @@ export class Subjects implements OnInit {
       .subscribe({
 
         next: (response: any) => {
-
-          this.years =
-            response.years;
-
+          this.years.set(response.years);
         },
 
         error: (error) => {
-
           this.errorMessage =
             error.error?.message ||
             'Failed to load education years.';
-
         }
 
       });
@@ -206,18 +191,13 @@ export class Subjects implements OnInit {
       .subscribe({
 
         next: (response: any) => {
-
-          this.subjects =
-            response.subjects;
-
+          this.subjects.set(response.subjects);
         },
 
         error: (error) => {
-
           this.errorMessage =
             error.error?.message ||
             'Failed to load subjects.';
-
         }
 
       });
@@ -232,12 +212,9 @@ export class Subjects implements OnInit {
     this.errorMessage = '';
 
     if (this.subjectForm.invalid) {
-
       this.errorMessage =
         'Please complete all subject details.';
-
       return;
-
     }
 
     const {
@@ -258,13 +235,12 @@ export class Subjects implements OnInit {
 
         next: (response: any) => {
 
-          this.message =
-            response.message;
+          this.message = response.message;
 
           this.subjectForm.reset();
 
-          this.departments = [];
-          this.years = [];
+          this.departments.set([]);
+          this.years.set([]);
 
           // Reload subjects after successful creation
           this.loadSubjects();
@@ -272,11 +248,9 @@ export class Subjects implements OnInit {
         },
 
         error: (error) => {
-
           this.errorMessage =
             error.error?.message ||
             'Failed to create subject.';
-
         }
 
       });

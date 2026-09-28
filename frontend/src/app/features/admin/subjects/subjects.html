@@ -81,7 +81,7 @@
 
 
           @for (
-            program of programs;
+            program of programs();
             track program.id
           ) {
 
@@ -117,7 +117,7 @@
 
 
           @for (
-            department of departments;
+            department of departments();
             track department.id
           ) {
 
@@ -152,7 +152,7 @@
 
 
           @for (
-            year of years;
+            year of years();
             track year.id
           ) {
 
@@ -236,14 +236,14 @@
 
 
       <span>
-        {{ subjects.length }} subjects
+        {{ subjects().length }} subjects
       </span>
 
     </div>
 
 
 
-    @if (subjects.length === 0) {
+    @if (subjects().length === 0) {
 
       <div class="empty-state">
 
@@ -258,7 +258,7 @@
       <div class="subject-list">
 
         @for (
-          subject of subjects;
+          subject of subjects();
           track subject.id
         ) {
 

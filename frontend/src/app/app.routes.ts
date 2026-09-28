@@ -37,7 +37,11 @@ import { EducationPrograms } from './features/admin/education-programs/education
 // Admin department management page
 import { Departments } from './features/admin/departments/departments';
 
+// Admin Eucation management page
 import { EducationYears } from './features/admin/education-years/education-years';
+
+// Admin Subject management page
+import { Subjects } from './features/admin/subjects/subjects';
 
 export const routes: Routes = [
 
@@ -134,6 +138,10 @@ export const routes: Routes = [
       path: 'education-years',
       component: EducationYears
     },
+    {
+      path: 'subjects',
+      component: Subjects
+    }
   ]
 }
 
