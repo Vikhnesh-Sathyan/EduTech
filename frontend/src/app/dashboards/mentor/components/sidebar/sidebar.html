@@ -1,0 +1,60 @@
+<!--
+  USE:
+  Provides navigation specifically for the mentor dashboard.
+-->
+
+<aside class="sidebar">
+
+
+  <!-- Navigation -->
+
+  <nav class="sidebar-navigation">
+
+    <a
+      routerLink="/mentor-dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <span class="nav-icon">⌂</span>
+      <span>Dashboard</span>
+    </a>
+
+
+    <a
+      routerLink="/mentor-students"
+      routerLinkActive="active"
+    >
+      <span class="nav-icon">◉</span>
+      <span>Students</span>
+    </a>
+
+
+    <a
+      routerLink="/mentor-sessions"
+      routerLinkActive="active"
+    >
+      <span class="nav-icon">◷</span>
+      <span>Sessions</span>
+    </a>
+
+
+    <a
+      routerLink="/mentor-resources"
+      routerLinkActive="active"
+    >
+      <span class="nav-icon">▣</span>
+      <span>Resources</span>
+    </a>
+
+
+    <a
+      routerLink="/mentor-profile"
+      routerLinkActive="active"
+    >
+      <span class="nav-icon">○</span>
+      <span>Profile</span>
+    </a>
+
+  </nav>
+
+</aside>

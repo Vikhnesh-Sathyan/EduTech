@@ -13,11 +13,14 @@ import { Login } from './auth/login/login';
 
 import { authGuard } from './guards/auth.guard';
 import { adminRoleGuard } from './guards/admin-role.guard';
+import { mentorRoleGuard } from './guards/mentor-role.guard';
 
 // ==================== STUDENT ====================
 
 import { StudentDashboard } from './dashboards/student/student-dashboard/student-dashboard';
 import { Profile } from './features/profile/profile';
+// Common layout used by all student pages
+import { StudentLayout } from './dashboards/student/student-layout/student-layout';
 
 // ==================== STUDY ====================
 
@@ -37,11 +40,19 @@ import { EducationPrograms } from './features/admin/education-programs/education
 // Admin department management page
 import { Departments } from './features/admin/departments/departments';
 
-// Admin Eucation management page
+// Admin education year management page
 import { EducationYears } from './features/admin/education-years/education-years';
 
-// Admin Subject management page
+// Admin subject management page
 import { Subjects } from './features/admin/subjects/subjects';
+
+// ==================== MENTOR ====================
+
+import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
+
+import { MentorProfile } from './features/mentor/mentor-profile/mentor-profile';
+
+import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
 
 export const routes: Routes = [
 
@@ -69,79 +80,109 @@ export const routes: Routes = [
   },
 
 
-  // ==================== STUDENT ROUTES ====================
+// ==================== STUDENT ROUTES ====================
 
-  // Student dashboard
-  {
-    path: 'student-dashboard',
-    component: StudentDashboard,
-    canActivate: [authGuard]
-  },
-
-  // Student profile
-  {
-    path: 'profile',
-    component: Profile,
-    canActivate: [authGuard]
-  },
-
-
-  // ==================== STUDY ROUTES ====================
-
-  // Study subjects page
-  {
-    path: 'study',
-    component: Study,
-    canActivate: [authGuard]
-  },
-
-  // Dynamic subject learning page
-  {
-    path: 'study/:subjectId',
-    component: Subject,
-    canActivate: [authGuard]
-  },
-
-
- // ==================== ADMIN ROUTES ====================
-
-// Admin dashboard keeps its own sidebar + topbar layout
+// Common layout used by all student pages
 {
-  path: 'admin-dashboard',
-  component: AdminDashboard,
-  canActivate: [
-    authGuard,
-    adminRoleGuard
+  path: '',
+  component: StudentLayout,
+  canActivate: [authGuard],
+  children: [
+
+    // Student dashboard
+    {
+      path: 'student-dashboard',
+      component: StudentDashboard
+    },
+
+    // Student profile
+    {
+      path: 'profile',
+      component: Profile
+    },
+
+    // Study subjects page
+    {
+      path: 'study',
+      component: Study
+    },
+
+    // Dynamic subject learning page
+    {
+      path: 'study/:subjectId',
+      component: Subject
+    }
+
   ]
 },
 
-// Admin management pages use the navbar-only layout
+  // ==================== ADMIN ROUTES ====================
+
+  // Admin dashboard keeps its own sidebar + topbar layout
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboard,
+    canActivate: [
+      authGuard,
+      adminRoleGuard
+    ]
+  },
+
+  // Admin management pages use the navbar-only layout
+  {
+    path: 'admin',
+    component: AdminLayout,
+    canActivate: [
+      authGuard,
+      adminRoleGuard
+    ],
+    children: [
+
+      {
+        path: 'education-programs',
+        component: EducationPrograms
+      },
+
+      {
+        path: 'departments',
+        component: Departments
+      },
+
+      {
+        path: 'education-years',
+        component: EducationYears
+      },
+
+      {
+        path: 'subjects',
+        component: Subjects
+      }
+
+    ]
+  },
+
+// ==================== MENTOR ROUTES ====================
+
+// Common layout used by all mentor pages
 {
-  path: 'admin',
-  component: AdminLayout,
+  path: '',
+  component: MentorLayout,
   canActivate: [
     authGuard,
-    adminRoleGuard
+    mentorRoleGuard
   ],
   children: [
+
     {
-      path: 'education-programs',
-      component: EducationPrograms
+      path: 'mentor-dashboard',
+      component: MentorDashboard
     },
 
     {
-      path: 'departments',
-      component: Departments
-    },
-
-    {
-      path: 'education-years',
-      component: EducationYears
-    },
-    {
-      path: 'subjects',
-      component: Subjects
+      path: 'mentor-profile',
+      component: MentorProfile
     }
+
   ]
 }
 

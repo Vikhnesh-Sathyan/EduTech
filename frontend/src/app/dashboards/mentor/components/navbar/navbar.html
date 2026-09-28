@@ -1,0 +1,32 @@
+<!--
+  USE:
+  Provides the common top navigation for mentor pages.
+  Dashboard-specific navigation is handled by the sidebar.
+-->
+
+<nav class="navbar">
+
+  <div class="navbar-brand">
+    EduTech
+  </div>
+
+
+  <div class="navbar-actions">
+
+    <a
+      routerLink="/mentor-profile"
+      class="profile-link"
+    >
+      Profile
+    </a>
+
+    <button
+      type="button"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</nav>

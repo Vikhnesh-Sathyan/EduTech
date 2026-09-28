@@ -1,0 +1,263 @@
+/* ==============================
+   Mentor Profile
+   ============================== */
+
+.mentor-profile {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+  color: #172033;
+}
+
+
+/* ==============================
+   Page Header
+   ============================== */
+
+.profile-header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #667085;
+}
+
+.profile-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.profile-header p:not(.eyebrow) {
+  max-width: 650px;
+  margin: 10px 0 0;
+  color: #667085;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* ==============================
+   Messages
+   ============================== */
+
+.success-message,
+.error-message {
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.success-message {
+  border: 1px solid #b7e4c7;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.error-message {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b42318;
+}
+
+
+/* ==============================
+   Profile Sections
+   ============================== */
+
+.profile-section {
+  margin-bottom: 20px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
+}
+
+.section-heading {
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.section-heading p {
+  margin: 7px 0 0;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ==============================
+   Personal Information
+   ============================== */
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid #eaecf0;
+  border-left: 1px solid #eaecf0;
+}
+
+.profile-field {
+  padding: 18px 20px;
+  border-right: 1px solid #eaecf0;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.profile-field > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #667085;
+  font-size: 13px;
+}
+
+.profile-field > strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
+/* ==============================
+   Form Layout
+   ============================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field.full-width {
+  margin-top: 22px;
+}
+
+.form-field label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #344054;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172033;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field input {
+  min-height: 44px;
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #98a2b3;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #667085;
+  box-shadow: 0 0 0 3px rgba(102, 112, 133, 0.10);
+}
+
+.form-field small {
+  margin-top: 6px;
+  color: #b42318;
+  font-size: 12px;
+}
+
+
+/* ==============================
+   Save Button
+   ============================== */
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.profile-actions button {
+  min-width: 130px;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: #172033;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.profile-actions button:hover {
+  background: #2d3748;
+}
+
+.profile-actions button:active {
+  transform: translateY(1px);
+}
+
+
+/* ==============================
+   Responsive
+   ============================== */
+
+@media (max-width: 700px) {
+
+  .mentor-profile {
+    padding: 32px 20px 48px;
+  }
+
+  .profile-header h1 {
+    font-size: 28px;
+  }
+
+  .profile-section {
+    padding: 22px;
+  }
+
+  .form-grid,
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-actions {
+    justify-content: stretch;
+  }
+
+  .profile-actions button {
+    width: 100%;
+  }
+
+}

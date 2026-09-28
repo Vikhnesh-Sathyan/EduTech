@@ -53,7 +53,7 @@ export class Login {
       email: email!,
       password: password!
     }).subscribe({
-   next: (response: any) => {
+next: (response: any) => {
 
   localStorage.setItem(
     'token',
@@ -65,11 +65,20 @@ export class Login {
     JSON.stringify(response.user)
   );
 
-if (response.user.role === 'student') {
-  this.router.navigate(['/student-dashboard']);
-} else if (response.user.role === 'admin') {
-  this.router.navigate(['/admin-dashboard']);
-}
+  if (response.user.role === 'student') {
+
+    this.router.navigate(['/student-dashboard']);
+
+  } else if (response.user.role === 'admin') {
+
+    this.router.navigate(['/admin-dashboard']);
+
+  } else if (response.user.role === 'mentor') {
+
+    this.router.navigate(['/mentor-dashboard']);
+
+  }
+
 },
 
       error: (error) => {

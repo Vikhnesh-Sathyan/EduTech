@@ -44,6 +44,12 @@ const educationRoutes =
 const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
+// ==================== MENTOR ROUTES ====================
+
+// Mentor profile routes
+const mentorRoutes = require("./routes/mentorRoutes");
+
+
 // Create Express application
 const app = express();
 
@@ -75,6 +81,9 @@ app.use("/api/auth", authRoutes);
 
 // Handles the authenticated student's profile
 app.use("/api/profile", profileRoutes);
+
+// Handles the authenticated mentor's profile
+app.use("/api/mentor", mentorRoutes);
 
 
 // =====================================================

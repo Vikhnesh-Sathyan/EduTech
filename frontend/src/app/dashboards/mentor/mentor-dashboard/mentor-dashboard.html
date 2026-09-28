@@ -1,0 +1,197 @@
+<!-- Mentor dashboard overview -->
+
+<div class="dashboard-shell">
+
+  <!-- Dashboard Sidebar -->
+
+  <app-mentor-sidebar></app-mentor-sidebar>
+
+
+  <!-- Dashboard Content -->
+
+  <main class="dashboard-content">
+
+    <div class="mentor-dashboard">
+
+      <!-- Header -->
+
+      <section class="dashboard-header">
+
+        <div>
+
+          <p class="eyebrow">
+            MENTOR WORKSPACE
+          </p>
+
+          <h1>
+            {{ greeting }}, Mentor
+          </h1>
+
+          <p class="subtitle">
+            Here's an overview of your mentoring activity.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- Summary -->
+
+      <section class="overview-grid">
+
+        <!-- Profile -->
+
+        <article class="overview-card profile-card">
+
+          <div class="card-top">
+
+            <span class="card-label">
+              PROFILE
+            </span>
+
+            <span class="status status-success">
+              Complete
+            </span>
+
+          </div>
+
+          <h2>
+            Professional Profile
+          </h2>
+
+          <p>
+            Keep your professional information,
+            skills and availability up to date.
+          </p>
+
+          <a
+            routerLink="/mentor-profile"
+            class="card-action"
+          >
+            View Profile →
+          </a>
+
+        </article>
+
+
+        <!-- Verification -->
+
+        <article class="overview-card">
+
+          <div class="card-top">
+
+            <span class="card-label">
+              VERIFICATION
+            </span>
+
+            <span class="status status-pending">
+              Pending
+            </span>
+
+          </div>
+
+          <h2>
+            Profile Verification
+          </h2>
+
+          <p>
+            Your mentor profile is currently waiting
+            for admin review.
+          </p>
+
+          <span class="card-info">
+            Awaiting review
+          </span>
+
+        </article>
+
+
+        <!-- Students -->
+
+        <article class="overview-card stat-card">
+
+          <span class="card-label">
+            STUDENTS
+          </span>
+
+          <strong>0</strong>
+
+          <p>
+            Students connected with you.
+          </p>
+
+        </article>
+
+
+        <!-- Sessions -->
+
+        <article class="overview-card stat-card">
+
+          <span class="card-label">
+            SESSIONS
+          </span>
+
+          <strong>0</strong>
+
+          <p>
+            Your upcoming mentoring sessions.
+          </p>
+
+        </article>
+
+      </section>
+
+
+      <!-- Activity -->
+
+      <section class="activity-card">
+
+        <div class="activity-header">
+
+          <div>
+
+            <p class="eyebrow">
+              MENTOR ACTIVITY
+            </p>
+
+            <h2>
+              Your mentoring space
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="activity-empty">
+
+          <div class="empty-icon">
+            +
+          </div>
+
+          <h3>
+            No mentoring activity yet
+          </h3>
+
+          <p>
+            Complete your profile and keep your
+            availability up to date to get started.
+          </p>
+
+          <a
+            routerLink="/mentor-profile"
+            class="primary-action"
+          >
+            Complete Profile
+          </a>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>

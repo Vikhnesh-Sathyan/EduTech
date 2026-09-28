@@ -1,0 +1,50 @@
+<!--
+  USE:
+  Provides the main navigation for student pages.
+-->
+
+<nav class="navbar">
+
+  <div class="navbar-brand">
+    EduTech
+  </div>
+
+
+  <div class="navbar-links">
+
+    <a routerLink="/student-dashboard">
+      Dashboard
+    </a>
+
+    <a routerLink="/study">
+      Study
+    </a>
+
+    <a>
+      Career
+    </a>
+
+    <a>
+      Practice
+    </a>
+
+    <a>
+      Mentor
+    </a>
+
+    <a routerLink="/profile">
+      Profile
+    </a>
+
+  </div>
+
+
+  <div class="navbar-actions">
+
+    <button type="button" (click)="logout()">
+      Logout
+    </button>
+
+  </div>
+
+</nav>

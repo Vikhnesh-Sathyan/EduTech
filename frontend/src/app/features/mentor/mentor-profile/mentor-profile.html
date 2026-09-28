@@ -1,0 +1,335 @@
+<!-- Mentor professional profile -->
+
+<div class="mentor-profile">
+
+  <!-- Page header -->
+  <section class="profile-header">
+    <p class="eyebrow">MENTOR PROFILE</p>
+
+    <h1>Professional Profile</h1>
+
+    <p>
+      Add your professional information so students can understand
+      your experience and areas of expertise.
+    </p>
+  </section>
+
+
+  <!-- Success / error messages -->
+
+  @if (message()) {
+    <div class="success-message">
+      {{ message() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+
+  <!-- Profile form -->
+
+  <form
+    [formGroup]="profileForm"
+    (ngSubmit)="saveProfile()"
+  >
+
+    <!-- Personal information -->
+
+    <section class="profile-section">
+
+      <div class="section-heading">
+        <h2>Personal Information</h2>
+
+        <p>
+          Your account information.
+        </p>
+      </div>
+
+
+      <div class="profile-grid">
+
+        <div class="profile-field">
+          <span>Name</span>
+
+          <strong>
+            {{ name() || 'Loading...' }}
+          </strong>
+        </div>
+
+
+        <div class="profile-field">
+          <span>Email</span>
+
+          <strong>
+            {{ email() || 'Loading...' }}
+          </strong>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Professional information -->
+
+    <section class="profile-section">
+
+      <div class="section-heading">
+        <h2>Professional Information</h2>
+
+        <p>
+          Tell students about your professional background.
+        </p>
+      </div>
+
+
+      <div class="form-grid">
+
+        <!-- Professional title -->
+
+        <div class="form-field">
+
+          <label for="professional_title">
+            Professional Title
+          </label>
+
+          <input
+            id="professional_title"
+            type="text"
+            formControlName="professional_title"
+            placeholder="Example: Senior Software Engineer"
+          >
+
+          @if (
+            profileForm.get('professional_title')?.touched &&
+            profileForm.get('professional_title')?.invalid
+          ) {
+            <small>
+              Professional title is required.
+            </small>
+          }
+
+        </div>
+
+
+        <!-- Specialization -->
+
+        <div class="form-field">
+
+          <label for="specialization">
+            Specialization
+          </label>
+
+          <input
+            id="specialization"
+            type="text"
+            formControlName="specialization"
+            placeholder="Example: Full Stack Development"
+          >
+
+          @if (
+            profileForm.get('specialization')?.touched &&
+            profileForm.get('specialization')?.invalid
+          ) {
+            <small>
+              Specialization is required.
+            </small>
+          }
+
+        </div>
+
+
+        <!-- Experience -->
+
+        <div class="form-field">
+
+          <label for="experience_years">
+            Experience (Years)
+          </label>
+
+          <input
+            id="experience_years"
+            type="number"
+            formControlName="experience_years"
+            min="0"
+            placeholder="Example: 5"
+          >
+
+        </div>
+
+
+        <!-- Skills -->
+
+        <div class="form-field">
+
+          <label for="skills">
+            Skills
+          </label>
+
+          <input
+            id="skills"
+            type="text"
+            formControlName="skills"
+            placeholder="Example: Angular, Node.js, MySQL"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- Bio -->
+
+      <div class="form-field full-width">
+
+        <label for="bio">
+          Professional Bio
+        </label>
+
+        <textarea
+          id="bio"
+          formControlName="bio"
+          rows="5"
+          placeholder="Tell students about your professional experience..."
+        ></textarea>
+
+      </div>
+
+    </section>
+
+
+    <!-- Professional links -->
+
+    <section class="profile-section">
+
+      <div class="section-heading">
+        <h2>Professional Links</h2>
+
+        <p>
+          Add links that help students learn more about your professional background.
+        </p>
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label for="linkedin_url">
+            LinkedIn
+          </label>
+
+          <input
+            id="linkedin_url"
+            type="url"
+            formControlName="linkedin_url"
+            placeholder="https://linkedin.com/in/your-profile"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="github_url">
+            GitHub
+          </label>
+
+          <input
+            id="github_url"
+            type="url"
+            formControlName="github_url"
+            placeholder="https://github.com/your-profile"
+          >
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Availability -->
+
+    <section class="profile-section">
+
+      <div class="section-heading">
+
+        <h2>Availability</h2>
+
+        <p>
+          Set the days and time when you are available for mentoring.
+        </p>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label for="availability_days">
+            Available Days
+          </label>
+
+          <input
+            id="availability_days"
+            type="text"
+            formControlName="availability_days"
+            placeholder="Example: Monday, Wednesday, Friday"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="availability_start_time">
+            Start Time
+          </label>
+
+          <input
+            id="availability_start_time"
+            type="time"
+            formControlName="availability_start_time"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="availability_end_time">
+            End Time
+          </label>
+
+          <input
+            id="availability_end_time"
+            type="time"
+            formControlName="availability_end_time"
+          >
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Save -->
+
+    <div class="profile-actions">
+
+      <button type="submit">
+        Save Profile
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
