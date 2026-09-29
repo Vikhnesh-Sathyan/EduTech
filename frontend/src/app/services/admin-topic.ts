@@ -34,4 +34,11 @@ export class AdminTopic {
   );
 }
 
+updateTopicStatus(topicId: number, status: string) {
+  return this.http.patch(
+    `${this.apiUrl}/${topicId}/status`,
+    { status }
+  );
+}
+
 }

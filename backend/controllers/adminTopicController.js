@@ -201,8 +201,73 @@ const updateTopic = async (req, res) => {
     }
 };
 
+// ==========================================
+// UPDATE TOPIC STATUS
+// ==========================================
+
+const updateTopicStatus = async (req, res) => {
+    try {
+
+        const { topicId } = req.params;
+        const { status } = req.body;
+
+        // Check valid status
+        if (!['active', 'inactive'].includes(status)) {
+            return res.status(400).json({
+                message: "Invalid topic status"
+            });
+        }
+
+        // Check topic exists
+        const topicSql = `
+            SELECT id
+            FROM subject_topics
+            WHERE id = ?
+        `;
+
+        const [topicResult] = await db.query(
+            topicSql,
+            [topicId]
+        );
+
+        if (topicResult.length === 0) {
+            return res.status(404).json({
+                message: "Topic not found"
+            });
+        }
+
+        // Update topic status
+        const updateSql = `
+            UPDATE subject_topics
+            SET status = ?
+            WHERE id = ?
+        `;
+
+        await db.query(
+            updateSql,
+            [status, topicId]
+        );
+
+        res.status(200).json({
+            message: "Topic status updated successfully"
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Update topic status error:",
+            error
+        );
+
+        res.status(500).json({
+            message: "Failed to update topic status"
+        });
+    }
+};
+
 module.exports = {
     getTopicsBySubject,
     createTopic,
-    updateTopic
+    updateTopic,
+    updateTopicStatus
 };

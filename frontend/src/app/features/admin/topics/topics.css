@@ -327,6 +327,73 @@ h1 {
   transform: translateY(1px);
 }
 
+/* ==========================================
+   TOPIC ACTIONS
+   ========================================== */
+
+.topic-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+
+/* ==========================================
+   STATUS BUTTON
+   ========================================== */
+
+.status-button {
+  border: 1px solid transparent;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+/* ==========================================
+   DISABLE BUTTON
+   ========================================== */
+
+.disable-button {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
+.disable-button:hover {
+  background: #ffedd5;
+  border-color: #fdba74;
+}
+
+
+/* ==========================================
+   ENABLE BUTTON
+   ========================================== */
+
+.enable-button {
+  background: #f0fdf4;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+
+.enable-button:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+
+/* ==========================================
+   BUTTON PRESS
+   ========================================== */
+
+.status-button:active {
+  transform: translateY(1px);
+}
+
 @media (max-width: 600px) {
 
   .topics-page {

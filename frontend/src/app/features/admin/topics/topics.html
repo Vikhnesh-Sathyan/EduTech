@@ -291,25 +291,39 @@
 
 
               <!-- Topic actions -->
-              <div class="topic-actions">
+          <div class="topic-actions">
 
-                <span
-                  class="status"
-                  [class.active]="topic.status === 'active'"
-                  [class.inactive]="topic.status === 'inactive'"
-                >
-                  {{ topic.status }}
-                </span>
+  <span
+    class="status"
+    [class.active]="topic.status === 'active'"
+    [class.inactive]="topic.status === 'inactive'"
+  >
+    {{ topic.status }}
+  </span>
 
-                <button
-                  type="button"
-                  class="edit-button"
-                  (click)="openEditTopic(topic)"
-                >
-                  Edit
-                </button>
+  <button
+    type="button"
+    class="edit-button"
+    (click)="openEditTopic(topic)"
+  >
+    Edit
+  </button>
 
-              </div>
+  <button
+    type="button"
+    class="status-button"
+    [class.disable-button]="topic.status === 'active'"
+    [class.enable-button]="topic.status === 'inactive'"
+    (click)="updateTopicStatus(topic)"
+  >
+    @if (topic.status === 'active') {
+      Disable
+    } @else {
+      Enable
+    }
+  </button>
+
+</div>
 
             </div>
 

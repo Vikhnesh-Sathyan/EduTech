@@ -3,7 +3,8 @@ const express = require("express");
 const {
     getTopicsBySubject,
     createTopic,
-    updateTopic
+    updateTopic,
+    updateTopicStatus
 } = require("../controllers/adminTopicController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -44,6 +45,17 @@ router.put(
     authMiddleware,
     roleMiddleware("admin"),
     updateTopic
+);
+
+// ==========================================
+// UPDATE TOPIC STATUS
+// ==========================================
+
+router.patch(
+    "/:topicId/status",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateTopicStatus
 );
 
 module.exports = router;

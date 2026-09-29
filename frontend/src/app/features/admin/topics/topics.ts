@@ -263,4 +263,41 @@ createTopic(): void {
     });
 }
 
+// ==========================================
+// UPDATE TOPIC STATUS
+// ==========================================
+
+updateTopicStatus(topic: any): void {
+  const newStatus =
+    topic.status === 'active'
+      ? 'inactive'
+      : 'active';
+
+  this.adminTopicService
+    .updateTopicStatus(topic.id, newStatus)
+    .subscribe({
+      next: () => {
+        const subjectId = this.selectedSubjectId();
+
+        if (subjectId) {
+          this.loadTopics(
+            String(subjectId)
+          );
+        }
+      },
+
+      error: (error: any) => {
+        console.error(
+          'Failed to update topic status:',
+          error
+        );
+
+        this.formMessage.set(
+          error.error?.message ||
+          'Failed to update topic status'
+        );
+      }
+    });
+}
+
 }
