@@ -1,32 +1,334 @@
+/* =========================================================
+   DIAGNOSTIC PAGE
+   ========================================================= */
+
 .diagnostic-page {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 48px 24px;
-}
-
-.diagnostic-header {
-  max-width: 720px;
-}
-
-.eyebrow {
-  margin: 0 0 12px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #777;
-}
-
-h1 {
-  margin: 0;
-  font-size: 42px;
-  line-height: 1.15;
+  min-height: calc(100vh - 72px);
+  background: #f7f7f5;
+  padding: 56px 32px 80px;
   color: #171717;
 }
 
-.diagnostic-header > p:last-child {
-  margin-top: 18px;
-  font-size: 17px;
+
+/* =========================================================
+   DIAGNOSTIC HEADER
+   ========================================================= */
+
+.diagnostic-header {
+  max-width: 900px;
+  margin: 0 auto 42px;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: #77736c;
+}
+
+.diagnostic-header h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(44px, 6vw, 68px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+
+  color: #111111;
+}
+
+.diagnostic-header p:last-child {
+  max-width: 680px;
+  margin: 26px 0 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
   line-height: 1.7;
-  color: #666;
+
+  color: #6d6962;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.diagnostic-progress {
+  max-width: 900px;
+  margin: 0 auto 34px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #65615b;
+}
+
+.progress-track {
+  width: 100%;
+  height: 5px;
+
+  overflow: hidden;
+
+  background: #dedbd5;
+  border-radius: 999px;
+}
+
+.progress-bar {
+  height: 100%;
+
+  background: #171717;
+  border-radius: inherit;
+
+  transition: width 0.3s ease;
+}
+
+
+/* =========================================================
+   QUESTION CARD
+   ========================================================= */
+
+.question-card {
+  max-width: 900px;
+  margin: 0 auto;
+
+  padding: 42px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e1db;
+  border-radius: 18px;
+
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.04);
+}
+
+.question-number {
+  margin: 0 0 18px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: #8a857d;
+}
+
+.question-card h2 {
+  margin: 0 0 34px;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 4vw, 34px);
+  line-height: 1.35;
+  font-weight: 600;
+
+  letter-spacing: -0.025em;
+
+  color: #171717;
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
+
+.options-list {
+  display: grid;
+  gap: 12px;
+}
+
+.option-button {
+  width: 100%;
+  min-height: 62px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 14px 18px;
+
+  border: 1px solid #dedbd5;
+  border-radius: 12px;
+
+  background: #faf9f7;
+  color: #242424;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.option-button:hover {
+  background: #f1efeb;
+  border-color: #aaa59d;
+  transform: translateY(-1px);
+}
+
+.option-button.selected {
+  background: #171717;
+  border-color: #171717;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   OPTION LETTER
+   ========================================================= */
+
+.option-letter {
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #cfcac2;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  background: #ffffff;
+  color: #4f4b45;
+}
+
+.option-button.selected .option-letter {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #171717;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.question-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 28px;
+}
+
+.next-button {
+  min-width: 120px;
+
+  padding: 13px 24px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #171717;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.next-button:hover:not(:disabled) {
+  background: #303030;
+  transform: translateY(-1px);
+}
+
+.next-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   LOADING / ERROR
+   ========================================================= */
+
+.state-message {
+  max-width: 700px;
+
+  margin: 100px auto;
+  padding: 40px;
+
+  text-align: center;
+
+  color: #6d6962;
+}
+
+.error-state {
+  color: #9b3030;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .diagnostic-page {
+    padding: 36px 18px 60px;
+  }
+
+  .diagnostic-header {
+    margin-bottom: 34px;
+  }
+
+  .diagnostic-header h1 {
+    font-size: 44px;
+  }
+
+  .diagnostic-header p:last-child {
+    font-size: 16px;
+  }
+
+  .question-card {
+    padding: 26px 20px;
+    border-radius: 14px;
+  }
+
+  .question-card h2 {
+    font-size: 25px;
+  }
+
+  .option-button {
+    min-height: 58px;
+    padding: 12px 14px;
+  }
+
+  .question-actions {
+    justify-content: stretch;
+  }
+
+  .next-button {
+    width: 100%;
+  }
 }

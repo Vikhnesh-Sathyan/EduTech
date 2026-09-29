@@ -1,6 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-diagnostic',
@@ -31,35 +30,32 @@ export class Diagnostic implements OnInit {
   errorMessage = signal('');
 
   constructor(
-    private router: Router
   ) {}
 
-  ngOnInit(): void {
+ngOnInit(): void {
 
-    // Get data passed from Subject page
-    const navigation = this.router.getCurrentNavigation();
+  // Get data passed from Subject page
+  const state = history.state;
 
-    const state = navigation?.extras.state;
+  // Check whether diagnostic data exists
+  if (!state?.['attemptId'] || !state?.['questions']) {
 
-    // Check whether diagnostic data exists
-   if (!state?.['attemptId'] || !state?.['questions']) {
-
-      this.errorMessage.set(
-        'Diagnostic data is unavailable'
-      );
-
-      this.loading.set(false);
-
-      return;
-    }
-
-    // Store diagnostic data
-    this.attemptId.set(state['attemptId']);
-    this.subject.set(state['subject']);
-    this.questions.set(state['questions']);
+    this.errorMessage.set(
+      'Diagnostic data is unavailable'
+    );
 
     this.loading.set(false);
+
+    return;
   }
+
+  // Store diagnostic data
+  this.attemptId.set(state['attemptId']);
+  this.subject.set(state['subject']);
+  this.questions.set(state['questions']);
+
+  this.loading.set(false);
+}
 
 
   // Get the currently displayed question
