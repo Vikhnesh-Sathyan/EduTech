@@ -1,12 +1,14 @@
-//This controller will handle student subject selection.
 // Handles student subject selection
 
 const db = require("../config/db");
 
 
+// ==========================================
+// GET AVAILABLE SUBJECTS
+// ==========================================
+
 // Get subjects available for the student's education year
-// Get subjects available for the student's education year
-const getAvailableSubjects = (req, res) => {
+const getAvailableSubjects = async (req, res) => {
 
     const sql = `
         SELECT
@@ -28,33 +30,38 @@ const getAvailableSubjects = (req, res) => {
         ORDER BY s.name ASC
     `;
 
-    db.query(
-        sql,
-        [req.user.id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [req.user.id]
+        );
 
-                console.error(
-                    "Available subjects fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            subjects: result
+        });
 
-                return res.status(500).json({
-                    message: "Failed to fetch available subjects"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                subjects: result
-            });
-        }
-    );
+        console.error(
+            "Available subjects fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch available subjects"
+        });
+    }
 };
 
 
-// Select a subject only if it belongs to the student's education year
-const selectSubject = (req, res) => {
+// ==========================================
+// SELECT SUBJECT
+// ==========================================
+
+// Select a subject only if it belongs to
+// the student's education year
+const selectSubject = async (req, res) => {
 
     const { subject_id } = req.body;
 
@@ -79,48 +86,52 @@ const selectSubject = (req, res) => {
         WHERE sp.user_id = ?
     `;
 
-    db.query(
-        sql,
-        [subject_id, req.user.id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [subject_id, req.user.id]
+        );
 
-                // Student already selected this subject
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Subject already selected"
-                    });
-                }
-
-                console.error(
-                    "Subject selection failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to select subject"
-                });
-            }
-
-            // No row means the subject does not belong
-            // to the student's education year
-            if (result.affectedRows === 0) {
-                return res.status(400).json({
-                    message: "Subject is not available for your education year"
-                });
-            }
-
-            res.status(201).json({
-                message: "Subject selected successfully",
-                studentSubjectId: result.insertId
+        // Student already selected this subject
+        if (result.affectedRows === 0) {
+            return res.status(400).json({
+                message:
+                    "Subject is not available for your education year"
             });
         }
-    );
+
+        res.status(201).json({
+            message: "Subject selected successfully",
+            studentSubjectId: result.insertId
+        });
+
+    } catch (err) {
+
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Subject already selected"
+            });
+        }
+
+        console.error(
+            "Subject selection failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to select subject"
+        });
+    }
 };
 
+
+// ==========================================
+// GET SELECTED SUBJECTS
+// ==========================================
+
 // Get subjects already selected by the authenticated student
-const getSelectedSubjects = (req, res) => {
+const getSelectedSubjects = async (req, res) => {
 
     const sql = `
         SELECT
@@ -135,31 +146,37 @@ const getSelectedSubjects = (req, res) => {
         ORDER BY s.name ASC
     `;
 
-    db.query(
-        sql,
-        [req.user.id],
-        (err, result) => {
+    try {
 
-            if (err) {
-                console.error(
-                    "Selected subjects fetch failed:",
-                    err.message
-                );
+        const [result] = await db.query(
+            sql,
+            [req.user.id]
+        );
 
-                return res.status(500).json({
-                    message: "Failed to fetch selected subjects"
-                });
-            }
+        res.status(200).json({
+            subjects: result
+        });
 
-            res.status(200).json({
-                subjects: result
-            });
-        }
-    );
+    } catch (err) {
+
+        console.error(
+            "Selected subjects fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch selected subjects"
+        });
+    }
 };
 
+
+// ==========================================
+// REMOVE SUBJECT
+// ==========================================
+
 // Remove a selected subject from the authenticated student
-const removeSubject = (req, res) => {
+const removeSubject = async (req, res) => {
 
     const { subjectId } = req.params;
 
@@ -169,38 +186,40 @@ const removeSubject = (req, res) => {
           AND subject_id = ?
     `;
 
-    db.query(
-        sql,
-        [req.user.id, subjectId],
-        (err, result) => {
+    try {
 
-            if (err) {
-                console.error(
-                    "Subject removal failed:",
-                    err.message
-                );
+        const [result] = await db.query(
+            sql,
+            [req.user.id, subjectId]
+        );
 
-                return res.status(500).json({
-                    message: "Failed to remove subject"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Selected subject not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Subject removed successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Selected subject not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Subject removed successfully"
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Subject removal failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to remove subject"
+        });
+    }
 };
+
 
 module.exports = {
     getAvailableSubjects,
     getSelectedSubjects,
     selectSubject,
-    removeSubject,
+    removeSubject
 };

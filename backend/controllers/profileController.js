@@ -1,33 +1,36 @@
-// Handles retrieving the authenticated student's profile
+// Handles retrieving and saving the authenticated student's profile
+
 const db = require("../config/db");
 
-const getProfile = (req, res) => {
 
-const sql = `
-    SELECT
-        sp.id,
-        u.name,
-        u.email,
-        sp.education_program_id,
-        sp.department_id,
-        sp.education_year_id,
-        sp.career_goal,
-        sp.learning_goals
-    FROM student_profiles sp
-    INNER JOIN users u
-        ON u.id = sp.user_id
-    WHERE sp.user_id = ?
-`;
+// ==========================================
+// GET STUDENT PROFILE
+// ==========================================
 
-    db.query(sql, [req.user.id], (err, result) => {
+const getProfile = async (req, res) => {
 
-        if (err) {
-            console.error("Profile fetch failed:", err.message);
+    const sql = `
+        SELECT
+            sp.id,
+            u.name,
+            u.email,
+            sp.education_program_id,
+            sp.department_id,
+            sp.education_year_id,
+            sp.career_goal,
+            sp.learning_goals
+        FROM student_profiles sp
+        INNER JOIN users u
+            ON u.id = sp.user_id
+        WHERE sp.user_id = ?
+    `;
 
-            return res.status(500).json({
-                message: "Database error"
-            });
-        }
+    try {
+
+        const [result] = await db.query(
+            sql,
+            [req.user.id]
+        );
 
         if (result.length === 0) {
             return res.status(404).json({
@@ -38,12 +41,26 @@ const sql = `
         res.status(200).json({
             profile: result[0]
         });
-    });
+
+    } catch (err) {
+
+        console.error(
+            "Profile fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Database error"
+        });
+    }
 };
 
-// Creates or updates the authenticated student's profile
-// Creates or updates the authenticated student's profile
-const saveProfile = (req, res) => {
+
+// ==========================================
+// CREATE OR UPDATE STUDENT PROFILE
+// ==========================================
+
+const saveProfile = async (req, res) => {
 
     const {
         education_program_id,
@@ -73,38 +90,39 @@ const saveProfile = (req, res) => {
             learning_goals = VALUES(learning_goals)
     `;
 
-    db.query(
-        sql,
-        [
-            req.user.id,
-            education_program_id,
-            department_id,
-            education_year_id,
-            career_goal,
-            learning_goals
-        ],
-        (err) => {
+    try {
 
-            if (err) {
-                console.error(
-                    "Profile save failed:",
-                    err.message
-                );
+        await db.query(
+            sql,
+            [
+                req.user.id,
+                education_program_id,
+                department_id,
+                education_year_id,
+                career_goal,
+                learning_goals
+            ]
+        );
 
-                return res.status(500).json({
-                    message: "Profile save failed"
-                });
-            }
+        res.status(200).json({
+            message: "Profile saved successfully"
+        });
 
-            res.status(200).json({
-                message: "Profile saved successfully"
-            });
-        }
-    );
+    } catch (err) {
+
+        console.error(
+            "Profile save failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Profile save failed"
+        });
+    }
 };
+
 
 module.exports = {
     getProfile,
     saveProfile
-
 };

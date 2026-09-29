@@ -3,8 +3,11 @@
 const db = require("../config/db");
 
 
-// Create an education year under a department
-const createEducationYear = (req, res) => {
+// ==========================================
+// CREATE EDUCATION YEAR
+// ==========================================
+
+const createEducationYear = async (req, res) => {
 
     const {
         department_id,
@@ -30,45 +33,48 @@ const createEducationYear = (req, res) => {
         VALUES (?, ?, ?)
     `;
 
-    db.query(
-        sql,
-        [
-            department_id,
-            name.trim(),
-            year_order
-        ],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [
+                department_id,
+                name.trim(),
+                year_order
+            ]
+        );
 
-                // Handle duplicate year name or order
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Education year already exists for this department"
-                    });
-                }
+        res.status(201).json({
+            message: "Education year created successfully",
+            yearId: result.insertId
+        });
 
-                console.error(
-                    "Education year creation failed:",
-                    err.message
-                );
+    } catch (err) {
 
-                return res.status(500).json({
-                    message: "Failed to create education year"
-                });
-            }
-
-            res.status(201).json({
-                message: "Education year created successfully",
-                yearId: result.insertId
+        // Handle duplicate year name or order
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Education year already exists for this department"
             });
         }
-    );
+
+        console.error(
+            "Education year creation failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to create education year"
+        });
+    }
 };
 
 
-// Get education years for a department
-const getEducationYearsByDepartment = (req, res) => {
+// ==========================================
+// GET EDUCATION YEARS BY DEPARTMENT
+// ==========================================
+
+const getEducationYearsByDepartment = async (req, res) => {
 
     const { departmentId } = req.params;
 
@@ -86,33 +92,36 @@ const getEducationYearsByDepartment = (req, res) => {
         ORDER BY year_order ASC
     `;
 
-    db.query(
-        sql,
-        [departmentId],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [departmentId]
+        );
 
-                console.error(
-                    "Education years fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            years: result
+        });
 
-                return res.status(500).json({
-                    message: "Failed to fetch education years"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                years: result
-            });
-        }
-    );
+        console.error(
+            "Education years fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch education years"
+        });
+    }
 };
 
 
-// Update an education year
-const updateEducationYear = (req, res) => {
+// ==========================================
+// UPDATE EDUCATION YEAR
+// ==========================================
+
+const updateEducationYear = async (req, res) => {
 
     const { id } = req.params;
 
@@ -140,49 +149,52 @@ const updateEducationYear = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [
-            name.trim(),
-            year_order,
-            id
-        ],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [
+                name.trim(),
+                year_order,
+                id
+            ]
+        );
 
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Education year already exists for this department"
-                    });
-                }
-
-                console.error(
-                    "Education year update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update education year"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Education year not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Education year updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Education year not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Education year updated successfully"
+        });
+
+    } catch (err) {
+
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Education year already exists for this department"
+            });
+        }
+
+        console.error(
+            "Education year update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update education year"
+        });
+    }
 };
 
 
-// Activate or deactivate an education year
-const updateEducationYearStatus = (req, res) => {
+// ==========================================
+// ACTIVATE OR DEACTIVATE EDUCATION YEAR
+// ==========================================
+
+const updateEducationYearStatus = async (req, res) => {
 
     const { id } = req.params;
     const { status } = req.body;
@@ -200,37 +212,42 @@ const updateEducationYearStatus = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [status, id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [status, id]
+        );
 
-                console.error(
-                    "Education year status update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update education year status"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Education year not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Education year status updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Education year not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Education year status updated successfully"
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Education year status update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update education year status"
+        });
+    }
 };
-// Get all education years with their department and program names
-const getEducationYears = (req, res) => {
+
+
+// ==========================================
+// GET ALL EDUCATION YEARS
+// ==========================================
+
+const getEducationYears = async (req, res) => {
 
     const sql = `
         SELECT
@@ -254,29 +271,27 @@ const getEducationYears = (req, res) => {
             ey.year_order ASC
     `;
 
-    db.query(
-        sql,
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(sql);
 
-                console.error(
-                    "All education years fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            years: result
+        });
 
-                return res.status(500).json({
-                    message:
-                        "Failed to fetch education years"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                years: result
-            });
-        }
-    );
+        console.error(
+            "All education years fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch education years"
+        });
+    }
 };
+
 
 module.exports = {
     createEducationYear,

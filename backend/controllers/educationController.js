@@ -1,14 +1,14 @@
 // Handles student access to active education configuration
-//is for the Student profile to get the options that Admin has configured.
-//STUDENT
-  // ↓
-//Read active options only
-   
+// Student reads only active options configured by Admin
+
 const db = require("../config/db");
 
 
-// Get active education programs
-const getEducationPrograms = (req, res) => {
+// ==========================================
+// GET ACTIVE EDUCATION PROGRAMS
+// ==========================================
+
+const getEducationPrograms = async (req, res) => {
 
     const sql = `
         SELECT
@@ -20,28 +20,33 @@ const getEducationPrograms = (req, res) => {
         ORDER BY name ASC
     `;
 
-    db.query(sql, (err, result) => {
+    try {
 
-        if (err) {
-            console.error(
-                "Education programs fetch failed:",
-                err.message
-            );
-
-            return res.status(500).json({
-                message: "Failed to fetch education programs"
-            });
-        }
+        const [result] = await db.query(sql);
 
         res.status(200).json({
             programs: result
         });
-    });
+
+    } catch (err) {
+
+        console.error(
+            "Education programs fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch education programs"
+        });
+    }
 };
 
 
-// Get active departments for a program
-const getDepartmentsByProgram = (req, res) => {
+// ==========================================
+// GET ACTIVE DEPARTMENTS FOR A PROGRAM
+// ==========================================
+
+const getDepartmentsByProgram = async (req, res) => {
 
     const { programId } = req.params;
 
@@ -55,32 +60,36 @@ const getDepartmentsByProgram = (req, res) => {
         ORDER BY name ASC
     `;
 
-    db.query(
-        sql,
-        [programId],
-        (err, result) => {
+    try {
 
-            if (err) {
-                console.error(
-                    "Departments fetch failed:",
-                    err.message
-                );
+        const [result] = await db.query(
+            sql,
+            [programId]
+        );
 
-                return res.status(500).json({
-                    message: "Failed to fetch departments"
-                });
-            }
+        res.status(200).json({
+            departments: result
+        });
 
-            res.status(200).json({
-                departments: result
-            });
-        }
-    );
+    } catch (err) {
+
+        console.error(
+            "Departments fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch departments"
+        });
+    }
 };
 
 
-// Get active education years for a department
-const getEducationYearsByDepartment = (req, res) => {
+// ==========================================
+// GET ACTIVE EDUCATION YEARS FOR A DEPARTMENT
+// ==========================================
+
+const getEducationYearsByDepartment = async (req, res) => {
 
     const { departmentId } = req.params;
 
@@ -95,27 +104,28 @@ const getEducationYearsByDepartment = (req, res) => {
         ORDER BY year_order ASC
     `;
 
-    db.query(
-        sql,
-        [departmentId],
-        (err, result) => {
+    try {
 
-            if (err) {
-                console.error(
-                    "Education years fetch failed:",
-                    err.message
-                );
+        const [result] = await db.query(
+            sql,
+            [departmentId]
+        );
 
-                return res.status(500).json({
-                    message: "Failed to fetch education years"
-                });
-            }
+        res.status(200).json({
+            years: result
+        });
 
-            res.status(200).json({
-                years: result
-            });
-        }
-    );
+    } catch (err) {
+
+        console.error(
+            "Education years fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch education years"
+        });
+    }
 };
 
 

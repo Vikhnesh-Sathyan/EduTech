@@ -2,9 +2,12 @@
 
 const db = require("../config/db");
 
-// Get the authenticated mentor's profile
-// Get the authenticated mentor's profile
-const getMentorProfile = (req, res) => {
+
+// ==========================================
+// GET MENTOR PROFILE
+// ==========================================
+
+const getMentorProfile = async (req, res) => {
 
     const sql = `
         SELECT
@@ -29,43 +32,42 @@ const getMentorProfile = (req, res) => {
         WHERE u.id = ?
     `;
 
-    db.query(
-        sql,
-        [req.user.id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [req.user.id]
+        );
 
-                console.error(
-                    "Mentor profile fetch failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to load mentor profile"
-                });
-            }
-
-
-            if (result.length === 0) {
-
-                return res.status(404).json({
-                    message: "Mentor account not found"
-                });
-
-            }
-
-
-            res.status(200).json({
-                profile: result[0]
+        if (result.length === 0) {
+            return res.status(404).json({
+                message: "Mentor account not found"
             });
-
         }
-    );
+
+        res.status(200).json({
+            profile: result[0]
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Mentor profile fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to load mentor profile"
+        });
+    }
 };
 
-// Create or update the authenticated mentor's profile
-const saveMentorProfile = (req, res) => {
+
+// ==========================================
+// CREATE OR UPDATE MENTOR PROFILE
+// ==========================================
+
+const saveMentorProfile = async (req, res) => {
 
     const {
         professional_title,
@@ -117,198 +119,182 @@ const saveMentorProfile = (req, res) => {
             availability_end_time = VALUES(availability_end_time)
     `;
 
-    db.query(
-        sql,
-        [
-            req.user.id,
-            professional_title,
-            specialization,
-            bio || null,
-            experience_years || null,
-            skills || null,
-            linkedin_url || null,
-            github_url || null,
-            availability_days || null,
-            availability_start_time || null,
-            availability_end_time || null
-        ],
-        (err) => {
+    try {
 
-            if (err) {
-                console.error(
-                    "Mentor profile save failed:",
-                    err.message
-                );
+        await db.query(
+            sql,
+            [
+                req.user.id,
+                professional_title,
+                specialization,
+                bio || null,
+                experience_years || null,
+                skills || null,
+                linkedin_url || null,
+                github_url || null,
+                availability_days || null,
+                availability_start_time || null,
+                availability_end_time || null
+            ]
+        );
 
-                return res.status(500).json({
-                    message: "Failed to save mentor profile"
-                });
-            }
+        res.status(200).json({
+            message: "Mentor profile saved successfully"
+        });
 
-            res.status(200).json({
-                message: "Mentor profile saved successfully"
-            });
-        }
-    );
-};
-
-// Submit mentor profile for admin verification
-const submitForVerification = (req, res) => {
-
-  const userId = req.user.id;
-
-  // ==========================================
-  // GET MENTOR PROFILE
-  // ==========================================
-
-  const selectSql = `
-    SELECT
-      professional_title,
-      specialization,
-      bio,
-      experience_years,
-      skills,
-      availability_days,
-      availability_start_time,
-      availability_end_time
-    FROM mentor_profiles
-    WHERE user_id = ?
-  `;
-
-  db.query(selectSql, [userId], (err, result) => {
-
-    if (err) {
-
-      console.error(
-        "Mentor profile check failed:",
-        err.message
-      );
-
-      return res.status(500).json({
-        message: "Failed to check mentor profile"
-      });
-
-    }
-
-
-    // ==========================================
-    // PROFILE NOT FOUND
-    // ==========================================
-
-    if (result.length === 0) {
-
-      return res.status(400).json({
-        message: "Please complete your mentor profile first"
-      });
-
-    }
-
-
-    const profile = result[0];
-
-
-    // ==========================================
-    // FIND INCOMPLETE FIELDS
-    // ==========================================
-
-    const missingFields = [];
-
-
-    if (!profile.professional_title?.trim()) {
-      missingFields.push("Professional Title");
-    }
-
-    if (!profile.specialization?.trim()) {
-      missingFields.push("Specialization");
-    }
-
-    if (!profile.bio?.trim()) {
-      missingFields.push("Professional Bio");
-    }
-
-    if (!profile.skills?.trim()) {
-      missingFields.push("Skills");
-    }
-
-    if (
-      profile.experience_years === null ||
-      profile.experience_years === undefined
-    ) {
-      missingFields.push("Experience");
-    }
-
-    if (!profile.availability_days?.trim()) {
-      missingFields.push("Available Days");
-    }
-
-    if (!profile.availability_start_time) {
-      missingFields.push("Start Time");
-    }
-
-    if (!profile.availability_end_time) {
-      missingFields.push("End Time");
-    }
-
-
-    // ==========================================
-    // STOP IF PROFILE IS INCOMPLETE
-    // ==========================================
-
-    if (missingFields.length > 0) {
-
-      return res.status(400).json({
-        message: `Please complete: ${missingFields.join(", ")}.`
-      });
-
-    }
-
-
-    // ==========================================
-    // SUBMIT FOR VERIFICATION
-    // ==========================================
-
-    const updateSql = `
-      UPDATE mentor_profiles
-      SET
-        verification_status = 'pending',
-        verification_note = NULL
-      WHERE user_id = ?
-    `;
-
-    db.query(updateSql, [userId], (err, result) => {
-
-      if (err) {
+    } catch (err) {
 
         console.error(
-          "Mentor verification submission failed:",
-          err.message
+            "Mentor profile save failed:",
+            err.message
         );
 
         return res.status(500).json({
-          message: "Failed to submit profile for verification"
+            message: "Failed to save mentor profile"
         });
-
-      }
-
-
-      if (result.affectedRows === 0) {
-
-        return res.status(404).json({
-          message: "Mentor profile not found"
-        });
-
-      }
-
-
-      res.status(200).json({
-        message: "Profile submitted for verification"
-      });
-
-    });
-
-  });
-
+    }
 };
+
+
+// ==========================================
+// SUBMIT FOR VERIFICATION
+// ==========================================
+
+const submitForVerification = async (req, res) => {
+
+    const userId = req.user.id;
+
+    // ==========================================
+    // GET MENTOR PROFILE
+    // ==========================================
+
+    const selectSql = `
+        SELECT
+            professional_title,
+            specialization,
+            bio,
+            experience_years,
+            skills,
+            availability_days,
+            availability_start_time,
+            availability_end_time
+        FROM mentor_profiles
+        WHERE user_id = ?
+    `;
+
+    try {
+
+        const [result] = await db.query(
+            selectSql,
+            [userId]
+        );
+
+        // ==========================================
+        // PROFILE NOT FOUND
+        // ==========================================
+
+        if (result.length === 0) {
+            return res.status(400).json({
+                message:
+                    "Please complete your mentor profile first"
+            });
+        }
+
+        const profile = result[0];
+
+        // ==========================================
+        // FIND INCOMPLETE FIELDS
+        // ==========================================
+
+        const missingFields = [];
+
+        if (!profile.professional_title?.trim()) {
+            missingFields.push("Professional Title");
+        }
+
+        if (!profile.specialization?.trim()) {
+            missingFields.push("Specialization");
+        }
+
+        if (!profile.bio?.trim()) {
+            missingFields.push("Professional Bio");
+        }
+
+        if (!profile.skills?.trim()) {
+            missingFields.push("Skills");
+        }
+
+        if (
+            profile.experience_years === null ||
+            profile.experience_years === undefined
+        ) {
+            missingFields.push("Experience");
+        }
+
+        if (!profile.availability_days?.trim()) {
+            missingFields.push("Available Days");
+        }
+
+        if (!profile.availability_start_time) {
+            missingFields.push("Start Time");
+        }
+
+        if (!profile.availability_end_time) {
+            missingFields.push("End Time");
+        }
+
+        // ==========================================
+        // STOP IF PROFILE IS INCOMPLETE
+        // ==========================================
+
+        if (missingFields.length > 0) {
+            return res.status(400).json({
+                message:
+                    `Please complete: ${missingFields.join(", ")}.`
+            });
+        }
+
+        // ==========================================
+        // SUBMIT FOR VERIFICATION
+        // ==========================================
+
+        const updateSql = `
+            UPDATE mentor_profiles
+            SET
+                verification_status = 'pending',
+                verification_note = NULL
+            WHERE user_id = ?
+        `;
+
+        const [updateResult] = await db.query(
+            updateSql,
+            [userId]
+        );
+
+        if (updateResult.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Mentor profile not found"
+            });
+        }
+
+        res.status(200).json({
+            message: "Profile submitted for verification"
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Mentor verification submission failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message:
+                "Failed to submit profile for verification"
+        });
+    }
+};
+
 
 module.exports = {
     getMentorProfile,

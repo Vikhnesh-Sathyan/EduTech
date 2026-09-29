@@ -2,82 +2,83 @@
 
 const db = require("../config/db");
 
-// Get mentors waiting for verification
-const getPendingMentors = (req, res) => {
+// ==========================================
+// GET MENTORS WAITING FOR VERIFICATION
+// ==========================================
 
-  const sql = `
-    SELECT
-      mp.id,
-      u.id AS user_id,
-      u.name,
-      u.email,
-      mp.professional_title,
-      mp.specialization,
-      mp.bio,
-      mp.experience_years,
-      mp.skills,
-      mp.linkedin_url,
-      mp.github_url,
-      mp.availability_days,
-      mp.availability_start_time,
-      mp.availability_end_time,
-      mp.verification_status,
-      mp.verification_note
-    FROM mentor_profiles mp
-    INNER JOIN users u
-      ON u.id = mp.user_id
-    WHERE mp.verification_status = 'pending'
-    ORDER BY mp.created_at DESC
-  `;
+const getPendingMentors = async (req, res) => {
 
-  db.query(sql, (err, result) => {
+  try {
 
-    if (err) {
-      console.error(
-        "Pending mentors fetch failed:",
-        err.message
-      );
+    const sql = `
+      SELECT
+        mp.id,
+        u.id AS user_id,
+        u.name,
+        u.email,
+        mp.professional_title,
+        mp.specialization,
+        mp.bio,
+        mp.experience_years,
+        mp.skills,
+        mp.linkedin_url,
+        mp.github_url,
+        mp.availability_days,
+        mp.availability_start_time,
+        mp.availability_end_time,
+        mp.verification_status,
+        mp.verification_note
+      FROM mentor_profiles mp
+      INNER JOIN users u
+        ON u.id = mp.user_id
+      WHERE mp.verification_status = 'pending'
+      ORDER BY mp.created_at DESC
+    `;
 
-      return res.status(500).json({
-        message: "Failed to load pending mentors"
-      });
-    }
+    const [result] = await db.query(sql);
 
-      console.log("PENDING MENTORS:", result);
+    console.log("PENDING MENTORS:", result);
 
-    
     res.status(200).json({
       mentors: result
     });
 
-  });
+  } catch (error) {
+
+    console.error(
+      "Pending mentors fetch failed:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to load pending mentors"
+    });
+  }
 };
 
-// Approve a mentor profile
-const approveMentor = (req, res) => {
+
+// ==========================================
+// APPROVE MENTOR PROFILE
+// ==========================================
+
+const approveMentor = async (req, res) => {
 
   const { mentorId } = req.params;
 
-  const sql = `
-    UPDATE mentor_profiles
-    SET
-      verification_status = 'approved',
-      verification_note = NULL
-    WHERE id = ?
-  `;
+  try {
 
-  db.query(sql, [mentorId], (err, result) => {
+    const sql = `
+      UPDATE mentor_profiles
+      SET
+        verification_status = 'approved',
+        verification_note = NULL
+      WHERE id = ?
+    `;
 
-    if (err) {
-      console.error(
-        "Mentor approval failed:",
-        err.message
-      );
-
-      return res.status(500).json({
-        message: "Failed to approve mentor"
-      });
-    }
+    const [result] = await db.query(
+      sql,
+      [mentorId]
+    );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
@@ -89,12 +90,25 @@ const approveMentor = (req, res) => {
       message: "Mentor approved successfully"
     });
 
-  });
+  } catch (error) {
+
+    console.error(
+      "Mentor approval failed:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to approve mentor"
+    });
+  }
 };
 
 
-// Reject a mentor profile
-const rejectMentor = (req, res) => {
+// ==========================================
+// REJECT MENTOR PROFILE
+// ==========================================
+
+const rejectMentor = async (req, res) => {
 
   const { mentorId } = req.params;
   const { verification_note } = req.body;
@@ -105,43 +119,44 @@ const rejectMentor = (req, res) => {
     });
   }
 
-  const sql = `
-    UPDATE mentor_profiles
-    SET
-      verification_status = 'rejected',
-      verification_note = ?
-    WHERE id = ?
-  `;
+  try {
 
-  db.query(
-    sql,
-    [verification_note, mentorId],
-    (err, result) => {
+    const sql = `
+      UPDATE mentor_profiles
+      SET
+        verification_status = 'rejected',
+        verification_note = ?
+      WHERE id = ?
+    `;
 
-      if (err) {
-        console.error(
-          "Mentor rejection failed:",
-          err.message
-        );
+    const [result] = await db.query(
+      sql,
+      [verification_note, mentorId]
+    );
 
-        return res.status(500).json({
-          message: "Failed to reject mentor"
-        });
-      }
-
-      if (result.affectedRows === 0) {
-        return res.status(404).json({
-          message: "Mentor profile not found"
-        });
-      }
-
-      res.status(200).json({
-        message: "Mentor rejected successfully"
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Mentor profile not found"
       });
-
     }
-  );
+
+    res.status(200).json({
+      message: "Mentor rejected successfully"
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Mentor rejection failed:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to reject mentor"
+    });
+  }
 };
+
 
 module.exports = {
   getPendingMentors,

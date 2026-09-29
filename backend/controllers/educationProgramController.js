@@ -3,8 +3,11 @@
 const db = require("../config/db");
 
 
-// Create a new education program
-const createEducationProgram = (req, res) => {
+// ==========================================
+// CREATE EDUCATION PROGRAM
+// ==========================================
+
+const createEducationProgram = async (req, res) => {
 
     const { name, description } = req.body;
 
@@ -21,41 +24,44 @@ const createEducationProgram = (req, res) => {
         VALUES (?, ?)
     `;
 
-    db.query(
-        sql,
-        [name.trim(), description || null],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [name.trim(), description || null]
+        );
 
-                // Handle duplicate program name
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Education program already exists"
-                    });
-                }
+        res.status(201).json({
+            message: "Education program created successfully",
+            programId: result.insertId
+        });
 
-                console.error(
-                    "Education program creation failed:",
-                    err.message
-                );
+    } catch (err) {
 
-                return res.status(500).json({
-                    message: "Failed to create education program"
-                });
-            }
-
-            res.status(201).json({
-                message: "Education program created successfully",
-                programId: result.insertId
+        // Handle duplicate program name
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Education program already exists"
             });
         }
-    );
+
+        console.error(
+            "Education program creation failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to create education program"
+        });
+    }
 };
 
 
-// Get all education programs
-const getEducationPrograms = (req, res) => {
+// ==========================================
+// GET ALL EDUCATION PROGRAMS
+// ==========================================
+
+const getEducationPrograms = async (req, res) => {
 
     const sql = `
         SELECT
@@ -69,29 +75,33 @@ const getEducationPrograms = (req, res) => {
         ORDER BY name ASC
     `;
 
-    db.query(sql, (err, result) => {
+    try {
 
-        if (err) {
-
-            console.error(
-                "Education programs fetch failed:",
-                err.message
-            );
-
-            return res.status(500).json({
-                message: "Failed to fetch education programs"
-            });
-        }
+        const [result] = await db.query(sql);
 
         res.status(200).json({
             programs: result
         });
-    });
+
+    } catch (err) {
+
+        console.error(
+            "Education programs fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch education programs"
+        });
+    }
 };
 
 
-// Update an education program
-const updateEducationProgram = (req, res) => {
+// ==========================================
+// UPDATE EDUCATION PROGRAM
+// ==========================================
+
+const updateEducationProgram = async (req, res) => {
 
     const { id } = req.params;
     const { name, description } = req.body;
@@ -111,45 +121,48 @@ const updateEducationProgram = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [name.trim(), description || null, id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [name.trim(), description || null, id]
+        );
 
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Education program already exists"
-                    });
-                }
-
-                console.error(
-                    "Education program update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update education program"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Education program not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Education program updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Education program not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Education program updated successfully"
+        });
+
+    } catch (err) {
+
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Education program already exists"
+            });
+        }
+
+        console.error(
+            "Education program update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update education program"
+        });
+    }
 };
 
 
-// Activate or deactivate an education program
-const updateEducationProgramStatus = (req, res) => {
+// ==========================================
+// ACTIVATE OR DEACTIVATE EDUCATION PROGRAM
+// ==========================================
+
+const updateEducationProgramStatus = async (req, res) => {
 
     const { id } = req.params;
     const { status } = req.body;
@@ -167,34 +180,34 @@ const updateEducationProgramStatus = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [status, id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [status, id]
+        );
 
-                console.error(
-                    "Education program status update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update education program status"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Education program not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Education program status updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Education program not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Education program status updated successfully"
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Education program status update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update education program status"
+        });
+    }
 };
 
 

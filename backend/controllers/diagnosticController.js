@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-
 // ==========================================
 // START DIAGNOSTIC
 // ==========================================
@@ -34,7 +33,6 @@ const startDiagnostic = async (req, res) => {
             [studentId, subjectId]
         );
 
-
         // Subject does not belong to this student
         if (result.length === 0) {
             return res.status(404).json({
@@ -43,7 +41,15 @@ const startDiagnostic = async (req, res) => {
         }
 
 
-        // Create a new diagnostic attempt
+        // Select questions before creating the attempt
+        const questions = await getDiagnosticQuestions(
+            studentId,
+            subjectId
+        );
+
+
+        // Create diagnostic attempt
+        // only after valid questions are available
         const attemptSql = `
             INSERT INTO diagnostic_attempts
             (student_id, subject_id)
@@ -53,13 +59,6 @@ const startDiagnostic = async (req, res) => {
         const [attemptResult] = await db.query(
             attemptSql,
             [studentId, subjectId]
-        );
-
-
-        // Select questions
-        const questions = await getDiagnosticQuestions(
-            studentId,
-            subjectId
         );
 
 
@@ -163,7 +162,8 @@ const getDiagnosticQuestions = async (
         const usedTopics = new Set();
 
 
-        // First pass: choose different topics
+        // First pass:
+        // Prefer different topics
         for (const question of questions) {
 
             if (!usedTopics.has(question.topic_id)) {
@@ -178,8 +178,8 @@ const getDiagnosticQuestions = async (
         }
 
 
-        // Second pass: fill remaining slots
-        // if there are not enough different topics
+        // Second pass:
+        // Fill remaining slots when necessary
         for (const question of questions) {
 
             if (!selected.includes(question)) {
@@ -196,10 +196,22 @@ const getDiagnosticQuestions = async (
     };
 
 
-    // Select required difficulty with topic coverage
-    const selectedEasy = selectByTopic(easy, 5);
-    const selectedMedium = selectByTopic(medium, 4);
-    const selectedHard = selectByTopic(hard, 1);
+    // Select required difficulty
+    // while trying to cover different topics
+    const selectedEasy = selectByTopic(
+        easy,
+        5
+    );
+
+    const selectedMedium = selectByTopic(
+        medium,
+        4
+    );
+
+    const selectedHard = selectByTopic(
+        hard,
+        1
+    );
 
 
     return [

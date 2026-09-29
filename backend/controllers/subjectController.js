@@ -3,8 +3,12 @@
 const db = require("../config/db");
 
 
+// ==========================================
+// CREATE SUBJECT
+// ==========================================
+
 // Create a subject under an education year
-const createSubject = (req, res) => {
+const createSubject = async (req, res) => {
 
     const {
         education_year_id,
@@ -29,44 +33,51 @@ const createSubject = (req, res) => {
         VALUES (?, ?, ?)
     `;
 
-    db.query(
-        sql,
-        [
-            education_year_id,
-            name.trim(),
-            description || null
-        ],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [
+                education_year_id,
+                name.trim(),
+                description || null
+            ]
+        );
 
-                // Handle duplicate subject name
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Subject already exists for this education year"
-                    });
-                }
+        res.status(201).json({
+            message: "Subject created successfully",
+            subjectId: result.insertId
+        });
 
-                console.error(
-                    "Subject creation failed:",
-                    err.message
-                );
+    } catch (err) {
 
-                return res.status(500).json({
-                    message: "Failed to create subject"
-                });
-            }
-
-            res.status(201).json({
-                message: "Subject created successfully",
-                subjectId: result.insertId
+        // Handle duplicate subject name
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message:
+                    "Subject already exists for this education year"
             });
         }
-    );
+
+        console.error(
+            "Subject creation failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to create subject"
+        });
+    }
 };
 
-// Get all subjects with their education year, department and program names
-const getSubjects = (req, res) => {
+
+// ==========================================
+// GET ALL SUBJECTS
+// ==========================================
+
+// Get all subjects with their education year,
+// department and program names
+const getSubjects = async (req, res) => {
 
     const sql = `
         SELECT
@@ -94,31 +105,34 @@ const getSubjects = (req, res) => {
             s.name ASC
     `;
 
-    db.query(
-        sql,
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(sql);
 
-                console.error(
-                    "All subjects fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            subjects: result
+        });
 
-                return res.status(500).json({
-                    message: "Failed to fetch subjects"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                subjects: result
-            });
-        }
-    );
+        console.error(
+            "All subjects fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch subjects"
+        });
+    }
 };
 
+
+// ==========================================
+// GET SUBJECTS BY EDUCATION YEAR
+// ==========================================
+
 // Get subjects for an education year
-const getSubjectsByYear = (req, res) => {
+const getSubjectsByYear = async (req, res) => {
 
     const { yearId } = req.params;
 
@@ -136,33 +150,37 @@ const getSubjectsByYear = (req, res) => {
         ORDER BY name ASC
     `;
 
-    db.query(
-        sql,
-        [yearId],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [yearId]
+        );
 
-                console.error(
-                    "Subjects fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            subjects: result
+        });
 
-                return res.status(500).json({
-                    message: "Failed to fetch subjects"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                subjects: result
-            });
-        }
-    );
+        console.error(
+            "Subjects fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch subjects"
+        });
+    }
 };
 
 
+// ==========================================
+// UPDATE SUBJECT
+// ==========================================
+
 // Update a subject
-const updateSubject = (req, res) => {
+const updateSubject = async (req, res) => {
 
     const { id } = req.params;
 
@@ -186,49 +204,54 @@ const updateSubject = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [
-            name.trim(),
-            description || null,
-            id
-        ],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [
+                name.trim(),
+                description || null,
+                id
+            ]
+        );
 
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Subject already exists for this education year"
-                    });
-                }
-
-                console.error(
-                    "Subject update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update subject"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Subject not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Subject updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Subject not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Subject updated successfully"
+        });
+
+    } catch (err) {
+
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message:
+                    "Subject already exists for this education year"
+            });
+        }
+
+        console.error(
+            "Subject update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update subject"
+        });
+    }
 };
 
 
+// ==========================================
+// ACTIVATE OR DEACTIVATE SUBJECT
+// ==========================================
+
 // Activate or deactivate a subject
-const updateSubjectStatus = (req, res) => {
+const updateSubjectStatus = async (req, res) => {
 
     const { id } = req.params;
     const { status } = req.body;
@@ -246,34 +269,34 @@ const updateSubjectStatus = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [status, id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [status, id]
+        );
 
-                console.error(
-                    "Subject status update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update subject status"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Subject not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Subject status updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Subject not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Subject status updated successfully"
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Subject status update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update subject status"
+        });
+    }
 };
 
 
