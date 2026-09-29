@@ -384,7 +384,23 @@ h1 {
   background: #dcfce7;
   border-color: #86efac;
 }
+.learning-button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid #3a3e44;
+  border-radius: 7px;
+  background: #171a1e;
+  color: #d7d9dc;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
 
+.learning-button:hover {
+  background: #20242a;
+  border-color: #555b63;
+}
 
 /* ==========================================
    BUTTON PRESS

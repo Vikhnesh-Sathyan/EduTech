@@ -42,6 +42,10 @@ const adminMentorRoutes =
 const adminDiagnosticRoutes =
     require("./routes/adminDiagnosticRoutes");
 
+// Admin Topic learning routes
+const adminTopicLearningRoutes =
+    require("./routes/adminTopicLearningRoutes");
+
 
 // ==================== STUDENT ROUTES ====================
 
@@ -87,6 +91,15 @@ app.use(cors());
 // Parse incoming JSON request data
 app.use(express.json());
 
+// Serve uploaded learning images to the frontend
+const path = require("path");
+
+app.use(
+    "/uploads",
+    express.static(
+        path.join(__dirname, "uploads")
+    )
+);
 
 // ==================== PORT ====================
 
@@ -162,6 +175,11 @@ app.use(
     adminDiagnosticRoutes
 );
 
+// Admin Topic learning routes
+app.use(
+    "/api/admin/topic-learning",
+    adminTopicLearningRoutes
+);
 
 // =====================================================
 // ==================== STUDENT ROUTES =================

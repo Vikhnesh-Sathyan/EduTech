@@ -1,4 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { AdminTopic } from '../../../services/admin-topic';
 import { AdminDiagnostic } from '../../../services/admin-diagnostic';
 
@@ -32,8 +34,8 @@ export class Topics implements OnInit {
   topicDescription = signal('');
   topicDisplayOrder = signal(1);
 
+  // Currently edited topic
   editingTopicId = signal<number | null>(null);
-
 
   // Form saving state
   saving = signal(false);
@@ -45,6 +47,7 @@ export class Topics implements OnInit {
   errorMessage = signal('');
 
   constructor(
+    private router: Router,
     private adminTopicService: AdminTopic,
     private adminDiagnosticService: AdminDiagnostic
   ) {}
@@ -53,7 +56,10 @@ export class Topics implements OnInit {
     this.loadSubjects();
   }
 
-  // Load active subjects
+  // ==========================================
+  // LOAD SUBJECTS
+  // ==========================================
+
   loadSubjects(): void {
 
     this.loadingSubjects.set(true);
@@ -88,7 +94,10 @@ export class Topics implements OnInit {
       });
   }
 
-  // Load topics when subject changes
+  // ==========================================
+  // LOAD TOPICS
+  // ==========================================
+
   loadTopics(subjectId: string): void {
 
     if (!subjectId) {
@@ -131,82 +140,151 @@ export class Topics implements OnInit {
       });
   }
 
-      // Open Add Topic form
-openAddTopic(): void {
-  this.editingTopicId.set(null);
-
-  this.showForm.set(true);
-
-  this.topicName.set('');
-  this.topicDescription.set('');
-  this.topicDisplayOrder.set(1);
-
-  this.formMessage.set('');
-}
-
-openEditTopic(topic: any): void {
-  this.editingTopicId.set(topic.id);
-
-  this.topicName.set(topic.name);
-  this.topicDescription.set(
-    topic.description || ''
-  );
-  this.topicDisplayOrder.set(
-    topic.display_order
-  );
-
-  this.formMessage.set('');
-  this.showForm.set(true);
-}
-
-
-// Create a new topic
-createTopic(): void {
-  const subjectId = this.selectedSubjectId();
-
-  if (!subjectId) {
-    this.formMessage.set(
-      'Please select a subject first'
-    );
-    return;
-  }
-
-  const name = this.topicName().trim();
-
-  if (!name) {
-    this.formMessage.set(
-      'Topic name is required'
-    );
-    return;
-  }
-
-  this.saving.set(true);
-  this.formMessage.set('');
-
-  const data = {
-    subjectId,
-    name,
-    description:
-      this.topicDescription().trim() || null,
-    displayOrder:
-      this.topicDisplayOrder()
-  };
-
-  const editingId = this.editingTopicId();
-
   // ==========================================
-  // UPDATE EXISTING TOPIC
+  // OPEN ADD TOPIC FORM
   // ==========================================
 
-  if (editingId) {
+  openAddTopic(): void {
+
+    this.editingTopicId.set(null);
+
+    this.showForm.set(true);
+
+    this.topicName.set('');
+    this.topicDescription.set('');
+    this.topicDisplayOrder.set(1);
+
+    this.formMessage.set('');
+  }
+
+  // ==========================================
+  // OPEN EDIT TOPIC FORM
+  // ==========================================
+
+  openEditTopic(topic: any): void {
+
+    this.editingTopicId.set(topic.id);
+
+    this.topicName.set(topic.name);
+
+    this.topicDescription.set(
+      topic.description || ''
+    );
+
+    this.topicDisplayOrder.set(
+      topic.display_order
+    );
+
+    this.formMessage.set('');
+    this.showForm.set(true);
+  }
+
+  // ==========================================
+  // CREATE / UPDATE TOPIC
+  // ==========================================
+
+  createTopic(): void {
+
+    const subjectId =
+      this.selectedSubjectId();
+
+    if (!subjectId) {
+
+      this.formMessage.set(
+        'Please select a subject first'
+      );
+
+      return;
+    }
+
+    const name =
+      this.topicName().trim();
+
+    if (!name) {
+
+      this.formMessage.set(
+        'Topic name is required'
+      );
+
+      return;
+    }
+
+    this.saving.set(true);
+    this.formMessage.set('');
+
+    const data = {
+
+      subjectId,
+
+      name,
+
+      description:
+        this.topicDescription().trim() || null,
+
+      displayOrder:
+        this.topicDisplayOrder()
+
+    };
+
+    const editingId =
+      this.editingTopicId();
+
+    // ==========================================
+    // UPDATE EXISTING TOPIC
+    // ==========================================
+
+    if (editingId) {
+
+      this.adminTopicService
+        .updateTopic(editingId, data)
+        .subscribe({
+
+          next: () => {
+
+            this.saving.set(false);
+
+            this.showForm.set(false);
+
+            this.editingTopicId.set(null);
+
+            this.loadTopics(
+              String(subjectId)
+            );
+          },
+
+          error: (error: any) => {
+
+            console.error(
+              'Failed to update topic:',
+              error
+            );
+
+            this.formMessage.set(
+              error.error?.message ||
+              'Failed to update topic'
+            );
+
+            this.saving.set(false);
+          }
+
+        });
+
+      return;
+    }
+
+    // ==========================================
+    // CREATE NEW TOPIC
+    // ==========================================
 
     this.adminTopicService
-      .updateTopic(editingId, data)
+      .createTopic(data)
       .subscribe({
+
         next: () => {
+
           this.saving.set(false);
+
           this.showForm.set(false);
-          this.editingTopicId.set(null);
 
           this.loadTopics(
             String(subjectId)
@@ -214,90 +292,82 @@ createTopic(): void {
         },
 
         error: (error: any) => {
+
           console.error(
-            'Failed to update topic:',
+            'Failed to create topic:',
             error
           );
 
           this.formMessage.set(
             error.error?.message ||
-            'Failed to update topic'
+            'Failed to create topic'
           );
 
           this.saving.set(false);
         }
-      });
 
-    return;
+      });
   }
 
   // ==========================================
-  // CREATE NEW TOPIC
+  // UPDATE TOPIC STATUS
   // ==========================================
 
-  this.adminTopicService
-    .createTopic(data)
-    .subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.showForm.set(false);
+  updateTopicStatus(topic: any): void {
 
-        this.loadTopics(
-          String(subjectId)
-        );
-      },
+    const newStatus =
+      topic.status === 'active'
+        ? 'inactive'
+        : 'active';
 
-      error: (error: any) => {
-        console.error(
-          'Failed to create topic:',
-          error
-        );
+    this.adminTopicService
+      .updateTopicStatus(
+        topic.id,
+        newStatus
+      )
+      .subscribe({
 
-        this.formMessage.set(
-          error.error?.message ||
-          'Failed to create topic'
-        );
+        next: () => {
 
-        this.saving.set(false);
-      }
-    });
-}
+          const subjectId =
+            this.selectedSubjectId();
 
-// ==========================================
-// UPDATE TOPIC STATUS
-// ==========================================
+          if (subjectId) {
 
-updateTopicStatus(topic: any): void {
-  const newStatus =
-    topic.status === 'active'
-      ? 'inactive'
-      : 'active';
+            this.loadTopics(
+              String(subjectId)
+            );
+          }
+        },
 
-  this.adminTopicService
-    .updateTopicStatus(topic.id, newStatus)
-    .subscribe({
-      next: () => {
-        const subjectId = this.selectedSubjectId();
+        error: (error: any) => {
 
-        if (subjectId) {
-          this.loadTopics(
-            String(subjectId)
+          console.error(
+            'Failed to update topic status:',
+            error
+          );
+
+          this.formMessage.set(
+            error.error?.message ||
+            'Failed to update topic status'
           );
         }
-      },
 
-      error: (error: any) => {
-        console.error(
-          'Failed to update topic status:',
-          error
-        );
+      });
+  }
 
-        this.formMessage.set(
-          error.error?.message ||
-          'Failed to update topic status'
-        );
-      }
-    });
-}
+  // ==========================================
+  // OPEN LEARNING CONTENT
+  // ==========================================
+
+  openLearningContent(
+    topicId: number
+  ): void {
+
+    this.router.navigate([
+      '/admin/topic-learning',
+      topicId
+    ]);
+  }
 
 }

@@ -50,6 +50,8 @@ import { MentorVerification } from './features/admin/mentor-verification/mentor-
 import { DiagnosticQuestions } from './features/admin/diagnostic-questions/diagnostic-questions';
 import { Topics } from './features/admin/topics/topics';
 
+import { AdminTopicLearningPage } from './features/admin/admin-topic-learning/admin-topic-learning';
+
 // ======================================================
 // MENTOR
 // ======================================================
@@ -247,8 +249,12 @@ export const routes: Routes = [
       {
         path: 'diagnostic-questions',
         component: DiagnosticQuestions
-      }
+      },
 
+      {
+       path: 'topic-learning/:topicId',
+       component: AdminTopicLearningPage
+      }
     ]
   },
 

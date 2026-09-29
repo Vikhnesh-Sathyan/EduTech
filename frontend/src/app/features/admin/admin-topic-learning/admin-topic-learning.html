@@ -1,0 +1,365 @@
+<section class="learning-content-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        LEARNING CONTENT
+      </p>
+
+      <h1>
+        {{ topicName() || 'Topic Learning Content' }}
+      </h1>
+
+      <p>
+        Create and manage the learning experience for this topic.
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="backToTopics()"
+    >
+      ← Back to Topics
+    </button>
+
+  </div>
+
+
+  <!-- Loading -->
+  @if (loading()) {
+
+    <div class="state-message">
+      Loading learning content...
+    </div>
+
+  }
+
+  @else {
+
+    <!-- Error -->
+    @if (errorMessage()) {
+
+      <div class="state-message error-state">
+        {{ errorMessage() }}
+      </div>
+
+    }
+
+
+    <!-- Success Message -->
+    @if (message()) {
+
+      <div class="state-message success-state">
+        {{ message() }}
+      </div>
+
+    }
+
+
+    <!-- Learning Content Form -->
+    <div class="learning-form">
+
+
+      <!-- Simple Explanation -->
+      <div class="content-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            01
+          </span>
+
+          <div>
+
+            <h2>
+              Simple Explanation
+            </h2>
+
+            <p>
+              Explain the topic in simple language that is easy to understand.
+            </p>
+
+          </div>
+
+        </div>
+
+        <textarea
+          [value]="simpleExplanation()"
+          (input)="simpleExplanation.set($any($event.target).value)"
+          placeholder="Example: A variable is a named place where we store a value..."
+          rows="6"
+        ></textarea>
+
+      </div>
+
+
+      <!-- Real World Example -->
+      <div class="content-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            02
+          </span>
+
+          <div>
+
+            <h2>
+              Real-world Example
+            </h2>
+
+            <p>
+              Connect the concept with something familiar from everyday life.
+            </p>
+
+          </div>
+
+        </div>
+
+        <textarea
+          [value]="realWorldExample()"
+          (input)="realWorldExample.set($any($event.target).value)"
+          placeholder="Example: Think of a labelled box where you keep something..."
+          rows="6"
+        ></textarea>
+
+      </div>
+
+
+      <!-- Visual / Diagram -->
+      <div class="content-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            03
+          </span>
+
+          <div>
+
+            <h2>
+              Visual / Diagram
+              <span>(Optional)</span>
+            </h2>
+
+            <p>
+              Add an image, text-based diagram, or both if they help explain the topic.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Image Upload -->
+        <div class="visual-upload">
+
+          <label for="visualImage">
+            Upload Image
+          </label>
+
+          <input
+            id="visualImage"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            (change)="onImageSelected($event)"
+          />
+
+          @if (selectedImage()) {
+
+            <p class="selected-file">
+              Selected:
+              {{ selectedImage()?.name }}
+            </p>
+
+          }
+
+        </div>
+
+
+        <!-- Existing Image -->
+        @if (existingImageUrl()) {
+
+          <div class="existing-image">
+
+            <p>
+              Current Image
+            </p>
+
+            <img
+              [src]="'http://localhost:5000' + existingImageUrl()"
+              alt="Current learning visual"
+            />
+
+          </div>
+
+        }
+
+
+        <!-- Visual Text -->
+        <div class="visual-text">
+
+          <label for="visualText">
+            Diagram / Visual Text
+          </label>
+
+          <textarea
+            id="visualText"
+            [value]="visualText()"
+            (input)="visualText.set($any($event.target).value)"
+            placeholder="Example: Variable → stores → Value"
+            rows="6"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <!-- Code Example -->
+      <div class="content-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            04
+          </span>
+
+          <div>
+
+            <h2>
+              Small Code Example
+            </h2>
+
+            <p>
+              Add a small code example that demonstrates the concept.
+            </p>
+
+          </div>
+
+        </div>
+
+        <textarea
+          class="code-input"
+          [value]="codeExample()"
+          (input)="codeExample.set($any($event.target).value)"
+          placeholder="Example:
+
+let age = 20;
+console.log(age);"
+          rows="10"
+          spellcheck="false"
+        ></textarea>
+
+      </div>
+
+
+      <!-- Common Mistake -->
+      <div class="content-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            05
+          </span>
+
+          <div>
+
+            <h2>
+              Common Mistake
+            </h2>
+
+            <p>
+              Explain a mistake students commonly make with this topic.
+            </p>
+
+          </div>
+
+        </div>
+
+        <textarea
+          [value]="commonMistake()"
+          (input)="commonMistake.set($any($event.target).value)"
+          placeholder="Example: A common mistake is confusing the variable name with the value..."
+          rows="6"
+        ></textarea>
+
+      </div>
+
+
+      <!-- Where Is It Used -->
+      <div class="content-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            06
+          </span>
+
+          <div>
+
+            <h2>
+              Where Is It Used?
+            </h2>
+
+            <p>
+              Explain where this concept is used in real software or development.
+            </p>
+
+          </div>
+
+        </div>
+
+        <textarea
+          [value]="whereUsed()"
+          (input)="whereUsed.set($any($event.target).value)"
+          placeholder="Example: Variables are used throughout applications to store and update data..."
+          rows="6"
+        ></textarea>
+
+      </div>
+
+
+      <!-- Actions -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="backToTopics()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving()"
+          (click)="saveLearningContent()"
+        >
+
+          @if (saving()) {
+            Saving...
+          }
+          @else if (contentExists()) {
+            Update Learning Content
+          }
+          @else {
+            Save Learning Content
+          }
+
+        </button>
+
+      </div>
+
+
+    </div>
+
+  }
+
+</section>

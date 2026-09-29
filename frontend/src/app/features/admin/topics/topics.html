@@ -289,17 +289,24 @@
 
               </div>
 
+        <!-- Topic actions -->
+        <div class="topic-actions">
 
-              <!-- Topic actions -->
-          <div class="topic-actions">
+      <span
+        class="status"
+        [class.active]="topic.status === 'active'"
+        [class.inactive]="topic.status === 'inactive'"
+      >
+          {{ topic.status }}
+      </span>
 
-  <span
-    class="status"
-    [class.active]="topic.status === 'active'"
-    [class.inactive]="topic.status === 'inactive'"
-  >
-    {{ topic.status }}
-  </span>
+      <button
+       type="button"
+        class="learning-button"
+        (click)="openLearningContent(topic.id)"
+      >
+          Learning Content
+    </button>
 
   <button
     type="button"
