@@ -86,8 +86,7 @@ const startDiagnostic = (req, res) => {
 
 
                  // Select questions for this diagnostic
-getDiagnosticQuestions(subjectId)
-    .then((questions) => {
+getDiagnosticQuestions(studentId, subjectId)    .then((questions) => {
 
         res.status(201).json({
             message: "Diagnostic started",
@@ -122,29 +121,37 @@ getDiagnosticQuestions(subjectId)
 // SELECT DIAGNOSTIC QUESTIONS
 // ==========================================
 
-const getDiagnosticQuestions = (subjectId) => {
+const getDiagnosticQuestions = (studentId, subjectId) => {
 
-    const questionSql = `
-        SELECT
-            id,
-            topic_id,
-            question,
-            option_a,
-            option_b,
-            option_c,
-            option_d,
-            difficulty
-        FROM diagnostic_questions
-        WHERE subject_id = ?
-          AND status = 'active'
-        ORDER BY RAND()
-    `;
+   const questionSql = `
+    SELECT
+        id,
+        topic_id,
+        question,
+        option_a,
+        option_b,
+        option_c,
+        option_d,
+        difficulty
+    FROM diagnostic_questions
+    WHERE subject_id = ?
+      AND status = 'active'
+      AND id NOT IN (
+          SELECT da.question_id
+          FROM diagnostic_answers da
+          INNER JOIN diagnostic_attempts d
+              ON d.id = da.attempt_id
+          WHERE d.student_id = ?
+            AND d.subject_id = ?
+      )
+    ORDER BY RAND()
+`;
 
     return new Promise((resolve, reject) => {
 
         db.query(
             questionSql,
-            [subjectId],
+            [subjectId , studentId, subjectId],
             (err, results) => {
 
                 if (err) {

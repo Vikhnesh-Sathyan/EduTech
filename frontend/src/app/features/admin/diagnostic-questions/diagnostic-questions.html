@@ -1,0 +1,193 @@
+<section class="diagnostic-questions-page">
+
+  <!-- Page header -->
+  <div class="page-header">
+
+    <div>
+      <p class="eyebrow">DIAGNOSTIC</p>
+
+      <h1>Diagnostic Questions</h1>
+
+      <p>
+        Manage the question bank used to assess student knowledge.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="add-question-button"
+      (click)="openAddQuestion()"
+    >
+      + Add Question
+    </button>
+
+  </div>
+
+
+  <!-- Add Question Form -->
+  @if (showForm()) {
+
+    <div class="question-form-panel">
+
+      <h2>Add Diagnostic Question</h2>
+
+      <p>
+        Create a question for the diagnostic question bank.
+      </p>
+
+
+      @if (loadingSubjects()) {
+
+        <div class="form-loading">
+          Loading subjects...
+        </div>
+
+      }
+
+      @else {
+
+        <div class="form-group">
+
+          <label for="subject">
+            Subject
+          </label>
+
+          <select id="subject">
+
+            <option value="">
+              Select Subject
+            </option>
+
+            @for (subject of subjects(); track subject.id) {
+
+              <option [value]="subject.id">
+                {{ subject.name }}
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- Loading -->
+  @if (loading()) {
+
+    <div class="state-message">
+      Loading questions...
+    </div>
+
+  }
+
+
+  <!-- Error -->
+  @else if (errorMessage()) {
+
+    <div class="state-message error-state">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- Empty -->
+  @else if (questions().length === 0) {
+
+    <div class="empty-state">
+
+      <h2>No diagnostic questions yet</h2>
+
+      <p>
+        Add questions to build the diagnostic question bank.
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- Questions -->
+  @else {
+
+    <div class="questions-card">
+
+      <div class="table-header">
+
+        <span>Question</span>
+        <span>Subject</span>
+        <span>Topic</span>
+        <span>Difficulty</span>
+        <span>Status</span>
+
+      </div>
+
+
+      @for (question of questions(); track question.id) {
+
+        <div class="question-row">
+
+          <div class="question-content">
+
+            <strong>
+              {{ question.question }}
+            </strong>
+
+            <span>
+              Correct answer: {{ question.correct_option }}
+            </span>
+
+          </div>
+
+
+          <div>
+            {{ question.subject_name }}
+          </div>
+
+
+          <div>
+            {{ question.topic_name }}
+          </div>
+
+
+          <div>
+
+            <span
+              class="difficulty"
+              [class.easy]="question.difficulty === 'easy'"
+              [class.medium]="question.difficulty === 'medium'"
+              [class.hard]="question.difficulty === 'hard'"
+            >
+              {{ question.difficulty }}
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <span
+              class="status"
+              [class.active]="question.status === 'active'"
+              [class.inactive]="question.status === 'inactive'"
+            >
+              {{ question.status }}
+            </span>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</section>

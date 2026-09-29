@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Study as StudyService } from '../../../services/study';
 
 @Component({
@@ -19,7 +19,8 @@ export class Subject implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private studyService: StudyService
+    private studyService: StudyService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -93,14 +94,24 @@ startDiagnostic(): void {
   this.studyService
     .startDiagnostic(subjectId)
     .subscribe({
-      next: (response: any) => {
+    next: (response: any) => {
 
-        console.log(
-          'Diagnostic started:',
-          response
-        );
+  this.router.navigate(
+    [
+      '/study',
+      subjectId,
+      'diagnostic'
+    ],
+    {
+      state: {
+        attemptId: response.attemptId,
+        subject: response.subject,
+        questions: response.questions
+      }
+    }
+  );
 
-      },
+},
 
       error: (error: any) => {
 

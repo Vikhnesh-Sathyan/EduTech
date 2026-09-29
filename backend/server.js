@@ -34,6 +34,15 @@ const subjectRoutes =
 const adminOverviewRoutes =
     require("./routes/adminOverviewRoutes");
 
+// Admin mentor verification routes
+const adminMentorRoutes =
+    require("./routes/adminMentorRoutes");
+
+// Admin diagnostic question routes
+const adminDiagnosticRoutes =
+    require("./routes/adminDiagnosticRoutes");
+
+
 // ==================== STUDENT ROUTES ====================
 
 // Student education lookup routes
@@ -44,21 +53,28 @@ const educationRoutes =
 const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
-// ==================== STUDY and Diagnostic ROUTES ====================
 
-const studyRoutes = require("./routes/studyRoutes");
+// ==================== STUDY AND DIAGNOSTIC ROUTES ====================
 
-const diagnosticRoutes = require("./routes/diagnosticRoutes");
+// Student study routes
+const studyRoutes =
+    require("./routes/studyRoutes");
+
+// Student diagnostic routes
+const diagnosticRoutes =
+    require("./routes/diagnosticRoutes");
+
 
 // ==================== MENTOR ROUTES ====================
 
 // Mentor profile routes
-const mentorRoutes = require("./routes/mentorRoutes");
+const mentorRoutes =
+    require("./routes/mentorRoutes");
 
-const adminMentorRoutes = require("./routes/adminMentorRoutes");
 
 // Create Express application
 const app = express();
+
 
 // ==================== MIDDLEWARE ====================
 
@@ -68,21 +84,25 @@ app.use(cors());
 // Parse incoming JSON request data
 app.use(express.json());
 
+
 // ==================== PORT ====================
 
 const PORT = process.env.PORT || 5000;
 
-// ==================== ROUTES ====================
+
+// ==================== BASIC ROUTE ====================
 
 // Basic server health check
 app.get("/", (req, res) => {
     res.send("EduTech Backend is running");
 });
 
+
 // ==================== AUTHENTICATION ROUTES ====================
 
 // Handles registration, login and authenticated user information
 app.use("/api/auth", authRoutes);
+
 
 // ==================== PROFILE ROUTES ====================
 
@@ -122,32 +142,56 @@ app.use(
 );
 
 // Handles admin dashboard overview statistics
-app.use("/api/admin/overview",adminOverviewRoutes);
+app.use(
+    "/api/admin/overview",
+    adminOverviewRoutes
+);
 
-// Admin mentor verification routes
-app.use("/api/admin/mentors", adminMentorRoutes);
+// Handles admin mentor verification
+app.use(
+    "/api/admin/mentors",
+    adminMentorRoutes
+);
 
+// Handles admin diagnostic question management
+app.use(
+    "/api/admin/diagnostic-questions",
+    adminDiagnosticRoutes
+);
 
 
 // =====================================================
-// =================== STUDENT  ==================
+// ==================== STUDENT ROUTES =================
 // =====================================================
 
 // Handles student education lookup
-app.use(  "/api/education",educationRoutes);
+app.use(
+    "/api/education",
+    educationRoutes
+);
 
 // Handles student subject selection
-app.use("/api/student/subjects",    studentSubjectRoutes);
+app.use(
+    "/api/student/subjects",
+    studentSubjectRoutes
+);
 
 
+// =====================================================
+// ============== STUDY AND DIAGNOSTIC ROUTES ==========
+// =====================================================
 
-// =================== STUDY and DIAGNOSTIC ROUTES  ==================
+// Handles student study subjects
+app.use(
+    "/api/study",
+    studyRoutes
+);
 
-// Student study routes
-app.use("/api/study", studyRoutes);
-
-// Student diagnostic routes
-app.use("/api/diagnostic", diagnosticRoutes);
+// Handles student diagnostic
+app.use(
+    "/api/diagnostic",
+    diagnosticRoutes
+);
 
 
 // ==================== START SERVER ====================

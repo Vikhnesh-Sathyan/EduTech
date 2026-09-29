@@ -1,0 +1,314 @@
+.diagnostic-questions-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+/* ================================
+   PAGE HEADER
+   ================================ */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #777;
+}
+
+h1 {
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.2;
+  color: #171717;
+}
+
+.page-header p:last-child {
+  margin: 12px 0 0;
+  color: #6b6b6b;
+  font-size: 15px;
+}
+
+/* ================================
+   ADD QUESTION BUTTON
+   ================================ */
+
+.add-question-button {
+  border: none;
+  border-radius: 10px;
+  padding: 13px 20px;
+  background: #171717;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-question-button:hover {
+  background: #303030;
+}
+
+/* ================================
+   STATES
+   ================================ */
+
+.state-message,
+.empty-state {
+  border: 1px solid #e7e7e7;
+  border-radius: 16px;
+  background: #fff;
+  padding: 48px 24px;
+  text-align: center;
+  color: #666;
+}
+
+.error-state {
+  color: #b42318;
+  background: #fff8f7;
+  border-color: #f1c7c3;
+}
+
+.empty-state h2 {
+  margin: 0;
+  color: #222;
+  font-size: 20px;
+}
+
+.empty-state p {
+  margin: 10px 0 0;
+  color: #777;
+}
+
+/* ================================
+   QUESTIONS CARD
+   ================================ */
+
+.questions-card {
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+/* ================================
+   TABLE HEADER
+   ================================ */
+
+.table-header,
+.question-row {
+  display: grid;
+  grid-template-columns:
+    minmax(280px, 2fr)
+    1fr
+    1fr
+    120px
+    100px;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 22px;
+}
+
+.table-header {
+  background: #fafafa;
+  border-bottom: 1px solid #e7e7e7;
+  color: #777;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ================================
+   QUESTION ROW
+   ================================ */
+
+.question-row {
+  min-height: 92px;
+  border-bottom: 1px solid #eeeeee;
+  color: #555;
+  font-size: 14px;
+}
+
+.question-row:last-child {
+  border-bottom: none;
+}
+
+.question-content {
+  min-width: 0;
+}
+
+.question-content strong {
+  display: block;
+  color: #222;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.question-content span {
+  display: block;
+  margin-top: 7px;
+  color: #999;
+  font-size: 12px;
+}
+
+/* ================================
+   DIFFICULTY
+   ================================ */
+
+.difficulty,
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.difficulty.easy {
+  background: #edf8f0;
+  color: #287a3d;
+}
+
+.difficulty.medium {
+  background: #fff7e6;
+  color: #946200;
+}
+
+.difficulty.hard {
+  background: #fff0ef;
+  color: #a63d35;
+}
+
+/* ================================
+   STATUS
+   ================================ */
+
+.status.active {
+  background: #edf8f0;
+  color: #287a3d;
+}
+
+.status.inactive {
+  background: #f1f1f1;
+  color: #777;
+}
+
+/* ==========================================
+   ADD QUESTION FORM
+   ========================================== */
+
+.question-form-panel {
+  margin-bottom: 24px;
+  padding: 28px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.question-form-panel h2 {
+  margin: 0;
+  color: #222;
+  font-size: 22px;
+}
+
+.question-form-panel > p {
+  margin: 8px 0 24px;
+  color: #777;
+  font-size: 14px;
+}
+
+.form-group {
+  max-width: 500px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group select:focus {
+  border-color: #999;
+}
+
+.form-loading {
+  color: #777;
+  font-size: 14px;
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media (max-width: 900px) {
+
+  .diagnostic-questions-page {
+    padding: 36px 20px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .table-header {
+    display: none;
+  }
+
+  .question-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .question-content {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .diagnostic-questions-page {
+    padding: 28px 16px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .question-row {
+    grid-template-columns: 1fr;
+  }
+
+  .question-content {
+    grid-column: auto;
+  }
+
+  .add-question-button {
+    width: 100%;
+  }
+}

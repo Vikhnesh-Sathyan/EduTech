@@ -1,16 +1,147 @@
 <section class="diagnostic-page">
 
-  <div class="diagnostic-header">
+  @if (loading()) {
 
-    <p class="eyebrow">Diagnostic</p>
+    <div class="state-message">
+      <p>Loading diagnostic...</p>
+    </div>
 
-    <h1>Check your current understanding</h1>
+  }
 
-    <p>
-      Answer the questions based on what you already know.
-      This helps us create a learning path for you.
-    </p>
+  @else if (errorMessage()) {
 
-  </div>
+    <div class="state-message error-state">
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+  }
+
+  @else if (questions().length > 0) {
+
+    <!-- Diagnostic header -->
+    <div class="diagnostic-header">
+
+      <p class="eyebrow">Diagnostic</p>
+
+      <h1>
+        {{ subject()?.name }}
+      </h1>
+
+      <p>
+        Answer each question based on what you already know.
+        There is no negative marking.
+      </p>
+
+    </div>
+
+
+    <!-- Progress -->
+    <div class="diagnostic-progress">
+
+      <div class="progress-info">
+
+        <span>
+          Question {{ currentQuestionIndex() + 1 }}
+          of {{ questions().length }}
+        </span>
+
+        <span>
+          {{ ((currentQuestionIndex() + 1) / questions().length * 100) | number:'1.0-0' }}%
+        </span>
+
+      </div>
+
+      <div class="progress-track">
+
+        <div
+          class="progress-bar"
+          [style.width.%]="
+            ((currentQuestionIndex() + 1) / questions().length) * 100
+          "
+        ></div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Current question -->
+    <div class="question-card">
+
+      <p class="question-number">
+        Question {{ currentQuestionIndex() + 1 }}
+      </p>
+
+      <h2>
+        {{ getCurrentQuestion().question }}
+      </h2>
+
+
+      <!-- Options -->
+      <div class="options-list">
+
+        <button
+          type="button"
+          class="option-button"
+          [class.selected]="selectedAnswer() === 'A'"
+          (click)="selectAnswer('A')"
+        >
+          <span class="option-letter">A</span>
+          <span>{{ getCurrentQuestion().option_a }}</span>
+        </button>
+
+
+        <button
+          type="button"
+          class="option-button"
+          [class.selected]="selectedAnswer() === 'B'"
+          (click)="selectAnswer('B')"
+        >
+          <span class="option-letter">B</span>
+          <span>{{ getCurrentQuestion().option_b }}</span>
+        </button>
+
+
+        <button
+          type="button"
+          class="option-button"
+          [class.selected]="selectedAnswer() === 'C'"
+          (click)="selectAnswer('C')"
+        >
+          <span class="option-letter">C</span>
+          <span>{{ getCurrentQuestion().option_c }}</span>
+        </button>
+
+
+        <button
+          type="button"
+          class="option-button"
+          [class.selected]="selectedAnswer() === 'D'"
+          (click)="selectAnswer('D')"
+        >
+          <span class="option-letter">D</span>
+          <span>{{ getCurrentQuestion().option_d }}</span>
+        </button>
+
+      </div>
+
+
+      <!-- Next -->
+      <div class="question-actions">
+
+        <button
+          type="button"
+          class="next-button"
+          [disabled]="!selectedAnswer()"
+          (click)="nextQuestion()"
+        >
+          Next
+        </button>
+
+      </div>
+
+    </div>
+
+  }
 
 </section>

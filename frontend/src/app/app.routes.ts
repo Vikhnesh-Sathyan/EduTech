@@ -27,6 +27,7 @@ import { StudentLayout } from './dashboards/student/student-layout/student-layou
 import { Study } from './features/study/study';
 import { Subject } from './features/study/subject-learning/subject-learning';
 import { Diagnostic } from './features/study/diagnostic/diagnostic';
+import { DiagnosticQuestions } from './features/admin/diagnostic-questions/diagnostic-questions';
 
 // ==================== ADMIN ====================
 
@@ -120,6 +121,11 @@ export const routes: Routes = [
     {
       path: 'study/:subjectId/diagnostic',
       component: Diagnostic
+    },
+
+    {
+      path: 'admin/diagnostic-questions',
+      component: DiagnosticQuestions
     }
 
   ]
