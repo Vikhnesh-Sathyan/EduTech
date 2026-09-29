@@ -21,4 +21,11 @@ getSubjectById(subjectId: string) {
     `${this.apiUrl}/subjects/${subjectId}`
   );
 }
+// Start diagnostic for a subject
+startDiagnostic(subjectId: string) {
+  return this.http.post(
+    `http://localhost:5000/api/diagnostic/subjects/${subjectId}/start`,
+    {}
+  );
+}
 }

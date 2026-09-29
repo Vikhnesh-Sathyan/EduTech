@@ -429,7 +429,241 @@
   transform: translateY(-1px);
 }
 
+/* =========================================================
+   Verification Popup
+   ========================================================= */
 
+.verification-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   Verification Modal
+   ========================================================= */
+
+.verification-modal {
+  width: min(100%, 520px);
+
+  padding: 36px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.18);
+}
+
+
+/* =========================================================
+   Verification Icon
+   ========================================================= */
+
+.verification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 46px;
+
+  margin-bottom: 22px;
+
+  border-radius: 50%;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Verification Label
+   ========================================================= */
+
+.verification-label {
+  margin: 0 0 10px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   Verification Heading
+   ========================================================= */
+
+.verification-modal h2 {
+  margin: 0;
+
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+
+  color: #0f172a;
+}
+
+
+/* =========================================================
+   Verification Message
+   ========================================================= */
+
+.verification-message {
+  margin: 14px 0 0;
+
+  font-size: 15px;
+  line-height: 1.65;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   Verification Note
+   ========================================================= */
+
+.verification-note {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  margin-top: 24px;
+  padding: 16px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  background: #f8fafc;
+}
+
+.verification-note strong {
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.verification-note span {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+
+/* =========================================================
+   Verification Actions
+   ========================================================= */
+
+.verification-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+
+/* Primary */
+
+.primary-verification-action {
+  padding: 11px 18px;
+
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary-verification-action:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+
+/* Secondary */
+
+.secondary-verification-action {
+  padding: 11px 18px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.secondary-verification-action:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+
+/* =========================================================
+   Verification Popup Responsive
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .verification-overlay {
+    padding: 16px;
+  }
+
+  .verification-modal {
+    padding: 28px 22px;
+  }
+
+  .verification-modal h2 {
+    font-size: 24px;
+  }
+
+  .verification-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-verification-action,
+  .secondary-verification-action {
+    width: 100%;
+  }
+
+}
 
 
 /* =========================================================

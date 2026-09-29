@@ -44,9 +44,11 @@ const educationRoutes =
 const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
-// ==================== STUDY ROUTES ====================
+// ==================== STUDY and Diagnostic ROUTES ====================
 
 const studyRoutes = require("./routes/studyRoutes");
+
+const diagnosticRoutes = require("./routes/diagnosticRoutes");
 
 // ==================== MENTOR ROUTES ====================
 
@@ -120,36 +122,32 @@ app.use(
 );
 
 // Handles admin dashboard overview statistics
-app.use(
-    "/api/admin/overview",
-    adminOverviewRoutes
-);
-
-
-// =====================================================
-// =================== STUDENT ROUTES ==================
-// =====================================================
-
-// Handles student education lookup
-app.use(
-    "/api/education",
-    educationRoutes
-);
-
-// Handles student subject selection
-app.use(
-    "/api/student/subjects",
-    studentSubjectRoutes
-);
+app.use("/api/admin/overview",adminOverviewRoutes);
 
 // Admin mentor verification routes
 app.use("/api/admin/mentors", adminMentorRoutes);
 
 
-// =================== STUDY ROUTES ==================
+
+// =====================================================
+// =================== STUDENT  ==================
+// =====================================================
+
+// Handles student education lookup
+app.use(  "/api/education",educationRoutes);
+
+// Handles student subject selection
+app.use("/api/student/subjects",    studentSubjectRoutes);
+
+
+
+// =================== STUDY and DIAGNOSTIC ROUTES  ==================
 
 // Student study routes
 app.use("/api/study", studyRoutes);
+
+// Student diagnostic routes
+app.use("/api/diagnostic", diagnosticRoutes);
 
 
 // ==================== START SERVER ====================

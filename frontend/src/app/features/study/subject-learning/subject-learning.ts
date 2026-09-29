@@ -79,5 +79,42 @@ export class Subject implements OnInit {
       });
 
   }
+      // Start diagnostic for the selected subject
+startDiagnostic(): void {
 
+  const subjectId =
+    this.route.snapshot.paramMap.get('subjectId');
+
+  if (!subjectId) {
+    this.errorMessage.set('Subject ID is missing');
+    return;
+  }
+
+  this.studyService
+    .startDiagnostic(subjectId)
+    .subscribe({
+      next: (response: any) => {
+
+        console.log(
+          'Diagnostic started:',
+          response
+        );
+
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Failed to start diagnostic:',
+          error
+        );
+
+        this.errorMessage.set(
+          error.error?.message ||
+          'Failed to start diagnostic'
+        );
+
+      }
+    });
+}
 }
