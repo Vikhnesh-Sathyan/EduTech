@@ -177,95 +177,117 @@ const register = async (req, res) => {
 };
 
 // Handles user login and generates a JWT
+// Handles user login and generates a JWT
 const login = async (req, res) => {
+
     try {
+
         const { email, password } = req.body;
 
         // Validate login data
         if (!email || !password) {
+
             return res.status(400).json({
                 message: "Email and password are required"
             });
+
         }
 
         const sql = `
             SELECT
-            u.id,
-            u.name,
-            u.email,
-            u.password,
-            u.role,
-            u.status,
-            mp.verification_status
-        FROM users u
-        LEFT JOIN mentor_profiles mp
-        ON mp.user_id = u.id
-        WHERE u.email = ?
-    `;
+                u.id,
+                u.name,
+                u.email,
+                u.password,
+                u.role,
+                u.status,
+                mp.verification_status
+            FROM users u
+            LEFT JOIN mentor_profiles mp
+                ON mp.user_id = u.id
+            WHERE u.email = ?
+        `;
 
-        db.query(sql, [email], async (err, result) => {
-            if (err) {
-                console.error("Login query failed:", err.message);
+        // Promise-style MySQL query
+        const [result] = await db.query(
+            sql,
+            [email]
+        );
 
-                return res.status(500).json({
-                    message: "Database error"
-                });
-            }
+        if (result.length === 0) {
 
-            if (result.length === 0) {
-                return res.status(401).json({
-                    message: "Invalid email or password"
-                });
-            }
-
-            const user = result[0];
-
-            if (user.status !== "active") {
-                return res.status(403).json({
-                    message: "Account is inactive"
-                });
-            }
-
-            const passwordMatch = await bcrypt.compare(
-                password,
-                user.password
-            );
-
-            if (!passwordMatch) {
-                return res.status(401).json({
-                    message: "Invalid email or password"
-                });
-            }
-
-            const token = jwt.sign(
-                {
-                    id: user.id,
-                    role: user.role
-                },
-                process.env.JWT_SECRET,
-                {
-                    expiresIn: "1d"
-                }
-            );
-
-            res.status(200).json({
-                message: "Login successful",
-                token,
-                user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role,
-                    verificationStatus: user.verification_status || null
-                }
+            return res.status(401).json({
+                message: "Invalid email or password"
             });
+
+        }
+
+        const user = result[0];
+
+        // Check account status
+        if (user.status !== "active") {
+
+            return res.status(403).json({
+                message: "Account is inactive"
+            });
+
+        }
+
+        // Compare entered password with hashed password
+        const passwordMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!passwordMatch) {
+
+            return res.status(401).json({
+                message: "Invalid email or password"
+            });
+
+        }
+
+        // Generate JWT
+        const token = jwt.sign(
+            {
+                id: user.id,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "1d"
+            }
+        );
+
+        // Send login response
+        res.status(200).json({
+
+            message: "Login successful",
+
+            token,
+
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                verificationStatus:
+                    user.verification_status || null
+            }
+
         });
+
     } catch (error) {
-        console.error("Login error:", error.message);
+
+        console.error(
+            "Login error:",
+            error.message
+        );
 
         res.status(500).json({
             message: "Something went wrong"
         });
+
     }
 };
 

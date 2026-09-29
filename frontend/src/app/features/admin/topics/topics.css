@@ -1,0 +1,345 @@
+.topics-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #777;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  color: #171717;
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.page-header p:last-child {
+  margin: 12px 0 0;
+  color: #6b6b6b;
+  font-size: 15px;
+}
+
+.selection-card {
+  padding: 24px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.selection-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.selection-card select {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  outline: none;
+}
+
+.selection-card select:focus {
+  border-color: #999;
+}
+
+.loading-text {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.topics-section {
+  margin-top: 28px;
+}
+
+.section-header {
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #222;
+  font-size: 22px;
+}
+
+.section-header p {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.topics-card,
+.empty-state,
+.state-message {
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.topic-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.topic-row:last-child {
+  border-bottom: none;
+}
+
+.topic-row strong {
+  color: #222;
+  font-size: 15px;
+}
+
+.topic-row p {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.status {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status.active {
+  background: #edf8f0;
+  color: #287a3d;
+}
+
+.status.inactive {
+  background: #f1f1f1;
+  color: #777;
+}
+
+.empty-state,
+.state-message {
+  padding: 40px 24px;
+  text-align: center;
+  color: #777;
+}
+
+.empty-state h3 {
+  margin: 0;
+  color: #222;
+  font-size: 18px;
+}
+
+.empty-state p {
+  margin: 8px 0 0;
+}
+
+.error-state {
+  margin-bottom: 20px;
+  color: #b42318;
+  background: #fff8f7;
+  border-color: #f1c7c3;
+}
+
+/* ==========================================
+   ADD TOPIC
+   ========================================== */
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.add-topic-button {
+  border: none;
+  border-radius: 9px;
+  padding: 11px 16px;
+  background: #171717;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-topic-button:hover {
+  background: #303030;
+}
+
+.topic-form {
+  margin-bottom: 20px;
+  padding: 24px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.topic-form h3 {
+  margin: 0;
+  color: #222;
+  font-size: 20px;
+}
+
+.topic-form > p {
+  margin: 7px 0 24px;
+  color: #777;
+  font-size: 14px;
+}
+
+.form-group {
+  max-width: 600px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #999;
+}
+
+.form-message {
+  margin-bottom: 16px;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-button,
+.save-button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 17px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background: #f1f1f1;
+  color: #444;
+}
+
+.save-button {
+  background: #171717;
+  color: #fff;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .add-topic-button {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-button,
+  .save-button {
+    width: 100%;
+  }
+
+}
+
+/* ==========================================
+   EDIT TOPIC BUTTON
+   ========================================== */
+
+.edit-button {
+  border: 1px solid #d6d6d6;
+  background: #ffffff;
+  color: #333333;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button:hover {
+  background: #f5f5f5;
+  border-color: #bdbdbd;
+}
+
+.edit-button:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 600px) {
+
+  .topics-page {
+    padding: 28px 16px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .topic-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}

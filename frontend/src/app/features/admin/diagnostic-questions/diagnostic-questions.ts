@@ -28,6 +28,12 @@ export class DiagnosticQuestions implements OnInit {
   // Subject loading state
   loadingSubjects = signal(false);
 
+  // Active topics for selected subject
+  topics = signal<any[]>([]);
+
+  // Topic loading state
+  loadingTopics = signal(false);
+
   constructor(
     private adminDiagnosticService: AdminDiagnostic
   ) {}
@@ -104,6 +110,46 @@ export class DiagnosticQuestions implements OnInit {
           );
 
           this.loadingSubjects.set(false);
+        }
+
+      });
+  }
+
+  // Load topics for selected subject
+  loadTopics(subjectId: string): void {
+
+    if (!subjectId) {
+
+      this.topics.set([]);
+
+      return;
+    }
+
+    this.loadingTopics.set(true);
+
+    this.adminDiagnosticService
+      .getTopics(Number(subjectId))
+      .subscribe({
+
+        next: (response: any) => {
+
+          this.topics.set(
+            response.topics || []
+          );
+
+          this.loadingTopics.set(false);
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to load topics:',
+            error
+          );
+
+          this.topics.set([]);
+
+          this.loadingTopics.set(false);
         }
 
       });

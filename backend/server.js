@@ -64,6 +64,9 @@ const studyRoutes =
 const diagnosticRoutes =
     require("./routes/diagnosticRoutes");
 
+const adminTopicRoutes =
+    require("./routes/adminTopicRoutes");
+
 
 // ==================== MENTOR ROUTES ====================
 
@@ -191,6 +194,11 @@ app.use(
 app.use(
     "/api/diagnostic",
     diagnosticRoutes
+);
+
+app.use(
+    "/api/admin/topics",
+    adminTopicRoutes
 );
 
 

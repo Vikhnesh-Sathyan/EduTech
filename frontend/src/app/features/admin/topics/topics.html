@@ -1,0 +1,326 @@
+<section class="topics-page">
+
+  <!-- Page header -->
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        LEARNING
+      </p>
+
+      <h1>
+        Manage Topics
+      </h1>
+
+      <p>
+        Organize learning topics for each subject.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Error -->
+  @if (errorMessage()) {
+
+    <div class="state-message error-state">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- Subject selection -->
+  <div class="selection-card">
+
+    <label for="subject">
+      Subject
+    </label>
+
+    @if (loadingSubjects()) {
+
+      <p class="loading-text">
+        Loading subjects...
+      </p>
+
+    }
+
+    @else {
+
+      <select
+        id="subject"
+        (change)="loadTopics($any($event.target).value)"
+      >
+
+        <option value="">
+          Select Subject
+        </option>
+
+        @for (subject of subjects(); track subject.id) {
+
+          <option [value]="subject.id">
+            {{ subject.name }}
+          </option>
+
+        }
+
+      </select>
+
+    }
+
+  </div>
+
+
+  <!-- Topics -->
+  @if (selectedSubjectId()) {
+
+    <div class="topics-section">
+
+      <!-- Section header -->
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            Topics
+          </h2>
+
+          <p>
+            Topics belonging to the selected subject.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="add-topic-button"
+          (click)="openAddTopic()"
+        >
+          + Add Topic
+        </button>
+
+      </div>
+
+
+      <!-- Add / Edit Topic Form -->
+      @if (showForm()) {
+
+        <div class="topic-form">
+
+          <h3>
+            @if (editingTopicId()) {
+              Edit Topic
+            } @else {
+              Add Topic
+            }
+          </h3>
+
+          <p>
+            @if (editingTopicId()) {
+              Update the details of this learning topic.
+            } @else {
+              Create a new learning topic for this subject.
+            }
+          </p>
+
+
+          <!-- Topic name -->
+          <div class="form-group">
+
+            <label for="topicName">
+              Topic Name
+            </label>
+
+            <input
+              id="topicName"
+              type="text"
+              [value]="topicName()"
+              (input)="topicName.set($any($event.target).value)"
+              placeholder="Example: Variables"
+            >
+
+          </div>
+
+
+          <!-- Topic description -->
+          <div class="form-group">
+
+            <label for="topicDescription">
+              Description
+            </label>
+
+            <textarea
+              id="topicDescription"
+              [value]="topicDescription()"
+              (input)="topicDescription.set($any($event.target).value)"
+              placeholder="Describe what this topic covers"
+              rows="4"
+            ></textarea>
+
+          </div>
+
+
+          <!-- Display order -->
+          <div class="form-group">
+
+            <label for="displayOrder">
+              Display Order
+            </label>
+
+            <input
+              id="displayOrder"
+              type="number"
+              min="1"
+              [value]="topicDisplayOrder()"
+              (input)="topicDisplayOrder.set(+$any($event.target).value)"
+            >
+
+          </div>
+
+
+          <!-- Form message -->
+          @if (formMessage()) {
+
+            <div class="form-message">
+              {{ formMessage() }}
+            </div>
+
+          }
+
+
+          <!-- Form actions -->
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              (click)="showForm.set(false)"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="save-button"
+              [disabled]="saving()"
+              (click)="createTopic()"
+            >
+
+              @if (saving()) {
+
+                Saving...
+
+              }
+
+              @else if (editingTopicId()) {
+
+                Update Topic
+
+              }
+
+              @else {
+
+                Save Topic
+
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- Loading topics -->
+      @if (loadingTopics()) {
+
+        <div class="state-message">
+          Loading topics...
+        </div>
+
+      }
+
+
+      <!-- No topics -->
+      @else if (topics().length === 0) {
+
+        <div class="empty-state">
+
+          <h3>
+            No topics yet
+          </h3>
+
+          <p>
+            Add topics to organize this subject.
+          </p>
+
+        </div>
+
+      }
+
+
+      <!-- Topic list -->
+      @else {
+
+        <div class="topics-card">
+
+          @for (topic of topics(); track topic.id) {
+
+            <div class="topic-row">
+
+              <!-- Topic information -->
+              <div class="topic-info">
+
+                <strong>
+                  {{ topic.name }}
+                </strong>
+
+                @if (topic.description) {
+
+                  <p>
+                    {{ topic.description }}
+                  </p>
+
+                }
+
+              </div>
+
+
+              <!-- Topic actions -->
+              <div class="topic-actions">
+
+                <span
+                  class="status"
+                  [class.active]="topic.status === 'active'"
+                  [class.inactive]="topic.status === 'inactive'"
+                >
+                  {{ topic.status }}
+                </span>
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="openEditTopic(topic)"
+                >
+                  Edit
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</section>

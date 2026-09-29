@@ -4,13 +4,19 @@
   <div class="page-header">
 
     <div>
-      <p class="eyebrow">DIAGNOSTIC</p>
 
-      <h1>Diagnostic Questions</h1>
+      <p class="eyebrow">
+        DIAGNOSTIC
+      </p>
+
+      <h1>
+        Diagnostic Questions
+      </h1>
 
       <p>
         Manage the question bank used to assess student knowledge.
       </p>
+
     </div>
 
     <button
@@ -29,13 +35,16 @@
 
     <div class="question-form-panel">
 
-      <h2>Add Diagnostic Question</h2>
+      <h2>
+        Add Diagnostic Question
+      </h2>
 
       <p>
         Create a question for the diagnostic question bank.
       </p>
 
 
+      <!-- Subject -->
       @if (loadingSubjects()) {
 
         <div class="form-loading">
@@ -52,7 +61,10 @@
             Subject
           </label>
 
-          <select id="subject">
+          <select
+            id="subject"
+            (change)="loadTopics($any($event.target).value)"
+          >
 
             <option value="">
               Select Subject
@@ -69,6 +81,44 @@
           </select>
 
         </div>
+
+
+        <!-- Topic -->
+        @if (loadingTopics()) {
+
+          <div class="form-loading">
+            Loading topics...
+          </div>
+
+        }
+
+        @else if (topics().length > 0) {
+
+          <div class="form-group">
+
+            <label for="topic">
+              Topic
+            </label>
+
+            <select id="topic">
+
+              <option value="">
+                Select Topic
+              </option>
+
+              @for (topic of topics(); track topic.id) {
+
+                <option [value]="topic.id">
+                  {{ topic.name }}
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+        }
 
       }
 
@@ -102,7 +152,9 @@
 
     <div class="empty-state">
 
-      <h2>No diagnostic questions yet</h2>
+      <h2>
+        No diagnostic questions yet
+      </h2>
 
       <p>
         Add questions to build the diagnostic question bank.
@@ -140,7 +192,8 @@
             </strong>
 
             <span>
-              Correct answer: {{ question.correct_option }}
+              Correct answer:
+              {{ question.correct_option }}
             </span>
 
           </div>

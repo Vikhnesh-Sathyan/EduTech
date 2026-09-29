@@ -38,6 +38,11 @@ export class Login {
 
   onSubmit() {
 
+
+  console.log('LOGIN BUTTON CLICKED');
+
+  this.message = '';
+  this.errorMessage = '';
     this.message = '';
     this.errorMessage = '';
 
@@ -48,12 +53,14 @@ export class Login {
 
     const { email, password } =
       this.loginForm.getRawValue();
+console.log('CALLING LOGIN API');
 
     this.auth.login({
       email: email!,
       password: password!
     }).subscribe({
 next: (response: any) => {
+  console.log('LOGIN API SUCCESS', response);
 
   localStorage.setItem(
     'token',
@@ -82,6 +89,8 @@ next: (response: any) => {
 },
 
       error: (error) => {
+          console.log('LOGIN API ERROR', error);
+
         this.errorMessage =
           error.error?.message || 'Login failed.';
       }

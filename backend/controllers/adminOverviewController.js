@@ -3,41 +3,43 @@
 
 const db = require("../config/db");
 
-const getOverview = (req, res) => {
+const getOverview = async (req, res) => {
 
-    const sql = `
-        SELECT
+    try {
 
-            (SELECT COUNT(*)
-             FROM education_programs) AS programs,
+        const sql = `
+            SELECT
 
-            (SELECT COUNT(*)
-             FROM departments) AS departments,
+                (SELECT COUNT(*)
+                 FROM education_programs) AS programs,
 
-            (SELECT COUNT(*)
-             FROM education_years) AS education_years,
+                (SELECT COUNT(*)
+                 FROM departments) AS departments,
 
-            (SELECT COUNT(*)
-             FROM subjects) AS subjects
-    `;
+                (SELECT COUNT(*)
+                 FROM education_years) AS education_years,
 
-    db.query(sql, (error, results) => {
+                (SELECT COUNT(*)
+                 FROM subjects) AS subjects
+        `;
 
-        if (error) {
-            console.error(
-                "Failed to load admin overview:",
-                error.message
-            );
-
-            return res.status(500).json({
-                message: "Failed to load admin overview."
-            });
-        }
+        const [results] = await db.query(sql);
 
         res.status(200).json({
             overview: results[0]
         });
-    });
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load admin overview:",
+            error.message
+        );
+
+        res.status(500).json({
+            message: "Failed to load admin overview."
+        });
+    }
 };
 
 module.exports = {
