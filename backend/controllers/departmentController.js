@@ -4,7 +4,7 @@ const db = require("../config/db");
 
 
 // Create a department under an education program
-const createDepartment = (req, res) => {
+const createDepartment = async (req, res) => {
 
     const {
         education_program_id,
@@ -24,40 +24,41 @@ const createDepartment = (req, res) => {
         VALUES (?, ?)
     `;
 
-    db.query(
-        sql,
-        [education_program_id, name.trim()],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [education_program_id, name.trim()]
+        );
 
-                // Handle duplicate department name
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Department already exists for this program"
-                    });
-                }
+        res.status(201).json({
+            message: "Department created successfully",
+            departmentId: result.insertId
+        });
 
-                console.error(
-                    "Department creation failed:",
-                    err.message
-                );
+    } catch (err) {
 
-                return res.status(500).json({
-                    message: "Failed to create department"
-                });
-            }
-
-            res.status(201).json({
-                message: "Department created successfully",
-                departmentId: result.insertId
+        // Handle duplicate department name
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Department already exists for this program"
             });
         }
-    );
+
+        console.error(
+            "Department creation failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to create department"
+        });
+    }
 };
 
+
 // Get all departments with their education program names
-const getDepartments = (req, res) => {
+const getDepartments = async (req, res) => {
 
     const sql = `
         SELECT
@@ -74,31 +75,30 @@ const getDepartments = (req, res) => {
         ORDER BY p.name ASC, d.name ASC
     `;
 
-    db.query(
-        sql,
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(sql);
 
-                console.error(
-                    "All departments fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            departments: result
+        });
 
-                return res.status(500).json({
-                    message: "Failed to fetch departments"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                departments: result
-            });
-        }
-    );
+        console.error(
+            "All departments fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch departments"
+        });
+    }
 };
 
+
 // Get departments for an education program
-const getDepartmentsByProgram = (req, res) => {
+const getDepartmentsByProgram = async (req, res) => {
 
     const { programId } = req.params;
 
@@ -115,33 +115,33 @@ const getDepartmentsByProgram = (req, res) => {
         ORDER BY name ASC
     `;
 
-    db.query(
-        sql,
-        [programId],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [programId]
+        );
 
-                console.error(
-                    "Departments fetch failed:",
-                    err.message
-                );
+        res.status(200).json({
+            departments: result
+        });
 
-                return res.status(500).json({
-                    message: "Failed to fetch departments"
-                });
-            }
+    } catch (err) {
 
-            res.status(200).json({
-                departments: result
-            });
-        }
-    );
+        console.error(
+            "Departments fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch departments"
+        });
+    }
 };
 
 
 // Update a department
-const updateDepartment = (req, res) => {
+const updateDepartment = async (req, res) => {
 
     const { id } = req.params;
     const { name } = req.body;
@@ -159,45 +159,45 @@ const updateDepartment = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [name.trim(), id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [name.trim(), id]
+        );
 
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Department already exists for this program"
-                    });
-                }
-
-                console.error(
-                    "Department update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update department"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Department not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Department updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Department not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Department updated successfully"
+        });
+
+    } catch (err) {
+
+        if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Department already exists for this program"
+            });
+        }
+
+        console.error(
+            "Department update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update department"
+        });
+    }
 };
 
 
 // Activate or deactivate a department
-const updateDepartmentStatus = (req, res) => {
+const updateDepartmentStatus = async (req, res) => {
 
     const { id } = req.params;
     const { status } = req.body;
@@ -215,34 +215,34 @@ const updateDepartmentStatus = (req, res) => {
         WHERE id = ?
     `;
 
-    db.query(
-        sql,
-        [status, id],
-        (err, result) => {
+    try {
 
-            if (err) {
+        const [result] = await db.query(
+            sql,
+            [status, id]
+        );
 
-                console.error(
-                    "Department status update failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to update department status"
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    message: "Department not found"
-                });
-            }
-
-            res.status(200).json({
-                message: "Department status updated successfully"
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Department not found"
             });
         }
-    );
+
+        res.status(200).json({
+            message: "Department status updated successfully"
+        });
+
+    } catch (err) {
+
+        console.error(
+            "Department status update failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to update department status"
+        });
+    }
 };
 
 

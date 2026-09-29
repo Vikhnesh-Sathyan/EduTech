@@ -10,6 +10,10 @@ import { AdminDiagnostic } from '../../../services/admin-diagnostic';
 })
 export class DiagnosticQuestions implements OnInit {
 
+  // =====================================================
+  // QUESTION LIST
+  // =====================================================
+
   // All diagnostic questions
   questions = signal<any[]>([]);
 
@@ -19,8 +23,18 @@ export class DiagnosticQuestions implements OnInit {
   // Error message
   errorMessage = signal('');
 
-  // Show Add Question form
+
+  // =====================================================
+  // ADD QUESTION FORM
+  // =====================================================
+
+  // Show or hide Add Question form
   showForm = signal(false);
+
+
+  // =====================================================
+  // SUBJECT
+  // =====================================================
 
   // Active subjects
   subjects = signal<any[]>([]);
@@ -28,21 +42,72 @@ export class DiagnosticQuestions implements OnInit {
   // Subject loading state
   loadingSubjects = signal(false);
 
-  // Active topics for selected subject
+  // Selected subject
+  selectedSubjectId = signal<number | null>(null);
+
+
+  // =====================================================
+  // TOPIC
+  // =====================================================
+
+  // Topics for selected subject
   topics = signal<any[]>([]);
+
+  // Selected topic
+  selectedTopicId = signal<number | null>(null);
 
   // Topic loading state
   loadingTopics = signal(false);
+
+
+  // =====================================================
+  // QUESTION
+  // =====================================================
+
+  // Diagnostic question text
+  questionText = signal('');
+
+
+  // =====================================================
+  // OPTIONS
+  // =====================================================
+
+  // Answer options
+  optionA = signal('');
+  optionB = signal('');
+  optionC = signal('');
+  optionD = signal('');
+
+
+  // =====================================================
+  // CORRECT ANSWER + DIFFICULTY
+  // =====================================================
+
+  // Correct answer
+  correctOption = signal('');
+
+  // Question difficulty
+  difficulty = signal('');
+
 
   constructor(
     private adminDiagnosticService: AdminDiagnostic
   ) {}
 
+
+  // =====================================================
+  // INITIAL LOAD
+  // =====================================================
+
   ngOnInit(): void {
     this.loadQuestions();
   }
 
-  // Load questions from backend
+
+  // =====================================================
+  // LOAD QUESTIONS
+  // =====================================================
+
   loadQuestions(): void {
 
     this.adminDiagnosticService
@@ -56,6 +121,7 @@ export class DiagnosticQuestions implements OnInit {
           );
 
           this.loading.set(false);
+
         },
 
         error: (error: any) => {
@@ -71,20 +137,31 @@ export class DiagnosticQuestions implements OnInit {
           );
 
           this.loading.set(false);
+
         }
 
       });
+
   }
 
-  // Open Add Question form
+
+  // =====================================================
+  // OPEN ADD QUESTION FORM
+  // =====================================================
+
   openAddQuestion(): void {
 
     this.showForm.set(true);
 
     this.loadSubjects();
+
   }
 
-  // Load active subjects
+
+  // =====================================================
+  // LOAD SUBJECTS
+  // =====================================================
+
   loadSubjects(): void {
 
     this.loadingSubjects.set(true);
@@ -100,6 +177,7 @@ export class DiagnosticQuestions implements OnInit {
           );
 
           this.loadingSubjects.set(false);
+
         },
 
         error: (error: any) => {
@@ -110,25 +188,41 @@ export class DiagnosticQuestions implements OnInit {
           );
 
           this.loadingSubjects.set(false);
+
         }
 
       });
+
   }
 
-  // Load topics for selected subject
+
+  // =====================================================
+  // LOAD TOPICS
+  // =====================================================
+
   loadTopics(subjectId: string): void {
 
     if (!subjectId) {
 
+      this.selectedSubjectId.set(null);
+      this.selectedTopicId.set(null);
       this.topics.set([]);
 
       return;
+
     }
+
+    const id = Number(subjectId);
+
+    this.selectedSubjectId.set(id);
+
+    // Reset previous topic
+    this.selectedTopicId.set(null);
 
     this.loadingTopics.set(true);
 
     this.adminDiagnosticService
-      .getTopics(Number(subjectId))
+      .getTopics(id)
       .subscribe({
 
         next: (response: any) => {
@@ -138,6 +232,7 @@ export class DiagnosticQuestions implements OnInit {
           );
 
           this.loadingTopics.set(false);
+
         },
 
         error: (error: any) => {
@@ -150,9 +245,98 @@ export class DiagnosticQuestions implements OnInit {
           this.topics.set([]);
 
           this.loadingTopics.set(false);
+
         }
 
       });
+
   }
+
+
+  // =====================================================
+  // CANCEL FORM
+  // =====================================================
+
+  cancelForm(): void {
+
+    this.showForm.set(false);
+
+    this.selectedSubjectId.set(null);
+    this.selectedTopicId.set(null);
+
+    this.topics.set([]);
+
+    this.questionText.set('');
+
+    this.optionA.set('');
+    this.optionB.set('');
+    this.optionC.set('');
+    this.optionD.set('');
+
+    this.correctOption.set('');
+    this.difficulty.set('');
+
+  }
+
+  saveQuestion(): void {
+
+  // Basic frontend validation
+  if (
+    !this.selectedSubjectId() ||
+    !this.selectedTopicId() ||
+    !this.questionText().trim() ||
+    !this.optionA().trim() ||
+    !this.optionB().trim() ||
+    !this.optionC().trim() ||
+    !this.optionD().trim() ||
+    !this.correctOption() ||
+    !this.difficulty()
+  ) {
+    this.errorMessage.set('Please fill all question fields');
+    return;
+  }
+
+  const data = {
+    subjectId: this.selectedSubjectId(),
+    topicId: this.selectedTopicId(),
+    question: this.questionText().trim(),
+    optionA: this.optionA().trim(),
+    optionB: this.optionB().trim(),
+    optionC: this.optionC().trim(),
+    optionD: this.optionD().trim(),
+    correctOption: this.correctOption(),
+    difficulty: this.difficulty()
+  };
+
+  this.adminDiagnosticService
+    .createQuestion(data)
+    .subscribe({
+      next: (response: any) => {
+
+        console.log(
+          'Diagnostic question created:',
+          response
+        );
+
+        this.cancelForm();
+        this.loadQuestions();
+
+        this.errorMessage.set('');
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Failed to create diagnostic question:',
+          error
+        );
+
+        this.errorMessage.set(
+          error.error?.message ||
+          'Failed to create diagnostic question'
+        );
+      }
+    });
+}
 
 }

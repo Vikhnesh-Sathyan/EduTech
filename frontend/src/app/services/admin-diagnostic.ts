@@ -9,25 +9,30 @@ export class AdminDiagnostic {
   private apiUrl =
     'http://localhost:5000/api/admin/diagnostic-questions';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
-  // Get all diagnostic questions
   getQuestions() {
     return this.http.get(this.apiUrl);
   }
 
-  // Get active subjects
-getSubjects() {
-  return this.http.get(
-    `${this.apiUrl}/subjects`
-  );
-}
+  getSubjects() {
+    return this.http.get(
+      `${this.apiUrl}/subjects`
+    );
+  }
 
-// Get active topics for a subject
-getTopics(subjectId: number) {
-  return this.http.get(
-    `${this.apiUrl}/subjects/${subjectId}/topics`
-  );
-}
+  getTopics(subjectId: number) {
+    return this.http.get(
+      `${this.apiUrl}/subjects/${subjectId}/topics`
+    );
+  }
 
+  createQuestion(data: any) {
+    return this.http.post(
+      this.apiUrl,
+      data
+    );
+  }
 }

@@ -1,279 +1,821 @@
+/* =====================================================
+   DIAGNOSTIC QUESTIONS PAGE
+   ===================================================== */
+
 .diagnostic-questions-page {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
-  padding: 48px 32px;
+  padding: 52px 56px 80px;
+  color: #171717;
 }
 
-/* ================================
+
+/* =====================================================
    PAGE HEADER
-   ================================ */
+   ===================================================== */
 
 .page-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 36px;
+  gap: 40px;
+  margin-bottom: 44px;
+}
+
+.page-header-content {
+  min-width: 0;
 }
 
 .eyebrow {
   margin: 0 0 10px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #777;
-}
-
-h1 {
-  margin: 0;
-  font-size: 36px;
-  line-height: 1.2;
-  color: #171717;
-}
-
-.page-header p:last-child {
-  margin: 12px 0 0;
-  color: #6b6b6b;
-  font-size: 15px;
-}
-
-/* ================================
-   ADD QUESTION BUTTON
-   ================================ */
-
-.add-question-button {
-  border: none;
-  border-radius: 10px;
-  padding: 13px 20px;
-  background: #171717;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.add-question-button:hover {
-  background: #303030;
-}
-
-/* ================================
-   STATES
-   ================================ */
-
-.state-message,
-.empty-state {
-  border: 1px solid #e7e7e7;
-  border-radius: 16px;
-  background: #fff;
-  padding: 48px 24px;
-  text-align: center;
-  color: #666;
-}
-
-.error-state {
-  color: #b42318;
-  background: #fff8f7;
-  border-color: #f1c7c3;
-}
-
-.empty-state h2 {
-  margin: 0;
-  color: #222;
-  font-size: 20px;
-}
-
-.empty-state p {
-  margin: 10px 0 0;
-  color: #777;
-}
-
-/* ================================
-   QUESTIONS CARD
-   ================================ */
-
-.questions-card {
-  overflow: hidden;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  background: #fff;
-}
-
-/* ================================
-   TABLE HEADER
-   ================================ */
-
-.table-header,
-.question-row {
-  display: grid;
-  grid-template-columns:
-    minmax(280px, 2fr)
-    1fr
-    1fr
-    120px
-    100px;
-  gap: 20px;
-  align-items: center;
-  padding: 18px 22px;
-}
-
-.table-header {
-  background: #fafafa;
-  border-bottom: 1px solid #e7e7e7;
   color: #777;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.22em;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #111;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.page-description {
+  max-width: 620px;
+  margin: 16px 0 0;
+  color: #666;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* =====================================================
+   ADD QUESTION BUTTON
+   ===================================================== */
+
+.add-question-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 52px;
+  padding: 0 22px;
+
+  border: 1px solid #171717;
+  border-radius: 12px;
+
+  background: #171717;
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.add-question-button span {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.add-question-button:hover {
+  background: #292929;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.add-question-button:active {
+  transform: translateY(1px);
+}
+
+
+/* =====================================================
+   QUESTION FORM PANEL
+   ===================================================== */
+
+.question-form-panel {
+  margin-bottom: 32px;
+
+  border: 1px solid #e5e5e2;
+  border-radius: 22px;
+
+  background: #fff;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 16px 40px rgba(0, 0, 0, 0.035);
+
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   FORM HEADER
+   ===================================================== */
+
+.form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+
+  padding: 32px 36px;
+
+  border-bottom: 1px solid #ededeb;
+  background: #fcfcfb;
+}
+
+.form-eyebrow {
+  margin: 0 0 8px;
+
+  color: #888;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.form-header h2 {
+  margin: 0;
+
+  color: #161616;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.form-header p:not(.form-eyebrow) {
+  margin: 8px 0 0;
+
+  color: #777;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.form-step {
+  flex-shrink: 0;
+
+  padding: 8px 12px;
+
+  border: 1px solid #dededb;
+  border-radius: 8px;
+
+  background: #fff;
+  color: #777;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+
+/* =====================================================
+   FORM SECTIONS
+   ===================================================== */
+
+.form-section {
+  padding: 34px 36px;
+
+  border-bottom: 1px solid #ededeb;
+}
+
+.form-section:last-of-type {
+  border-bottom: 0;
+}
+
+
+/* =====================================================
+   SECTION HEADING
+   ===================================================== */
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  margin-bottom: 26px;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  border: 1px solid #dededb;
+  border-radius: 9px;
+
+  background: #f8f8f6;
+  color: #555;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.section-heading h3 {
+  margin: 2px 0 4px;
+
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.section-heading p {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   FORM GRID
+   ===================================================== */
+
+.form-grid {
+  display: grid;
+  gap: 22px;
+}
+
+.two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+
+/* =====================================================
+   FORM GROUP
+   ===================================================== */
+
+.form-group {
+  min-width: 0;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-bottom: 9px;
+
+  color: #333;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+
+/* =====================================================
+   INPUTS
+   ===================================================== */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #dcdcd8;
+  border-radius: 11px;
+
+  background: #fff;
+  color: #202020;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.form-group input,
+.form-group select {
+  height: 48px;
+  padding: 0 14px;
+}
+
+.form-group textarea {
+  min-height: 135px;
+  padding: 14px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #aaa;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #c5c5c1;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #222;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.form-group select:disabled {
+  background: #f5f5f3;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   FIELD HINT
+   ===================================================== */
+
+.field-hint {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #999;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   FORM LOADING
+   ===================================================== */
+
+.form-loading {
+  display: flex;
+  align-items: center;
+
+  height: 48px;
+  padding: 0 14px;
+
+  border: 1px solid #e0e0dc;
+  border-radius: 11px;
+
+  background: #f8f8f6;
+  color: #888;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   ANSWER OPTIONS
+   ===================================================== */
+
+.options-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+.option-group label {
+  color: #444;
+}
+
+.option-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  border: 1px solid #d9d9d5;
+  border-radius: 7px;
+
+  background: #f7f7f5;
+  color: #444;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* =====================================================
+   FORM ACTIONS
+   ===================================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+
+  padding: 24px 36px;
+
+  background: #fcfcfb;
+  border-top: 1px solid #ededeb;
+}
+
+
+/* Cancel */
+
+.cancel-button {
+  min-height: 46px;
+  padding: 0 18px;
+
+  border: 1px solid #d8d8d4;
+  border-radius: 10px;
+
+  background: #fff;
+  color: #444;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: #f6f6f4;
+  border-color: #c7c7c3;
+}
+
+
+/* Save */
+
+.save-question-button {
+  min-height: 46px;
+  padding: 0 22px;
+
+  border: 1px solid #171717;
+  border-radius: 10px;
+
+  background: #171717;
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.save-question-button:disabled {
+  background: #cfcfcb;
+  border-color: #cfcfcb;
+  color: #fff;
+
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   QUESTIONS CARD
+   ===================================================== */
+
+.questions-card {
+  border: 1px solid #e5e5e2;
+  border-radius: 20px;
+
+  background: #fff;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.025),
+    0 14px 35px rgba(0, 0, 0, 0.025);
+}
+
+
+/* =====================================================
+   TABLE HEADER
+   ===================================================== */
+
+.table-header {
+  display: grid;
+
+  grid-template-columns:
+    minmax(300px, 2.2fr)
+    minmax(130px, 1fr)
+    minmax(130px, 1fr)
+    120px
+    110px;
+
+  gap: 20px;
+
+  padding: 17px 22px;
+
+  border-bottom: 1px solid #e8e8e5;
+
+  background: #fafaf8;
+
+  color: #858581;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-/* ================================
+
+/* =====================================================
    QUESTION ROW
-   ================================ */
+   ===================================================== */
 
 .question-row {
-  min-height: 92px;
-  border-bottom: 1px solid #eeeeee;
+  display: grid;
+
+  grid-template-columns:
+    minmax(300px, 2.2fr)
+    minmax(130px, 1fr)
+    minmax(130px, 1fr)
+    120px
+    110px;
+
+  gap: 20px;
+
+  align-items: center;
+
+  padding: 22px;
+
+  border-bottom: 1px solid #eeeeeb;
+
   color: #555;
-  font-size: 14px;
+
+  font-size: 13px;
+
+  transition:
+    background 0.2s ease;
 }
 
 .question-row:last-child {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
+.question-row:hover {
+  background: #fcfcfb;
+}
+
+
+/* =====================================================
+   QUESTION CONTENT
+   ===================================================== */
+
 .question-content {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
   min-width: 0;
 }
 
 .question-content strong {
-  display: block;
   color: #222;
+
   font-size: 14px;
+  font-weight: 650;
   line-height: 1.5;
 }
 
 .question-content span {
-  display: block;
-  margin-top: 7px;
   color: #999;
-  font-size: 12px;
+
+  font-size: 11px;
 }
 
-/* ================================
-   DIFFICULTY
-   ================================ */
 
-.difficulty,
-.status {
+/* =====================================================
+   DIFFICULTY
+   ===================================================== */
+
+.difficulty {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 5px 10px;
+
+  padding: 6px 9px;
+
+  border-radius: 7px;
+
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 750;
+
   text-transform: capitalize;
 }
 
 .difficulty.easy {
-  background: #edf8f0;
-  color: #287a3d;
+  background: #f3f3f1;
+  color: #555;
 }
 
 .difficulty.medium {
-  background: #fff7e6;
-  color: #946200;
+  background: #ecece9;
+  color: #444;
 }
 
 .difficulty.hard {
-  background: #fff0ef;
-  color: #a63d35;
+  background: #e4e4e0;
+  color: #222;
 }
 
-/* ================================
+
+/* =====================================================
    STATUS
-   ================================ */
+   ===================================================== */
+
+.status {
+  display: inline-flex;
+
+  padding: 6px 9px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  text-transform: capitalize;
+}
 
 .status.active {
-  background: #edf8f0;
-  color: #287a3d;
+  background: #f1f1ee;
+  color: #333;
 }
 
 .status.inactive {
-  background: #f1f1f1;
-  color: #777;
+  background: #e9e9e6;
+  color: #888;
 }
 
-/* ==========================================
-   ADD QUESTION FORM
-   ========================================== */
 
-.question-form-panel {
-  margin-bottom: 24px;
-  padding: 28px;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 280px;
+
+  padding: 50px 30px;
+
+  border: 1px solid #e5e5e2;
+  border-radius: 20px;
+
   background: #fff;
+
+  text-align: center;
 }
 
-.question-form-panel h2 {
-  margin: 0;
-  color: #222;
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 46px;
+
+  margin-bottom: 18px;
+
+  border: 1px solid #dededb;
+  border-radius: 12px;
+
+  background: #f7f7f5;
+  color: #777;
+
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 22px;
 }
 
-.question-form-panel > p {
-  margin: 8px 0 24px;
-  color: #777;
-  font-size: 14px;
-}
+.empty-state h2 {
+  margin: 0;
 
-.form-group {
-  max-width: 500px;
-}
+  color: #222;
 
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #333;
-  font-size: 13px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
   font-weight: 600;
 }
 
-.form-group select {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
+.empty-state p {
+  max-width: 450px;
+
+  margin: 9px 0 0;
+
+  color: #888;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   PAGE STATES
+   ===================================================== */
+
+.state-message {
+  padding: 45px;
+
+  border: 1px solid #e5e5e2;
+  border-radius: 18px;
+
   background: #fff;
-  color: #333;
-  font-size: 14px;
-  outline: none;
-}
 
-.form-group select:focus {
-  border-color: #999;
-}
-
-.form-loading {
   color: #777;
+
   font-size: 14px;
+
+  text-align: center;
 }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
+.error-state {
+  color: #555;
+}
 
-@media (max-width: 900px) {
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1000px) {
 
   .diagnostic-questions-page {
-    padding: 36px 20px;
+    padding: 40px 28px 60px;
+  }
+
+  .table-header,
+  .question-row {
+    grid-template-columns:
+      minmax(250px, 2fr)
+      minmax(120px, 1fr)
+      minmax(120px, 1fr)
+      100px
+      100px;
+  }
+
+}
+
+
+@media (max-width: 760px) {
+
+  .diagnostic-questions-page {
+    padding: 30px 18px 50px;
   }
 
   .page-header {
     align-items: flex-start;
     flex-direction: column;
+    gap: 24px;
+  }
+
+  .add-question-button {
+    width: 100%;
+  }
+
+  .form-header {
+    flex-direction: column;
+    padding: 26px 22px;
+  }
+
+  .form-section {
+    padding: 28px 22px;
+  }
+
+  .two-columns,
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    padding: 20px 22px;
   }
 
   .table-header {
@@ -281,34 +823,35 @@ h1 {
   }
 
   .question-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    padding: 20px;
   }
 
-  .question-content {
-    grid-column: 1 / -1;
-  }
 }
 
-@media (max-width: 600px) {
+
+@media (max-width: 480px) {
 
   .diagnostic-questions-page {
-    padding: 28px 16px;
+    padding: 24px 14px 40px;
   }
 
-  h1 {
-    font-size: 30px;
+  .page-header h1 {
+    font-size: 34px;
   }
 
-  .question-row {
-    grid-template-columns: 1fr;
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 
-  .question-content {
-    grid-column: auto;
-  }
-
-  .add-question-button {
+  .cancel-button,
+  .save-question-button {
     width: 100%;
   }
+
 }

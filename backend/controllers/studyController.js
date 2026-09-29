@@ -5,42 +5,32 @@ const db = require("../config/db");
 // GET SUBJECTS FOR LOGGED-IN STUDENT
 // ==========================================
 
-const getStudentSubjects = (req, res) => {
+const getStudentSubjects = async (req, res) => {
 
     // Student ID comes from the JWT
     const userId = req.user.id;
 
+    try {
 
-    // Find the student's education year
-    const sql = `
-        SELECT
-            sp.education_year_id
-        FROM student_profiles sp
-        WHERE sp.user_id = ?
-    `;
+        // Find the student's education year
+        const sql = `
+            SELECT
+                sp.education_year_id
+            FROM student_profiles sp
+            WHERE sp.user_id = ?
+        `;
 
-
-    db.query(sql, [userId], (err, result) => {
-
-        if (err) {
-            console.error(
-                "Student education year lookup failed:",
-                err.message
-            );
-
-            return res.status(500).json({
-                message: "Failed to load student information"
-            });
-        }
+        const [result] = await db.query(
+            sql,
+            [userId]
+        );
 
 
         // Student profile does not exist
         if (result.length === 0) {
-
             return res.status(404).json({
                 message: "Student profile not found"
             });
-
         }
 
 
@@ -50,11 +40,9 @@ const getStudentSubjects = (req, res) => {
 
         // Student has not selected an education year
         if (!educationYearId) {
-
             return res.status(400).json({
                 message: "Education year is not configured"
             });
-
         }
 
 
@@ -70,40 +58,35 @@ const getStudentSubjects = (req, res) => {
             ORDER BY name ASC
         `;
 
-
-        db.query(
+        const [subjects] = await db.query(
             subjectSql,
-            [educationYearId],
-            (err, subjects) => {
-
-                if (err) {
-                    console.error(
-                        "Student subjects lookup failed:",
-                        err.message
-                    );
-
-                    return res.status(500).json({
-                        message: "Failed to load subjects"
-                    });
-                }
-
-
-                res.status(200).json({
-                    subjects
-                });
-
-            }
+            [educationYearId]
         );
 
-    });
 
+        res.status(200).json({
+            subjects
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Student subjects lookup failed:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Failed to load subjects"
+        });
+    }
 };
+
 
 // ==========================================
 // GET ONE SUBJECT FOR LOGGED-IN STUDENT
 // ==========================================
 
-const getSubjectById = (req, res) => {
+const getSubjectById = async (req, res) => {
 
     // Student ID comes from the JWT
     const userId = req.user.id;
@@ -111,60 +94,53 @@ const getSubjectById = (req, res) => {
     // Subject ID comes from the URL
     const subjectId = req.params.subjectId;
 
+    try {
 
-    // Find the subject only if it belongs
-    // to the student's education year
-    const sql = `
-        SELECT
-            s.id,
-            s.name,
-            s.description
-        FROM subjects s
-        INNER JOIN student_profiles sp
-            ON sp.education_year_id = s.education_year_id
-        WHERE sp.user_id = ?
-          AND s.id = ?
-          AND s.status = 'active'
-    `;
+        // Find the subject only if it belongs
+        // to the student's education year
+        const sql = `
+            SELECT
+                s.id,
+                s.name,
+                s.description
+            FROM subjects s
+            INNER JOIN student_profiles sp
+                ON sp.education_year_id = s.education_year_id
+            WHERE sp.user_id = ?
+              AND s.id = ?
+              AND s.status = 'active'
+        `;
 
-
-    db.query(
-        sql,
-        [userId, subjectId],
-        (err, result) => {
-
-            if (err) {
-
-                console.error(
-                    "Subject lookup failed:",
-                    err.message
-                );
-
-                return res.status(500).json({
-                    message: "Failed to load subject"
-                });
-
-            }
+        const [result] = await db.query(
+            sql,
+            [userId, subjectId]
+        );
 
 
-            // Subject does not exist
-            // or does not belong to this student's education year
-            if (result.length === 0) {
-
-                return res.status(404).json({
-                    message: "Subject not found"
-                });
-
-            }
-
-
-            res.status(200).json({
-                subject: result[0]
+        // Subject does not exist
+        // or does not belong to this student's education year
+        if (result.length === 0) {
+            return res.status(404).json({
+                message: "Subject not found"
             });
-
         }
-    );
 
+
+        res.status(200).json({
+            subject: result[0]
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Subject lookup failed:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Failed to load subject"
+        });
+    }
 };
 
 
@@ -172,4 +148,3 @@ module.exports = {
     getStudentSubjects,
     getSubjectById
 };
-
