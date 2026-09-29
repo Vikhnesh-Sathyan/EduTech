@@ -1,7 +1,8 @@
 const express = require("express");
 
 const {
-    startDiagnostic
+    startDiagnostic,
+    submitAnswer
 } = require("../controllers/diagnosticController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -18,5 +19,11 @@ router.post(
     startDiagnostic
 );
 
+router.post(
+    "/:attemptId/answer",
+    authMiddleware,
+    roleMiddleware("student"),
+    submitAnswer
+);
 
 module.exports = router;

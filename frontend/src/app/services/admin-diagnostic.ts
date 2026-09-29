@@ -9,13 +9,26 @@ export class AdminDiagnostic {
   private apiUrl =
     'http://localhost:5000/api/admin/diagnostic-questions';
 
+
   constructor(
     private http: HttpClient
   ) {}
 
+
+  // =====================================================
+  // GET QUESTIONS
+  // =====================================================
+
   getQuestions() {
-    return this.http.get(this.apiUrl);
+    return this.http.get(
+      this.apiUrl
+    );
   }
+
+
+  // =====================================================
+  // GET SUBJECTS
+  // =====================================================
 
   getSubjects() {
     return this.http.get(
@@ -23,11 +36,21 @@ export class AdminDiagnostic {
     );
   }
 
+
+  // =====================================================
+  // GET TOPICS
+  // =====================================================
+
   getTopics(subjectId: number) {
     return this.http.get(
       `${this.apiUrl}/subjects/${subjectId}/topics`
     );
   }
+
+
+  // =====================================================
+  // CREATE QUESTION
+  // =====================================================
 
   createQuestion(data: any) {
     return this.http.post(
@@ -35,4 +58,20 @@ export class AdminDiagnostic {
       data
     );
   }
+
+
+  // =====================================================
+  // UPDATE QUESTION
+  // =====================================================
+
+  updateQuestion(
+    questionId: number,
+    data: any
+  ) {
+    return this.http.put(
+      `${this.apiUrl}/${questionId}`,
+      data
+    );
+  }
+
 }

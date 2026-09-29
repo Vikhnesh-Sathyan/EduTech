@@ -36,7 +36,7 @@
 
 
   <!-- =====================================================
-       ADD QUESTION FORM
+       ADD / EDIT QUESTION FORM
        ===================================================== -->
 
   @if (showForm()) {
@@ -54,17 +54,34 @@
           </p>
 
           <h2>
-            Add Diagnostic Question
+            @if (editingQuestionId()) {
+              Edit Diagnostic Question
+            }
+            @else {
+              Add Diagnostic Question
+            }
           </h2>
 
           <p>
-            Create a structured question for student assessment.
+            @if (editingQuestionId()) {
+              Update the selected diagnostic question.
+            }
+            @else {
+              Create a structured question for student assessment.
+            }
           </p>
 
         </div>
 
         <div class="form-step">
-          NEW QUESTION
+
+          @if (editingQuestionId()) {
+            EDIT QUESTION
+          }
+          @else {
+            NEW QUESTION
+          }
+
         </div>
 
       </div>
@@ -112,7 +129,12 @@
 
               <select
                 id="subject"
-                (change)="loadTopics($any($event.target).value)"
+                [value]="selectedSubjectId() ?? ''"
+                (change)="
+                  loadTopics(
+                    $any($event.target).value
+                  )
+                "
               >
 
                 <option value="">
@@ -124,7 +146,9 @@
                   track subject.id
                 ) {
 
-                  <option [value]="subject.id">
+                  <option
+                    [value]="subject.id"
+                  >
                     {{ subject.name }}
                   </option>
 
@@ -147,6 +171,7 @@
 
             <select
               id="topic"
+              [value]="selectedTopicId() ?? ''"
               [disabled]="
                 !selectedSubjectId() ||
                 loadingTopics()
@@ -159,12 +184,14 @@
             >
 
               <option value="">
+
                 @if (loadingTopics()) {
                   Loading topics...
                 }
                 @else {
                   Select Topic
                 }
+
               </option>
 
               @for (
@@ -172,7 +199,9 @@
                 track topic.id
               ) {
 
-                <option [value]="topic.id">
+                <option
+                  [value]="topic.id"
+                >
                   {{ topic.name }}
                 </option>
 
@@ -201,7 +230,9 @@
 
           <div>
             <h3>Question</h3>
-            <p>Write the question students will answer.</p>
+            <p>
+              Write the question students will answer.
+            </p>
           </div>
 
         </div>
@@ -235,7 +266,7 @@
 
 
       <!-- =================================================
-           ANSWER OPTIONS
+           CODE
            ================================================= -->
 
       <div class="form-section">
@@ -247,8 +278,70 @@
           </span>
 
           <div>
-            <h3>Answer Options</h3>
-            <p>Provide four possible answers.</p>
+
+            <h3>
+              Code
+            </h3>
+
+            <p>
+              Optional code block for programming questions.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="questionCode">
+            Code
+          </label>
+
+          <textarea
+            id="questionCode"
+            class="code-input"
+            [value]="code()"
+            (input)="
+              code.set(
+                $any($event.target).value
+              )
+            "
+            placeholder="Paste the code here if this is a coding question..."
+            rows="8"
+          ></textarea>
+
+          <span class="field-hint">
+            Leave this empty for normal conceptual questions.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ANSWER OPTIONS
+           ================================================= -->
+
+      <div class="form-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            04
+          </span>
+
+          <div>
+
+            <h3>
+              Answer Options
+            </h3>
+
+            <p>
+              Provide four possible answers.
+            </p>
+
           </div>
 
         </div>
@@ -261,11 +354,13 @@
           <div class="form-group option-group">
 
             <label for="optionA">
+
               <span class="option-badge">
                 A
               </span>
 
               Option A
+
             </label>
 
             <input
@@ -288,11 +383,13 @@
           <div class="form-group option-group">
 
             <label for="optionB">
+
               <span class="option-badge">
                 B
               </span>
 
               Option B
+
             </label>
 
             <input
@@ -315,11 +412,13 @@
           <div class="form-group option-group">
 
             <label for="optionC">
+
               <span class="option-badge">
                 C
               </span>
 
               Option C
+
             </label>
 
             <input
@@ -342,11 +441,13 @@
           <div class="form-group option-group">
 
             <label for="optionD">
+
               <span class="option-badge">
                 D
               </span>
 
               Option D
+
             </label>
 
             <input
@@ -377,12 +478,19 @@
         <div class="section-heading">
 
           <span class="section-number">
-            04
+            05
           </span>
 
           <div>
-            <h3>Assessment Settings</h3>
-            <p>Define the correct answer and difficulty level.</p>
+
+            <h3>
+              Assessment Settings
+            </h3>
+
+            <p>
+              Define the correct answer and difficulty level.
+            </p>
+
           </div>
 
         </div>
@@ -490,14 +598,20 @@
           Cancel
         </button>
 
-        <!-- API connection will be added next -->
 
         <button
           type="button"
           class="save-question-button"
           (click)="saveQuestion()"
         >
-          Save Question
+
+          @if (editingQuestionId()) {
+            Update Question
+          }
+          @else {
+            Save Question
+          }
+
         </button>
 
       </div>
@@ -575,6 +689,10 @@
           Status
         </span>
 
+        <span>
+          Action
+        </span>
+
       </div>
 
 
@@ -587,6 +705,8 @@
 
         <div class="question-row">
 
+          <!-- Question -->
+
           <div class="question-content">
 
             <strong>
@@ -598,18 +718,32 @@
               {{ question.correct_option }}
             </span>
 
+            @if (question.code) {
+
+              <span class="code-indicator">
+                Coding Question
+              </span>
+
+            }
+
           </div>
 
+
+          <!-- Subject -->
 
           <div>
             {{ question.subject_name }}
           </div>
 
 
+          <!-- Topic -->
+
           <div>
             {{ question.topic_name }}
           </div>
 
+
+          <!-- Difficulty -->
 
           <div>
 
@@ -631,6 +765,8 @@
           </div>
 
 
+          <!-- Status -->
+
           <div>
 
             <span
@@ -644,6 +780,21 @@
             >
               {{ question.status }}
             </span>
+
+          </div>
+
+
+          <!-- Action -->
+
+          <div class="question-action">
+
+            <button
+              type="button"
+              class="edit-question-button"
+              (click)="openEditQuestion(question)"
+            >
+              Edit
+            </button>
 
           </div>
 

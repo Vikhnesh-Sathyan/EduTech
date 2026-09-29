@@ -5,7 +5,7 @@
 .diagnostic-page {
   min-height: calc(100vh - 72px);
   background: #f7f7f5;
-  padding: 56px 32px 80px;
+  padding: 48px 32px 72px;
   color: #171717;
 }
 
@@ -16,40 +16,34 @@
 
 .diagnostic-header {
   max-width: 900px;
-  margin: 0 auto 42px;
+  margin: 0 auto 38px;
 }
 
 .eyebrow {
-  margin: 0 0 16px;
-
-  font-size: 13px;
+  margin: 0 0 14px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-
   color: #77736c;
 }
 
 .diagnostic-header h1 {
   margin: 0;
-
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(44px, 6vw, 68px);
-  line-height: 1;
+  font-size: clamp(38px, 5vw, 56px);
+  line-height: 1.05;
   font-weight: 600;
-  letter-spacing: -0.045em;
-
+  letter-spacing: -0.04em;
   color: #111111;
 }
 
 .diagnostic-header p:last-child {
   max-width: 680px;
-  margin: 26px 0 0;
-
+  margin: 20px 0 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 18px;
-  line-height: 1.7;
-
+  font-size: 16px;
+  line-height: 1.65;
   color: #6d6962;
 }
 
@@ -60,38 +54,31 @@
 
 .diagnostic-progress {
   max-width: 900px;
-  margin: 0 auto 34px;
+  margin: 0 auto 30px;
 }
 
 .progress-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  margin-bottom: 10px;
-
-  font-size: 13px;
+  margin-bottom: 9px;
+  font-size: 12px;
   font-weight: 600;
-
   color: #65615b;
 }
 
 .progress-track {
   width: 100%;
   height: 5px;
-
   overflow: hidden;
-
   background: #dedbd5;
   border-radius: 999px;
 }
 
 .progress-bar {
   height: 100%;
-
   background: #171717;
   border-radius: inherit;
-
   transition: width 0.3s ease;
 }
 
@@ -103,40 +90,30 @@
 .question-card {
   max-width: 900px;
   margin: 0 auto;
-
-  padding: 42px;
-
+  padding: 36px;
   background: #ffffff;
-
   border: 1px solid #e4e1db;
   border-radius: 18px;
-
   box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.04);
 }
 
 .question-number {
-  margin: 0 0 18px;
-
-  font-size: 13px;
+  margin: 0 0 16px;
+  font-size: 12px;
   font-weight: 700;
-
   letter-spacing: 0.08em;
   text-transform: uppercase;
-
   color: #8a857d;
 }
 
 .question-card h2 {
-  margin: 0 0 34px;
-
+  margin: 0 0 28px;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(25px, 4vw, 34px);
+  font-size: clamp(23px, 3.5vw, 30px);
   line-height: 1.35;
   font-weight: 600;
-
-  letter-spacing: -0.025em;
-
+  letter-spacing: -0.02em;
   color: #171717;
 }
 
@@ -147,32 +124,24 @@
 
 .options-list {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .option-button {
   width: 100%;
-  min-height: 62px;
-
+  min-height: 56px;
   display: flex;
   align-items: center;
-  gap: 16px;
-
-  padding: 14px 18px;
-
+  gap: 14px;
+  padding: 12px 16px;
   border: 1px solid #dedbd5;
-  border-radius: 12px;
-
+  border-radius: 11px;
   background: #faf9f7;
   color: #242424;
-
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
-
   text-align: left;
-
   cursor: pointer;
-
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
@@ -198,21 +167,16 @@
    ========================================================= */
 
 .option-letter {
-  width: 32px;
-  height: 32px;
-
-  flex: 0 0 32px;
-
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: 1px solid #cfcac2;
-  border-radius: 8px;
-
-  font-size: 13px;
+  border-radius: 7px;
+  font-size: 12px;
   font-weight: 700;
-
   background: #ffffff;
   color: #4f4b45;
 }
@@ -231,26 +195,19 @@
 .question-actions {
   display: flex;
   justify-content: flex-end;
-
-  margin-top: 28px;
+  margin-top: 24px;
 }
 
 .next-button {
-  min-width: 120px;
-
-  padding: 13px 24px;
-
+  min-width: 112px;
+  padding: 12px 22px;
   border: none;
-  border-radius: 10px;
-
+  border-radius: 9px;
   background: #171717;
   color: #ffffff;
-
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition:
     background 0.2s ease,
     transform 0.2s ease,
@@ -274,12 +231,9 @@
 
 .state-message {
   max-width: 700px;
-
   margin: 100px auto;
   padding: 40px;
-
   text-align: center;
-
   color: #6d6962;
 }
 
@@ -287,6 +241,126 @@
   color: #9b3030;
 }
 
+/* =========================================================
+   QUESTION META
+   ========================================================= */
+
+.question-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.question-meta .question-number {
+  margin: 0;
+}
+
+
+/* =========================================================
+   DIFFICULTY BADGE
+   ========================================================= */
+
+.difficulty-badge {
+  padding: 5px 9px;
+  border: 1px solid #dedbd5;
+  border-radius: 999px;
+  background: #f7f6f3;
+  color: #706b64;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CODING QUESTION
+   ========================================================= */
+
+.code-block {
+  margin: -4px 0 24px;
+  overflow: hidden;
+  border: 1px solid #292929;
+  border-radius: 12px;
+  background: #1d1d1d;
+}
+
+
+/* Code header */
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid #333333;
+  background: #242424;
+  color: #a9a9a9;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+/* Code itself */
+
+.code-block pre {
+  margin: 0;
+  padding: 18px 20px;
+  overflow-x: auto;
+  color: #eeeeee;
+  font-family:
+    "Cascadia Code",
+    "Fira Code",
+    Consolas,
+    monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.code-block code {
+  font-family: inherit;
+  white-space: pre;
+}
+
+
+/* =========================================================
+   CODING ANSWER LABEL
+   ========================================================= */
+
+.answer-label {
+  margin: 0 0 12px;
+  color: #65615b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   MOBILE CODING UI
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .code-block {
+    border-radius: 10px;
+  }
+
+  .code-block pre {
+    padding: 14px;
+    font-size: 12px;  
+    line-height: 1.6;
+  }
+
+  .code-header {
+    padding: 8px 12px;
+  }
+
+}
 
 /* =========================================================
    MOBILE
@@ -295,33 +369,34 @@
 @media (max-width: 700px) {
 
   .diagnostic-page {
-    padding: 36px 18px 60px;
+    padding: 32px 18px 56px;
   }
 
   .diagnostic-header {
-    margin-bottom: 34px;
+    margin-bottom: 30px;
   }
 
   .diagnostic-header h1 {
-    font-size: 44px;
+    font-size: 38px;
   }
 
   .diagnostic-header p:last-child {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .question-card {
-    padding: 26px 20px;
+    padding: 24px 18px;
     border-radius: 14px;
   }
 
   .question-card h2 {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .option-button {
-    min-height: 58px;
-    padding: 12px 14px;
+    min-height: 54px;
+    padding: 11px 13px;
+    font-size: 14px;
   }
 
   .question-actions {

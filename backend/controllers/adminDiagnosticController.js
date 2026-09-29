@@ -11,6 +11,7 @@ const createDiagnosticQuestion = async (req, res) => {
             subjectId,
             topicId,
             question,
+            code,
             optionA,
             optionB,
             optionC,
@@ -55,7 +56,8 @@ const createDiagnosticQuestion = async (req, res) => {
 
         if (topicResult.length === 0) {
             return res.status(400).json({
-                message: "Selected topic does not belong to this subject"
+                message:
+                    "Selected topic does not belong to this subject"
             });
         }
 
@@ -66,6 +68,7 @@ const createDiagnosticQuestion = async (req, res) => {
                 subject_id,
                 topic_id,
                 question,
+                code,
                 option_a,
                 option_b,
                 option_c,
@@ -73,7 +76,7 @@ const createDiagnosticQuestion = async (req, res) => {
                 correct_option,
                 difficulty
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const [result] = await db.query(
@@ -82,6 +85,7 @@ const createDiagnosticQuestion = async (req, res) => {
                 subjectId,
                 topicId,
                 question,
+                code || null,
                 optionA,
                 optionB,
                 optionC,
@@ -93,7 +97,8 @@ const createDiagnosticQuestion = async (req, res) => {
 
 
         res.status(201).json({
-            message: "Diagnostic question created successfully",
+            message:
+                "Diagnostic question created successfully",
             questionId: result.insertId
         });
 
@@ -105,10 +110,155 @@ const createDiagnosticQuestion = async (req, res) => {
         );
 
         res.status(500).json({
-            message: "Failed to create diagnostic question"
+            message:
+                "Failed to create diagnostic question"
         });
     }
 };
+
+
+// ==========================================
+// UPDATE DIAGNOSTIC QUESTION
+// ==========================================
+
+const updateDiagnosticQuestion = async (req, res) => {
+
+    try {
+
+        const { questionId } = req.params;
+
+        const {
+            subjectId,
+            topicId,
+            question,
+            code,
+            optionA,
+            optionB,
+            optionC,
+            optionD,
+            correctOption,
+            difficulty
+        } = req.body;
+
+
+        // Check required fields
+        if (
+            !questionId ||
+            !subjectId ||
+            !topicId ||
+            !question ||
+            !optionA ||
+            !optionB ||
+            !optionC ||
+            !optionD ||
+            !correctOption ||
+            !difficulty
+        ) {
+            return res.status(400).json({
+                message:
+                    "All question fields are required"
+            });
+        }
+
+
+        // Check that topic belongs to selected subject
+        const topicSql = `
+            SELECT id
+            FROM subject_topics
+            WHERE id = ?
+              AND subject_id = ?
+              AND status = 'active'
+        `;
+
+        const [topicResult] = await db.query(
+            topicSql,
+            [topicId, subjectId]
+        );
+
+
+        if (topicResult.length === 0) {
+            return res.status(400).json({
+                message:
+                    "Selected topic does not belong to this subject"
+            });
+        }
+
+
+        // Check that question exists
+        const questionCheckSql = `
+            SELECT id
+            FROM diagnostic_questions
+            WHERE id = ?
+        `;
+
+        const [questionResult] = await db.query(
+            questionCheckSql,
+            [questionId]
+        );
+
+
+        if (questionResult.length === 0) {
+            return res.status(404).json({
+                message:
+                    "Diagnostic question not found"
+            });
+        }
+
+
+        // Update question
+        const updateSql = `
+            UPDATE diagnostic_questions
+            SET
+                subject_id = ?,
+                topic_id = ?,
+                question = ?,
+                code = ?,
+                option_a = ?,
+                option_b = ?,
+                option_c = ?,
+                option_d = ?,
+                correct_option = ?,
+                difficulty = ?
+            WHERE id = ?
+        `;
+
+        await db.query(
+            updateSql,
+            [
+                subjectId,
+                topicId,
+                question,
+                code || null,
+                optionA,
+                optionB,
+                optionC,
+                optionD,
+                correctOption,
+                difficulty,
+                questionId
+            ]
+        );
+
+
+        res.status(200).json({
+            message:
+                "Diagnostic question updated successfully"
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Update diagnostic question error:",
+            error
+        );
+
+        res.status(500).json({
+            message:
+                "Failed to update diagnostic question"
+        });
+    }
+};
+
 
 // ==========================================
 // GET DIAGNOSTIC QUESTIONS
@@ -125,6 +275,7 @@ const getDiagnosticQuestions = async (req, res) => {
                 dq.topic_id,
                 st.name AS topic_name,
                 dq.question,
+                dq.code,
                 dq.option_a,
                 dq.option_b,
                 dq.option_c,
@@ -158,10 +309,12 @@ const getDiagnosticQuestions = async (req, res) => {
         );
 
         res.status(500).json({
-            message: "Failed to load diagnostic questions"
+            message:
+                "Failed to load diagnostic questions"
         });
     }
 };
+
 
 // ==========================================
 // GET SUBJECTS FOR DIAGNOSTIC MANAGEMENT
@@ -193,7 +346,8 @@ const getDiagnosticSubjects = async (req, res) => {
         );
 
         res.status(500).json({
-            message: "Failed to load subjects"
+            message:
+                "Failed to load subjects"
         });
     }
 };
@@ -235,13 +389,16 @@ const getDiagnosticTopics = async (req, res) => {
         );
 
         res.status(500).json({
-            message: "Failed to load topics"
+            message:
+                "Failed to load topics"
         });
     }
 };
 
+
 module.exports = {
     createDiagnosticQuestion,
+    updateDiagnosticQuestion,
     getDiagnosticQuestions,
     getDiagnosticSubjects,
     getDiagnosticTopics

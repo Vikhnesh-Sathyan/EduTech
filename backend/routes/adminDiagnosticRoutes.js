@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
     createDiagnosticQuestion,
+    updateDiagnosticQuestion,
     getDiagnosticQuestions,
     getDiagnosticSubjects,
     getDiagnosticTopics
@@ -11,12 +12,18 @@ const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
 const router = express.Router();
-
 router.post(
     "/",
     authMiddleware,
     roleMiddleware("admin"),
     createDiagnosticQuestion
+);
+
+router.put(
+    "/:questionId",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateDiagnosticQuestion
 );
 
 router.get(

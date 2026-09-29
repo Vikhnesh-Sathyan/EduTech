@@ -21,7 +21,9 @@
     <!-- Diagnostic header -->
     <div class="diagnostic-header">
 
-      <p class="eyebrow">Diagnostic</p>
+      <p class="eyebrow">
+        Diagnostic
+      </p>
 
       <h1>
         {{ subject()?.name }}
@@ -46,7 +48,10 @@
         </span>
 
         <span>
-          {{ ((currentQuestionIndex() + 1) / questions().length * 100) | number:'1.0-0' }}%
+          {{
+            ((currentQuestionIndex() + 1) / questions().length * 100)
+            | number:'1.0-0'
+          }}%
         </span>
 
       </div>
@@ -68,13 +73,55 @@
     <!-- Current question -->
     <div class="question-card">
 
-      <p class="question-number">
-        Question {{ currentQuestionIndex() + 1 }}
-      </p>
+      <!-- Question meta -->
+      <div class="question-meta">
 
+        <p class="question-number">
+          Question {{ currentQuestionIndex() + 1 }}
+        </p>
+
+        @if (getCurrentQuestion().difficulty) {
+
+          <span class="difficulty-badge">
+            {{ getCurrentQuestion().difficulty }}
+          </span>
+
+        }
+
+      </div>
+
+
+      <!-- Question text -->
       <h2>
         {{ getCurrentQuestion().question }}
       </h2>
+
+
+      <!-- Coding question -->
+      @if (getCurrentQuestion().code) {
+
+        <div class="code-block">
+
+          <div class="code-header">
+            <span>JavaScript</span>
+            <span>Code</span>
+          </div>
+
+          <pre><code>{{ getCurrentQuestion().code }}</code></pre>
+
+        </div>
+
+      }
+
+
+      <!-- Answer instruction for coding questions -->
+      @if (getCurrentQuestion().code) {
+
+        <p class="answer-label">
+          Select the correct output:
+        </p>
+
+      }
 
 
       <!-- Options -->
