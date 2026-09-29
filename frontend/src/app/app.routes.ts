@@ -32,6 +32,7 @@ import { Profile } from './features/profile/profile';
 import { Study } from './features/study/study';
 import { Subject } from './features/study/subject-learning/subject-learning';
 import { Diagnostic } from './features/study/diagnostic/diagnostic';
+import { DiagnosticResult } from './features/study/diagnostic-result/diagnostic-result';
 
 // ======================================================
 // ADMIN
@@ -141,6 +142,12 @@ export const routes: Routes = [
       {
         path: 'study/:subjectId/diagnostic',
         component: Diagnostic
+      },
+
+        // Diagnostic Result  
+      {
+        path: 'diagnostic-result/:subjectId',
+        component: DiagnosticResult
       }
 
     ]

@@ -106,23 +106,105 @@
         Getting Started
       </p>
 
-      <h2>
-        Build your foundation
-      </h2>
 
-      <p>
-        Before starting your personalized learning
-        path, we will understand your current
-        knowledge of this subject.
-      </p>
+      <!-- ==========================================
+           CHECKING DIAGNOSTIC
+      ========================================== -->
 
-      <button
-  type="button"
-  class="start-button"
-  (click)="startDiagnostic()"
->
-  Start Diagnostic
-</button>
+      @if (checkingDiagnostic()) {
+
+        <h2>
+          Checking your learning status
+        </h2>
+
+        <p>
+          Preparing your personalized learning
+          experience...
+        </p>
+
+      }
+
+
+      <!-- ==========================================
+           DIAGNOSTIC NOT COMPLETED
+      ========================================== -->
+
+      @else if (!diagnosticCompleted()) {
+
+        <h2>
+          Build your foundation
+        </h2>
+
+        <p>
+          Before starting your personalized learning
+          path, we will understand your current
+          knowledge of this subject.
+        </p>
+
+        <button
+          type="button"
+          class="start-button"
+          (click)="startDiagnostic()"
+        >
+          Start Diagnostic
+        </button>
+
+      }
+
+
+      <!-- ==========================================
+           DIAGNOSTIC COMPLETED
+      ========================================== -->
+
+      @else {
+
+        <h2>
+          Your diagnostic is complete
+        </h2>
+
+        <p>
+          Your initial diagnostic has already been
+          completed. You can review your baseline
+          learning profile before continuing.
+        </p>
+
+
+        @if (diagnosticResult()) {
+
+          <div class="diagnostic-summary">
+
+            <div class="summary-score">
+
+              <strong>
+                {{ diagnosticResult().correctAnswers }}
+                /
+                {{ diagnosticResult().totalQuestions }}
+              </strong>
+
+              <span>
+                {{ diagnosticResult().percentage }}%
+              </span>
+
+            </div>
+
+            <p>
+              Initial diagnostic score
+            </p>
+
+          </div>
+
+        }
+
+
+        <button
+          type="button"
+          class="start-button"
+          (click)="viewDiagnosticResult()"
+        >
+          View Diagnostic Result
+        </button>
+
+      }
 
     </section>
 

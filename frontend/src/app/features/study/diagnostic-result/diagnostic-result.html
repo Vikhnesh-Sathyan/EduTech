@@ -1,0 +1,575 @@
+<section class="result-page">
+
+  <!-- ==========================================
+       LOADING STATE
+  ========================================== -->
+
+  @if (loading()) {
+
+    <div class="state-message">
+
+      <p>
+        Loading your diagnostic result...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ==========================================
+       ERROR STATE
+  ========================================== -->
+
+  @else if (errorMessage()) {
+
+    <div class="state-message error-state">
+
+      <p>
+        {{ errorMessage() }}
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ==========================================
+       RESULT
+  ========================================== -->
+
+  @else if (result()) {
+
+    <!-- ==========================================
+         PAGE HEADER
+    ========================================== -->
+
+    <header class="result-header">
+
+      <div>
+
+        <p class="eyebrow">
+          Diagnostic complete
+        </p>
+
+        <h1>
+          Your {{ result().subjectName }} learning profile
+        </h1>
+
+        <p class="header-description">
+          Here's an initial view of your current
+          understanding based on this diagnostic.
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- ==========================================
+         SCORE HERO
+    ========================================== -->
+
+    <section class="score-section">
+
+      <div class="score-main">
+
+        <p class="score-label">
+          Overall performance
+        </p>
+
+        <div class="score-value">
+
+          {{ result().correctAnswers }}
+
+          <span>
+            / {{ result().totalQuestions }}
+          </span>
+
+        </div>
+
+        <p class="score-description">
+
+          {{ result().percentage | number:'1.0-0' }}%
+
+          accuracy across the diagnostic
+
+        </p>
+
+      </div>
+
+
+      <div class="score-summary">
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            Correct
+          </span>
+
+          <strong>
+            {{ result().correctAnswers }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            Incorrect
+          </span>
+
+          <strong>
+            {{ result().incorrectAnswers }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            Questions
+          </span>
+
+          <strong>
+            {{ result().totalQuestions }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         RESULT NOTE
+    ========================================== -->
+
+    <section class="baseline-note">
+
+      <div class="note-icon">
+        i
+      </div>
+
+      <div>
+
+        <h2>
+          This is your starting point
+        </h2>
+
+        <p>
+          This 10-question diagnostic provides
+          initial signals about the topics you
+          may already be comfortable with and
+          the areas that may benefit from more
+          practice. It is not a final assessment
+          of your overall {{ result().subjectName }}
+          ability.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         MAIN GRID
+    ========================================== -->
+
+    <div class="result-grid">
+
+
+      <!-- ========================================
+           DIFFICULTY BREAKDOWN
+      ======================================== -->
+
+      <section class="result-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <p class="card-eyebrow">
+              Performance
+            </p>
+
+            <h2>
+              Difficulty breakdown
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="difficulty-list">
+
+          @for (
+            item of result().difficultyBreakdown;
+            track item.difficulty
+          ) {
+
+            <div class="difficulty-row">
+
+              <div class="difficulty-info">
+
+                <span class="difficulty-name">
+                  {{ item.difficulty }}
+                </span>
+
+                <span class="difficulty-score">
+
+                  {{ item.correctAnswers }}
+
+                  /
+
+                  {{ item.totalQuestions }}
+
+                </span>
+
+              </div>
+
+
+              <div class="difficulty-progress">
+
+                <div class="difficulty-track">
+
+                  <div
+                    class="difficulty-fill"
+                    [style.width.%]="item.percentage"
+                  ></div>
+
+                </div>
+
+                <span class="difficulty-percentage">
+
+                  {{ item.percentage | number:'1.0-0' }}%
+
+                </span>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+
+      <!-- ========================================
+           TOPIC SIGNALS
+      ======================================== -->
+
+      <section class="result-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <p class="card-eyebrow">
+              Topic signals
+            </p>
+
+            <h2>
+              What your answers suggest
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="topic-list">
+
+          @for (
+            topic of result().topicBreakdown;
+            track topic.topicId
+          ) {
+
+            <div class="topic-row">
+
+              <div class="topic-content">
+
+                <div class="topic-title-row">
+
+                  <strong>
+                    {{ topic.topicName }}
+                  </strong>
+
+                  <span
+                    class="signal"
+                    [class.comfortable]="
+                      topic.signal === 'Comfortable'
+                    "
+                    [class.developing]="
+                      topic.signal === 'Developing'
+                    "
+                    [class.needs-practice]="
+                      topic.signal === 'Needs practice'
+                    "
+                    [class.focused-practice]="
+                      topic.signal === 'Needs focused practice'
+                    "
+                  >
+
+                    {{ topic.signal }}
+
+                  </span>
+
+                </div>
+
+
+                <div class="topic-meta">
+
+                  <span>
+
+                    {{ topic.correctAnswers }}
+
+                    /
+
+                    {{ topic.totalQuestions }}
+
+                    correct
+
+                  </span>
+
+                  <span>
+
+                    {{ topic.percentage | number:'1.0-0' }}%
+
+                  </span>
+
+                </div>
+
+
+                <div class="topic-progress">
+
+                  <div
+                    class="topic-progress-fill"
+                    [style.width.%]="topic.percentage"
+                  ></div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- ==========================================
+         RECOMMENDED FOCUS
+    ========================================== -->
+
+    @if (
+      result().recommendedTopics?.length > 0
+    ) {
+
+      <section class="focus-section">
+
+        <div class="focus-header">
+
+          <div>
+
+            <p class="card-eyebrow">
+              Recommended starting point
+            </p>
+
+            <h2>
+              Focus areas for your learning path
+            </h2>
+
+            <p>
+              Based on the initial signals from
+              this diagnostic, these topics are
+              good places to begin practicing.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="focus-list">
+
+          @for (
+            topic of result().recommendedTopics;
+            track topic.topicId
+          ) {
+
+            <div class="focus-item">
+
+              <span class="focus-number">
+                {{ $index + 1 }}
+              </span>
+
+              <div>
+
+                <strong>
+                  {{ topic.topicName }}
+                </strong>
+
+                <p>
+
+                  {{ topic.signal }}
+
+                  ·
+
+                  {{ topic.percentage | number:'1.0-0' }}%
+
+                  in this diagnostic
+
+                </p>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <button
+          type="button"
+          class="start-learning-button"
+          (click)="router.navigate(['/study'])"
+        >
+
+          <span>
+            Start learning
+          </span>
+
+          <span>
+            →
+          </span>
+
+        </button>
+
+      </section>
+
+    }
+
+
+    <!-- ==========================================
+         PROFILE EVOLUTION
+    ========================================== -->
+
+    <section class="evolution-section">
+
+      <div class="evolution-header">
+
+        <p class="card-eyebrow">
+          Your profile will evolve
+        </p>
+
+        <h2>
+          The diagnostic is only the beginning
+        </h2>
+
+        <p>
+          As you learn, practice and complete more
+          activities, EduTech can build a more
+          meaningful picture of your progress.
+        </p>
+
+      </div>
+
+
+      <div class="evolution-flow">
+
+        <div class="flow-item">
+
+          <span>
+            01
+          </span>
+
+          <strong>
+            Diagnostic
+          </strong>
+
+          <p>
+            Initial baseline
+          </p>
+
+        </div>
+
+
+        <div class="flow-line"></div>
+
+
+        <div class="flow-item">
+
+          <span>
+            02
+          </span>
+
+          <strong>
+            Learn
+          </strong>
+
+          <p>
+            Build understanding
+          </p>
+
+        </div>
+
+
+        <div class="flow-line"></div>
+
+
+        <div class="flow-item">
+
+          <span>
+            03
+          </span>
+
+          <strong>
+            Practice
+          </strong>
+
+          <p>
+            Apply what you learn
+          </p>
+
+        </div>
+
+
+        <div class="flow-line"></div>
+
+
+        <div class="flow-item">
+
+          <span>
+            04
+          </span>
+
+          <strong>
+            Progress
+          </strong>
+
+          <p>
+            Track improvement
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  }
+
+</section>

@@ -339,6 +339,163 @@
   font-weight: 600;
 }
 
+/* =====================================================
+   QUESTION ACTIONS
+   ===================================================== */
+
+.question-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+
+/* =====================================================
+   SHARED BUTTON STYLE
+   ===================================================== */
+
+.previous-button,
+.next-button {
+  min-height: 46px;
+  padding: 0 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border-radius: 10px;
+
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+/* =====================================================
+   PREVIOUS BUTTON
+   ===================================================== */
+
+.previous-button {
+  min-width: 116px;
+
+  border: 1px solid #d8d5cf;
+  background: #ffffff;
+
+  color: #35322d;
+}
+
+
+/* Previous hover */
+
+.previous-button:hover:not(:disabled) {
+  background: #f5f3ef;
+  border-color: #c8c4bc;
+}
+
+
+/* Previous disabled */
+
+.previous-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+
+/* =====================================================
+   NEXT BUTTON
+   ===================================================== */
+
+.next-button {
+  min-width: 108px;
+
+  border: 1px solid #1f1f1f;
+  background: #1f1f1f;
+
+  color: #ffffff;
+}
+
+
+/* Next hover */
+
+.next-button:hover:not(:disabled) {
+  background: #333333;
+  border-color: #333333;
+}
+
+
+/* Next disabled */
+
+.next-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+
+/* =====================================================
+   BUTTON ICON
+   ===================================================== */
+
+.button-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* =====================================================
+   SAVING MESSAGE
+   ===================================================== */
+
+.saving-message {
+  margin: 14px 0 0;
+
+  color: #77736c;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  text-align: right;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+  .question-actions {
+    gap: 10px;
+  }
+
+  .previous-button,
+  .next-button {
+    min-height: 44px;
+    padding: 0 15px;
+
+    font-size: 12px;
+  }
+
+  .previous-button {
+    min-width: 100px;
+  }
+
+  .next-button {
+    min-width: 100px;
+  }
+
+}
 
 /* =========================================================
    MOBILE CODING UI

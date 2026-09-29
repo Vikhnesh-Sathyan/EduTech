@@ -2,8 +2,10 @@ const express = require("express");
 
 const {
     startDiagnostic,
-    submitAnswer
-} = require("../controllers/diagnosticController");
+    submitAnswer,
+    completeDiagnostic,
+    getDiagnosticResult
+} = require('../controllers/diagnosticController');
 
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
@@ -25,5 +27,21 @@ router.post(
     roleMiddleware("student"),
     submitAnswer
 );
+
+router.post(
+    "/:attemptId/complete",
+    authMiddleware,
+    roleMiddleware("student"),
+    completeDiagnostic
+);
+
+router.get(
+    '/subjects/:subjectId/result',
+    authMiddleware,
+    roleMiddleware("student"),
+    getDiagnosticResult
+);
+
+
 
 module.exports = router;
