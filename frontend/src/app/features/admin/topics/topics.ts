@@ -368,6 +368,14 @@ export class Topics implements OnInit {
       '/admin/topic-learning',
       topicId
     ]);
+
+    
   }
+  openSubtopics(topicId: number): void {
+  this.router.navigate([
+    '/admin/subtopics',
+    topicId
+  ]);
+}
 
 }

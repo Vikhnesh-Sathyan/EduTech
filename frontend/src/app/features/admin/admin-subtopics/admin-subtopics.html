@@ -1,0 +1,296 @@
+<section class="subtopics-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        LEARNING STRUCTURE
+      </p>
+
+      <h1>
+        Manage Subtopics
+      </h1>
+
+      <p>
+        Organize the learning structure inside this topic.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  @if (loading()) {
+
+    <div class="state-message">
+      Loading subtopics...
+    </div>
+
+  }
+
+  @else {
+
+    @if (errorMessage()) {
+
+      <div class="state-message error-state">
+        {{ errorMessage() }}
+      </div>
+
+    }
+
+
+    @if (message()) {
+
+      <div class="state-message success-state">
+        {{ message() }}
+      </div>
+
+    }
+
+
+    <!-- SUBTOPIC EDITOR -->
+    @if (showForm()) {
+
+      <div class="subtopic-form">
+
+        <div class="form-header">
+
+          <div>
+
+            <p class="section-label">
+              {{ editingSubtopicId()
+                ? 'EDIT SUBTOPIC'
+                : 'NEW SUBTOPIC'
+              }}
+            </p>
+
+            <h2>
+              {{ editingSubtopicId()
+                ? 'Update Subtopic'
+                : 'Create Subtopic'
+              }}
+            </h2>
+
+            <p>
+              Define a focused learning area inside this topic.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="subtopicTitle">
+            Subtopic Title
+          </label>
+
+          <input
+            id="subtopicTitle"
+            type="text"
+            [value]="subtopicTitle()"
+            (input)="subtopicTitle.set($any($event.target).value)"
+            placeholder="Example: Variable Keywords"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="subtopicDescription">
+            Description
+            <span>(Optional)</span>
+          </label>
+
+          <textarea
+            id="subtopicDescription"
+            [value]="subtopicDescription()"
+            (input)="subtopicDescription.set($any($event.target).value)"
+            placeholder="Describe what this subtopic covers..."
+            rows="4"
+          ></textarea>
+
+        </div>
+
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="resetForm()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="save-button"
+            [disabled]="saving()"
+            (click)="saveSubtopic()"
+          >
+
+            @if (saving()) {
+              Saving...
+            }
+            @else if (editingSubtopicId()) {
+              Update Subtopic
+            }
+            @else {
+              Create Subtopic
+            }
+
+          </button>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- SUBTOPICS LIST -->
+    <div class="subtopics-area">
+
+      <div class="list-header">
+
+        <div>
+
+          <p class="section-label">
+            TOPIC STRUCTURE
+          </p>
+
+          <h2>
+            Subtopics
+          </h2>
+
+          <p>
+            Build focused learning areas inside this topic.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="add-button"
+          (click)="openAddSubtopic()"
+        >
+          + Add Subtopic
+        </button>
+
+      </div>
+
+
+      @if (subtopics().length === 0) {
+
+        <div class="empty-state">
+
+          <h3>
+            No subtopics yet
+          </h3>
+
+          <p>
+            Create the first subtopic to start structuring this topic.
+          </p>
+
+        </div>
+
+      }
+
+      @else {
+
+        <div class="subtopics-card">
+
+          @for (
+            subtopic of subtopics();
+            track subtopic.id
+          ) {
+
+            <div class="subtopic-row">
+
+              <div class="subtopic-number">
+                {{ subtopic.display_order }}
+              </div>
+
+
+              <div class="subtopic-info">
+
+                <h3>
+                  {{ subtopic.title }}
+                </h3>
+
+                @if (subtopic.description) {
+
+                  <p>
+                    {{ subtopic.description }}
+                  </p>
+
+                }
+
+              </div>
+
+
+              <span
+                class="status"
+                [class.active]="subtopic.status === 'active'"
+                [class.inactive]="subtopic.status === 'inactive'"
+              >
+                {{ subtopic.status }}
+              </span>
+
+
+              <div class="subtopic-actions">
+
+                <button
+                  type="button"
+                  class="section-button"
+                  (click)="openSections(subtopic.id)"
+                >
+                  Sections
+                </button>
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="editSubtopic(subtopic)"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="status-button"
+                  [class.disable-button]="subtopic.status === 'active'"
+                  [class.enable-button]="subtopic.status === 'inactive'"
+                  (click)="updateSubtopicStatus(subtopic)"
+                >
+
+                  @if (subtopic.status === 'active') {
+                    Disable
+                  }
+                  @else {
+                    Enable
+                  }
+
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</section>

@@ -1,0 +1,309 @@
+/* =====================================================
+   PAGE
+===================================================== */
+
+.section-learning-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 32px 70px;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+  margin-bottom: 36px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.page-header p:last-child {
+  margin: 10px 0 0;
+  max-width: 680px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   STATE MESSAGES
+===================================================== */
+
+.state-message {
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.error-state {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.success-state {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+
+/* =====================================================
+   CONTENT EDITOR
+===================================================== */
+
+.content-editor {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+
+/* =====================================================
+   EDITOR HEADER
+===================================================== */
+
+.editor-header {
+  padding-bottom: 24px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-label {
+  margin: 0 0 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.editor-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 650;
+}
+
+.editor-header p:last-child {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   FORM FIELD
+===================================================== */
+
+.form-field {
+  margin-bottom: 28px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.form-field label span {
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.form-field label .required {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.form-field textarea {
+  width: 100%;
+  min-height: 120px;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field textarea:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
+}
+
+.form-field textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-field small {
+  display: block;
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   CODE FIELD
+===================================================== */
+
+.form-field .code-field {
+  min-height: 180px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+
+/* =====================================================
+   IMAGE UPLOAD
+===================================================== */
+
+.form-field input[type="file"] {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 9px;
+  background: #f8fafc;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.form-field input[type="file"]:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+
+/* =====================================================
+   IMAGE PREVIEW
+===================================================== */
+
+.image-preview {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.preview-label {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.image-preview img {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  max-height: 380px;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+
+/* =====================================================
+   FORM ACTIONS
+===================================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.save-button {
+  min-width: 150px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 9px;
+  background: #111827;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.save-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.save-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .section-learning-page {
+    padding: 28px 18px 50px;
+  }
+
+  .page-header h1 {
+    font-size: 27px;
+  }
+
+  .content-editor {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .save-button {
+    width: 100%;
+  }
+}

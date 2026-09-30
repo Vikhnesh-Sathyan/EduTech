@@ -51,6 +51,9 @@ import { DiagnosticQuestions } from './features/admin/diagnostic-questions/diagn
 import { Topics } from './features/admin/topics/topics';
 
 import { AdminTopicLearningPage } from './features/admin/admin-topic-learning/admin-topic-learning';
+import { AdminLearningSectionsPage } from './features/admin/admin-learning-sections/admin-learning-sections';
+import { AdminSectionLearningPage } from './features/admin/admin-section-learning/admin-section-learning';
+import { AdminSubtopicsPage } from './features/admin/admin-subtopics/admin-subtopics';
 
 // ======================================================
 // MENTOR
@@ -254,7 +257,27 @@ export const routes: Routes = [
       {
        path: 'topic-learning/:topicId',
        component: AdminTopicLearningPage
-      }
+      },
+
+      {
+        path: 'topic-sections/:topicId',
+        component: AdminLearningSectionsPage
+      },
+
+      {
+        path: 'section-learning/:sectionId',
+        component: AdminSectionLearningPage
+      }, 
+
+      {
+        path: 'subtopics/:topicId',
+        component: AdminSubtopicsPage
+      },
+
+      {
+        path: 'subtopic-sections/:subtopicId',
+        component: AdminLearningSectionsPage
+      },
     ]
   },
 

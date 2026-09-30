@@ -1,0 +1,283 @@
+<section class="section-learning-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        {{ topicName() || 'LEARNING CONTENT' }}
+      </p>
+
+      <h1>
+        {{ sectionTitle() || 'Section Content' }}
+      </h1>
+
+      <p>
+        Build the learning experience for this section.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+  @if (loading()) {
+
+    <div class="state-message">
+      Loading learning content...
+    </div>
+
+  }
+
+  @else {
+
+    <!-- ERROR -->
+    @if (errorMessage()) {
+
+      <div class="state-message error-state">
+        {{ errorMessage() }}
+      </div>
+
+    }
+
+
+    <!-- SUCCESS -->
+    @if (message()) {
+
+      <div class="state-message success-state">
+        {{ message() }}
+      </div>
+
+    }
+
+
+    <!-- CONTENT EDITOR -->
+    <div class="content-editor">
+
+      <div class="editor-header">
+
+        <div>
+
+          <p class="section-label">
+            {{ contentExists()
+              ? 'EDIT CONTENT'
+              : 'NEW CONTENT'
+            }}
+          </p>
+
+          <h2>
+            {{ contentExists()
+              ? 'Update Section Content'
+              : 'Create Section Content'
+            }}
+          </h2>
+
+          <p>
+            Keep the explanation simple, practical,
+            and focused on understanding.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- SIMPLE EXPLANATION -->
+      <div class="form-field">
+
+        <label for="simpleExplanation">
+          Simple Explanation
+          <span class="required">*</span>
+        </label>
+
+        <textarea
+          id="simpleExplanation"
+          [value]="simpleExplanation()"
+          (input)="simpleExplanation.set($any($event.target).value)"
+          placeholder="Explain this concept in simple language..."
+          rows="6"
+        ></textarea>
+
+        <small>
+          The main explanation students will read first.
+        </small>
+
+      </div>
+
+
+      <!-- REAL WORLD EXAMPLE -->
+      <div class="form-field">
+
+        <label for="realWorldExample">
+          Real-world Example
+          <span>(Optional)</span>
+        </label>
+
+        <textarea
+          id="realWorldExample"
+          [value]="realWorldExample()"
+          (input)="realWorldExample.set($any($event.target).value)"
+          placeholder="Explain the concept using a practical real-world example..."
+          rows="5"
+        ></textarea>
+
+      </div>
+
+
+      <!-- VISUAL / DIAGRAM IMAGE -->
+      <div class="form-field">
+
+        <label for="visualImage">
+          Visual / Diagram Image
+          <span>(Optional)</span>
+        </label>
+
+        <input
+          id="visualImage"
+          type="file"
+          accept="image/png,image/jpeg,image/jpg,image/webp"
+          (change)="onImageSelected($event)"
+        />
+
+        <small>
+          Upload an image or diagram that helps students understand this section.
+        </small>
+
+
+        <!-- CURRENT / SELECTED IMAGE -->
+        @if (imagePreviewUrl()) {
+
+          <div class="image-preview">
+
+            <p class="preview-label">
+              {{ visualImageUrl() ? 'Current Image' : 'Selected Image' }}
+            </p>
+
+            <img
+              [src]="imagePreviewUrl()"
+              alt="Learning visual preview"
+            />
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- VISUAL TEXT -->
+      <div class="form-field">
+
+        <label for="visualText">
+          Visual / Diagram Text
+          <span>(Optional)</span>
+        </label>
+
+        <textarea
+          id="visualText"
+          [value]="visualText()"
+          (input)="visualText.set($any($event.target).value)"
+          placeholder="Example:&#10;&#10;Variable&#10;   ↓&#10;stores&#10;   ↓&#10;Value"
+          rows="7"
+        ></textarea>
+
+        <small>
+          Use simple text diagrams when they help explain the concept.
+        </small>
+
+      </div>
+
+
+      <!-- CODE EXAMPLE -->
+      <div class="form-field">
+
+        <label for="codeExample">
+          Code Example
+          <span>(Optional)</span>
+        </label>
+
+        <textarea
+          id="codeExample"
+          class="code-field"
+          [value]="codeExample()"
+          (input)="codeExample.set($any($event.target).value)"
+          placeholder="Write a small code example..."
+          rows="9"
+        ></textarea>
+
+        <small>
+          Keep the example small and focused on this section.
+        </small>
+
+      </div>
+
+
+      <!-- COMMON MISTAKE -->
+      <div class="form-field">
+
+        <label for="commonMistake">
+          Common Mistake
+          <span>(Optional)</span>
+        </label>
+
+        <textarea
+          id="commonMistake"
+          [value]="commonMistake()"
+          (input)="commonMistake.set($any($event.target).value)"
+          placeholder="Explain a common mistake students may make..."
+          rows="5"
+        ></textarea>
+
+      </div>
+
+
+      <!-- WHERE USED -->
+      <div class="form-field">
+
+        <label for="whereUsed">
+          Where Is It Used?
+          <span>(Optional)</span>
+        </label>
+
+        <textarea
+          id="whereUsed"
+          [value]="whereUsed()"
+          (input)="whereUsed.set($any($event.target).value)"
+          placeholder="Explain where this concept is commonly used..."
+          rows="5"
+        ></textarea>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving()"
+          (click)="saveContent()"
+        >
+
+          @if (saving()) {
+            Saving...
+          }
+          @else if (contentExists()) {
+            Update Content
+          }
+          @else {
+            Create Content
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

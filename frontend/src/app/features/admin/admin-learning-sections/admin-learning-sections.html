@@ -1,0 +1,333 @@
+<section class="learning-sections-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        LEARNING STRUCTURE
+      </p>
+
+      <h1>
+        Learning Sections
+      </h1>
+
+      <p>
+        Organize the learning sections inside this subtopic.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  @if (loading()) {
+
+    <div class="state-message">
+      Loading sections...
+    </div>
+
+  }
+
+  @else {
+
+    @if (errorMessage()) {
+
+      <div class="state-message error-state">
+        {{ errorMessage() }}
+      </div>
+
+    }
+
+
+    @if (message()) {
+
+      <div class="state-message success-state">
+        {{ message() }}
+      </div>
+
+    }
+
+
+    <!-- SECTION EDITOR -->
+    <div class="section-editor">
+
+      <div class="editor-header">
+
+        <div>
+
+          <p class="section-label">
+
+            {{ editingSectionId()
+              ? 'EDIT SECTION'
+              : 'NEW SECTION'
+            }}
+
+          </p>
+
+          <h2>
+
+            {{ editingSectionId()
+              ? 'Update Learning Section'
+              : 'Create Learning Section'
+            }}
+
+          </h2>
+
+          <p>
+            Create a focused learning unit inside this subtopic.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-field">
+
+        <label for="sectionTitle">
+          Section Title
+        </label>
+
+        <input
+          id="sectionTitle"
+          type="text"
+          [value]="sectionTitle()"
+          (input)="sectionTitle.set($any($event.target).value)"
+          placeholder="Example: What is let?"
+        />
+
+      </div>
+
+
+      <div class="form-field">
+
+        <label for="sectionDescription">
+
+          Description
+
+          <span>
+            (Optional)
+          </span>
+
+        </label>
+
+        <textarea
+          id="sectionDescription"
+          [value]="sectionDescription()"
+          (input)="sectionDescription.set($any($event.target).value)"
+          placeholder="Briefly describe what students will learn in this section..."
+          rows="4"
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        @if (editingSectionId()) {
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="resetForm()"
+          >
+            Cancel
+          </button>
+
+        }
+
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving()"
+          (click)="saveSection()"
+        >
+
+          @if (saving()) {
+
+            Saving...
+
+          }
+
+          @else if (editingSectionId()) {
+
+            Update Section
+
+          }
+
+          @else {
+
+            Add Section
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- SECTION LIST -->
+    <div class="sections-area">
+
+      <div class="list-header">
+
+        <div>
+
+          <p class="section-label">
+            SUBTOPIC STRUCTURE
+          </p>
+
+          <h2>
+            Learning Sections
+          </h2>
+
+          <p>
+            Build the individual learning units for this subtopic.
+          </p>
+
+        </div>
+
+
+        <span class="section-count">
+
+          {{ sections().length }}
+
+          {{
+            sections().length === 1
+              ? 'Section'
+              : 'Sections'
+          }}
+
+        </span>
+
+      </div>
+
+
+      @if (sections().length === 0) {
+
+        <div class="empty-state">
+
+          <h3>
+            No learning sections yet
+          </h3>
+
+          <p>
+            Create the first section to start building this subtopic.
+          </p>
+
+        </div>
+
+      }
+
+      @else {
+
+        <div class="section-list">
+
+          @for (
+            section of sections();
+            track section.id
+          ) {
+
+            <div class="section-row">
+
+
+              <div class="section-number">
+
+                {{
+                  section.display_order
+                  | number:'2.0-0'
+                }}
+
+              </div>
+
+
+              <div class="section-info">
+
+                <h3>
+                  {{ section.title }}
+                </h3>
+
+                @if (section.description) {
+
+                  <p>
+                    {{ section.description }}
+                  </p>
+
+                }
+
+              </div>
+
+
+              <span
+                class="status"
+                [class.active]="section.status === 'active'"
+                [class.inactive]="section.status === 'inactive'"
+              >
+                {{ section.status }}
+              </span>
+
+
+              <div class="section-actions">
+
+
+                <button
+                  type="button"
+                  class="content-button"
+                  (click)="openSectionContent(section.id)"
+                >
+                  Content
+                </button>
+
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="editSection(section)"
+                >
+                  Edit
+                </button>
+
+
+                <button
+                  type="button"
+                  class="status-button"
+                  [class.disable-button]="section.status === 'active'"
+                  [class.enable-button]="section.status === 'inactive'"
+                  (click)="updateSectionStatus(section)"
+                >
+
+                  @if (section.status === 'active') {
+
+                    Disable
+
+                  }
+
+                  @else {
+
+                    Enable
+
+                  }
+
+                </button>
+
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</section>

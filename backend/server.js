@@ -8,11 +8,24 @@ const cors = require("cors");
 // Import database connection
 const db = require("./config/db");
 
-// Import application routes
-const authRoutes = require("./routes/authRoutes");
-const profileRoutes = require("./routes/profileRoutes");
+// Import path
+const path = require("path");
 
-// ==================== ADMIN ROUTES ====================
+
+// =====================================================
+// APPLICATION ROUTES
+// =====================================================
+
+const authRoutes =
+    require("./routes/authRoutes");
+
+const profileRoutes =
+    require("./routes/profileRoutes");
+
+
+// =====================================================
+// ADMIN ROUTES
+// =====================================================
 
 // Admin education program routes
 const educationProgramRoutes =
@@ -42,12 +55,29 @@ const adminMentorRoutes =
 const adminDiagnosticRoutes =
     require("./routes/adminDiagnosticRoutes");
 
-// Admin Topic learning routes
+// Admin topic learning routes
 const adminTopicLearningRoutes =
     require("./routes/adminTopicLearningRoutes");
 
+// Admin learning section routes
+const adminLearningSectionRoutes =
+    require("./routes/adminLearningSectionRoutes");
 
-// ==================== STUDENT ROUTES ====================
+// Admin section learning content routes
+const adminSectionLearningRoutes =
+    require("./routes/adminSectionLearningRoutes");
+
+// Admin topic routes
+const adminTopicRoutes =
+    require("./routes/adminTopicRoutes");
+
+const adminSubtopicRoutes =
+    require("./routes/adminSubtopicRoutes");
+
+
+// =====================================================
+// STUDENT ROUTES
+// =====================================================
 
 // Student education lookup routes
 const educationRoutes =
@@ -58,7 +88,9 @@ const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
 
-// ==================== STUDY AND DIAGNOSTIC ROUTES ====================
+// =====================================================
+// STUDY AND DIAGNOSTIC ROUTES
+// =====================================================
 
 // Student study routes
 const studyRoutes =
@@ -68,22 +100,26 @@ const studyRoutes =
 const diagnosticRoutes =
     require("./routes/diagnosticRoutes");
 
-const adminTopicRoutes =
-    require("./routes/adminTopicRoutes");
 
-
-// ==================== MENTOR ROUTES ====================
+// =====================================================
+// MENTOR ROUTES
+// =====================================================
 
 // Mentor profile routes
 const mentorRoutes =
     require("./routes/mentorRoutes");
 
 
-// Create Express application
+// =====================================================
+// CREATE EXPRESS APPLICATION
+// =====================================================
+
 const app = express();
 
 
-// ==================== MIDDLEWARE ====================
+// =====================================================
+// MIDDLEWARE
+// =====================================================
 
 // Allow requests from the Angular frontend
 app.use(cors());
@@ -91,9 +127,7 @@ app.use(cors());
 // Parse incoming JSON request data
 app.use(express.json());
 
-// Serve uploaded learning images to the frontend
-const path = require("path");
-
+// Serve uploaded learning images
 app.use(
     "/uploads",
     express.static(
@@ -101,97 +135,143 @@ app.use(
     )
 );
 
-// ==================== PORT ====================
 
-const PORT = process.env.PORT || 5000;
+// =====================================================
+// PORT
+// =====================================================
+
+const PORT =
+    process.env.PORT || 5000;
 
 
-// ==================== BASIC ROUTE ====================
+// =====================================================
+// BASIC ROUTE
+// =====================================================
 
 // Basic server health check
 app.get("/", (req, res) => {
-    res.send("EduTech Backend is running");
+
+    res.send(
+        "EduTech Backend is running"
+    );
+
 });
 
 
-// ==================== AUTHENTICATION ROUTES ====================
+// =====================================================
+// AUTHENTICATION ROUTES
+// =====================================================
 
-// Handles registration, login and authenticated user information
-app.use("/api/auth", authRoutes);
-
-
-// ==================== PROFILE ROUTES ====================
-
-// Handles the authenticated student's profile
-app.use("/api/profile", profileRoutes);
-
-// Handles the authenticated mentor's profile
-app.use("/api/mentor", mentorRoutes);
+// Handles registration and login
+app.use(
+    "/api/auth",
+    authRoutes
+);
 
 
 // =====================================================
-// ==================== ADMIN ROUTES ====================
+// PROFILE ROUTES
 // =====================================================
 
-// Handles admin education program configuration
+// Handles authenticated student profile
+app.use(
+    "/api/profile",
+    profileRoutes
+);
+
+// Handles authenticated mentor profile
+app.use(
+    "/api/mentor",
+    mentorRoutes
+);
+
+
+// =====================================================
+// ADMIN ROUTES
+// =====================================================
+
+// Education programs
 app.use(
     "/api/admin/education-programs",
     educationProgramRoutes
 );
 
-// Handles admin department configuration
+// Departments
 app.use(
     "/api/admin/departments",
     departmentRoutes
 );
 
-// Handles admin education year configuration
+// Education years
 app.use(
     "/api/admin/education-years",
     educationYearRoutes
 );
 
-// Handles admin subject configuration
+// Subjects
 app.use(
     "/api/admin/subjects",
     subjectRoutes
 );
 
-// Handles admin dashboard overview statistics
+// Admin dashboard overview
 app.use(
     "/api/admin/overview",
     adminOverviewRoutes
 );
 
-// Handles admin mentor verification
+// Mentor verification
 app.use(
     "/api/admin/mentors",
     adminMentorRoutes
 );
 
-// Handles admin diagnostic question management
+// Diagnostic question management
 app.use(
     "/api/admin/diagnostic-questions",
     adminDiagnosticRoutes
 );
 
-// Admin Topic learning routes
+// Topic learning - old/legacy system
 app.use(
     "/api/admin/topic-learning",
     adminTopicLearningRoutes
 );
 
+// Learning section management
+app.use(
+    "/api/admin/learning-sections",
+    adminLearningSectionRoutes
+);
+
+// Learning content inside a section
+app.use(
+    "/api/admin/section-learning",
+    adminSectionLearningRoutes
+);
+
+// Topic management
+app.use(
+    "/api/admin/topics",
+    adminTopicRoutes
+);
+
+app.use(
+    "/api/admin/subtopics",
+    adminSubtopicRoutes
+);
+
 // =====================================================
-// ==================== STUDENT ROUTES =================
+// STUDENT ROUTES
 // =====================================================
 
-// Handles student education lookup
+// Student education lookup
 app.use(
     "/api/education",
     educationRoutes
 );
 
-// Handles student subject selection
+// Student subjects
 app.use(
     "/api/student/subjects",
     studentSubjectRoutes
@@ -199,29 +279,30 @@ app.use(
 
 
 // =====================================================
-// ============== STUDY AND DIAGNOSTIC ROUTES ==========
+// STUDY AND DIAGNOSTIC ROUTES
 // =====================================================
 
-// Handles student study subjects
+// Student study
 app.use(
     "/api/study",
     studyRoutes
 );
 
-// Handles student diagnostic
+// Student diagnostic
 app.use(
     "/api/diagnostic",
     diagnosticRoutes
 );
 
-app.use(
-    "/api/admin/topics",
-    adminTopicRoutes
-);
 
-
-// ==================== START SERVER ====================
+// =====================================================
+// START SERVER
+// =====================================================
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+
+    console.log(
+        `Server running on port ${PORT}`
+    );
+
 });
