@@ -1,0 +1,532 @@
+<section class="learning-page">
+
+  <!-- =================================================
+       TOP BAR
+  ================================================== -->
+
+  <header class="learning-header">
+
+    <div class="header-left">
+
+      <button
+        type="button"
+        class="mobile-menu-button"
+      >
+        ☰
+      </button>
+
+      <div class="breadcrumb">
+
+        <span>
+          Study
+        </span>
+
+        <span class="separator">
+          /
+        </span>
+
+        <strong>
+          {{ subjectName() }}
+        </strong>
+
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+    >
+      ← Back to Subject
+    </button>
+
+  </header>
+
+
+  <!-- =================================================
+       LEARNING BODY
+  ================================================== -->
+
+  <div class="learning-body">
+
+
+    <!-- =================================================
+         LEARNING SIDEBAR
+    ================================================== -->
+
+    <aside class="learning-sidebar">
+
+      <div class="sidebar-header">
+
+        <p class="sidebar-label">
+          {{ subjectName() }}
+        </p>
+
+        <h2>
+          Learning
+        </h2>
+
+      </div>
+
+
+      <div class="topic-list">
+
+        @for (topic of topics(); track topic.id) {
+
+          <div class="topic-group">
+
+            <!-- =========================================
+                 TOPIC
+            ========================================== -->
+
+            <button
+              type="button"
+              class="topic-button"
+              [class.active]="expandedTopicId() === topic.id"
+              (click)="toggleTopic(topic.id)"
+            >
+
+              <span class="topic-icon">
+                {{ expandedTopicId() === topic.id ? '⌄' : '›' }}
+              </span>
+
+              <span>
+                {{ topic.name }}
+              </span>
+
+            </button>
+
+
+            <!-- =========================================
+                 SUBTOPICS
+            ========================================== -->
+
+            @if (
+              topic.subtopics?.length &&
+              expandedTopicId() === topic.id
+            ) {
+
+              <div class="subtopic-list">
+
+                @for (
+                  subtopic of topic.subtopics;
+                  track subtopic.id
+                ) {
+
+                  <!-- SUBTOPIC -->
+
+                  <button
+                    type="button"
+                    class="subtopic-button"
+                    [class.active]="
+                      selectedSubtopicId() === subtopic.id
+                    "
+                    (click)="selectSubtopic(subtopic.id)"
+                  >
+
+                    <span class="subtopic-dot"></span>
+
+                    <span>
+                      {{ subtopic.title }}
+                    </span>
+
+                  </button>
+
+
+                  <!-- ===================================
+                       SECTIONS
+                  ==================================== -->
+
+                  @if (
+                    selectedSubtopicId() === subtopic.id &&
+                    subtopic.sections?.length
+                  ) {
+
+                    <div class="section-list">
+
+                      @for (
+                        section of subtopic.sections;
+                        track section.id
+                      ) {
+
+                       <button
+  type="button"
+  class="section-button"
+  [class.active]="selectedSectionId() === section.id"
+  (click)="selectSection(section.id)"
+>
+  {{ section.title }}
+</button>
+
+                      }
+
+                    </div>
+
+                  }
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    </aside>
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="learning-content">
+
+
+      <!-- =================================================
+           CONTENT HEADER
+      ================================================== -->
+
+      <div class="content-header">
+
+        <p class="content-label">
+          INTRODUCTION
+        </p>
+
+        <h1>
+          JavaScript
+        </h1>
+
+        <p class="content-intro">
+          JavaScript is a programming language that
+          allows developers to create interactive,
+          dynamic, and responsive web applications.
+        </p>
+
+      </div>
+
+
+      <!-- =================================================
+           WHAT IS JAVASCRIPT
+      ================================================== -->
+
+      <section class="content-section">
+
+        <h2>
+          What is JavaScript?
+        </h2>
+
+        <p>
+          JavaScript is a high-level programming
+          language mainly used to add behaviour and
+          interactivity to web applications.
+        </p>
+
+        <p>
+          HTML defines the structure of a webpage,
+          CSS controls its appearance, and JavaScript
+          allows the webpage to respond to users and
+          perform actions dynamically.
+        </p>
+
+        <div class="concept-flow">
+
+          <div class="flow-item">
+
+            <strong>
+              HTML
+            </strong>
+
+            <span>
+              Structure
+            </span>
+
+          </div>
+
+          <span class="flow-arrow">
+            +
+          </span>
+
+          <div class="flow-item">
+
+            <strong>
+              CSS
+            </strong>
+
+            <span>
+              Appearance
+            </span>
+
+          </div>
+
+          <span class="flow-arrow">
+            +
+          </span>
+
+          <div class="flow-item">
+
+            <strong>
+              JavaScript
+            </strong>
+
+            <span>
+              Behaviour
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           WHY JAVASCRIPT
+      ================================================== -->
+
+      <section class="content-section">
+
+        <p class="section-label">
+          FOUNDATION
+        </p>
+
+        <h2>
+          Why do we use JavaScript?
+        </h2>
+
+        <p>
+          JavaScript allows a website to respond to
+          user actions and change its content without
+          requiring the entire page to reload.
+        </p>
+
+
+        <div class="feature-grid">
+
+          <div class="feature-card">
+
+            <span>
+              01
+            </span>
+
+            <h3>
+              Interactivity
+            </h3>
+
+            <p>
+              Respond to clicks, typing, selections,
+              forms, and other user actions.
+            </p>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <span>
+              02
+            </span>
+
+            <h3>
+              Dynamic Content
+            </h3>
+
+            <p>
+              Change webpage content and behaviour
+              while the application is running.
+            </p>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <span>
+              03
+            </span>
+
+            <h3>
+              Data & APIs
+            </h3>
+
+            <p>
+              Communicate with backend services and
+              work with data from APIs.
+            </p>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <span>
+              04
+            </span>
+
+            <h3>
+              Application Development
+            </h3>
+
+            <p>
+              Build complete applications using
+              JavaScript and its ecosystem.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           WHERE JAVASCRIPT IS USED
+      ================================================== -->
+
+      <section class="content-section">
+
+        <p class="section-label">
+          REAL WORLD
+        </p>
+
+        <h2>
+          Where is JavaScript used?
+        </h2>
+
+        <div class="usage-list">
+
+          <div class="usage-item">
+
+            <strong>
+              Frontend Development
+            </strong>
+
+            <span>
+              Interactive websites and web applications
+            </span>
+
+          </div>
+
+
+          <div class="usage-item">
+
+            <strong>
+              Backend Development
+            </strong>
+
+            <span>
+              Server-side applications using Node.js
+            </span>
+
+          </div>
+
+
+          <div class="usage-item">
+
+            <strong>
+              APIs
+            </strong>
+
+            <span>
+              Communication between applications and services
+            </span>
+
+          </div>
+
+
+          <div class="usage-item">
+
+            <strong>
+              Mobile Applications
+            </strong>
+
+            <span>
+              JavaScript-based mobile development
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           FIRST CODE
+      ================================================== -->
+
+      <section class="content-section">
+
+        <p class="section-label">
+          FIRST STEP
+        </p>
+
+        <h2>
+          Your first JavaScript code
+        </h2>
+
+        <p>
+          One of the simplest ways to see JavaScript
+          in action is by printing a message.
+        </p>
+
+        <div class="code-block">
+
+          <div class="code-header">
+
+            <span>
+              JavaScript
+            </span>
+
+          </div>
+
+          <pre><code>console.log("Hello, JavaScript!");</code></pre>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           LEARNING PATH
+      ================================================== -->
+
+      <section class="learning-path-card">
+
+        <div>
+
+          <p class="section-label">
+            NEXT
+          </p>
+
+          <h2>
+            Start with the fundamentals
+          </h2>
+
+          <p>
+            Move through JavaScript step by step,
+            from variables and conditions to functions,
+            objects, and more advanced concepts.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="start-button"
+        >
+          Start Learning
+          <span>→</span>
+        </button>
+
+      </section>
+
+
+    </main>
+
+  </div>
+
+</section>

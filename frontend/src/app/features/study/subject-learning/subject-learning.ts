@@ -250,4 +250,22 @@ export class Subject implements OnInit {
 
   }
 
+startLearning(): void {
+
+  const subjectId =
+    this.route.snapshot.paramMap.get('subjectId');
+
+  if (!subjectId) {
+    return;
+  }
+
+  // Navigate to the student learning page
+  this.router.navigate([
+    '/study',
+    subjectId,
+    'learning'
+  ]);
+
+}
+
 }

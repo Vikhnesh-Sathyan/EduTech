@@ -33,7 +33,7 @@ import { Study } from './features/study/study';
 import { Subject } from './features/study/subject-learning/subject-learning';
 import { Diagnostic } from './features/study/diagnostic/diagnostic';
 import { DiagnosticResult } from './features/study/diagnostic-result/diagnostic-result';
-
+import { StudentLearningSection } from './features/study/student-learning-section/student-learning-section';
 // ======================================================
 // ADMIN
 // ======================================================
@@ -153,7 +153,12 @@ export const routes: Routes = [
       {
         path: 'diagnostic-result/:subjectId',
         component: DiagnosticResult
-      }
+      },
+
+      { 
+      path: 'study/:subjectId/learning', 
+      component: StudentLearningSection
+    }
 
     ]
   },

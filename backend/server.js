@@ -1,15 +1,24 @@
-// Load environment variables from .env
+// =====================================================
+// LOAD ENVIRONMENT VARIABLES
+// =====================================================
+
 require("dotenv").config();
 
-// Import required packages
+
+// =====================================================
+// IMPORT REQUIRED PACKAGES
+// =====================================================
+
 const express = require("express");
 const cors = require("cors");
-
-// Import database connection
-const db = require("./config/db");
-
-// Import path
 const path = require("path");
+
+
+// =====================================================
+// IMPORT DATABASE CONNECTION
+// =====================================================
+
+const db = require("./config/db");
 
 
 // =====================================================
@@ -55,10 +64,6 @@ const adminMentorRoutes =
 const adminDiagnosticRoutes =
     require("./routes/adminDiagnosticRoutes");
 
-// Admin topic learning routes
-const adminTopicLearningRoutes =
-    require("./routes/adminTopicLearningRoutes");
-
 // Admin learning section routes
 const adminLearningSectionRoutes =
     require("./routes/adminLearningSectionRoutes");
@@ -71,6 +76,7 @@ const adminSectionLearningRoutes =
 const adminTopicRoutes =
     require("./routes/adminTopicRoutes");
 
+// Admin subtopic routes
 const adminSubtopicRoutes =
     require("./routes/adminSubtopicRoutes");
 
@@ -232,12 +238,6 @@ app.use(
     adminDiagnosticRoutes
 );
 
-// Topic learning - old/legacy system
-app.use(
-    "/api/admin/topic-learning",
-    adminTopicLearningRoutes
-);
-
 // Learning section management
 app.use(
     "/api/admin/learning-sections",
@@ -256,10 +256,12 @@ app.use(
     adminTopicRoutes
 );
 
+// Subtopic management
 app.use(
     "/api/admin/subtopics",
     adminSubtopicRoutes
 );
+
 
 // =====================================================
 // STUDENT ROUTES

@@ -2,7 +2,8 @@ const express = require("express");
 
 const {
     getStudentSubjects,
-    getSubjectById
+    getSubjectById,
+    getSubjectLearningStructure
 } = require("../controllers/studyController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -27,5 +28,12 @@ router.get(
     getSubjectById
 );
 
+// Get learning structure for one subject
+router.get(
+    "/subjects/:subjectId/learning",
+    authMiddleware,
+    roleMiddleware("student"),
+    getSubjectLearningStructure
+);
 
 module.exports = router;

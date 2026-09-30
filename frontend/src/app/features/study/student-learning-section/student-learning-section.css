@@ -1,0 +1,701 @@
+/* =====================================================
+   PAGE
+===================================================== */
+
+.learning-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #172033;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.learning-header {
+  height: 64px;
+  padding: 0 28px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  font-size: 14px;
+  color: #64748b;
+}
+
+.breadcrumb strong {
+  color: #172033;
+  font-weight: 600;
+}
+
+.separator {
+  color: #cbd5e1;
+}
+
+.back-button {
+  border: 1px solid #dbe2ea;
+  background: #ffffff;
+
+  color: #475569;
+
+  padding: 9px 14px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.mobile-menu-button {
+  display: none;
+
+  border: none;
+  background: transparent;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+.learning-body {
+  display: flex;
+  align-items: flex-start;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.learning-sidebar {
+  width: 280px;
+  min-width: 280px;
+
+  height: calc(100vh - 64px);
+
+  position: sticky;
+  top: 64px;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+}
+
+.sidebar-header {
+  padding: 28px 22px 22px;
+
+  border-bottom: 1px solid #eef2f6;
+}
+
+.sidebar-label,
+.content-label,
+.section-label {
+  margin: 0 0 7px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  color: #94a3b8;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+  letter-spacing: -0.02em;
+
+  color: #172033;
+}
+
+.sidebar-content {
+  padding: 14px 10px 30px;
+}
+
+
+/* =====================================================
+   TOPICS
+===================================================== */
+
+.topic-group {
+  margin-bottom: 3px;
+}
+
+.topic-button {
+  width: 100%;
+
+  min-height: 42px;
+
+  padding: 10px 12px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #475569;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  text-align: left;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.18s ease;
+}
+
+.topic-button:hover {
+  background: #f8fafc;
+  color: #172033;
+}
+
+.topic-button.active {
+  background: #f1f5f9;
+  color: #172033;
+}
+
+.expand-icon {
+  width: 18px;
+
+  font-size: 16px;
+  color: #64748b;
+
+  text-align: center;
+}
+
+.topic-dot {
+  width: 7px;
+  height: 7px;
+
+  margin-left: 5px;
+
+  border-radius: 50%;
+
+  background: #cbd5e1;
+}
+
+
+/* =====================================================
+   SUBTOPICS
+===================================================== */
+
+.subtopic-list {
+  margin-left: 21px;
+
+  padding: 3px 0 7px;
+
+  border-left: 1px solid #e2e8f0;
+}
+
+.subtopic-button {
+  width: calc(100% - 8px);
+
+  margin-left: 8px;
+
+  padding: 9px 10px;
+
+  border: none;
+  background: transparent;
+
+  color: #64748b;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  border-radius: 5px;
+
+  transition: all 0.18s ease;
+}
+
+.subtopic-button:hover {
+  background: #f8fafc;
+  color: #172033;
+}
+
+.subtopic-line {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #cbd5e1;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.learning-content {
+  width: 100%;
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  padding: 58px 50px 100px;
+}
+
+
+/* =====================================================
+   CONTENT HEADER
+===================================================== */
+
+.content-header {
+  padding-bottom: 42px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.content-header h1 {
+  margin: 0;
+
+  font-size: 42px;
+  line-height: 1.15;
+
+  letter-spacing: -0.035em;
+
+  color: #111827;
+}
+
+.content-intro {
+  max-width: 720px;
+
+  margin: 18px 0 0;
+
+  font-size: 17px;
+  line-height: 1.75;
+
+  color: #64748b;
+}
+
+
+/* =====================================================
+   CONTENT SECTIONS
+===================================================== */
+
+.content-section {
+  padding: 46px 0;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.content-section h2 {
+  margin: 0 0 17px;
+
+  font-size: 27px;
+  line-height: 1.3;
+
+  letter-spacing: -0.025em;
+
+  color: #172033;
+}
+
+.content-section > p:not(.section-label) {
+  max-width: 780px;
+
+  margin: 0 0 15px;
+
+  font-size: 15px;
+  line-height: 1.8;
+
+  color: #475569;
+}
+
+
+/* =====================================================
+   CONCEPT FLOW
+===================================================== */
+
+.concept-flow {
+  margin-top: 28px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 22px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.flow-item {
+  flex: 1;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  text-align: center;
+}
+
+.flow-item strong {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 14px;
+
+  color: #172033;
+}
+
+.flow-item span {
+  font-size: 12px;
+
+  color: #64748b;
+}
+
+.flow-arrow {
+  color: #94a3b8;
+
+  font-size: 18px;
+}
+
+
+/* =====================================================
+   FEATURE GRID
+===================================================== */
+
+.feature-grid {
+  margin-top: 25px;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 14px;
+}
+
+.feature-card {
+  padding: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.feature-card > span {
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #94a3b8;
+}
+
+.feature-card h3 {
+  margin: 16px 0 8px;
+
+  font-size: 16px;
+
+  color: #172033;
+}
+
+.feature-card p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.65;
+
+  color: #64748b;
+}
+
+
+/* =====================================================
+   USAGE LIST
+===================================================== */
+
+.usage-list {
+  margin-top: 25px;
+
+  display: grid;
+
+  gap: 1px;
+
+  background: #e2e8f0;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+.usage-item {
+  padding: 18px 20px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+}
+
+.usage-item strong {
+  font-size: 14px;
+
+  color: #334155;
+}
+
+.usage-item span {
+  font-size: 13px;
+
+  color: #64748b;
+
+  text-align: right;
+}
+
+
+/* =====================================================
+   CODE
+===================================================== */
+
+.code-block {
+  margin-top: 24px;
+
+  background: #111827;
+
+  border-radius: 9px;
+
+  overflow: hidden;
+}
+
+.code-header {
+  padding: 10px 16px;
+
+  border-bottom: 1px solid #273244;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  color: #94a3b8;
+}
+
+.code-block pre {
+  margin: 0;
+
+  padding: 22px;
+
+  overflow-x: auto;
+}
+
+.code-block code {
+  font-family: Consolas, Monaco, monospace;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  color: #e2e8f0;
+}
+
+
+/* =====================================================
+   LEARNING PATH CTA
+===================================================== */
+
+.learning-path-card {
+  margin-top: 46px;
+
+  padding: 32px;
+
+  background: #172033;
+
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+.learning-path-card .section-label {
+  color: #94a3b8;
+}
+
+.learning-path-card h2 {
+  margin: 0 0 10px;
+
+  font-size: 24px;
+
+  color: #ffffff;
+}
+
+.learning-path-card p {
+  max-width: 620px;
+
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  color: #cbd5e1;
+}
+
+.start-button {
+  flex-shrink: 0;
+
+  padding: 12px 18px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #172033;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  transition: background 0.2s ease;
+}
+
+.start-button:hover {
+  background: #f1f5f9;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .learning-sidebar {
+    width: 240px;
+    min-width: 240px;
+  }
+
+  .learning-content {
+    padding: 45px 30px 80px;
+  }
+
+  .content-header h1 {
+    font-size: 36px;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .learning-header {
+    padding: 0 16px;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .back-button {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .learning-sidebar {
+    display: none;
+  }
+
+  .learning-content {
+    padding: 35px 20px 70px;
+  }
+
+  .content-header h1 {
+    font-size: 32px;
+  }
+
+  .concept-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .flow-arrow {
+    text-align: center;
+  }
+
+  .usage-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+  }
+
+  .usage-item span {
+    text-align: left;
+  }
+
+  .learning-path-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .start-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+}
