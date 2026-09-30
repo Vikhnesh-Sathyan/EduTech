@@ -44,6 +44,12 @@ export class StudentLearningSection implements OnInit {
 
 selectedSectionId = signal<number | null>(null);
 
+// =====================================================
+// SELECTED SECTION CONTENT
+// =====================================================
+
+sectionContent = signal<any | null>(null);
+
   // =====================================================
   // PAGE STATE
   // =====================================================
@@ -181,9 +187,50 @@ selectedSectionId = signal<number | null>(null);
 // SELECT SECTION
 // =====================================================
 
+// =====================================================
+// SELECT SECTION
+// =====================================================
+
 selectSection(sectionId: number): void {
 
   this.selectedSectionId.set(sectionId);
+
+  this.loadSectionContent(sectionId);
+
+}
+// =====================================================
+// LOAD SECTION CONTENT
+// =====================================================
+
+loadSectionContent(sectionId: number): void {
+
+  this.sectionContent.set(null);
+
+  this.studentLearningService
+    .getSectionLearningContent(sectionId)
+    .subscribe({
+
+      next: (response: any) => {
+
+        console.log(
+          'Section content:',
+          response
+        );
+
+        this.sectionContent.set(response);
+
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Failed to load section content:',
+          error
+        );
+
+      }
+
+    });
 
 }
 

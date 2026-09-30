@@ -22,4 +22,13 @@ export class StudentLearning {
 
   }
 
+  // Get learning content for one section
+getSectionLearningContent(sectionId: number) {
+
+  return this.http.get(
+    `http://localhost:5000/api/student/section-learning/${sectionId}`
+  );
+
+}
+
 }

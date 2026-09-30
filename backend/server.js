@@ -93,6 +93,8 @@ const educationRoutes =
 const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
+const studentSectionLearningRoutes =
+    require("./routes/studentSectionLearningRoutes");
 
 // =====================================================
 // STUDY AND DIAGNOSTIC ROUTES
@@ -277,6 +279,11 @@ app.use(
 app.use(
     "/api/student/subjects",
     studentSubjectRoutes
+);
+
+app.use(
+    "/api/student/section-learning",
+    studentSectionLearningRoutes
 );
 
 

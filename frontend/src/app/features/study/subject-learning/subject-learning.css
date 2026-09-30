@@ -99,7 +99,7 @@
    STATUS
 ========================================== */
 
-.status {
+/* .status {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -113,7 +113,7 @@
 
   font-size: 13px;
   font-weight: 600;
-}
+} */
 
 .status-dot {
   width: 7px;
@@ -295,6 +295,21 @@
 
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.start-learning-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* ==========================================
