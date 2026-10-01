@@ -80,6 +80,10 @@ const adminTopicRoutes =
 const adminSubtopicRoutes =
     require("./routes/adminSubtopicRoutes");
 
+// Admin Project Understanding routes
+const adminProjectRoutes =
+    require("./routes/adminProjectRoutes");
+
 
 // =====================================================
 // STUDENT ROUTES
@@ -95,6 +99,11 @@ const studentSubjectRoutes =
 
 const studentSectionLearningRoutes =
     require("./routes/studentSectionLearningRoutes");
+
+// Student Project Understanding routes
+// const studentProjectRoutes =
+//     require("./routes/studentProjectRoutes");
+
 
 // =====================================================
 // STUDY AND DIAGNOSTIC ROUTES
@@ -266,6 +275,17 @@ app.use(
 
 
 // =====================================================
+// ADMIN PROJECT UNDERSTANDING ROUTES
+// =====================================================
+
+// Project Understanding management
+app.use(
+    "/api/admin/projects",
+    adminProjectRoutes
+);
+
+
+// =====================================================
 // STUDENT ROUTES
 // =====================================================
 
@@ -281,10 +301,22 @@ app.use(
     studentSubjectRoutes
 );
 
+// Student section learning
 app.use(
     "/api/student/section-learning",
     studentSectionLearningRoutes
 );
+
+
+// =====================================================
+// STUDENT PROJECT UNDERSTANDING ROUTES
+// =====================================================
+
+// Student Project Understanding
+// app.use(
+//     "/api/student/projects",
+//     studentProjectRoutes
+// );
 
 
 // =====================================================
