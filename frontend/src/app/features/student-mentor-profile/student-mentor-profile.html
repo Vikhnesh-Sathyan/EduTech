@@ -308,13 +308,24 @@
 
     <div class="profile-action">
 
-      <button
-        type="button"
-        class="request-button"
-        (click)="requestMentorship()"
-      >
-        Request Mentorship
-      </button>
+<button
+  type="button"
+  class="request-button"
+  [disabled]="
+    mentor()?.relationship_status === 'pending' ||
+    mentor()?.relationship_status === 'accepted'
+  "
+  (click)="requestMentorship()"
+>
+  {{
+    mentor()?.relationship_status === 'pending'
+      ? 'Request Sent'
+      : mentor()?.relationship_status === 'accepted'
+        ? 'Connected'
+        : 'Request Mentorship'
+  }}
+</button>
+
 
     </div>
 

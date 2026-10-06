@@ -4,8 +4,11 @@
 const db = require("../config/db");
 
 
-// GET APPROVED MENTORS
+
+// Gets approved mentors and the current student's relationship status
 const getAvailableMentors = async (req, res) => {
+
+    const studentId = req.user.id;
 
     try {
 
@@ -23,21 +26,30 @@ const getAvailableMentors = async (req, res) => {
                 mp.github_url,
                 mp.availability_days,
                 mp.availability_start_time,
-                mp.availability_end_time
+                mp.availability_end_time,
+
+                COALESCE(
+                    msr.status,
+                    'none'
+                ) AS relationship_status
 
             FROM users u
 
             INNER JOIN mentor_profiles mp
                 ON mp.user_id = u.id
 
+            LEFT JOIN mentor_student_relationships msr
+                ON msr.mentor_id = u.id
+                AND msr.student_id = ?
+
             WHERE u.role = 'mentor'
               AND u.status = 'active'
               AND mp.verification_status = 'approved'
 
             ORDER BY u.name ASC
-            `
+            `,
+            [studentId]
         );
-
 
         return res.status(200).json({
             mentors
@@ -58,10 +70,13 @@ const getAvailableMentors = async (req, res) => {
 };
 
 
+
+
 // Gets the public profile of an approved mentor
 const getMentorProfile = async (req, res) => {
 
     const { mentorId } = req.params;
+    const studentId = req.user.id;
 
     try {
 
@@ -80,19 +95,28 @@ const getMentorProfile = async (req, res) => {
                 mp.github_url,
                 mp.availability_days,
                 mp.availability_start_time,
-                mp.availability_end_time
+                mp.availability_end_time,
+
+                COALESCE(
+                    msr.status,
+                    'none'
+                ) AS relationship_status
 
             FROM users u
 
             INNER JOIN mentor_profiles mp
                 ON mp.user_id = u.id
 
+            LEFT JOIN mentor_student_relationships msr
+                ON msr.mentor_id = u.id
+                AND msr.student_id = ?
+
             WHERE u.id = ?
               AND u.role = 'mentor'
               AND u.status = 'active'
               AND mp.verification_status = 'approved'
             `,
-            [mentorId]
+            [studentId, mentorId]
         );
 
         if (mentors.length === 0) {
@@ -120,6 +144,7 @@ const getMentorProfile = async (req, res) => {
 
     }
 };
+
 
 module.exports = {
     getAvailableMentors,

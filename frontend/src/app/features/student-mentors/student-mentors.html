@@ -331,13 +331,23 @@
 </button>
 
 
-    <button
-      type="button"
-      class="secondary-button"
-      (click)="requestMentorship(mentor.mentor_id)"
-    >
-      Request
-    </button>
+   
+<button
+  type="button"
+  class="secondary-button"
+  [disabled]="mentor.relationship_status === 'pending' ||
+               mentor.relationship_status === 'accepted'"
+  (click)="requestMentorship(mentor.mentor_id)"
+>
+  {{
+    mentor.relationship_status === 'pending'
+      ? 'Request Sent'
+      : mentor.relationship_status === 'accepted'
+        ? 'Connected'
+        : 'Request'
+  }}
+</button>
+
 
   </div>
 

@@ -126,49 +126,65 @@ export class StudentMentorProfile implements OnInit {
   }
 
 
-  // Sends a mentorship request
-  requestMentorship(): void {
 
-    const mentorId =
-      this.mentor()?.mentor_id;
+// Sends a mentorship request
+requestMentorship(): void {
 
-    if (!mentorId) {
-      return;
-    }
+  const mentorId =
+    this.mentor()?.mentor_id;
 
-    this.studentMentorService
-      .requestMentorship(mentorId)
-      .subscribe({
-
-        next: (response: any) => {
-
-          console.log(
-            'MENTORSHIP REQUEST RESPONSE:',
-            response
-          );
-
-          alert(
-            'Mentorship request sent successfully.'
-          );
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Mentorship request failed:',
-            error
-          );
-
-          alert(
-            error?.error?.message ||
-            'Failed to send mentorship request.'
-          );
-
-        }
-
-      });
-
+  if (!mentorId) {
+    return;
   }
+
+  this.studentMentorService
+    .requestMentorship(mentorId)
+    .subscribe({
+
+      next: (response: any) => {
+
+        console.log(
+          'MENTORSHIP REQUEST RESPONSE:',
+          response
+        );
+
+        // Updates the button immediately
+        this.mentor.update((current) => {
+
+          if (!current) {
+            return current;
+          }
+
+          return {
+            ...current,
+            relationship_status: 'pending'
+          };
+
+        });
+
+        alert(
+          'Mentorship request sent successfully.'
+        );
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Mentorship request failed:',
+          error
+        );
+
+        alert(
+          error?.error?.message ||
+          'Failed to send mentorship request.'
+        );
+
+      }
+
+    });
+
+}
+
 
 }
