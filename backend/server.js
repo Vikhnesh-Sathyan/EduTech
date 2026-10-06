@@ -101,8 +101,8 @@ const studentSectionLearningRoutes =
     require("./routes/studentSectionLearningRoutes");
 
 // Student Project Understanding routes
-// const studentProjectRoutes =
-//     require("./routes/studentProjectRoutes");
+const studentProjectRoutes =
+    require("./routes/studentProjectRoutes");
 
 
 // =====================================================
@@ -313,10 +313,10 @@ app.use(
 // =====================================================
 
 // Student Project Understanding
-// app.use(
-//     "/api/student/projects",
-//     studentProjectRoutes
-// );
+app.use(
+    "/api/student/projects",
+    studentProjectRoutes
+);
 
 
 // =====================================================

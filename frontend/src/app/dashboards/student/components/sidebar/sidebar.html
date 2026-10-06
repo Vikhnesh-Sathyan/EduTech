@@ -1,39 +1,56 @@
 <aside class="sidebar">
 
+  <!-- Logo -->
   <div class="logo">
     EduTech
   </div>
 
+
+  <!-- Main Navigation -->
   <nav class="navigation">
 
     <a routerLink="/student-dashboard">
-      Dashboard
+      <span class="nav-label">Dashboard</span>
     </a>
 
     <a routerLink="/study">
-      Study
+      <span class="nav-label">Study</span>
     </a>
 
-    <a>
-      Career
+    <a routerLink="/project-understanding">
+      <span class="nav-label">Projects</span>
     </a>
 
-    <a>
-      Practice
+    <a routerLink="/practice">
+      <span class="nav-label">Practice</span>
     </a>
 
-    <a>
-      Mentor
+    <a routerLink="/career">
+      <span class="nav-label">Career</span>
     </a>
 
-    <a routerLink="/profile">Profile</a>
+    <a routerLink="/mentor">
+      <span class="nav-label">Mentor</span>
+    </a>
+
+    <a routerLink="/profile">
+      <span class="nav-label">Profile</span>
+    </a>
 
   </nav>
 
+
+  <!-- Logout -->
   <div class="logout-section">
-   <button type="button" (click)="logout()">
-       Logout
+
+    <button
+      type="button"
+      (click)="logout()">
+
+      Logout
+
     </button>
+
   </div>
 
 </aside>

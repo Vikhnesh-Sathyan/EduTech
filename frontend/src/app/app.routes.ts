@@ -34,6 +34,27 @@ import { Subject } from './features/study/subject-learning/subject-learning';
 import { Diagnostic } from './features/study/diagnostic/diagnostic';
 import { DiagnosticResult } from './features/study/diagnostic-result/diagnostic-result';
 import { StudentLearningSection } from './features/study/student-learning-section/student-learning-section';
+
+// ======================================================
+// STUDENT - PROJECT UNDERSTANDING
+// ======================================================
+
+import {
+  ProjectUnderstanding as StudentProjectUnderstanding
+} from './features/project/project-understanding/project-understanding';
+
+import {
+  ProjectTopics as StudentProjectTopics
+} from './features/project/project-topics/project-topics';
+
+import {
+  ProjectSections as StudentProjectSections
+} from './features/project/project-sections/project-sections';
+
+import {
+  ProjectSectionContent as StudentProjectSectionContent
+} from './features/project/project-section-content/project-section-content';
+
 // ======================================================
 // ADMIN
 // ======================================================
@@ -45,6 +66,7 @@ import { EducationPrograms } from './features/admin/education-programs/education
 import { Departments } from './features/admin/departments/departments';
 import { EducationYears } from './features/admin/education-years/education-years';
 import { Subjects } from './features/admin/subjects/subjects';
+
 import { MentorVerification } from './features/admin/mentor-verification/mentor-verification';
 
 import { DiagnosticQuestions } from './features/admin/diagnostic-questions/diagnostic-questions';
@@ -56,13 +78,32 @@ import { AdminSectionLearningPage } from './features/admin/admin-section-learnin
 import { AdminSubtopicsPage } from './features/admin/admin-subtopics/admin-subtopics';
 
 // ======================================================
+// ADMIN - PROJECT UNDERSTANDING
+// ======================================================
+
+import {
+  ProjectUnderstanding
+} from './features/admin/project-understanding/project-understanding';
+
+import {
+  ProjectTopics
+} from './features/admin/project-topics/project-topics';
+
+import {
+  ProjectSections
+} from './features/admin/project-sections/project-sections';
+
+import {
+  ProjectSectionContent
+} from './features/admin/project-section-content/project-section-content';
+
+// ======================================================
 // MENTOR
 // ======================================================
 
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
 import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
 import { MentorProfile } from './features/mentor/mentor-profile/mentor-profile';
-
 
 // ======================================================
 // ROUTES
@@ -79,7 +120,6 @@ export const routes: Routes = [
     component: Home
   },
 
-
   // ====================================================
   // AUTH ROUTES
   // ====================================================
@@ -94,7 +134,6 @@ export const routes: Routes = [
     component: Login
   },
 
-
   // ====================================================
   // STUDENT ROUTES
   // ====================================================
@@ -105,70 +144,138 @@ export const routes: Routes = [
   // Dashboard
   // Profile
   // Study
-  // Subject
-  // Diagnostic
+  // Project Understanding
   //
   // ====================================================
 
   {
     path: '',
     component: StudentLayout,
+
     canActivate: [
       authGuard
     ],
 
     children: [
 
-      // Student dashboard
+      // --------------------------------------------------
+      // Student Dashboard
+      // --------------------------------------------------
+
       {
         path: 'student-dashboard',
         component: StudentDashboard
       },
 
-      // Student profile
+      // ==================================================
+      // STUDENT PROJECT UNDERSTANDING
+      // ==================================================
+      //
+      // Student can:
+      // - Explore categories
+      // - Explore topics
+      // - Explore sections
+      // - Read learning content
+      //
+      // Base URL:
+      // /project-understanding
+      //
+      // ==================================================
+
+      {
+        path: 'project-understanding',
+        component: StudentProjectUnderstanding
+      },
+
+      // Student Project Topics
+      // /project-understanding/:categoryId/topics
+
+      {
+        path: 'project-understanding/:categoryId/topics',
+        component: StudentProjectTopics
+      },
+
+      // Student Project Sections
+      // /project-understanding/:categoryId/topics/:topicId/sections
+
+      {
+        path: 'project-understanding/:categoryId/topics/:topicId/sections',
+        component: StudentProjectSections
+      },
+
+      // Student Project Section Content
+      // /project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content
+
+      {
+        path: 'project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content',
+        component: StudentProjectSectionContent
+      },
+
+      // --------------------------------------------------
+      // Student Profile
+      // --------------------------------------------------
+
       {
         path: 'profile',
         component: Profile
       },
 
-      // Study subjects
+      // ==================================================
+      // STUDY
+      // ==================================================
+
       {
         path: 'study',
         component: Study
       },
 
-      // Subject learning page
+      // --------------------------------------------------
+      // Subject Learning
+      // --------------------------------------------------
+
       {
         path: 'study/:subjectId',
         component: Subject
       },
 
-      // Diagnostic page
+      // --------------------------------------------------
+      // Diagnostic
+      // --------------------------------------------------
+
       {
         path: 'study/:subjectId/diagnostic',
         component: Diagnostic
       },
 
-        // Diagnostic Result  
+      // --------------------------------------------------
+      // Diagnostic Result
+      // --------------------------------------------------
+
       {
         path: 'diagnostic-result/:subjectId',
         component: DiagnosticResult
       },
 
-      { 
-      path: 'study/:subjectId/learning', 
-      component: StudentLearningSection
-    }
+      // --------------------------------------------------
+      // Learning Section
+      // --------------------------------------------------
+
+      {
+        path: 'study/:subjectId/learning',
+        component: StudentLearningSection
+      }
 
     ]
   },
-
 
   // ====================================================
   // ADMIN DASHBOARD
   // ====================================================
   //
-  // The main Admin Dashboard has its own layout.
+  // Main Admin Dashboard
+  //
+  // URL:
+  // /admin-dashboard
   //
   // ====================================================
 
@@ -182,20 +289,14 @@ export const routes: Routes = [
     ]
   },
 
-
   // ====================================================
-  // ADMIN MANAGEMENT ROUTES
+  // ADMIN MANAGEMENT
   // ====================================================
   //
-  // All admin management pages use AdminLayout.
+  // All Admin management pages use AdminLayout.
   //
-  // /admin/education-programs
-  // /admin/departments
-  // /admin/education-years
-  // /admin/subjects
-  // /admin/mentor-verification
-  // /admin/topics
-  // /admin/diagnostic-questions
+  // Base URL:
+  // /admin
   //
   // ====================================================
 
@@ -210,82 +311,151 @@ export const routes: Routes = [
 
     children: [
 
-      // --------------------------------------------------
-      // Education
-      // --------------------------------------------------
+      // ==================================================
+      // EDUCATION MANAGEMENT
+      // ==================================================
+
+      // /admin/education-programs
 
       {
         path: 'education-programs',
         component: EducationPrograms
       },
 
+      // /admin/departments
+
       {
         path: 'departments',
         component: Departments
       },
+
+      // /admin/education-years
 
       {
         path: 'education-years',
         component: EducationYears
       },
 
+      // /admin/subjects
+
       {
         path: 'subjects',
         component: Subjects
       },
 
+      // ==================================================
+      // LEARNING MANAGEMENT
+      // ==================================================
 
-      // --------------------------------------------------
-      // Mentor Management
-      // --------------------------------------------------
-
-      {
-        path: 'mentor-verification',
-        component: MentorVerification
-      },
-
-
-      // --------------------------------------------------
-      // Learning Management
-      // --------------------------------------------------
+      // /admin/topics
 
       {
         path: 'topics',
         component: Topics
       },
 
+      // /admin/diagnostic-questions
+
       {
         path: 'diagnostic-questions',
         component: DiagnosticQuestions
       },
 
+      // /admin/topic-learning/:topicId
+
       {
-       path: 'topic-learning/:topicId',
-       component: AdminTopicLearningPage
+        path: 'topic-learning/:topicId',
+        component: AdminTopicLearningPage
       },
+
+      // /admin/topic-sections/:topicId
 
       {
         path: 'topic-sections/:topicId',
         component: AdminLearningSectionsPage
       },
 
+      // /admin/section-learning/:sectionId
+
       {
         path: 'section-learning/:sectionId',
         component: AdminSectionLearningPage
-      }, 
+      },
+
+      // /admin/subtopics/:topicId
 
       {
         path: 'subtopics/:topicId',
         component: AdminSubtopicsPage
       },
 
+      // /admin/subtopic-sections/:subtopicId
+
       {
         path: 'subtopic-sections/:subtopicId',
         component: AdminLearningSectionsPage
       },
+
+      // ==================================================
+      // ADMIN PROJECT UNDERSTANDING
+      // ==================================================
+      //
+      // Admin can:
+      // - Manage categories
+      // - Manage topics
+      // - Manage sections
+      // - Manage section content
+      //
+      // Base URL:
+      // /admin/project-understanding
+      //
+      // ==================================================
+
+      // Admin Project Categories
+      // /admin/project-understanding
+
+      {
+        path: 'project-understanding',
+        component: ProjectUnderstanding
+      },
+
+      // Admin Project Topics
+      // /admin/project-understanding/:categoryId/topics
+
+      {
+        path: 'project-understanding/:categoryId/topics',
+        component: ProjectTopics
+      },
+
+      // Admin Project Sections
+      // /admin/project-understanding/:categoryId/topics/:topicId/sections
+
+      {
+        path: 'project-understanding/:categoryId/topics/:topicId/sections',
+        component: ProjectSections
+      },
+
+      // Admin Project Section Content
+      // /admin/project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content
+
+      {
+        path: 'project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content',
+        component: ProjectSectionContent
+      },
+
+      // ==================================================
+      // MENTOR MANAGEMENT
+      // ==================================================
+
+      // /admin/mentor-verification
+
+      {
+        path: 'mentor-verification',
+        component: MentorVerification
+      }
+
     ]
   },
-
 
   // ====================================================
   // MENTOR ROUTES
@@ -306,13 +476,19 @@ export const routes: Routes = [
 
     children: [
 
-      // Mentor dashboard
+      // --------------------------------------------------
+      // Mentor Dashboard
+      // --------------------------------------------------
+
       {
         path: 'mentor-dashboard',
         component: MentorDashboard
       },
 
-      // Mentor profile
+      // --------------------------------------------------
+      // Mentor Profile
+      // --------------------------------------------------
+
       {
         path: 'mentor-profile',
         component: MentorProfile

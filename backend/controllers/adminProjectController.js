@@ -529,8 +529,251 @@ const deleteProjectSection = async (req, res) => {
     }
 };
 
+// =====================================================
+// CREATE PROJECT CATEGORY
+// =====================================================
+
+const createProjectCategory = async (req, res) => {
+    try {
+
+        const {
+            name,
+            description,
+            display_order
+        } = req.body;
+
+        // Validate required fields
+        if (!name || !display_order) {
+            return res.status(400).json({
+                message: "Category name and display order are required"
+            });
+        }
+
+        // Check whether category name already exists
+        const [existing] = await db.query(
+            `
+            SELECT id
+            FROM project_categories
+            WHERE name = ?
+            `,
+            [name]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                message: "Category already exists"
+            });
+        }
+
+        // Create category
+        const [result] = await db.query(
+            `
+            INSERT INTO project_categories
+            (
+                name,
+                description,
+                display_order
+            )
+            VALUES (?, ?, ?)
+            `,
+            [
+                name,
+                description || null,
+                display_order
+            ]
+        );
+
+        res.status(201).json({
+            message: "Project category created successfully",
+            categoryId: result.insertId
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Create project category error:",
+            error
+        );
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+}; 
+
+// =====================================================
+// UPDATE PROJECT CATEGORY
+// =====================================================
+
+const updateProjectCategory = async (req, res) => {
+    try {
+
+        const categoryId =
+            Number(req.params.categoryId);
+
+        const {
+            name,
+            description,
+            display_order,
+            status
+        } = req.body;
+
+        // Validate category ID
+        if (!categoryId) {
+            return res.status(400).json({
+                message: "Valid category ID is required"
+            });
+        }
+
+        // Validate category name
+        if (!name) {
+            return res.status(400).json({
+                message: "Category name is required"
+            });
+        }
+
+        // Check whether category exists
+        const [existing] = await db.query(
+            `
+            SELECT id
+            FROM project_categories
+            WHERE id = ?
+            `,
+            [categoryId]
+        );
+
+        if (existing.length === 0) {
+            return res.status(404).json({
+                message: "Project category not found"
+            });
+        }
+
+        // Check duplicate category name
+        const [duplicate] = await db.query(
+            `
+            SELECT id
+            FROM project_categories
+            WHERE name = ?
+            AND id != ?
+            `,
+            [
+                name,
+                categoryId
+            ]
+        );
+
+        if (duplicate.length > 0) {
+            return res.status(409).json({
+                message: "Category name already exists"
+            });
+        }
+
+        // Update category
+        await db.query(
+            `
+            UPDATE project_categories
+            SET
+                name = ?,
+                description = ?,
+                display_order = ?,
+                status = ?
+            WHERE id = ?
+            `,
+            [
+                name,
+                description || null,
+                display_order,
+                status || 'active',
+                categoryId
+            ]
+        );
+
+        res.status(200).json({
+            message: "Project category updated successfully"
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Update project category error:",
+            error
+        );
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+};
+
+// =====================================================
+// DELETE PROJECT CATEGORY
+// =====================================================
+
+const deleteProjectCategory = async (req, res) => {
+    try {
+
+        const categoryId =
+            Number(req.params.categoryId);
+
+        // Validate category ID
+        if (!categoryId) {
+            return res.status(400).json({
+                message: "Valid category ID is required"
+            });
+        }
+
+        // Check whether category exists
+        const [existing] = await db.query(
+            `
+            SELECT id
+            FROM project_categories
+            WHERE id = ?
+            `,
+            [categoryId]
+        );
+
+        if (existing.length === 0) {
+            return res.status(404).json({
+                message: "Project category not found"
+            });
+        }
+
+        // Delete category
+        await db.query(
+            `
+            DELETE FROM project_categories
+            WHERE id = ?
+            `,
+            [categoryId]
+        );
+
+        res.status(200).json({
+            message: "Project category deleted successfully"
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Delete project category error:",
+            error
+        );
+
+        res.status(500).json({
+            message:
+                "Category cannot be deleted because it contains topics"
+        });
+
+    }
+};
+
 module.exports = {
     getProjectCategories,
+    createProjectCategory,
+    updateProjectCategory,
+    deleteProjectCategory,
+
     getProjectTopics,
     createProjectTopic,
     updateProjectTopic,

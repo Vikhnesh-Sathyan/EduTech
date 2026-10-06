@@ -1,0 +1,474 @@
+/* =====================================================
+   PAGE
+===================================================== */
+
+.project-section-content {
+  padding: 40px 48px 60px;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+  margin-bottom: 42px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: #6b7280;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+
+  color: #111827;
+}
+
+.intro {
+  max-width: 720px;
+
+  margin: 12px 0 0;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   CONTENT EDITOR
+===================================================== */
+
+.content-editor {
+  max-width: 1000px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(17, 24, 39, 0.05);
+
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   EDITOR HEADER
+===================================================== */
+
+.editor-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding: 28px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-label {
+  margin: 0 0 6px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color: #9ca3af;
+}
+
+.editor-header h2 {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 650;
+
+  color: #111827;
+}
+
+.editor-description {
+  margin: 8px 0 0;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   CONTENT STATUS
+===================================================== */
+
+.content-status {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background: #f9fafb;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+
+  color: #374151;
+}
+
+.content-status.empty {
+  color: #9ca3af;
+}
+
+
+/* =====================================================
+   CONTENT FIELD
+===================================================== */
+
+.content-field {
+  padding: 28px;
+
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.field-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 14px;
+}
+
+.field-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 28px;
+
+  border-radius: 6px;
+
+  background: #f3f4f6;
+  color: #6b7280;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.field-heading label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 14px;
+  font-weight: 650;
+
+  color: #111827;
+}
+
+.field-heading p {
+  margin: 0;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #9ca3af;
+}
+
+
+/* =====================================================
+   TEXTAREAS
+===================================================== */
+
+.content-field > textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 14px 15px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #111827;
+
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.7;
+
+  resize: vertical;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.content-field > textarea:focus {
+  border-color: #9ca3af;
+
+  box-shadow:
+    0 0 0 3px rgba(17, 24, 39, 0.06);
+}
+
+.content-field > textarea::placeholder {
+  color: #9ca3af;
+}
+
+
+/* =====================================================
+   CODE EDITOR
+===================================================== */
+
+.code-editor {
+  min-height: 240px;
+
+  background: #111827 !important;
+  color: #f3f4f6 !important;
+
+  border-color: #111827 !important;
+
+  font-family:
+    "Consolas",
+    "Monaco",
+    "Courier New",
+    monospace !important;
+
+  font-size: 12px !important;
+  line-height: 1.7 !important;
+
+  tab-size: 2;
+}
+
+.code-editor::placeholder {
+  color: #9ca3af !important;
+}
+
+.code-editor:focus {
+  border-color: #111827 !important;
+
+  box-shadow:
+    0 0 0 3px rgba(17, 24, 39, 0.12) !important;
+}
+
+
+/* =====================================================
+   VISUAL FIELDS
+===================================================== */
+
+.visual-fields {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 12px;
+  font-weight: 650;
+
+  color: #374151;
+}
+
+.form-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #111827;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field input:focus {
+  border-color: #9ca3af;
+
+  box-shadow:
+    0 0 0 3px rgba(17, 24, 39, 0.06);
+}
+
+.form-field input::placeholder {
+  color: #9ca3af;
+}
+
+
+/* =====================================================
+   IMAGE PREVIEW
+===================================================== */
+
+.image-preview {
+  margin-top: 20px;
+
+  padding: 16px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  background: #f9fafb;
+}
+
+.image-preview img {
+  display: block;
+
+  max-width: 100%;
+  max-height: 360px;
+
+  margin: 0 auto;
+
+  border-radius: 6px;
+
+  object-fit: contain;
+}
+
+.image-preview p {
+  margin: 12px 0 0;
+
+  font-size: 12px;
+  line-height: 1.6;
+
+  text-align: center;
+
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   EDITOR ACTIONS
+===================================================== */
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  padding: 22px 28px;
+
+  background: #fafafa;
+}
+
+.save-button {
+  min-width: 140px;
+
+  padding: 11px 18px;
+
+  border: 1px solid #111827;
+  border-radius: 7px;
+
+  background: #111827;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.save-button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading-state {
+  padding: 24px;
+
+  font-size: 13px;
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .project-section-content {
+    padding: 32px 24px 48px;
+  }
+
+  .visual-fields {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .project-section-content {
+    padding: 24px 16px 40px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .editor-header {
+    flex-direction: column;
+  }
+
+  .content-field {
+    padding: 22px;
+  }
+
+  .editor-actions {
+    padding: 18px 22px;
+  }
+
+}

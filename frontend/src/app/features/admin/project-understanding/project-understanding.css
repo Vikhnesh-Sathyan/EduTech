@@ -1,0 +1,633 @@
+/* =====================================================
+   PROJECT UNDERSTANDING
+   Premium Admin Content Management
+===================================================== */
+
+.project-understanding {
+  padding: 40px 48px 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: #172033;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+
+  color: #667085;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.intro {
+  max-width: 680px;
+  margin: 12px 0 0;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  color: #667085;
+}
+
+
+/* =====================================================
+   CATEGORY SECTION
+===================================================== */
+
+.category-section {
+  width: 100%;
+}
+
+
+/* =====================================================
+   SECTION HEADER
+===================================================== */
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 22px;
+}
+
+.section-label {
+  margin: 0 0 7px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: #98a2b3;
+}
+
+.section-header h2 {
+  margin: 0;
+
+  font-size: 21px;
+  font-weight: 650;
+
+  color: #1d2939;
+}
+
+
+/* =====================================================
+   ADD BUTTON
+===================================================== */
+
+.add-button {
+  border: 1px solid #1d2939;
+  border-radius: 8px;
+
+  padding: 10px 16px;
+
+  background: #1d2939;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.add-button:hover {
+  background: #344054;
+  border-color: #344054;
+}
+
+.add-button:active {
+  transform: translateY(1px);
+}
+
+
+/* =====================================================
+   CATEGORY FORM
+===================================================== */
+
+.category-form {
+  margin-bottom: 28px;
+
+  padding: 28px;
+
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 26px;
+}
+
+.form-label {
+  margin: 0 0 6px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: #98a2b3;
+}
+
+.form-header h3 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 650;
+
+  color: #1d2939;
+}
+
+.close-button {
+  width: 32px;
+  height: 32px;
+
+  border: 1px solid #e4e7ec;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #667085;
+
+  font-size: 20px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.close-button:hover {
+  background: #f9fafb;
+  border-color: #d0d5dd;
+  color: #1d2939;
+}
+
+
+/* =====================================================
+   FORM GRID
+===================================================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #344054;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+
+  padding: 11px 13px;
+
+  background: #ffffff;
+  color: #101828;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #98a2b3;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #667085;
+
+  box-shadow:
+    0 0 0 3px rgba(102, 112, 133, 0.10);
+}
+
+
+/* =====================================================
+   FORM ACTIONS
+===================================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+.cancel-button,
+.save-button {
+  border-radius: 7px;
+
+  padding: 10px 16px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cancel-button {
+  border: 1px solid #d0d5dd;
+
+  background: #ffffff;
+  color: #344054;
+}
+
+.cancel-button:hover {
+  background: #f9fafb;
+}
+
+.save-button {
+  border: 1px solid #1d2939;
+
+  background: #1d2939;
+  color: #ffffff;
+}
+
+.save-button:hover {
+  background: #344054;
+  border-color: #344054;
+}
+
+
+/* =====================================================
+   CATEGORY META
+===================================================== */
+
+.category-meta {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 14px;
+
+  color: #667085;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* =====================================================
+   CATEGORY GRID
+===================================================== */
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+
+/* =====================================================
+   CATEGORY CARD
+===================================================== */
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 190px;
+
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.03);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.category-card:hover {
+  border-color: #d0d5dd;
+
+  box-shadow:
+    0 6px 18px rgba(16, 24, 40, 0.06);
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   CATEGORY CONTENT
+===================================================== */
+
+.category-content {
+  flex: 1;
+
+  padding: 24px 24px 20px;
+}
+
+.category-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 34px;
+  height: 26px;
+
+  margin-bottom: 18px;
+
+  border-radius: 6px;
+
+  background: #f2f4f7;
+  color: #475467;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.category-content h3 {
+  margin: 0 0 8px;
+
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 650;
+
+  color: #1d2939;
+}
+
+.category-content p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.65;
+
+  color: #667085;
+}
+
+
+/* =====================================================
+   CATEGORY ACTIONS
+===================================================== */
+
+.category-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 14px 24px;
+
+  border-top: 1px solid #f0f2f5;
+
+  background: #fcfcfd;
+}
+
+.category-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.text-button {
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+  color: #475467;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.text-button:hover {
+  color: #1d2939;
+}
+
+.delete-button {
+  color: #b42318;
+}
+
+.delete-button:hover {
+  color: #912018;
+}
+
+
+/* =====================================================
+   MANAGE LINK
+===================================================== */
+
+.manage-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #1d2939;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    gap 0.2s ease;
+}
+
+.manage-link:hover {
+  color: #475467;
+  gap: 10px;
+}
+
+.arrow {
+  font-size: 15px;
+  line-height: 1;
+}
+
+
+/* =====================================================
+   EDIT FORM
+===================================================== */
+
+.edit-form {
+  padding: 22px 24px;
+
+  border-top: 1px solid #f0f2f5;
+
+  background: #fcfcfd;
+}
+
+.edit-form .form-actions {
+  margin-top: 18px;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+  padding: 64px 32px;
+
+  border: 1px dashed #d0d5dd;
+  border-radius: 12px;
+
+  background: #fcfcfd;
+
+  text-align: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+
+  font-size: 17px;
+  font-weight: 650;
+
+  color: #1d2939;
+}
+
+.empty-state p {
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #667085;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .project-understanding {
+    padding: 32px 28px 48px;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .project-understanding {
+    padding: 24px 18px 40px;
+  }
+
+  .page-header h1 {
+    font-size: 27px;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+
+  .category-form {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-field.full-width {
+    grid-column: auto;
+  }
+
+  .category-action {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .manage-link {
+    align-self: flex-end;
+  }
+
+}

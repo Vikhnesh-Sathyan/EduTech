@@ -1,0 +1,145 @@
+<!--
+  USE:
+  Student explores the topics available inside
+  a Project Understanding category.
+-->
+
+<section class="student-project-topics">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Explore Topics
+    </h1>
+
+    <p class="intro">
+      Build your understanding step by step through
+      important concepts used in real-world applications.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       TOPIC SECTION
+  ================================================== -->
+
+  <section class="topic-section">
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          LEARNING PATH
+        </p>
+
+        <h2>
+          Topics
+        </h2>
+
+      </div>
+
+      <span class="topic-count">
+        {{ topics().length }}
+        {{ topics().length === 1 ? 'Topic' : 'Topics' }}
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         TOPIC LIST
+    ================================================== -->
+
+    <div
+      class="topic-list"
+      *ngIf="topics().length > 0"
+    >
+
+      <article
+        class="topic-card"
+        *ngFor="let topic of topics()"
+      >
+
+        <div class="topic-number">
+
+          {{ topic.display_order | number:'2.0' }}
+
+        </div>
+
+
+        <div class="topic-content">
+
+          <h3>
+            {{ topic.name }}
+          </h3>
+
+          <p>
+            {{ topic.description }}
+          </p>
+
+        </div>
+
+
+        <a
+          class="topic-link"
+          [routerLink]="[
+            '/project-understanding',
+            categoryId,
+            'topics',
+            topic.id,
+            'sections'
+          ]"
+        >
+
+          <span>
+            Start Learning
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+
+        </a>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="topics().length === 0"
+    >
+
+      <div class="empty-icon">
+        —
+      </div>
+
+      <h3>
+        No topics available
+      </h3>
+
+      <p>
+        Topics for this category will appear here
+        once they are published.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>

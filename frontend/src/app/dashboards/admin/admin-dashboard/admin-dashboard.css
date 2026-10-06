@@ -1,125 +1,290 @@
 /* =====================================================
    ADMIN DASHBOARD
-   ===================================================== */
+===================================================== */
 
 .admin-dashboard {
   min-height: 100vh;
+
   display: flex;
+
   background: #f7f7f5;
 }
 
+
+/* =====================================================
+   MAIN WORKSPACE
+===================================================== */
+
 .main-content {
   flex: 1;
+
   min-width: 0;
+
   padding: 28px 36px;
 }
 
-.dashboard-content {
-  margin-top: 32px;
-}
 
-.eyebrow {
-  margin: 0 0 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #777;
-}
-
-.dashboard-content h1 {
-  margin: 0;
-  font-size: 32px;
-  font-weight: 600;
-  color: #171717;
-}
-
-.intro {
-  margin: 10px 0 0;
-  max-width: 620px;
-  color: #6f6f6f;
-  font-size: 15px;
-  line-height: 1.6;
-}
 /* =====================================================
-   ADMIN OVERVIEW
-   ===================================================== */
+   DASHBOARD CONTENT
+===================================================== */
+
+.dashboard-content {
+  max-width: 1280px;
+
+  margin: 34px auto 0;
+}
+
+
+/* =====================================================
+   PAGE HEADING
+===================================================== */
 
 .page-heading {
-  margin-bottom: 48px;
+  margin-bottom: 52px;
 }
+
+
+.eyebrow {
+  margin: 0 0 10px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.6px;
+
+  color: #777;
+
+  text-transform: uppercase;
+}
+
+
+.page-heading h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 1.2;
+
+  font-weight: 600;
+
+  color: #171717;
+
+  letter-spacing: -0.5px;
+}
+
+
+.intro {
+  max-width: 620px;
+
+  margin: 12px 0 0;
+
+  color: #6f6f6f;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+/* =====================================================
+   OVERVIEW SECTION
+===================================================== */
 
 .overview-section {
-  max-width: 1100px;
+  width: 100%;
 }
 
+
+/* =====================================================
+   SECTION HEADING
+===================================================== */
+
 .section-heading {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+
   margin-bottom: 22px;
 }
 
-.section-heading h2 {
-  margin: 0 0 6px;
 
-  font-size: 18px;
+.section-label {
+  margin: 0 0 7px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+
+  color: #999;
+
+  text-transform: uppercase;
+}
+
+
+.section-heading h2 {
+  margin: 0;
+
+  font-size: 19px;
   font-weight: 600;
 
   color: #222;
 }
 
-.section-heading p {
-  margin: 0;
 
-  color: #777;
+.section-heading > p {
+  max-width: 330px;
 
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.overview-grid {
-  display: grid;
-
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 16px;
-}
-
-.overview-card {
-  padding: 22px;
-
-  background: #fff;
-
-  border: 1px solid #e5e5e2;
-  border-radius: 10px;
-}
-
-.card-label {
-  display: block;
-
-  margin-bottom: 16px;
-
-  color: #777;
-
-  font-size: 11px;
-  font-weight: 700;
-
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-}
-
-.overview-card strong {
-  display: block;
-
-  margin-bottom: 6px;
-
-  color: #171717;
-
-  font-size: 28px;
-  font-weight: 600;
-}
-
-.overview-card p {
   margin: 0;
 
   color: #888;
 
   font-size: 12px;
+
+  line-height: 1.5;
+
+  text-align: right;
+}
+
+
+/* =====================================================
+   OVERVIEW GRID
+===================================================== */
+
+.overview-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+
+/* =====================================================
+   OVERVIEW CARD
+===================================================== */
+
+.overview-card {
+  min-height: 150px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  box-sizing: border-box;
+
+  padding: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e5e2;
+
+  border-radius: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.overview-card:hover {
+  border-color: #d6d6d2;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   CARD LABEL
+===================================================== */
+
+.card-label {
+  display: block;
+
+  color: #777;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+
+/* =====================================================
+   CARD NUMBER
+===================================================== */
+
+.overview-card strong {
+  display: block;
+
+  margin-top: 18px;
+
+  color: #171717;
+
+  font-size: 30px;
+  line-height: 1;
+
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   CARD DESCRIPTION
+===================================================== */
+
+.overview-card p {
+  margin: 10px 0 0;
+
+  color: #888;
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+  .overview-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .main-content {
+    padding: 22px;
+  }
+
+  .dashboard-content {
+    margin-top: 26px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .section-heading > p {
+    text-align: left;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
 }

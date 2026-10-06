@@ -1,0 +1,147 @@
+<!--
+  USE:
+  Student explores the learning sections
+  inside a Project Understanding topic.
+-->
+
+<section class="student-project-sections">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Learn Step by Step
+    </h1>
+
+    <p class="intro">
+      Follow these sections to understand the concept
+      from the basics to the complete real-world flow.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       SECTION LIST
+  ================================================== -->
+
+  <section class="learning-section">
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          LEARNING PATH
+        </p>
+
+        <h2>
+          Sections
+        </h2>
+
+      </div>
+
+      <span class="section-count">
+        {{ sections().length }}
+        {{ sections().length === 1 ? 'Section' : 'Sections' }}
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         SECTIONS
+    ================================================== -->
+
+    <div
+      class="section-list"
+      *ngIf="sections().length > 0"
+    >
+
+      <article
+        class="learning-card"
+        *ngFor="let section of sections()"
+      >
+
+        <div class="section-number">
+
+          {{ section.display_order | number:'2.0' }}
+
+        </div>
+
+
+        <div class="section-content">
+
+          <h3>
+            {{ section.title }}
+          </h3>
+
+          <p>
+            {{ section.description }}
+          </p>
+
+        </div>
+
+
+        <a
+          class="learn-link"
+          [routerLink]="[
+            '/project-understanding',
+            categoryId,
+            'topics',
+            topicId,
+            'sections',
+            section.id,
+            'content'
+          ]"
+        >
+
+          <span>
+            Start Learning
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+
+        </a>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="sections().length === 0"
+    >
+
+      <div class="empty-icon">
+        —
+      </div>
+
+      <h3>
+        No sections available
+      </h3>
+
+      <p>
+        Learning sections for this topic will appear here
+        once they are published.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>

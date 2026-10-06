@@ -1,0 +1,351 @@
+.student-project-topics {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 40px 60px;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+  max-width: 760px;
+  margin-bottom: 52px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: #6b7280;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+
+  color: #111827;
+}
+
+.intro {
+  margin: 14px 0 0;
+
+  max-width: 680px;
+
+  font-size: 15px;
+  line-height: 1.75;
+
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   TOPIC SECTION
+===================================================== */
+
+.topic-section {
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 22px;
+}
+
+.section-label {
+  margin: 0 0 7px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color: #9ca3af;
+}
+
+.section-header h2 {
+  margin: 0;
+
+  font-size: 21px;
+  font-weight: 650;
+
+  color: #111827;
+}
+
+.topic-count {
+  white-space: nowrap;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   TOPIC LIST
+===================================================== */
+
+.topic-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* =====================================================
+   TOPIC CARD
+===================================================== */
+
+.topic-card {
+  display: grid;
+
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+
+  align-items: center;
+
+  gap: 22px;
+
+  padding: 22px 24px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.topic-card:hover {
+  border-color: #d1d5db;
+
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.06);
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   TOPIC NUMBER
+===================================================== */
+
+.topic-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 9px;
+
+  background: #f3f4f6;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #374151;
+}
+
+
+/* =====================================================
+   TOPIC CONTENT
+===================================================== */
+
+.topic-content {
+  min-width: 0;
+}
+
+.topic-content h3 {
+  margin: 0;
+
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+
+  color: #111827;
+}
+
+.topic-content p {
+  margin: 6px 0 0;
+
+  max-width: 720px;
+
+  font-size: 13px;
+  line-height: 1.65;
+
+  color: #6b7280;
+}
+
+
+/* =====================================================
+   TOPIC LINK
+===================================================== */
+
+.topic-link {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 9px 0;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  color: #111827;
+
+  transition:
+    gap 0.15s ease,
+    color 0.15s ease;
+}
+
+.topic-link:hover {
+  gap: 11px;
+  color: #374151;
+}
+
+.arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+  padding: 70px 30px;
+
+  border: 1px dashed #d9dde4;
+  border-radius: 14px;
+
+  background: #fafafa;
+
+  text-align: center;
+}
+
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 10px;
+
+  background: #f3f4f6;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #9ca3af;
+}
+
+.empty-state h3 {
+  margin: 0;
+
+  font-size: 17px;
+  font-weight: 650;
+
+  color: #374151;
+}
+
+.empty-state p {
+  max-width: 500px;
+
+  margin: 9px auto 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #9ca3af;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+  .student-project-topics {
+    padding: 36px 24px 48px;
+  }
+
+  .topic-card {
+    grid-template-columns: 46px minmax(0, 1fr);
+
+    gap: 16px;
+  }
+
+  .topic-link {
+    grid-column: 2;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .student-project-topics {
+    padding: 28px 18px 40px;
+  }
+
+  .page-header {
+    margin-bottom: 38px;
+  }
+
+  .page-header h1 {
+    font-size: 30px;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .topic-card {
+    grid-template-columns: 42px minmax(0, 1fr);
+
+    padding: 18px;
+  }
+
+  .topic-number {
+    width: 36px;
+    height: 36px;
+  }
+
+  .topic-content h3 {
+    font-size: 16px;
+  }
+
+}

@@ -1,0 +1,154 @@
+<!--
+  USE:
+  Student explores the available Project Understanding categories.
+-->
+
+<section class="student-projects">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECTS
+    </p>
+
+    <h1>
+      Project Understanding
+    </h1>
+
+    <p class="intro">
+      Understand how real-world applications are structured,
+      developed, and connected from frontend to backend.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       CATEGORY LIST
+  ================================================== -->
+
+  <section class="category-section">
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          LEARNING PATH
+        </p>
+
+        <h2>
+          Explore Project Concepts
+        </h2>
+
+      </div>
+
+      <span class="category-count">
+        {{ categories().length }}
+        {{ categories().length === 1 ? 'Category' : 'Categories' }}
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         CATEGORY GRID
+    ================================================== -->
+
+    <div
+      class="category-grid"
+      *ngIf="categories().length > 0"
+    >
+
+      <article
+        class="category-card"
+        *ngFor="let category of categories()"
+      >
+
+        <div class="card-top">
+
+          <span class="category-number">
+            {{ category.display_order | number:'2.0' }}
+          </span>
+
+          <span class="learn-label">
+            LEARN
+          </span>
+
+        </div>
+
+
+        <div class="card-content">
+
+          <h3>
+            {{ category.name }}
+          </h3>
+
+          <p>
+            {{ category.description }}
+          </p>
+
+        </div>
+
+
+        <div class="card-footer">
+
+          <span>
+            Explore concepts
+          </span>
+
+          <a
+            class="explore-link"
+            [routerLink]="[
+             '/project-understanding',
+              category.id,
+              'topics'
+            ]"
+          >
+            <span>
+              Explore
+            </span>
+
+            <span class="arrow">
+              →
+            </span>
+          </a>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="categories().length === 0"
+    >
+
+      <div class="empty-icon">
+        —
+      </div>
+
+      <h3>
+        No learning content available
+      </h3>
+
+      <p>
+        Project Understanding content will appear here
+        once it has been published by the platform.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>

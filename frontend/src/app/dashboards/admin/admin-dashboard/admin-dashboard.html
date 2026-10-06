@@ -1,26 +1,36 @@
 <!--
   USE:
   Displays the main Admin Dashboard workspace.
-  The dashboard includes the sidebar, topbar, and platform overview.
+  Includes the sidebar, topbar, and platform overview.
 -->
 
 <div class="admin-dashboard">
 
-  <!-- Admin navigation -->
+  <!-- =================================================
+       ADMIN SIDEBAR
+  ================================================== -->
+
   <app-sidebar></app-sidebar>
 
 
-  <!-- Main dashboard area -->
+  <!-- =================================================
+       MAIN WORKSPACE
+  ================================================== -->
+
   <main class="main-content">
 
-    <!-- Admin dashboard header -->
+    <!-- Admin topbar -->
     <app-topbar></app-topbar>
 
 
     <!-- Dashboard content -->
     <section class="dashboard-content">
 
-      <div class="page-heading">
+      <!-- =================================================
+           PAGE HEADER
+      ================================================== -->
+
+      <header class="page-heading">
 
         <p class="eyebrow">
           ADMINISTRATION
@@ -31,26 +41,39 @@
         </h1>
 
         <p class="intro">
-          Manage EduTech education configuration and platform operations.
+          Manage EduTech education configuration and platform
+          operations from one workspace.
         </p>
 
-      </div>
+      </header>
 
 
-      <div class="overview-section">
+      <!-- =================================================
+           EDUCATION OVERVIEW
+      ================================================== -->
+
+      <section class="overview-section">
 
         <div class="section-heading">
 
-          <h2>
-            Education Configuration
-          </h2>
+          <div>
+            <p class="section-label">
+              EDUCATION STRUCTURE
+            </p>
+
+            <h2>
+              Configuration Overview
+            </h2>
+          </div>
 
           <p>
-            Overview of the education structure currently configured on the platform.
+            Current education structure configured on the platform.
           </p>
 
         </div>
 
+
+        <!-- Overview cards -->
 
         <div class="overview-grid">
 
@@ -123,7 +146,7 @@
 
         </div>
 
-      </div>
+      </section>
 
     </section>
 

@@ -1,0 +1,385 @@
+<!--
+  USE:
+  Admin manages topics inside a Project Understanding category.
+-->
+
+<section class="project-topics">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Topics
+    </h1>
+
+    <p class="intro">
+      Manage the topics that belong to this Project Understanding category.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       TOPIC SECTION
+  ================================================== -->
+
+  <section class="topic-section">
+
+    <!-- ==================================================
+         TOPIC HEADER
+    ================================================== -->
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          CONTENT STRUCTURE
+        </p>
+
+        <h2>
+          Topics
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="showAddForm = !showAddForm"
+      >
+        + Add Topic
+      </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         ADD TOPIC FORM
+    ================================================== -->
+
+    <div
+      class="topic-form"
+      *ngIf="showAddForm"
+    >
+
+      <div class="form-header">
+
+        <div>
+
+          <p class="form-label">
+            NEW TOPIC
+          </p>
+
+          <h3>
+            Add Project Topic
+          </h3>
+
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="showAddForm = false"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <!-- Topic Name -->
+
+        <div class="form-field">
+
+          <label>
+            Topic Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newTopic.name"
+            placeholder="Example: Client–Server Architecture"
+          >
+
+        </div>
+
+
+        <!-- Display Order -->
+
+        <div class="form-field">
+
+          <label>
+            Display Order
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="newTopic.display_order"
+            min="1"
+            placeholder="1"
+          >
+
+        </div>
+
+
+        <!-- Description -->
+
+        <div class="form-field full-width">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            [(ngModel)]="newTopic.description"
+            rows="4"
+            placeholder="Describe what students will understand from this topic..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <!-- FORM ACTIONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="showAddForm = false"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          (click)="createTopic()"
+        >
+          Create Topic
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         TOPIC COUNT
+    ================================================== -->
+
+    <div class="topic-meta">
+
+      <span>
+        {{ topics().length }} topics
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         TOPIC GRID
+    ================================================== -->
+
+    <div
+      class="topic-grid"
+      *ngIf="topics().length > 0"
+    >
+
+      <article
+        class="topic-card"
+        *ngFor="let topic of topics()"
+      >
+
+        <!-- ==================================================
+             TOPIC CONTENT
+        ================================================== -->
+
+        <div class="topic-content">
+
+          <span class="topic-number">
+            {{ topic.display_order | number:'2.0' }}
+          </span>
+
+          <h3>
+            {{ topic.name }}
+          </h3>
+
+          <p>
+            {{ topic.description }}
+          </p>
+
+        </div>
+
+
+        <!-- ==================================================
+             EDIT FORM
+        ================================================== -->
+
+        <div
+          class="edit-form"
+          *ngIf="editingTopicId === topic.id"
+        >
+
+          <div class="form-field">
+
+            <label>
+              Topic Name
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="editTopic.name"
+            >
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Display Order
+            </label>
+
+            <input
+              type="number"
+              [(ngModel)]="editTopic.display_order"
+              min="1"
+            >
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Description
+            </label>
+
+            <textarea
+              [(ngModel)]="editTopic.description"
+              rows="3"
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              (click)="cancelEditTopic()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="save-button"
+              (click)="updateTopic()"
+            >
+              Save Changes
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             TOPIC ACTIONS
+        ================================================== -->
+
+        <div
+          class="topic-action"
+          *ngIf="editingTopicId !== topic.id"
+        >
+
+          <div class="topic-actions-left">
+
+            <!-- Edit -->
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="startEditTopic(topic)"
+            >
+              Edit
+            </button>
+
+
+            <!-- Delete -->
+
+            <button
+              type="button"
+              class="text-button delete-button"
+              (click)="deleteTopic(topic.id)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+
+          <!-- Manage Sections -->
+
+          <a
+  class="manage-link"
+  [routerLink]="[
+    '/admin/project-understanding',
+    categoryId,
+    'topics',
+    topic.id,
+    'sections'
+  ]"
+>
+  Manage Sections
+
+  <span class="arrow">
+    →
+  </span>
+</a>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="topics().length === 0"
+    >
+
+      <h3>
+        No topics yet
+      </h3>
+
+      <p>
+        Create the first topic to start building
+        the learning structure for this category.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>

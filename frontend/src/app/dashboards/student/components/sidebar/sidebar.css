@@ -1,37 +1,147 @@
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
 .sidebar {
-  width: 240px;
-  min-height: 100vh;
-  padding: 24px 18px;
-  box-sizing: border-box;
-  border-right: 1px solid #e5e7eb;
+  width: 250px;
+  height: 100vh;
+
   display: flex;
   flex-direction: column;
+
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  padding: 28px 18px;
+
+  box-sizing: border-box;
 }
 
+
+/* =====================================================
+   LOGO
+===================================================== */
+
 .logo {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
-  margin-bottom: 40px;
+
+  color: #111827;
+
+  padding: 0 14px;
+  margin-bottom: 42px;
 }
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 .navigation {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
+
+/* =====================================================
+   NAVIGATION LINK
+===================================================== */
+
 .navigation a {
-  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+
+  min-height: 46px;
+
+  padding: 0 14px;
+
+  border-radius: 10px;
+
   text-decoration: none;
-  cursor: pointer;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.navigation a:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+
+/* =====================================================
+   ACTIVE ROUTE
+===================================================== */
+
+.navigation a.active {
+  background: #eef2ff;
+  color: #4f46e5;
+
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   LOGOUT SECTION
+===================================================== */
 
 .logout-section {
   margin-top: auto;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #f0f0f0;
 }
+
+
+/* =====================================================
+   LOGOUT BUTTON
+===================================================== */
 
 .logout-section button {
   width: 100%;
-  padding: 12px 14px;
+
+  min-height: 44px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-align: left;
+
+  padding: 0 14px;
+
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.logout-section button:hover {
+  background: #fef2f2;
+  color: #dc2626;
 }

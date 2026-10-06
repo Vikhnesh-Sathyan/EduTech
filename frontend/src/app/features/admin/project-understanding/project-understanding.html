@@ -1,0 +1,383 @@
+<!--
+  USE:
+  Admin manages Project Understanding categories.
+-->
+
+<section class="project-understanding">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Project Understanding
+    </h1>
+
+    <p class="intro">
+      Manage the structure and learning content of the
+      Project Understanding module.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       CATEGORY SECTION
+  ================================================== -->
+
+  <section class="category-section">
+
+    <!-- ==================================================
+         CATEGORY HEADER
+    ================================================== -->
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          CONTENT STRUCTURE
+        </p>
+
+        <h2>
+          Categories
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="showAddForm = !showAddForm"
+      >
+        + Add Category
+      </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         ADD CATEGORY FORM
+    ================================================== -->
+
+    <div
+      class="category-form"
+      *ngIf="showAddForm"
+    >
+
+      <div class="form-header">
+
+        <div>
+
+          <p class="form-label">
+            NEW CATEGORY
+          </p>
+
+          <h3>
+            Add Project Category
+          </h3>
+
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="showAddForm = false"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <!-- Category Name -->
+
+        <div class="form-field">
+
+          <label>
+            Category Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newCategory.name"
+            placeholder="Example: Project Architecture"
+          >
+
+        </div>
+
+
+        <!-- Display Order -->
+
+        <div class="form-field">
+
+          <label>
+            Display Order
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="newCategory.display_order"
+            min="1"
+            placeholder="1"
+          >
+
+        </div>
+
+
+        <!-- Description -->
+
+        <div class="form-field full-width">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            [(ngModel)]="newCategory.description"
+            rows="4"
+            placeholder="Describe what students will learn in this category..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <!-- FORM ACTIONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="showAddForm = false"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          (click)="createCategory()"
+        >
+          Create Category
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         CATEGORY COUNT
+    ================================================== -->
+
+    <div class="category-meta">
+
+      <span>
+        {{ categories().length }} categories
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         CATEGORY GRID
+    ================================================== -->
+
+    <div
+      class="category-grid"
+      *ngIf="categories().length > 0"
+    >
+
+      <article
+        class="category-card"
+        *ngFor="let category of categories()"
+      >
+
+        <!-- ==================================================
+             CATEGORY CONTENT
+        ================================================== -->
+
+        <div class="category-content">
+
+          <span class="category-number">
+            {{ category.display_order | number:'2.0' }}
+          </span>
+
+          <h3>
+            {{ category.name }}
+          </h3>
+
+          <p>
+            {{ category.description }}
+          </p>
+
+        </div>
+
+
+        <!-- ==================================================
+             EDIT FORM
+        ================================================== -->
+
+        <div
+          class="edit-form"
+          *ngIf="editingCategoryId === category.id"
+        >
+
+          <div class="form-field">
+
+            <label>
+              Category Name
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="editCategory.name"
+            >
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Display Order
+            </label>
+
+            <input
+              type="number"
+              [(ngModel)]="editCategory.display_order"
+              min="1"
+            >
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Description
+            </label>
+
+            <textarea
+              [(ngModel)]="editCategory.description"
+              rows="3"
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              (click)="cancelEditCategory()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="save-button"
+              (click)="updateCategory()"
+            >
+              Save Changes
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             CATEGORY ACTIONS
+        ================================================== -->
+
+        <div
+          class="category-action"
+          *ngIf="editingCategoryId !== category.id"
+        >
+
+          <div class="category-actions-left">
+
+            <!-- Edit -->
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="startEditCategory(category)"
+            >
+              Edit
+            </button>
+
+
+            <!-- Delete -->
+
+            <button
+              type="button"
+              class="text-button delete-button"
+              (click)="deleteCategory(category.id)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+
+          <!-- Manage Topics -->
+
+          <a
+            class="manage-link"
+            [routerLink]="[
+              '/admin/project-understanding',
+              category.id,
+              'topics'
+            ]"
+          >
+            Manage Topics
+            <span class="arrow">
+              →
+            </span>
+          </a>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="categories().length === 0"
+    >
+
+      <h3>
+        No categories yet
+      </h3>
+
+      <p>
+        Create the first Project Understanding category
+        to start building the learning structure.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>

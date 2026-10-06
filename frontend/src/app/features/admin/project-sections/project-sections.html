@@ -1,0 +1,364 @@
+<!--
+  USE:
+  Admin manages sections belonging to a Project Understanding topic.
+-->
+
+<section class="project-sections">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Sections
+    </h1>
+
+    <p class="intro">
+      Manage the sections that belong to this Project Understanding topic.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       SECTION MANAGEMENT
+  ================================================== -->
+
+  <section class="section-management">
+
+    <div class="section-header">
+
+      <div>
+
+        <p class="section-label">
+          CONTENT STRUCTURE
+        </p>
+
+        <h2>
+          Sections
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="showAddForm = !showAddForm"
+      >
+        + Add Section
+      </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         ADD SECTION FORM
+    ================================================== -->
+
+    <div
+      class="section-form"
+      *ngIf="showAddForm"
+    >
+
+      <div class="form-header">
+
+        <div>
+
+          <p class="form-label">
+            NEW SECTION
+          </p>
+
+          <h3>
+            Add Project Section
+          </h3>
+
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="showAddForm = false"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label>
+            Section Title
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newSection.title"
+            placeholder="Example: Client–Server Architecture"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Display Order
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="newSection.display_order"
+            min="1"
+            placeholder="1"
+          >
+
+        </div>
+
+
+        <div class="form-field full-width">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            [(ngModel)]="newSection.description"
+            rows="4"
+            placeholder="Describe what students will learn in this section..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="showAddForm = false"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          (click)="createSection()"
+        >
+          Create Section
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         SECTION COUNT
+    ================================================== -->
+
+    <div class="section-meta">
+
+      <span>
+        {{ sections().length }} sections
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         SECTION GRID
+    ================================================== -->
+
+    <div
+      class="section-grid"
+      *ngIf="sections().length > 0"
+    >
+
+      <article
+        class="section-card"
+        *ngFor="let section of sections()"
+      >
+
+        <div class="section-content">
+
+          <span class="section-number">
+            {{ section.display_order | number:'2.0' }}
+          </span>
+
+          <h3>
+            {{ section.title }}
+          </h3>
+
+          <p>
+            {{ section.description }}
+          </p>
+
+        </div>
+
+
+        <!-- ==================================================
+             EDIT SECTION FORM
+        ================================================== -->
+
+        <div
+          class="edit-form"
+          *ngIf="editingSectionId === section.id"
+        >
+
+          <div class="form-field">
+
+            <label>
+              Section Title
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="editSection.title"
+            >
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Display Order
+            </label>
+
+            <input
+              type="number"
+              [(ngModel)]="editSection.display_order"
+              min="1"
+            >
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Description
+            </label>
+
+            <textarea
+              [(ngModel)]="editSection.description"
+              rows="3"
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              (click)="cancelEditSection()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="save-button"
+              (click)="updateSection()"
+            >
+              Save Changes
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             SECTION ACTIONS
+        ================================================== -->
+
+        <div
+          class="section-action"
+          *ngIf="editingSectionId !== section.id"
+        >
+
+          <div class="section-actions-left">
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="startEditSection(section)"
+            >
+              Edit
+            </button>
+
+            <button
+              type="button"
+              class="text-button delete-button"
+              (click)="deleteSection(section.id)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+
+<a
+  class="manage-link"
+  [routerLink]="[
+    '/admin/project-understanding',
+    categoryId,
+    'topics',
+    topicId,
+    'sections',
+    section.id,
+    'content'
+  ]"
+>
+  Manage Content
+
+  <span class="arrow">
+    →
+  </span>
+</a>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="sections().length === 0"
+    >
+
+      <h3>
+        No sections yet
+      </h3>
+
+      <p>
+        Create the first section to start building the content
+        for this Project Understanding topic.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>

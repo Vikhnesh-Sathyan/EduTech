@@ -4,10 +4,15 @@ const router = express.Router();
 
 const {
     getProjectCategories,
+    createProjectCategory,
+    updateProjectCategory,
+    deleteProjectCategory,
+
     getProjectTopics,
     createProjectTopic,
     updateProjectTopic,
     deleteProjectTopic,
+
     getProjectSections,
     createProjectSection,
     updateProjectSection,
@@ -19,6 +24,7 @@ const {
     createProjectSectionContent,
     updateProjectSectionContent
 } = require("../controllers/adminProjectContentController");
+
 const authMiddleware =
     require("../middleware/authMiddleware");
 
@@ -50,6 +56,42 @@ router.get(
     authMiddleware,
     roleMiddleware("admin"),
     getProjectTopics
+);
+
+// =====================================================
+// PROJECT CATEGORY MANAGEMENT
+// =====================================================
+
+// Get all categories
+router.get(
+    "/categories",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getProjectCategories
+);
+
+// Create category
+router.post(
+    "/categories",
+    authMiddleware,
+    roleMiddleware("admin"),
+    createProjectCategory
+);
+
+// Update category
+router.put(
+    "/categories/:categoryId",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateProjectCategory
+);
+
+// Delete category
+router.delete(
+    "/categories/:categoryId",
+    authMiddleware,
+    roleMiddleware("admin"),
+    deleteProjectCategory
 );
 
 // =====================================================
@@ -193,6 +235,31 @@ router.post(
             });
         }
     }
+);
+
+// =====================================================
+// SECTION CONTENT
+// =====================================================
+
+router.get(
+    "/sections/:sectionId/content",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getProjectSectionContent
+);
+
+router.post(
+    "/sections/:sectionId/content",
+    authMiddleware,
+    roleMiddleware("admin"),
+    createProjectSectionContent
+);
+
+router.put(
+    "/sections/:sectionId/content",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateProjectSectionContent
 );
 
 module.exports = router;

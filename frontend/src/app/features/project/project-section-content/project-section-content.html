@@ -1,0 +1,243 @@
+<section class="student-project-content">
+
+  <!-- Page Header -->
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Learn the Concept
+    </h1>
+
+    <p class="intro">
+      Understand the concept, why it is used,
+      how it works, and the important code behind it.
+    </p>
+
+  </header>
+
+
+  <!-- Loading -->
+  <div
+    class="loading-state"
+    *ngIf="loading()"
+  >
+    Loading content...
+  </div>
+
+
+  <!-- Learning Content -->
+  <article
+    class="learning-article"
+    *ngIf="!loading() && content()"
+  >
+
+    <!-- WHAT -->
+    <section class="content-block">
+
+      <div class="content-heading">
+        <span class="content-number">01</span>
+
+        <div>
+          <p class="section-label">
+            CONCEPT
+          </p>
+
+          <h2>
+            What is it?
+          </h2>
+        </div>
+      </div>
+
+      <div class="text-content">
+        <p>
+          {{ content().what }}
+        </p>
+      </div>
+
+    </section>
+
+
+    <!-- WHY -->
+    <section
+      class="content-block"
+      *ngIf="content().why"
+    >
+
+      <div class="content-heading">
+        <span class="content-number">02</span>
+
+        <div>
+          <p class="section-label">
+            PURPOSE
+          </p>
+
+          <h2>
+            Why is it used?
+          </h2>
+        </div>
+      </div>
+
+      <div class="text-content">
+        <p>
+          {{ content().why }}
+        </p>
+      </div>
+
+    </section>
+
+
+    <!-- FLOW -->
+    <section
+      class="content-block"
+      *ngIf="content().flow"
+    >
+
+      <div class="content-heading">
+        <span class="content-number">03</span>
+
+        <div>
+          <p class="section-label">
+            PROCESS
+          </p>
+
+          <h2>
+            How does it work?
+          </h2>
+        </div>
+      </div>
+
+      <div class="flow-content">
+        <pre>{{ content().flow }}</pre>
+      </div>
+
+    </section>
+
+
+    <!-- IMPORTANT KEYWORDS -->
+    <section
+      class="content-block"
+      *ngIf="content().important_keywords"
+    >
+
+      <div class="content-heading">
+        <span class="content-number">04</span>
+
+        <div>
+          <p class="section-label">
+            KEY TERMS
+          </p>
+
+          <h2>
+            Important Keywords
+          </h2>
+        </div>
+      </div>
+
+      <div class="keywords-content">
+        <span
+          class="keyword"
+          *ngFor="
+            let keyword of content().important_keywords.split(',')
+          "
+        >
+          {{ keyword.trim() }}
+        </span>
+      </div>
+
+    </section>
+
+
+    <!-- IMPORTANT CODE -->
+    <section
+      class="content-block"
+      *ngIf="content().important_code"
+    >
+
+      <div class="content-heading">
+        <span class="content-number">05</span>
+
+        <div>
+          <p class="section-label">
+            CODE
+          </p>
+
+          <h2>
+            Important Code
+          </h2>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <pre><code>{{ content().important_code }}</code></pre>
+      </div>
+
+    </section>
+
+
+    <!-- VISUAL -->
+    <section
+      class="content-block"
+      *ngIf="content().photo_url"
+    >
+
+      <div class="content-heading">
+        <span class="content-number">06</span>
+
+        <div>
+          <p class="section-label">
+            VISUAL
+          </p>
+
+          <h2>
+            Understand Visually
+          </h2>
+        </div>
+      </div>
+
+      <div class="visual-content">
+
+       <img 
+  [src]="backendUrl + content().photo_url"
+  alt="Project concept visual"
+>
+
+        <p
+          *ngIf="content().photo_caption"
+        >
+          {{ content().photo_caption }}
+        </p>
+
+      </div>
+
+    </section>
+
+
+  </article>
+
+
+  <!-- Empty State -->
+  <div
+    class="empty-state"
+    *ngIf="!loading() && !content()"
+  >
+
+    <div class="empty-icon">
+      —
+    </div>
+
+    <h3>
+      Content not available
+    </h3>
+
+    <p>
+      Learning content for this section has not
+      been published yet.
+    </p>
+
+  </div>
+
+
+</section>

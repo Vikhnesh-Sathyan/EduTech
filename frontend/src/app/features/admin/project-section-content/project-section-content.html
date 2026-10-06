@@ -1,0 +1,387 @@
+<!--
+  USE:
+  Admin creates and manages learning content
+  for a Project Understanding section.
+-->
+
+<section class="project-section-content">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <p class="eyebrow">
+      PROJECT UNDERSTANDING
+    </p>
+
+    <h1>
+      Section Content
+    </h1>
+
+    <p class="intro">
+      Create and manage the learning content for this
+      Project Understanding section.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading()"
+  >
+
+    Loading content...
+
+  </div>
+
+
+  <!-- ==================================================
+       CONTENT EDITOR
+  ================================================== -->
+
+  <section
+    class="content-editor"
+    *ngIf="!loading()"
+  >
+
+    <!-- ==================================================
+         EDITOR HEADER
+    ================================================== -->
+
+    <div class="editor-header">
+
+      <div>
+
+        <p class="section-label">
+          LEARNING CONTENT
+        </p>
+
+        <h2>
+          Content Editor
+        </h2>
+
+        <p class="editor-description">
+          Structure the explanation so students can
+          understand the concept clearly.
+        </p>
+
+      </div>
+
+
+      <!-- CONTENT STATUS -->
+
+      <span
+        class="content-status"
+        *ngIf="contentExists()"
+      >
+        Content Available
+      </span>
+
+      <span
+        class="content-status empty"
+        *ngIf="!contentExists()"
+      >
+        Not Created
+      </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         WHAT
+    ================================================== -->
+
+    <div class="content-field">
+
+      <div class="field-heading">
+
+        <span class="field-number">
+          01
+        </span>
+
+        <div>
+
+          <label>
+            What
+          </label>
+
+          <p>
+            Explain what this concept or feature is.
+          </p>
+
+        </div>
+
+      </div>
+
+      <textarea
+        [(ngModel)]="sectionContent.what"
+        rows="7"
+        placeholder="Explain the concept in simple terms..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- ==================================================
+         WHY
+    ================================================== -->
+
+    <div class="content-field">
+
+      <div class="field-heading">
+
+        <span class="field-number">
+          02
+        </span>
+
+        <div>
+
+          <label>
+            Why
+          </label>
+
+          <p>
+            Explain why this concept is used in a real project.
+          </p>
+
+        </div>
+
+      </div>
+
+      <textarea
+        [(ngModel)]="sectionContent.why"
+        rows="6"
+        placeholder="Explain why this is important in a real application..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- ==================================================
+         FLOW
+    ================================================== -->
+
+    <div class="content-field">
+
+      <div class="field-heading">
+
+        <span class="field-number">
+          03
+        </span>
+
+        <div>
+
+          <label>
+            Flow
+          </label>
+
+          <p>
+            Explain how this concept works from start to finish.
+          </p>
+
+        </div>
+
+      </div>
+
+      <textarea
+        [(ngModel)]="sectionContent.flow"
+        rows="7"
+        placeholder="Example: Frontend → API → Backend → Database → Response..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- ==================================================
+         IMPORTANT KEYWORDS
+    ================================================== -->
+
+    <div class="content-field">
+
+      <div class="field-heading">
+
+        <span class="field-number">
+          04
+        </span>
+
+        <div>
+
+          <label>
+            Important Keywords
+          </label>
+
+          <p>
+            Add important terms students should remember.
+          </p>
+
+        </div>
+
+      </div>
+
+      <textarea
+        [(ngModel)]="sectionContent.important_keywords"
+        rows="5"
+        placeholder="Example: HTTP, request, response, API, endpoint..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- ==================================================
+         IMPORTANT CODE
+    ================================================== -->
+
+    <div class="content-field">
+
+      <div class="field-heading">
+
+        <span class="field-number">
+          05
+        </span>
+
+        <div>
+
+          <label>
+            Important Code
+          </label>
+
+          <p>
+            Add the important code students should understand.
+          </p>
+
+        </div>
+
+      </div>
+
+      <textarea
+        class="code-editor"
+        [(ngModel)]="sectionContent.important_code"
+        rows="12"
+        spellcheck="false"
+        placeholder="Paste the important code example here..."
+      ></textarea>
+
+    </div>
+
+<!-- ==================================================
+     VISUAL
+================================================== -->
+
+<div class="content-field">
+
+  <div class="field-heading">
+
+    <span class="field-number">
+      06
+    </span>
+
+    <div>
+
+      <label>
+        Visual
+      </label>
+
+      <p>
+        Upload a visual that helps explain the concept.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- IMAGE UPLOAD -->
+
+  <div class="image-upload">
+
+    <label
+      for="project-section-image"
+      class="upload-button"
+    >
+      Choose Image
+    </label>
+
+    <input
+      id="project-section-image"
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+      (change)="onImageSelected($event)"
+      hidden
+    >
+
+    <p class="upload-hint">
+      PNG, JPG or WebP. Maximum size: 5 MB.
+    </p>
+
+  </div>
+
+
+  <!-- IMAGE PREVIEW -->
+
+  <div
+    class="image-preview"
+    *ngIf="sectionContent.photo_url"
+  >
+
+    <img 
+      [src]="backendUrl + content().photo_url"
+      alt="Project concept visual"
+    >
+
+  </div>
+
+
+  <!-- CAPTION -->
+
+  <div class="form-field">
+
+    <label>
+      Caption
+    </label>
+
+    <input
+      type="text"
+      [(ngModel)]="sectionContent.photo_caption"
+      placeholder="Explain what the visual represents..."
+    >
+
+  </div>
+
+</div>
+
+
+    <!-- ==================================================
+         SAVE
+    ================================================== -->
+
+    <div class="editor-actions">
+
+      <button
+        type="button"
+        class="save-button"
+        (click)="saveContent()"
+        [disabled]="saving() || !sectionContent.what.trim()"
+      >
+
+        <span *ngIf="!saving()">
+          {{ contentExists() ? 'Save Changes' : 'Create Content' }}
+        </span>
+
+        <span *ngIf="saving()">
+          Saving...
+        </span>
+
+      </button>
+
+    </div>
+
+  </section>
+
+</section>

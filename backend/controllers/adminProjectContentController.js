@@ -250,6 +250,79 @@ const updateProjectSectionContent = async (req, res) => {
     }
 };
 
+// =====================================================
+// CREATE PROJECT CATEGORY
+// =====================================================
+
+const createProjectCategory = async (req, res) => {
+    try {
+
+        const {
+            name,
+            description,
+            display_order
+        } = req.body;
+
+        // Validate required fields
+        if (!name || !display_order) {
+            return res.status(400).json({
+                message: "Category name and display order are required"
+            });
+        }
+
+        // Check whether category name already exists
+        const [existing] = await db.query(
+            `
+            SELECT id
+            FROM project_categories
+            WHERE name = ?
+            `,
+            [name]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                message: "Category already exists"
+            });
+        }
+
+        // Create category
+        const [result] = await db.query(
+            `
+            INSERT INTO project_categories
+            (
+                name,
+                description,
+                display_order
+            )
+            VALUES (?, ?, ?)
+            `,
+            [
+                name,
+                description || null,
+                display_order
+            ]
+        );
+
+        res.status(201).json({
+            message: "Project category created successfully",
+            categoryId: result.insertId
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Create project category error:",
+            error
+        );
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+};
+
 
 // =====================================================
 // EXPORT CONTROLLERS
