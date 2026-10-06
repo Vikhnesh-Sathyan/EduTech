@@ -217,30 +217,37 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* ================================================== MENTOR INFO GROUP ================================================== */ 
 
+.mentor-info-group { 
+    margin-bottom: 15px; } 
+    
+/* ================================================== INFO LABEL ================================================== */ 
+
+.info-label {
+     margin: 0 0 6px; 
+     color: #9ca3af; 
+     font-size: 10px; 
+     font-weight: 700; 
+     letter-spacing: 1px; 
+     text-transform: uppercase;
+     }
 
 /* ==================================================
    SPECIALIZATION
 ================================================== */
 
-.mentor-specialization {
-  display: inline-flex;
-  align-self: flex-start;
-
-  margin-bottom: 10px;
-  padding: 6px 9px;
-
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-
-  background: #f8fafc;
-
-  color: #374151;
-
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.3;
-}
+.mentor-specialization { 
+    display: inline-flex; 
+    align-self: flex-start; 
+    padding: 6px 9px;
+    border: 1px solid #e5e7eb; 
+    border-radius: 6px; 
+    background: #f8fafc; 
+    color: #374151;
+    font-size: 12px;
+    font-weight: 600; 
+    line-height: 1.3; }
 
 
 /* ==================================================
@@ -252,9 +259,9 @@
 
   color: #6b7280;
 
-  font-size: 12px;
-  line-height: 1.5;
-}
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;}
 
 
 /* ==================================================

@@ -198,127 +198,151 @@
       filteredMentors().length > 0
     "
   >
+<!-- ==================================================
+     MENTOR CARD
+================================================== -->
 
-    <article
-      class="mentor-card"
-      *ngFor="let mentor of filteredMentors()"
-    >
-
-
-      <!-- ==================================================
-           MENTOR IDENTITY
-      ================================================== -->
-
-      <div class="mentor-header">
-
-        <div class="mentor-avatar">
-          {{ mentor.name?.charAt(0) }}
-        </div>
-
-        <div class="mentor-identity">
-
-          <h2>
-            {{ mentor.name }}
-          </h2>
-
-          <p>
-            {{ mentor.professional_title }}
-          </p>
-
-        </div>
-
-      </div>
+<article
+  class="mentor-card"
+  *ngFor="let mentor of filteredMentors()"
+>
 
 
-      <!-- ==================================================
-           SPECIALIZATION
-      ================================================== -->
+  <!-- ==================================================
+       MENTOR IDENTITY
+  ================================================== -->
 
-      <div class="mentor-specialization">
+  <div class="mentor-header">
 
-        {{ mentor.specialization }}
+    <div class="mentor-avatar">
+      {{ mentor.name?.charAt(0) }}
+    </div>
 
-      </div>
+    <div class="mentor-identity">
 
+      <h2>
+        {{ mentor.name }}
+      </h2>
 
-      <!-- ==================================================
-           EXPERIENCE
-      ================================================== -->
-
-      <p
-        class="mentor-experience"
-        *ngIf="mentor.experience_years !== null"
-      >
-
-        {{ mentor.experience_years }}+
-        years experience
-
+      <p>
+        {{ mentor.professional_title }}
       </p>
 
+    </div>
 
-      <!-- ==================================================
-           LIMITED SKILLS
-      ================================================== -->
+  </div>
 
-      <div
-        class="mentor-skills"
-        *ngIf="mentor.skills"
+
+  <!-- ==================================================
+       SPECIALIZATION
+  ================================================== -->
+
+  <div class="mentor-info-group">
+
+    <p class="info-label">
+      SPECIALIZATION
+    </p>
+
+    <div class="mentor-specialization">
+      {{ mentor.specialization }}
+    </div>
+
+  </div>
+
+
+  <!-- ==================================================
+       EXPERIENCE
+  ================================================== -->
+
+  <div
+    class="mentor-info-group"
+    *ngIf="mentor.experience_years !== null"
+  >
+
+    <p class="info-label">
+      EXPERIENCE
+    </p>
+
+    <p class="mentor-experience">
+      {{ mentor.experience_years }}+ years
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       SKILLS
+  ================================================== -->
+
+  <div
+    class="mentor-info-group"
+    *ngIf="mentor.skills"
+  >
+
+    <p class="info-label">
+      SKILLS
+    </p>
+
+    <div class="mentor-skills">
+
+      <span
+        class="skill"
+        *ngFor="
+          let skill of mentor.skills
+            .split(',')
+            .slice(0, 3)
+        "
       >
 
-        <span
-          class="skill"
-          *ngFor="
-            let skill of mentor.skills
-              .split(',')
-              .slice(0, 3)
-          "
-        >
+        {{ skill.trim() }}
 
-          {{ skill.trim() }}
+      </span>
 
-        </span>
+      <button
+        type="button"
+        class="skill-more"
+        *ngIf="
+          mentor.skills.split(',').length > 3
+        "
+        (click)="showSkills(mentor)"
+      >
 
-        <button
-          type="button"
-          class="skill-more"
-          *ngIf="
-            mentor.skills.split(',').length > 3
-          "
-          (click)="showSkills(mentor)"
-        >
+        +{{ mentor.skills.split(',').length - 3 }}
 
-          +{{ mentor.skills.split(',').length - 3 }}
+      </button>
 
-        </button>
+    </div>
 
-      </div>
+  </div>
 
 
-      <!-- ==================================================
-           ACTIONS
-      ================================================== -->
+  <!-- ==================================================
+       ACTIONS
+  ================================================== -->
 
-      <div class="mentor-actions">
+  <div class="mentor-actions">
 
-        <button
-          type="button"
-          class="primary-button"
-        >
-          View Profile
-        </button>
+    <button
+      type="button"
+      class="primary-button"
+    >
+      View Profile
+    </button>
 
-        <button
-          type="button"
-          class="secondary-button"
-          (click)="requestMentorship(mentor.mentor_id)"
-        >
-          Request
-        </button>
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="requestMentorship(mentor.mentor_id)"
+    >
+      Request
+    </button>
 
-      </div>
+  </div>
 
 
-    </article>
+</article>
+
+
 
   </div>
 
