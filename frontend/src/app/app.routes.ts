@@ -41,7 +41,7 @@ import { StudentLearningSection } from './features/study/student-learning-sectio
 
 import { StudentMentors } from './features/student-mentors/student-mentors';
 
-
+import { StudentMentorProfile } from './features/student-mentor-profile/student-mentor-profile';
 
 
 
@@ -283,7 +283,14 @@ export const routes: Routes = [
       {
         path: 'mentors',
         component: StudentMentors
+      },
+      
+      { 
+        path: 'mentors/:mentorId',
+        component: StudentMentorProfile 
       }
+
+
 
     ]
   },

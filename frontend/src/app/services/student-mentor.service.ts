@@ -26,4 +26,16 @@ export class StudentMentorService {
       }
     );
   }
+
+  
+// Gets the full public profile of one mentor
+getMentorProfile(mentorId: number) {
+
+  return this.http.get(
+    `${this.apiUrl}/${mentorId}`
+  );
+
+}
+
+
 }

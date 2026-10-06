@@ -1,0 +1,571 @@
+
+/* ==================================================
+   PAGE
+================================================== */
+
+.mentor-profile-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 32px 60px;
+}
+
+
+/* ==================================================
+   BACK BUTTON
+================================================== */
+
+.back-button {
+  margin-bottom: 24px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease;
+}
+
+.back-button:hover {
+  color: #111827;
+}
+
+
+/* ==================================================
+   PROFILE CONTAINER
+================================================== */
+
+.profile-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 18px rgba(15, 23, 42, 0.04);
+
+  overflow: hidden;
+}
+
+
+/* ==================================================
+   PROFILE HEADER
+================================================== */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+
+  gap: 22px;
+
+  padding: 32px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* ==================================================
+   AVATAR
+================================================== */
+
+.profile-avatar {
+  width: 76px;
+  height: 76px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f3f4f6;
+
+  color: #374151;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+
+/* ==================================================
+   PROFILE IDENTITY
+================================================== */
+
+.profile-identity {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+
+  color: #9ca3af;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.profile-identity h1 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+
+  letter-spacing: -0.4px;
+}
+
+.professional-title {
+  margin: 5px 0 12px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   SPECIALIZATION
+================================================== */
+
+.specialization {
+  display: inline-flex;
+
+  padding: 6px 10px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* ==================================================
+   PROFILE SECTIONS
+================================================== */
+
+.profile-section {
+  padding: 24px 32px;
+
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.section-label {
+  margin: 0 0 9px;
+
+  color: #9ca3af;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+
+/* ==================================================
+   EXPERIENCE
+================================================== */
+
+.experience-section {
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+.experience-value {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* ==================================================
+   SECTION TEXT
+================================================== */
+
+.section-text {
+  max-width: 720px;
+
+  margin: 0;
+
+  color: #4b5563;
+
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+
+/* ==================================================
+   SKILLS
+================================================== */
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.skill {
+  padding: 7px 10px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* ==================================================
+   AVAILABILITY
+================================================== */
+
+.availability-card {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+
+/* ==================================================
+   AVAILABILITY ITEM
+================================================== */
+
+.availability-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 15px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+
+  background: #f8fafc;
+}
+
+
+/* ==================================================
+   AVAILABILITY ICON
+================================================== */
+
+.availability-icon {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #6b7280;
+
+  font-size: 11px;
+}
+
+
+/* ==================================================
+   AVAILABILITY LABEL
+================================================== */
+
+.availability-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #9ca3af;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+
+/* ==================================================
+   AVAILABILITY VALUE
+================================================== */
+
+.availability-value {
+  margin: 0;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+
+  .availability-card {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+
+/* ==================================================
+   PROFESSIONAL PROFILES
+================================================== */
+
+.profile-links {
+  display: flex;
+
+  gap: 10px;
+}
+
+.profile-links a {
+  display: inline-flex;
+
+  padding: 7px 11px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.profile-links a:hover {
+  background: #f8fafc;
+
+  border-color: #d1d5db;
+}
+
+
+/* ==================================================
+   PROFILE ACTION
+================================================== */
+
+.profile-action {
+  display: flex;
+  justify-content: flex-end;
+
+  padding: 24px 32px;
+}
+
+.request-button {
+  min-height: 42px;
+
+  padding: 9px 18px;
+
+  border: 1px solid #111827;
+  border-radius: 7px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.request-button:hover {
+  background: #1f2937;
+
+  transform: translateY(-1px);
+}
+
+
+/* ==================================================
+   STATE MESSAGE
+================================================== */
+
+.state-message {
+  padding: 50px 24px;
+
+  text-align: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+}
+
+.state-message p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.state-message h2 {
+  margin: 0 0 8px;
+
+  color: #111827;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.state-message button {
+  margin-top: 18px;
+
+  min-height: 38px;
+
+  padding: 8px 15px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.state-message button:hover {
+  background: #f9fafb;
+}
+
+.state-message.error {
+  border-color: #ead4d4;
+}
+
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 700px) {
+
+  .mentor-profile-page {
+    padding: 28px 20px 50px;
+  }
+
+  .profile-header {
+    align-items: flex-start;
+
+    padding: 25px;
+
+    gap: 17px;
+  }
+
+  .profile-identity h1 {
+    font-size: 24px;
+  }
+
+  .profile-section {
+    padding: 21px 25px;
+  }
+
+  .profile-action {
+    padding: 21px 25px;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 480px) {
+
+  .mentor-profile-page {
+    padding: 24px 16px 40px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+
+    padding: 22px;
+  }
+
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+
+    font-size: 24px;
+  }
+
+  .profile-identity h1 {
+    font-size: 22px;
+  }
+
+  .profile-section {
+    padding: 20px 22px;
+  }
+
+  .profile-action {
+    padding: 20px 22px;
+  }
+
+  .request-button {
+    width: 100%;
+  }
+
+}

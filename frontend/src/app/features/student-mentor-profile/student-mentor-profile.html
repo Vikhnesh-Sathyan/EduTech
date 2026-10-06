@@ -1,0 +1,325 @@
+
+<!--
+  USE:
+  Displays the complete public profile of an approved mentor.
+-->
+
+<section class="mentor-profile-page">
+
+
+  <!-- ==================================================
+       BACK
+  ================================================== -->
+
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBack()"
+  >
+    ← Back to mentors
+  </button>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="loading()"
+  >
+
+    <p>
+      Loading mentor profile...
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="state-message error"
+    *ngIf="
+      !loading() &&
+      errorMessage()
+    "
+  >
+
+    <h2>
+      Unable to load profile
+    </h2>
+
+    <p>
+      {{ errorMessage() }}
+    </p>
+
+    <button
+      type="button"
+      (click)="goBack()"
+    >
+      Back to mentors
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       PROFILE
+  ================================================== -->
+
+  <div
+    class="profile-container"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentor()
+    "
+  >
+
+
+    <!-- ==================================================
+         PROFILE HEADER
+    ================================================== -->
+
+    <header class="profile-header">
+
+      <div class="profile-avatar">
+
+        {{ mentor()?.name?.charAt(0) }}
+
+      </div>
+
+
+      <div class="profile-identity">
+
+        <p class="eyebrow">
+          MENTOR PROFILE
+        </p>
+
+        <h1>
+          {{ mentor()?.name }}
+        </h1>
+
+        <p class="professional-title">
+          {{ mentor()?.professional_title }}
+        </p>
+
+        <div class="specialization">
+
+          {{ mentor()?.specialization }}
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- ==================================================
+         EXPERIENCE
+    ================================================== -->
+
+    <section
+      class="profile-section experience-section"
+      *ngIf="mentor()?.experience_years !== null"
+    >
+
+      <p class="section-label">
+        EXPERIENCE
+      </p>
+
+      <p class="experience-value">
+        {{ mentor()?.experience_years }}+ years
+      </p>
+
+    </section>
+
+
+    <!-- ==================================================
+         ABOUT
+    ================================================== -->
+
+    <section
+      class="profile-section"
+      *ngIf="mentor()?.bio"
+    >
+
+      <p class="section-label">
+        ABOUT
+      </p>
+
+      <p class="section-text">
+        {{ mentor()?.bio }}
+      </p>
+
+    </section>
+
+
+    <!-- ==================================================
+         SKILLS
+    ================================================== -->
+
+    <section
+      class="profile-section"
+      *ngIf="mentor()?.skills"
+    >
+
+      <p class="section-label">
+        SKILLS
+      </p>
+
+      <div class="skills-list">
+
+        <span
+          class="skill"
+          *ngFor="
+            let skill of mentor()?.skills?.split(',')
+          "
+        >
+
+          {{ skill.trim() }}
+
+        </span>
+
+      </div>
+
+    </section>
+
+
+<!-- ==================================================
+     AVAILABILITY
+================================================== -->
+
+<section
+  class="profile-section availability-section"
+  *ngIf="
+    mentor()?.availability_days ||
+    mentor()?.availability_start_time ||
+    mentor()?.availability_end_time
+  "
+>
+
+  <p class="section-label">
+    AVAILABILITY
+  </p>
+
+  <div class="availability-card">
+
+    <!-- Available Days -->
+
+    <div class="availability-item">
+
+      <span class="availability-icon">
+        ●
+      </span>
+
+      <div>
+
+        <span class="availability-label">
+          Available Days
+        </span>
+
+        <p class="availability-value">
+          {{ mentor()?.availability_days }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- Available Hours -->
+
+    <div class="availability-item">
+
+      <span class="availability-icon">
+        ◷
+      </span>
+
+      <div>
+
+        <span class="availability-label">
+          Available Hours
+        </span>
+
+        <p class="availability-value">
+          {{ mentor()?.availability_start_time?.slice(0, 5) }}
+          –
+          {{ mentor()?.availability_end_time?.slice(0, 5) }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+    <!-- ==================================================
+         PROFESSIONAL PROFILES
+    ================================================== -->
+
+    <section
+      class="profile-section"
+      *ngIf="
+        mentor()?.linkedin_url ||
+        mentor()?.github_url
+      "
+    >
+
+      <p class="section-label">
+        PROFESSIONAL PROFILES
+      </p>
+
+      <div class="profile-links">
+
+        <a
+          *ngIf="mentor()?.linkedin_url"
+          [href]="mentor()?.linkedin_url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LinkedIn
+        </a>
+
+        <a
+          *ngIf="mentor()?.github_url"
+          [href]="mentor()?.github_url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         ACTION
+    ================================================== -->
+
+    <div class="profile-action">
+
+      <button
+        type="button"
+        class="request-button"
+        (click)="requestMentorship()"
+      >
+        Request Mentorship
+      </button>
+
+    </div>
+
+
+  </div>
+
+
+</section>

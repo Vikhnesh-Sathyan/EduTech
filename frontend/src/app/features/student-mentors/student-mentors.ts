@@ -8,6 +8,8 @@ import {
   computed
 } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import { CommonModule } from '@angular/common';
 
 import { StudentMentorService } from '../../services/student-mentor.service';
@@ -95,9 +97,21 @@ export class StudentMentors implements OnInit {
   });
 
 
-  constructor(
-    private studentMentorService: StudentMentorService
-  ) {}
+ constructor(
+  private studentMentorService: StudentMentorService,
+  private router: Router
+) {}
+
+
+// Opens the selected mentor profile
+viewProfile(mentorId: number): void {
+
+  this.router.navigate([
+    '/mentors',
+    mentorId
+  ]);
+
+}
 
 
   ngOnInit(): void {

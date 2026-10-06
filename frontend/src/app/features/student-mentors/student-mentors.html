@@ -323,11 +323,13 @@
   <div class="mentor-actions">
 
     <button
-      type="button"
-      class="primary-button"
-    >
-      View Profile
-    </button>
+  type="button"
+  class="primary-button"
+  (click)="viewProfile(mentor.mentor_id)"
+>
+  View Profile
+</button>
+
 
     <button
       type="button"
