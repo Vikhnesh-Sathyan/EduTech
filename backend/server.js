@@ -25,9 +25,11 @@ const db = require("./config/db");
 // APPLICATION ROUTES
 // =====================================================
 
+// Authentication routes
 const authRoutes =
     require("./routes/authRoutes");
 
+// Student profile routes
 const profileRoutes =
     require("./routes/profileRoutes");
 
@@ -97,6 +99,7 @@ const educationRoutes =
 const studentSubjectRoutes =
     require("./routes/studentSubjectRoutes");
 
+// Student section learning routes
 const studentSectionLearningRoutes =
     require("./routes/studentSectionLearningRoutes");
 
@@ -119,10 +122,21 @@ const diagnosticRoutes =
 
 
 // =====================================================
+// MENTOR-STUDENT RELATIONSHIP ROUTES
+// =====================================================
+
+// Handles mentorship requests and relationships
+const mentorStudentRoutes =
+    require("./routes/mentorStudentRoutes");
+
+const studentMentorRoutes =
+    require("./routes/studentMentorRoutes");
+
+// =====================================================
 // MENTOR ROUTES
 // =====================================================
 
-// Mentor profile routes
+// Mentor profile and dashboard routes
 const mentorRoutes =
     require("./routes/mentorRoutes");
 
@@ -135,7 +149,7 @@ const app = express();
 
 
 // =====================================================
-// MIDDLEWARE
+// GLOBAL MIDDLEWARE
 // =====================================================
 
 // Allow requests from the Angular frontend
@@ -144,7 +158,12 @@ app.use(cors());
 // Parse incoming JSON request data
 app.use(express.json());
 
-// Serve uploaded learning images
+
+// =====================================================
+// STATIC FILES
+// =====================================================
+
+// Serve uploaded learning and project images
 app.use(
     "/uploads",
     express.static(
@@ -154,7 +173,7 @@ app.use(
 
 
 // =====================================================
-// PORT
+// PORT CONFIGURATION
 // =====================================================
 
 const PORT =
@@ -162,7 +181,7 @@ const PORT =
 
 
 // =====================================================
-// BASIC ROUTE
+// BASIC SERVER ROUTE
 // =====================================================
 
 // Basic server health check
@@ -187,7 +206,7 @@ app.use(
 
 
 // =====================================================
-// PROFILE ROUTES
+// STUDENT PROFILE ROUTES
 // =====================================================
 
 // Handles authenticated student profile
@@ -196,10 +215,32 @@ app.use(
     profileRoutes
 );
 
-// Handles authenticated mentor profile
+
+// =====================================================
+// MENTOR ROUTES
+// =====================================================
+
+// Handles mentor profile and dashboard
 app.use(
     "/api/mentor",
     mentorRoutes
+);
+
+
+// =====================================================
+// MENTOR-STUDENT RELATIONSHIP ROUTES
+// =====================================================
+
+app.use(
+    "/api/student/mentors",
+    studentMentorRoutes
+);
+
+// Handles mentorship requests,
+// acceptance and rejection
+app.use(
+    "/api/mentor-student",
+    mentorStudentRoutes
 );
 
 
@@ -286,7 +327,7 @@ app.use(
 
 
 // =====================================================
-// STUDENT ROUTES
+// STUDENT EDUCATION ROUTES
 // =====================================================
 
 // Student education lookup
@@ -294,6 +335,11 @@ app.use(
     "/api/education",
     educationRoutes
 );
+
+
+// =====================================================
+// STUDENT STUDY ROUTES
+// =====================================================
 
 // Student subjects
 app.use(
@@ -307,23 +353,7 @@ app.use(
     studentSectionLearningRoutes
 );
 
-
-// =====================================================
-// STUDENT PROJECT UNDERSTANDING ROUTES
-// =====================================================
-
-// Student Project Understanding
-app.use(
-    "/api/student/projects",
-    studentProjectRoutes
-);
-
-
-// =====================================================
-// STUDY AND DIAGNOSTIC ROUTES
-// =====================================================
-
-// Student study
+// Student Study
 app.use(
     "/api/study",
     studyRoutes
@@ -333,6 +363,17 @@ app.use(
 app.use(
     "/api/diagnostic",
     diagnosticRoutes
+);
+
+
+// =====================================================
+// STUDENT PROJECT UNDERSTANDING ROUTES
+// =====================================================
+
+// Student Project Understanding
+app.use(
+    "/api/student/projects",
+    studentProjectRoutes
 );
 
 

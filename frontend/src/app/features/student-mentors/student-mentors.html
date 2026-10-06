@@ -1,0 +1,400 @@
+<!--
+  USE:
+  Student discovers mentors quickly without
+  overwhelming the page with too much information.
+-->
+
+<section class="student-mentors-page">
+
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        MENTORSHIP
+      </p>
+
+      <h1>
+        Find a Mentor
+      </h1>
+
+      <p class="intro">
+        Find the right mentor to support your learning
+        and career journey.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- ==================================================
+       SEARCH + FILTER
+  ================================================== -->
+
+  <section class="mentor-controls">
+
+    <input
+      type="text"
+      placeholder="Search mentors..."
+      aria-label="Search mentors"
+      (input)="updateSearch($event)"
+    />
+
+    <select
+      aria-label="Filter by specialization"
+      (change)="updateSpecialization($event)"
+    >
+
+      <option value="">
+        All Specializations
+      </option>
+
+      <option value="full-stack">
+        Full Stack Development
+      </option>
+
+      <option value="frontend">
+        Frontend Development
+      </option>
+
+      <option value="backend">
+        Backend Development
+      </option>
+
+      <option value="data">
+        Data & Analytics
+      </option>
+
+    </select>
+
+  </section>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="loading()"
+  >
+
+    <p>
+      Finding available mentors...
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="state-message error"
+    *ngIf="!loading() && errorMessage()"
+  >
+
+    <p>
+      {{ errorMessage() }}
+    </p>
+
+    <button
+      type="button"
+      (click)="loadMentors()"
+    >
+      Try Again
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       NO MENTORS AVAILABLE
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length === 0
+    "
+  >
+
+    <h2>
+      No mentors available
+    </h2>
+
+    <p>
+      Approved mentors will appear here when they
+      become available.
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       MENTOR COUNT
+  ================================================== -->
+
+  <div
+    class="mentor-summary"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length > 0
+    "
+  >
+
+    <span>
+      {{ filteredMentors().length }} mentors available
+    </span>
+
+  </div>
+
+
+  <!-- ==================================================
+       NO SEARCH / FILTER MATCHES
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length > 0 &&
+      filteredMentors().length === 0
+    "
+  >
+
+    <h2>
+      No matching mentors
+    </h2>
+
+    <p>
+      Try a different search term or specialization.
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       MENTOR GRID
+  ================================================== -->
+
+  <div
+    class="mentor-grid"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length > 0 &&
+      filteredMentors().length > 0
+    "
+  >
+
+    <article
+      class="mentor-card"
+      *ngFor="let mentor of filteredMentors()"
+    >
+
+
+      <!-- ==================================================
+           MENTOR IDENTITY
+      ================================================== -->
+
+      <div class="mentor-header">
+
+        <div class="mentor-avatar">
+          {{ mentor.name?.charAt(0) }}
+        </div>
+
+        <div class="mentor-identity">
+
+          <h2>
+            {{ mentor.name }}
+          </h2>
+
+          <p>
+            {{ mentor.professional_title }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==================================================
+           SPECIALIZATION
+      ================================================== -->
+
+      <div class="mentor-specialization">
+
+        {{ mentor.specialization }}
+
+      </div>
+
+
+      <!-- ==================================================
+           EXPERIENCE
+      ================================================== -->
+
+      <p
+        class="mentor-experience"
+        *ngIf="mentor.experience_years !== null"
+      >
+
+        {{ mentor.experience_years }}+
+        years experience
+
+      </p>
+
+
+      <!-- ==================================================
+           LIMITED SKILLS
+      ================================================== -->
+
+      <div
+        class="mentor-skills"
+        *ngIf="mentor.skills"
+      >
+
+        <span
+          class="skill"
+          *ngFor="
+            let skill of mentor.skills
+              .split(',')
+              .slice(0, 3)
+          "
+        >
+
+          {{ skill.trim() }}
+
+        </span>
+
+        <button
+          type="button"
+          class="skill-more"
+          *ngIf="
+            mentor.skills.split(',').length > 3
+          "
+          (click)="showSkills(mentor)"
+        >
+
+          +{{ mentor.skills.split(',').length - 3 }}
+
+        </button>
+
+      </div>
+
+
+      <!-- ==================================================
+           ACTIONS
+      ================================================== -->
+
+      <div class="mentor-actions">
+
+        <button
+          type="button"
+          class="primary-button"
+        >
+          View Profile
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="requestMentorship(mentor.mentor_id)"
+        >
+          Request
+        </button>
+
+      </div>
+
+
+    </article>
+
+  </div>
+
+
+  <!-- ==================================================
+       SKILLS POPUP
+  ================================================== -->
+
+  <div
+    class="skills-overlay"
+    *ngIf="selectedMentor()"
+    (click)="closeSkills()"
+  >
+
+    <div
+      class="skills-popup"
+      (click)="$event.stopPropagation()"
+    >
+
+
+      <!-- Popup Header -->
+
+      <div class="skills-popup-header">
+
+        <div>
+
+          <p class="popup-eyebrow">
+            MENTOR SKILLS
+          </p>
+
+          <h2>
+            {{ selectedMentor()?.name }}
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="popup-close"
+          (click)="closeSkills()"
+          aria-label="Close skills"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- Popup Description -->
+
+      <p class="popup-description">
+        Technologies and areas this mentor works with.
+      </p>
+
+
+      <!-- All Skills -->
+
+      <div class="all-skills">
+
+        <span
+          class="full-skill"
+          *ngFor="
+            let skill of selectedMentor()?.skills?.split(',')
+          "
+        >
+
+          {{ skill.trim() }}
+
+        </span>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+</section>

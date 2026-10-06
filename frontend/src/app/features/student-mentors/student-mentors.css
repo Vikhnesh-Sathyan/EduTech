@@ -1,0 +1,635 @@
+/* ==================================================
+   PAGE
+================================================== */
+
+.student-mentors-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px 60px;
+}
+
+
+/* ==================================================
+   PAGE HEADER
+================================================== */
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.intro {
+  max-width: 620px;
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: 0.68;
+}
+
+
+/* ==================================================
+   SEARCH + FILTER
+================================================== */
+
+.mentor-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mentor-controls input,
+.mentor-controls select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 13px;
+
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #111827;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mentor-controls input::placeholder {
+  color: #9ca3af;
+}
+
+.mentor-controls input:focus,
+.mentor-controls select:focus {
+  border-color: #9ca3af;
+
+  box-shadow:
+    0 0 0 3px rgba(17, 24, 39, 0.05);
+}
+
+
+/* ==================================================
+   MENTOR SUMMARY
+================================================== */
+
+.mentor-summary {
+  margin-bottom: 14px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #6b7280;
+}
+
+
+/* ==================================================
+   MENTOR GRID
+================================================== */
+
+.mentor-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+/* ==================================================
+   MENTOR CARD
+================================================== */
+
+.mentor-card {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 260px;
+
+  padding: 22px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 10px rgba(15, 23, 42, 0.03);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.mentor-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d1d5db;
+
+  box-shadow:
+    0 8px 22px rgba(15, 23, 42, 0.07);
+}
+
+
+/* ==================================================
+   MENTOR HEADER
+================================================== */
+
+.mentor-header {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 17px;
+}
+
+.mentor-avatar {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f3f4f6;
+
+  color: #374151;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.mentor-identity {
+  min-width: 0;
+}
+
+.mentor-identity h2 {
+  margin: 0;
+
+  overflow: hidden;
+
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mentor-identity p {
+  margin: 3px 0 0;
+
+  overflow: hidden;
+
+  color: #6b7280;
+
+  font-size: 12px;
+  line-height: 1.4;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==================================================
+   SPECIALIZATION
+================================================== */
+
+.mentor-specialization {
+  display: inline-flex;
+  align-self: flex-start;
+
+  margin-bottom: 10px;
+  padding: 6px 9px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+
+/* ==================================================
+   EXPERIENCE
+================================================== */
+
+.mentor-experience {
+  margin: 0 0 15px;
+
+  color: #6b7280;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   SKILLS
+================================================== */
+
+.mentor-skills {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  min-height: 27px;
+}
+
+.skill,
+.skill-more {
+  padding: 5px 8px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #4b5563;
+
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.skill-more {
+  background: #f8fafc;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+
+/* ==================================================
+   ACTIONS
+================================================== */
+
+.mentor-actions {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+
+  gap: 8px;
+
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 38px;
+
+  padding: 8px 12px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* View Profile */
+
+.primary-button {
+  border: 1px solid #111827;
+
+  background: #111827;
+
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #1f2937;
+
+  transform: translateY(-1px);
+}
+
+
+/* Request */
+
+.secondary-button {
+  border: 1px solid #d1d5db;
+
+  background: #ffffff;
+
+  color: #374151;
+}
+
+.secondary-button:hover {
+  border-color: #9ca3af;
+
+  background: #f9fafb;
+
+  transform: translateY(-1px);
+}
+
+
+/* ==================================================
+   STATE MESSAGES
+================================================== */
+
+.state-message {
+  padding: 44px 24px;
+
+  text-align: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.state-message h2 {
+  margin: 0 0 7px;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.state-message p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.state-message.error {
+  border-color: #f0d0d0;
+}
+
+.state-message button {
+  margin-top: 16px;
+
+  min-height: 38px;
+
+  padding: 8px 15px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.state-message button:hover {
+  background: #f9fafb;
+}
+
+/* ==================================================
+   SKILLS POPUP
+================================================== */
+
+.skills-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.skills-popup {
+  width: 100%;
+  max-width: 460px;
+
+  padding: 24px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.15);
+}
+
+
+/* ==================================================
+   POPUP HEADER
+================================================== */
+
+.skills-popup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.popup-eyebrow {
+  margin: 0 0 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+
+  color: #6b7280;
+}
+
+.skills-popup-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.popup-close {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #4b5563;
+
+  font-size: 20px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.popup-close:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+
+/* ==================================================
+   POPUP DESCRIPTION
+================================================== */
+
+.popup-description {
+  margin: 16px 0 18px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* ==================================================
+   ALL SKILLS
+================================================== */
+
+.all-skills {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.full-skill {
+  padding: 7px 10px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 480px) {
+
+  .skills-overlay {
+    padding: 16px;
+  }
+
+  .skills-popup {
+    padding: 20px;
+  }
+
+}
+
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 950px) {
+
+  .mentor-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 700px) {
+
+  .student-mentors-page {
+    padding: 30px 20px 50px;
+  }
+
+  .mentor-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .mentor-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* ==================================================
+   SMALL MOBILE
+================================================== */
+
+@media (max-width: 480px) {
+
+  .student-mentors-page {
+    padding: 24px 16px 40px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .mentor-card {
+    padding: 19px;
+  }
+
+  .mentor-actions {
+    grid-template-columns: 1fr;
+  }
+
+}

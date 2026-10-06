@@ -36,6 +36,17 @@ import { DiagnosticResult } from './features/study/diagnostic-result/diagnostic-
 import { StudentLearningSection } from './features/study/student-learning-section/student-learning-section';
 
 // ======================================================
+// STUDENT - MENTOR Relationship
+// ======================================================
+
+import { StudentMentors } from './features/student-mentors/student-mentors';
+
+
+
+
+
+
+// ======================================================
 // STUDENT - PROJECT UNDERSTANDING
 // ======================================================
 
@@ -263,6 +274,15 @@ export const routes: Routes = [
       {
         path: 'study/:subjectId/learning',
         component: StudentLearningSection
+      },
+
+      // ==================================================
+      // STUDENT MENTORS
+      // ==================================================
+
+      {
+        path: 'mentors',
+        component: StudentMentors
       }
 
     ]
@@ -428,16 +448,12 @@ export const routes: Routes = [
       },
 
       // Admin Project Sections
-      // /admin/project-understanding/:categoryId/topics/:topicId/sections
-
       {
         path: 'project-understanding/:categoryId/topics/:topicId/sections',
         component: ProjectSections
       },
 
       // Admin Project Section Content
-      // /admin/project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content
-
       {
         path: 'project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content',
         component: ProjectSectionContent
