@@ -40,4 +40,9 @@ submitForVerification() {
     {}
   );
 }
+
+// Get dashboard verification status
+getDashboard() {
+  return this.http.get(`${this.apiUrl}/dashboard`);
+}
 }

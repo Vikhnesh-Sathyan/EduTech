@@ -1,5 +1,4 @@
-// Defines protected mentor profile routes
-
+// Defines protected mentor routes
 const express = require("express");
 
 const {
@@ -8,10 +7,20 @@ const {
     submitForVerification
 } = require("../controllers/mentorController");
 
-const authMiddleware = require("../middleware/authMiddleware");
+const {
+    getMentorDashboard
+} = require("../controllers/mentorDashboardController");
+
+const authMiddleware = require("../middleware/AuthMiddleware");
+
 const roleMiddleware = require("../middleware/roleMiddleware");
 
 const router = express.Router();
+
+
+// ==========================================
+// GET MENTOR PROFILE
+// ==========================================
 
 router.get(
     "/profile",
@@ -20,6 +29,11 @@ router.get(
     getMentorProfile
 );
 
+
+// ==========================================
+// SAVE MENTOR PROFILE
+// ==========================================
+
 router.put(
     "/profile",
     authMiddleware,
@@ -27,12 +41,29 @@ router.put(
     saveMentorProfile
 );
 
-// Submit mentor profile for verification
+
+// ==========================================
+// SUBMIT PROFILE FOR VERIFICATION
+// ==========================================
+
 router.put(
     "/profile/submit",
     authMiddleware,
     roleMiddleware("mentor"),
     submitForVerification
 );
+
+
+// ==========================================
+// GET MENTOR DASHBOARD
+// ==========================================
+
+router.get(
+    "/dashboard",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getMentorDashboard
+);
+
 
 module.exports = router;

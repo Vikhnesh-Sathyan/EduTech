@@ -1,3 +1,4 @@
+
 <!-- Mentor dashboard overview -->
 
 <div class="dashboard-shell">
@@ -24,7 +25,7 @@
           </p>
 
           <h1>
-            {{ greeting }}, Mentor
+            {{ greeting() }}, Mentor
           </h1>
 
           <p class="subtitle">
@@ -85,28 +86,115 @@
               VERIFICATION
             </span>
 
-            <span class="status status-pending">
+            <!-- Pending -->
+
+            <span
+              *ngIf="verificationStatus() === 'pending'"
+              class="status status-pending"
+            >
               Pending
             </span>
 
+            <!-- Approved -->
+
+            <span
+              *ngIf="verificationStatus() === 'approved'"
+              class="status status-success"
+            >
+              Approved
+            </span>
+
+            <!-- Rejected -->
+
+            <span
+              *ngIf="verificationStatus() === 'rejected'"
+              class="status status-rejected"
+            >
+              Rejected
+            </span>
+
           </div>
+
 
           <h2>
             Profile Verification
           </h2>
 
-          <p>
+
+          <!-- Pending message -->
+
+          <p *ngIf="verificationStatus() === 'pending'">
+
             Your mentor profile is currently waiting
             for admin review.
+
           </p>
 
-        <button
-          type="button"
-        class="card-action verification-card-action"
-        (click)="continueVerification()"
-      >
-          Continue Verification →
-      </button>
+
+          <!-- Approved message -->
+
+          <p *ngIf="verificationStatus() === 'approved'">
+
+            Your mentor profile has been approved.
+            You can now start mentoring students.
+
+          </p>
+
+
+          <!-- Rejected message -->
+
+          <p *ngIf="verificationStatus() === 'rejected'">
+
+            Your mentor profile needs some changes
+            before it can be approved.
+
+          </p>
+
+
+          <!-- Rejection reason -->
+
+          <div
+            *ngIf="
+              verificationStatus() === 'rejected' &&
+              verificationNote()
+            "
+            class="verification-note"
+          >
+
+            <strong>
+              Admin feedback
+            </strong>
+
+            <span>
+              {{ verificationNote() }}
+            </span>
+
+          </div>
+
+
+          <!-- Pending action -->
+
+          <button
+            *ngIf="verificationStatus() === 'pending'"
+            type="button"
+            class="card-action verification-card-action"
+            (click)="continueVerification()"
+          >
+            View Verification →
+          </button>
+
+
+          <!-- Rejected action -->
+
+          <button
+            *ngIf="verificationStatus() === 'rejected'"
+            type="button"
+            class="card-action verification-card-action"
+            (click)="continueVerification()"
+          >
+            Update Profile →
+          </button>
+
 
         </article>
 
@@ -119,7 +207,9 @@
             STUDENTS
           </span>
 
-          <strong>0</strong>
+          <strong>
+            0
+          </strong>
 
           <p>
             Students connected with you.
@@ -136,7 +226,9 @@
             SESSIONS
           </span>
 
-          <strong>0</strong>
+          <strong>
+            0
+          </strong>
 
           <p>
             Your upcoming mentoring sessions.
@@ -187,7 +279,7 @@
             routerLink="/mentor-profile"
             class="primary-action"
           >
-            Complete Profile
+            View Profile
           </a>
 
         </div>
@@ -203,7 +295,7 @@
 
   <div
     class="verification-overlay"
-    *ngIf="showVerificationPopup"
+    *ngIf="showVerificationPopup()"
   >
 
     <div class="verification-modal">
@@ -216,44 +308,92 @@
         MENTOR VERIFICATION
       </p>
 
-      <h2>
-        Your account is not verified yet
-      </h2>
 
-      <p class="verification-message">
-        Complete your mentor verification to unlock
-        student mentoring features.
-      </p>
+      <!-- Pending popup -->
 
-      <div class="verification-note">
+      <ng-container
+        *ngIf="verificationStatus() === 'pending'"
+      >
 
-        <strong>
-          What happens next?
-        </strong>
+        <h2>
+          Your profile is under review
+        </h2>
 
-        <span>
-          Complete your professional profile and submit
-          your information for admin review.
-        </span>
+        <p class="verification-message">
+          Your mentor profile has been submitted
+          and is currently waiting for admin review.
+        </p>
 
-      </div>
+        <div class="verification-note">
+
+          <strong>
+            What happens next?
+          </strong>
+
+          <span>
+            An administrator will review your
+            professional information and decide
+            whether to approve your mentor profile.
+          </span>
+
+        </div>
+
+      </ng-container>
+
+
+      <!-- Rejected popup -->
+
+      <ng-container
+        *ngIf="verificationStatus() === 'rejected'"
+      >
+
+        <h2>
+          Your profile needs changes
+        </h2>
+
+        <p class="verification-message">
+          Your mentor profile was not approved.
+          Please review the administrator's feedback
+          and update your profile.
+        </p>
+
+        <div
+          *ngIf="verificationNote()"
+          class="verification-note"
+        >
+
+          <strong>
+            Admin feedback
+          </strong>
+
+          <span>
+            {{ verificationNote() }}
+          </span>
+
+        </div>
+
+      </ng-container>
+
 
       <div class="verification-actions">
 
         <button
-          type="button"
-          class="primary-verification-action"
-          (click)="continueVerification()"
-        >
-          Continue Verification
-        </button>
-
-        <button
+          *ngIf="verificationStatus() === 'pending'"
           type="button"
           class="secondary-verification-action"
           (click)="closeVerificationPopup()"
         >
           Maybe Later
+        </button>
+
+
+        <button
+          *ngIf="verificationStatus() === 'rejected'"
+          type="button"
+          class="primary-verification-action"
+          (click)="continueVerification()"
+        >
+          Update Profile
         </button>
 
       </div>
