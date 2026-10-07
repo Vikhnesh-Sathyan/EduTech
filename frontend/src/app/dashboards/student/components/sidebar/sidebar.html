@@ -33,47 +33,44 @@
     <!-- Study Progress -->
     @if (currentStudy(); as study) {
 
-      <div class="study-progress-widget">
+  <div class="study-progress-widget">
 
-        <div class="study-progress-header">
-          <span class="study-progress-label">
-            STUDY PROGRESS
-          </span>
-        </div>
+  <div class="study-progress-header">
+    <span class="study-progress-label">
+      STUDY PROGRESS
+    </span>
+  </div>
 
+  <div class="study-progress-main">
 
-        <div class="study-progress-current">
-          CURRENT STUDY
-        </div>
-
-
-        <div class="study-progress-subject">
-          {{ study.subject_name }}
-        </div>
-
-
-        <div class="study-progress-percentage">
-          {{ study.progress_percentage }}%
-        </div>
-
-
-        <div class="study-progress-summary">
-          {{ study.completed_sections }}
-          of
-          {{ study.total_sections }}
-          sections completed
-        </div>
-
-
-        <a
-          routerLink="/study-progress"
-          class="study-progress-link"
-        >
-          View All
-          <span>→</span>
-        </a>
-
+    <div>
+      <div class="study-progress-subject">
+        {{ study.subject_name }}
       </div>
+
+      <div class="study-progress-summary">
+        {{ study.completed_sections }}
+        of
+        {{ study.total_sections }}
+        sections completed
+      </div>
+    </div>
+
+    <div class="study-progress-percentage">
+      {{ study.progress_percentage }}%
+    </div>
+
+  </div>
+
+  <a
+    routerLink="/study-progress"
+    class="study-progress-link"
+  >
+    <span>View All</span>
+    <span>→</span>
+  </a>
+
+</div>
 
     }
 

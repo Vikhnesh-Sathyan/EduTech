@@ -145,86 +145,84 @@
   background: #fef2f2;
   color: #dc2626;
 }
+
 /* =====================================================
    STUDY PROGRESS WIDGET
 ===================================================== */
 
 .study-progress-widget {
-  margin: 14px 12px 18px;
-  padding: 14px;
+  margin: 10px 12px 16px;
+  padding: 12px 14px;
+
   border: 1px solid #e5e7eb;
   border-radius: 12px;
+
   background: #f8fafc;
 }
 
-
 .study-progress-header {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-
 .study-progress-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #64748b;
 }
 
-
-.study-progress-current {
-  margin-bottom: 4px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: #94a3b8;
+.study-progress-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
 }
-
 
 .study-progress-subject {
-  margin-bottom: 4px;
-  font-size: 15px;
+  margin-bottom: 2px;
+
+  font-size: 14px;
   font-weight: 700;
+
   color: #0f172a;
 }
-
 
 .study-progress-percentage {
-  margin-bottom: 5px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  color: #0f172a;
+  color: #2563eb;
 }
-
 
 .study-progress-summary {
-  margin-bottom: 12px;
-  font-size: 11px;
-  line-height: 1.5;
+  margin-bottom: 9px;
+
+  font-size: 10px;
+  line-height: 1.4;
+
   color: #64748b;
 }
-
 
 .study-progress-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding-top: 10px;
+  padding-top: 8px;
 
   border-top: 1px solid #e2e8f0;
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
+
   color: #334155;
   text-decoration: none;
 }
 
-
 .study-progress-link span {
-  font-size: 14px;
+  font-size: 13px;
   transition: transform 0.2s ease;
 }
-
 
 .study-progress-link:hover span {
   transform: translateX(3px);
