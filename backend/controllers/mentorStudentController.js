@@ -46,13 +46,37 @@ const requestMentorship = async (req, res) => {
             [mentorId, studentId]
         );
 
-        if (existing.length > 0) {
+     
+if (existing.length > 0) {
 
-            return res.status(409).json({
-                message: `Mentorship request already exists with status: ${existing[0].status}`
-            });
+    // Allow a student to send the request again after rejection
+    if (existing[0].status === 'rejected') {
 
-        }
+        await db.query(
+            `
+            UPDATE mentor_student_relationships
+
+            SET
+                status = 'pending',
+                requested_by = 'student'
+
+            WHERE id = ?
+            `,
+            [existing[0].id]
+        );
+
+        return res.status(200).json({
+            message: "Mentorship request sent successfully"
+        });
+
+    }
+
+    return res.status(409).json({
+        message: `Mentorship request already exists with status: ${existing[0].status}`
+    });
+
+}
+
 
 
         // Create the mentorship request

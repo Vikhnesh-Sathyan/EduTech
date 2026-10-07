@@ -217,19 +217,23 @@
 </button>
 
 
-        <button
-          type="button"
-          class="primary-button"
-        >
-          Accept
-        </button>
+<button
+  type="button"
+  class="primary-button"
+  (click)="acceptRequest(request.id)"
+>
+  Accept
+</button>
 
-        <button
-          type="button"
-          class="danger-button"
-        >
-          Reject
-        </button>
+
+
+       <button
+  type="button"
+  class="danger-button"
+  (click)="rejectRequest(request.id)"
+>
+  Reject
+</button>
 
       </div>
 

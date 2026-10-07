@@ -111,4 +111,78 @@ viewStudentProfile(studentId: number): void {
 
 }
 
+// Accepts a mentorship request
+acceptRequest(relationshipId: number): void {
+
+  this.mentorService
+    .acceptMentorship(relationshipId)
+    .subscribe({
+
+      next: (response: any) => {
+
+        console.log(
+          'MENTORSHIP ACCEPT RESPONSE:',
+          response
+        );
+
+        // Remove the accepted request from the pending list
+        this.requests.update((requests) =>
+          requests.filter(
+            (request) =>
+              request.id !== relationshipId
+          )
+        );
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Mentorship acceptance failed:',
+          error
+        );
+
+      }
+
+    });
+
+}
+
+// Rejects a mentorship request
+rejectRequest(relationshipId: number): void {
+
+  this.mentorService
+    .rejectMentorship(relationshipId)
+    .subscribe({
+
+      next: (response: any) => {
+
+        console.log(
+          'MENTORSHIP REJECT RESPONSE:',
+          response
+        );
+
+        // Remove the rejected request from the pending list
+        this.requests.update((requests) =>
+          requests.filter(
+            (request) =>
+              request.id !== relationshipId
+          )
+        );
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Mentorship rejection failed:',
+          error
+        );
+
+      }
+
+    });
+
+}
+
 }
