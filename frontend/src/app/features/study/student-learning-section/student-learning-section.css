@@ -983,6 +983,108 @@
   border-radius: 9px;
 }
 
+/* =====================================================
+   LEARNING PROGRESS
+===================================================== */
+
+.learning-progress-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-top: 45px;
+  padding: 26px 28px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.progress-content {
+  flex: 1;
+}
+
+.progress-content .section-label {
+  margin-bottom: 8px;
+}
+
+.progress-content h2 {
+  margin: 0;
+
+  color: #111827;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.progress-content p:not(.section-label) {
+  max-width: 560px;
+
+  margin: 8px 0 0;
+
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.progress-action {
+  flex-shrink: 0;
+}
+
+.complete-button {
+  padding: 11px 18px;
+
+  border: 1px solid #111827;
+  border-radius: 7px;
+
+  background: #111827;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.complete-button:hover {
+  background: #1f2937;
+}
+
+.completed-status {
+  padding: 10px 15px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 7px;
+
+  background: #f0fdf4;
+  color: #166534;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+@media (max-width: 700px) {
+
+  .learning-progress-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .progress-action {
+    width: 100%;
+  }
+
+  .complete-button,
+  .completed-status {
+    width: 100%;
+    text-align: center;
+  }
+
+}
+
 
 /* =====================================================
    RESPONSIVE

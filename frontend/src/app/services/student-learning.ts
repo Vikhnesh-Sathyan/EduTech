@@ -22,13 +22,36 @@ export class StudentLearning {
 
   }
 
+
   // Get learning content for one section
-getSectionLearningContent(sectionId: number) {
+  getSectionLearningContent(sectionId: number) {
 
-  return this.http.get(
-    `http://localhost:5000/api/student/section-learning/${sectionId}`
-  );
+    return this.http.get(
+      `http://localhost:5000/api/student/section-learning/${sectionId}`
+    );
 
-}
+  }
+
+
+  // Start or update progress when a student opens a section
+  accessSection(sectionId: number) {
+
+    return this.http.post(
+      `http://localhost:5000/api/student/section-learning/${sectionId}/access`,
+      {}
+    );
+
+  }
+
+
+  // Mark a learning section as completed
+  completeSection(sectionId: number) {
+
+    return this.http.put(
+      `http://localhost:5000/api/student/section-learning/${sectionId}/complete`,
+      {}
+    );
+
+  }
 
 }

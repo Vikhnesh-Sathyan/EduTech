@@ -1083,6 +1083,59 @@
 
         }
 
+        
+<!-- ===============================================
+     LEARNING PROGRESS
+================================================ -->
+
+<section class="learning-progress-card">
+
+  <div class="progress-content">
+
+    <p class="section-label">
+      LEARNING PROGRESS
+    </p>
+
+    <h2>
+      {{ sectionProgress()?.status === 'completed'
+        ? 'Section completed'
+        : 'Continue your learning' }}
+    </h2>
+
+    <p>
+      {{ sectionProgress()?.status === 'completed'
+        ? 'You have completed this learning section.'
+        : 'Mark this section as completed when you are finished studying it.' }}
+    </p>
+
+  </div>
+
+
+  <div class="progress-action">
+
+    @if (sectionProgress()?.status === 'completed') {
+
+      <div class="completed-status">
+        ✓ Completed
+      </div>
+
+    } @else {
+
+      <button
+        type="button"
+        class="complete-button"
+        (click)="completeSection()"
+      >
+        Mark as Completed
+      </button>
+
+    }
+
+  </div>
+
+</section>
+
+
       }
 
 
