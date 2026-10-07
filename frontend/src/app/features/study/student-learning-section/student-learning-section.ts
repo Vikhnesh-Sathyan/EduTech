@@ -65,13 +65,6 @@ export class StudentLearningSection implements OnInit {
 
 
   // =====================================================
-  // SUBJECT PROGRESS
-  // =====================================================
-
-  subjectProgress = signal<any | null>(null);
-
-
-  // =====================================================
   // PAGE STATE
   // =====================================================
 
@@ -131,13 +124,6 @@ export class StudentLearningSection implements OnInit {
     // ===================================================
 
     this.loadLearningStructure(subjectId);
-
-
-    // ===================================================
-    // LOAD SUBJECT PROGRESS
-    // ===================================================
-
-    this.loadSubjectProgress(subjectId);
 
   }
 
@@ -394,24 +380,6 @@ export class StudentLearningSection implements OnInit {
             })
           );
 
-
-          // =============================================
-          // RELOAD SUBJECT PROGRESS
-          // =============================================
-
-          const currentSubjectId =
-            this.subjectId();
-
-
-          if (currentSubjectId) {
-
-            this.loadSubjectProgress(
-              currentSubjectId
-            );
-
-          }
-
-
           // =============================================
           // SUCCESS TOAST
           // =============================================
@@ -434,43 +402,6 @@ export class StudentLearningSection implements OnInit {
           this.toastService.error(
             error.error?.message ||
             'Failed to complete section.'
-          );
-
-        }
-
-      });
-
-  }
-
-
-  // =====================================================
-  // LOAD SUBJECT STUDY PROGRESS
-  // =====================================================
-
-  loadSubjectProgress(subjectId: number): void {
-
-    this.studentLearningService
-      .getSubjectStudyProgress(subjectId)
-      .subscribe({
-
-        next: (response: any) => {
-
-          console.log(
-            'Subject study progress:',
-            response
-          );
-
-          this.subjectProgress.set(
-            response
-          );
-
-        },
-
-        error: (error: any) => {
-
-          console.error(
-            'Failed to load subject study progress:',
-            error
           );
 
         }

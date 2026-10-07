@@ -61,6 +61,12 @@ getSubjectStudyProgress(subjectId: number) {
   );
 }
 
+// Get the student's current/recent study progress
+getCurrentStudyProgress() {
+  return this.http.get(
+    'http://localhost:5000/api/student/section-learning/progress/current'
+  );
+}
 
 
 }
