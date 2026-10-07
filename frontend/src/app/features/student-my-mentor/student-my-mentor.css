@@ -353,6 +353,870 @@
   margin: 0;
 }
 
+/* ==================================================
+PAGE
+================================================== */
+
+.my-mentor-page {
+
+max-width: 1000px;
+
+margin: 0 auto;
+
+padding: 36px 24px 60px;
+
+}
+
+/* ==================================================
+PAGE HEADER
+================================================== */
+
+.page-header {
+
+margin-bottom: 26px;
+
+}
+
+.eyebrow {
+
+margin: 0 0 7px;
+
+color: #9ca3af;
+
+font-size: 9px;
+
+font-weight: 700;
+
+letter-spacing: 1.2px;
+
+}
+
+.page-header h1 {
+
+margin: 0;
+
+color: #111827;
+
+font-size: 28px;
+
+font-weight: 700;
+
+letter-spacing: -0.5px;
+
+}
+
+.page-description {
+
+max-width: 600px;
+
+margin: 8px 0 0;
+
+color: #6b7280;
+
+font-size: 13px;
+
+line-height: 1.6;
+
+}
+
+/* ==================================================
+MENTOR CONTAINER
+================================================== */
+
+.mentor-container {
+
+overflow: hidden;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 12px;
+
+background: #ffffff;
+
+box-shadow: 0 4px 14px rgba(17, 24, 39, 0.04);
+
+}
+
+/* ==================================================
+CONNECTION STATUS
+================================================== */
+
+.connection-status {
+
+display: flex;
+
+align-items: center;
+
+gap: 7px;
+
+padding: 12px 28px;
+
+border-bottom: 1px solid #f1f5f9;
+
+color: #15803d;
+
+font-size: 9px;
+
+font-weight: 700;
+
+letter-spacing: 1px;
+
+}
+
+.status-dot {
+
+width: 7px;
+
+height: 7px;
+
+border-radius: 50%;
+
+background: #22c55e;
+
+}
+
+/* ==================================================
+MENTOR HEADER
+================================================== */
+
+.mentor-header {
+
+display: flex;
+
+align-items: center;
+
+gap: 18px;
+
+padding: 30px 28px;
+
+border-bottom: 1px solid #f1f5f9;
+
+background: #fafafa;
+
+}
+
+.mentor-avatar {
+
+width: 62px;
+
+height: 62px;
+
+flex-shrink: 0;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 12px;
+
+background: #ffffff;
+
+color: #374151;
+
+font-size: 21px;
+
+font-weight: 700;
+
+}
+
+.mentor-identity {
+
+min-width: 0;
+
+}
+
+.section-label {
+
+margin: 0 0 8px;
+
+color: #9ca3af;
+
+font-size: 9px;
+
+font-weight: 700;
+
+letter-spacing: 1px;
+
+text-transform: uppercase;
+
+}
+
+.mentor-identity h2 {
+
+margin: 0;
+
+color: #111827;
+
+font-size: 23px;
+
+font-weight: 700;
+
+letter-spacing: -0.3px;
+
+}
+
+.professional-title {
+
+margin: 5px 0 9px;
+
+color: #6b7280;
+
+font-size: 13px;
+
+}
+
+.specialization {
+
+display: inline-flex;
+
+padding: 6px 9px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 6px;
+
+background: #f8fafc;
+
+color: #374151;
+
+font-size: 11px;
+
+font-weight: 600;
+
+}
+
+/* ==================================================
+MENTOR SECTIONS
+================================================== */
+
+.mentor-section {
+
+padding: 23px 28px;
+
+border-bottom: 1px solid #f1f5f9;
+
+}
+
+.section-text {
+
+max-width: 720px;
+
+margin: 0;
+
+color: #4b5563;
+
+font-size: 13px;
+
+line-height: 1.7;
+
+}
+
+.experience-value {
+
+margin: 0;
+
+color: #374151;
+
+font-size: 14px;
+
+font-weight: 600;
+
+}
+
+/* ==================================================
+SKILLS
+================================================== */
+
+.skills-list {
+
+display: flex;
+
+flex-wrap: wrap;
+
+gap: 7px;
+
+}
+
+.skill {
+
+padding: 6px 9px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 6px;
+
+background: #f8fafc;
+
+color: #4b5563;
+
+font-size: 11px;
+
+font-weight: 500;
+
+}
+
+/* ==================================================
+AVAILABILITY
+================================================== */
+
+.availability-card {
+
+display: grid;
+
+grid-template-columns: repeat(2, minmax(0, 1fr));
+
+gap: 12px;
+
+}
+
+.availability-item {
+
+display: flex;
+
+align-items: center;
+
+gap: 12px;
+
+padding: 14px 15px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 9px;
+
+background: #f8fafc;
+
+}
+
+.availability-icon {
+
+width: 32px;
+
+height: 32px;
+
+flex-shrink: 0;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 7px;
+
+background: #ffffff;
+
+color: #6b7280;
+
+font-size: 11px;
+
+}
+
+.availability-label {
+
+display: block;
+
+margin-bottom: 3px;
+
+color: #9ca3af;
+
+font-size: 9px;
+
+font-weight: 700;
+
+letter-spacing: 0.8px;
+
+text-transform: uppercase;
+
+}
+
+.availability-value {
+
+margin: 0;
+
+color: #374151;
+
+font-size: 13px;
+
+font-weight: 600;
+
+line-height: 1.4;
+
+}
+
+/* ==================================================
+ACTIONS
+================================================== */
+
+.mentor-actions {
+
+display: flex;
+
+justify-content: flex-end;
+
+gap: 10px;
+
+padding: 20px 28px;
+
+}
+
+.primary-button,
+
+.secondary-button {
+
+padding: 10px 16px;
+
+border-radius: 7px;
+
+font-size: 11px;
+
+font-weight: 600;
+
+cursor: pointer;
+
+}
+
+.primary-button {
+
+border: 1px solid #111827;
+
+background: #111827;
+
+color: #ffffff;
+
+}
+
+.primary-button:hover {
+
+background: #1f2937;
+
+}
+
+.secondary-button {
+
+border: 1px solid #d1d5db;
+
+background: #ffffff;
+
+color: #374151;
+
+}
+
+.secondary-button:hover {
+
+border-color: #9ca3af;
+
+background: #f9fafb;
+
+}
+
+/* ==================================================
+EMPTY STATE
+================================================== */
+
+.empty-state {
+
+padding: 60px 30px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 12px;
+
+background: #ffffff;
+
+text-align: center;
+
+box-shadow: 0 4px 14px rgba(17, 24, 39, 0.04);
+
+}
+
+.empty-label {
+
+margin: 0 0 8px;
+
+color: #9ca3af;
+
+font-size: 9px;
+
+font-weight: 700;
+
+letter-spacing: 1.1px;
+
+}
+
+.empty-state h2 {
+
+margin: 0;
+
+color: #111827;
+
+font-size: 20px;
+
+font-weight: 700;
+
+}
+
+.empty-state p:not(.empty-label) {
+
+max-width: 460px;
+
+margin: 9px auto 20px;
+
+color: #6b7280;
+
+font-size: 13px;
+
+line-height: 1.6;
+
+}
+
+/* ==================================================
+STATES
+================================================== */
+
+.state-message {
+
+padding: 36px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 10px;
+
+background: #ffffff;
+
+color: #6b7280;
+
+font-size: 13px;
+
+text-align: center;
+
+}
+
+.state-message.error {
+
+border-color: #fecaca;
+
+color: #b91c1c;
+
+}
+
+.state-message h2 {
+
+margin: 0 0 8px;
+
+color: #111827;
+
+font-size: 17px;
+
+}
+
+.state-message p {
+
+margin: 0;
+
+}
+
+/* ==================================================
+RESPONSIVE
+================================================== */
+
+@media (max-width: 600px) {
+
+.my-mentor-page {
+
+
+padding: 24px 16px 40px;
+
+
+}
+
+.mentor-header {
+
+
+align-items: flex-start;
+
+padding: 24px 20px;
+
+
+}
+
+.mentor-section {
+
+
+padding: 20px;
+
+
+}
+
+.connection-status {
+
+padding: 11px 20px;
+
+}
+
+.availability-card {
+
+grid-template-columns: 1fr;
+}
+
+.mentor-actions {
+
+flex-direction: column;
+padding: 18px 20px;
+
+}
+
+.primary-button,
+.secondary-button {
+
+width: 100%;
+}
+
+}
+
+/* ==================================================
+CHANGE MENTOR MODAL
+================================================== */
+
+.modal-backdrop {
+
+position: fixed;
+
+inset: 0;
+
+z-index: 1000;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+padding: 20px;
+
+background: rgba(17, 24, 39, 0.38);
+
+}
+
+.confirmation-modal {
+
+width: 100%;
+
+max-width: 430px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 12px;
+
+background: #ffffff;
+
+box-shadow: 0 20px 45px rgba(17, 24, 39, 0.16);
+
+animation: modal-in 0.18s ease-out;
+
+}
+
+.modal-header {
+
+padding: 24px 24px 16px;
+
+border-bottom: 1px solid #f1f5f9;
+
+}
+
+.modal-eyebrow {
+
+margin: 0 0 7px;
+
+color: #9ca3af;
+
+font-size: 9px;
+
+font-weight: 700;
+
+letter-spacing: 1px;
+
+}
+
+.modal-header h2 {
+
+margin: 0;
+
+color: #111827;
+
+font-size: 19px;
+
+font-weight: 700;
+
+letter-spacing: -0.2px;
+
+}
+
+.modal-body {
+
+padding: 20px 24px;
+
+}
+
+.modal-body p {
+
+margin: 0;
+
+color: #4b5563;
+
+font-size: 13px;
+
+line-height: 1.65;
+
+}
+
+.modal-body .modal-note {
+
+margin-top: 12px;
+
+padding: 11px 12px;
+
+border: 1px solid #e5e7eb;
+
+border-radius: 7px;
+
+background: #f8fafc;
+
+color: #374151;
+
+font-size: 12px;
+
+font-weight: 500;
+
+}
+
+.modal-actions {
+
+display: flex;
+
+justify-content: flex-end;
+
+gap: 9px;
+
+padding: 16px 24px 20px;
+
+}
+
+.cancel-button,
+
+.continue-button {
+
+padding: 9px 15px;
+
+border-radius: 7px;
+
+font-size: 11px;
+
+font-weight: 600;
+
+cursor: pointer;
+
+}
+
+.cancel-button {
+
+border: 1px solid #d1d5db;
+
+background: #ffffff;
+
+color: #374151;
+
+}
+
+.cancel-button:hover {
+
+border-color: #9ca3af;
+
+background: #f9fafb;
+
+}
+
+.continue-button {
+
+border: 1px solid #111827;
+
+background: #111827;
+
+color: #ffffff;
+
+}
+
+.continue-button:hover {
+
+background: #1f2937;
+
+}
+
+@keyframes modal-in {
+
+from {
+
+opacity: 0;
+
+transform: translateY(5px);
+
+}
+
+to {
+
+
+opacity: 1;
+
+transform: translateY(0);
+
+}
+
+}
+
+@media (max-width: 600px) {
+
+.confirmation-modal {
+
+max-width: none;
+
+}
+
+.modal-header,
+
+.modal-body {
+
+padding-left: 20px;
+
+padding-right: 20px;
+
+}
+
+.modal-actions {
+
+flex-direction: column-reverse;
+
+padding: 14px 20px 20px;
+
+
+}
+
+.cancel-button,
+
+.continue-button {
+
+
+width: 100%;
+
+
+}
+
+}
+
 
 /* ==================================================
    RESPONSIVE

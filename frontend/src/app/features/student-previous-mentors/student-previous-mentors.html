@@ -1,0 +1,203 @@
+
+<!--
+  USE:
+  Displays mentors who were previously connected
+  to the student.
+-->
+
+<section class="previous-mentors-page">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        MENTORSHIP
+      </p>
+
+      <h1>
+        Previous Mentors
+      </h1>
+
+      <p class="page-description">
+        Your previous mentorship connections.
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()"
+    >
+      ← Back to My Mentor
+    </button>
+
+  </header>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="loading()"
+  >
+
+    Loading previous mentors...
+
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="state-message error"
+    *ngIf="
+      !loading() &&
+      errorMessage()
+    "
+  >
+
+    <h2>
+      Unable to load previous mentors
+    </h2>
+
+    <p>
+      {{ errorMessage() }}
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       EMPTY STATE
+  ================================================== -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length === 0
+    "
+  >
+
+    <p class="empty-label">
+      NO PREVIOUS MENTORS
+    </p>
+
+    <h2>
+      No previous mentorship connections.
+    </h2>
+
+    <p>
+      Your previous mentors will appear here
+      after you change your mentor.
+    </p>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="goBack()"
+    >
+      Back to My Mentor
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       PREVIOUS MENTORS
+  ================================================== -->
+
+  <div
+    class="mentors-list"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length > 0
+    "
+  >
+
+    <article
+      class="mentor-card"
+      *ngFor="let mentor of mentors()"
+    >
+
+      <!-- Mentor identity -->
+
+      <div class="mentor-header">
+
+        <div class="mentor-avatar">
+          {{ mentor.name?.charAt(0) }}
+        </div>
+
+        <div class="mentor-identity">
+
+          <h2>
+            {{ mentor.name }}
+          </h2>
+
+          <p>
+            {{ mentor.specialization }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Skills -->
+
+      <div
+        class="skills-section"
+        *ngIf="mentor.skills"
+      >
+
+        <p class="section-label">
+          SKILLS
+        </p>
+
+        <div class="skills-list">
+
+          <span
+            class="skill"
+            *ngFor="
+              let skill of mentor.skills.split(',')
+            "
+          >
+            {{ skill.trim() }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Action -->
+
+      <div class="mentor-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="viewProfile(mentor.mentor_id)"
+        >
+          View Profile
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

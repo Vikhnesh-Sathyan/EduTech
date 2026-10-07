@@ -52,5 +52,11 @@ getMentorRecommendations() {
   );
 }
 
+getPreviousMentors() {
+  return this.http.get(
+    `${this.apiUrl}/previous`
+  );
+
+}
 
 }

@@ -4,6 +4,7 @@ const {
     getAvailableMentors,
     getMentorProfile,
     getMyMentor,
+    getPreviousMentors,
     getMentorRecommendations
 } = require("../controllers/studentMentorController");
 
@@ -26,6 +27,13 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getMyMentor
+);
+
+router.get(
+    "/previous",
+    authMiddleware,
+    roleMiddleware("student"),
+    getPreviousMentors
 );
 
 router.get(

@@ -11,24 +11,25 @@
 
   <header class="page-header">
 
-    <div>
 
-      <p class="eyebrow">
-        MENTORSHIP
-      </p>
+<div>
 
-      <h1>
-        My Mentor
-      </h1>
+  <p class="eyebrow">
+    MENTORSHIP
+  </p>
 
-      <p class="page-description">
-        Your current mentorship connection and guidance profile.
-      </p>
+  <h1>
+    My Mentor
+  </h1>
 
-    </div>
+  <p class="page-description">
+    Your current mentorship connection and guidance profile.
+  </p>
+
+</div>
+
 
   </header>
-
 
   <!-- ==================================================
        LOADING
@@ -40,7 +41,6 @@
   >
     Loading your mentor...
   </div>
-
 
   <!-- ==================================================
        ERROR
@@ -54,16 +54,17 @@
     "
   >
 
-    <h2>
-      Unable to load mentor
-    </h2>
 
-    <p>
-      {{ errorMessage() }}
-    </p>
+<h2>
+  Unable to load mentor
+</h2>
+
+<p>
+  {{ errorMessage() }}
+</p>
+
 
   </div>
-
 
   <!-- ==================================================
        NO ACTIVE MENTOR
@@ -78,29 +79,30 @@
     "
   >
 
-    <p class="empty-label">
-      NO ACTIVE MENTOR
-    </p>
 
-    <h2>
-      Find a mentor for your journey.
-    </h2>
+<p class="empty-label">
+  NO ACTIVE MENTOR
+</p>
 
-    <p>
-      Explore mentors who match your learning
-      and career direction.
-    </p>
+<h2>
+  Find a mentor for your journey.
+</h2>
 
-    <button
-      type="button"
-      class="primary-button"
-      (click)="changeMentor()"
-    >
-      Explore Mentors
-    </button>
+<p>
+  Explore mentors who match your learning
+  and career direction.
+</p>
+
+<button
+  type="button"
+  class="primary-button"
+  (click)="changeMentor()"
+>
+  Explore Mentors
+</button>
+
 
   </div>
-
 
   <!-- ==================================================
        ACTIVE MENTOR
@@ -115,206 +117,287 @@
     "
   >
 
-    <!-- ==================================================
-         CONNECTION STATUS
-    ================================================== -->
 
-    <div class="connection-status">
+<!-- ==================================================
+     CONNECTION STATUS
+================================================== -->
 
-      <span class="status-dot"></span>
+<div class="connection-status">
 
-      <span>
-        CONNECTED
+  <span class="status-dot"></span>
+
+  <span>
+    CONNECTED
+  </span>
+
+</div>
+
+
+<!-- ==================================================
+     MENTOR HEADER
+================================================== -->
+
+<header class="mentor-header">
+
+  <div class="mentor-avatar">
+    {{ mentor()?.name?.charAt(0) }}
+  </div>
+
+  <div class="mentor-identity">
+
+    <p class="section-label">
+      YOUR MENTOR
+    </p>
+
+    <h2>
+      {{ mentor()?.name }}
+    </h2>
+
+    <p class="professional-title">
+      {{ mentor()?.professional_title }}
+    </p>
+
+    <div class="specialization">
+      {{ mentor()?.specialization }}
+    </div>
+
+  </div>
+
+</header>
+
+
+<!-- ==================================================
+     ABOUT
+================================================== -->
+
+<section
+  class="mentor-section"
+  *ngIf="mentor()?.bio"
+>
+
+  <p class="section-label">
+    ABOUT
+  </p>
+
+  <p class="section-text">
+    {{ mentor()?.bio }}
+  </p>
+
+</section>
+
+
+<!-- ==================================================
+     EXPERIENCE
+================================================== -->
+
+<section
+  class="mentor-section"
+  *ngIf="mentor()?.experience_years !== null"
+>
+
+  <p class="section-label">
+    EXPERIENCE
+  </p>
+
+  <p class="experience-value">
+    {{ mentor()?.experience_years }}+ years
+  </p>
+
+</section>
+
+
+<!-- ==================================================
+     SKILLS
+================================================== -->
+
+<section
+  class="mentor-section"
+  *ngIf="mentor()?.skills"
+>
+
+  <p class="section-label">
+    SKILLS
+  </p>
+
+  <div class="skills-list">
+
+    <span
+      class="skill"
+      *ngFor="
+        let skill of mentor()?.skills?.split(',')
+      "
+    >
+      {{ skill.trim() }}
+    </span>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     AVAILABILITY
+================================================== -->
+
+<section
+  class="mentor-section"
+  *ngIf="
+    mentor()?.availability_days ||
+    mentor()?.availability_start_time ||
+    mentor()?.availability_end_time
+  "
+>
+
+  <p class="section-label">
+    AVAILABILITY
+  </p>
+
+  <div class="availability-card">
+
+    <div class="availability-item">
+
+      <span class="availability-icon">
+        ●
       </span>
+
+      <div>
+
+        <span class="availability-label">
+          Available Days
+        </span>
+
+        <p class="availability-value">
+          {{ mentor()?.availability_days }}
+        </p>
+
+      </div>
 
     </div>
 
 
-    <!-- ==================================================
-         MENTOR HEADER
-    ================================================== -->
+    <div class="availability-item">
 
-    <header class="mentor-header">
+      <span class="availability-icon">
+        ◷
+      </span>
 
-      <div class="mentor-avatar">
-        {{ mentor()?.name?.charAt(0) }}
-      </div>
+      <div>
 
-      <div class="mentor-identity">
-
-        <p class="section-label">
-          YOUR MENTOR
-        </p>
-
-        <h2>
-          {{ mentor()?.name }}
-        </h2>
-
-        <p class="professional-title">
-          {{ mentor()?.professional_title }}
-        </p>
-
-        <div class="specialization">
-          {{ mentor()?.specialization }}
-        </div>
-
-      </div>
-
-    </header>
-
-
-    <!-- ==================================================
-         ABOUT
-    ================================================== -->
-
-    <section
-      class="mentor-section"
-      *ngIf="mentor()?.bio"
-    >
-
-      <p class="section-label">
-        ABOUT
-      </p>
-
-      <p class="section-text">
-        {{ mentor()?.bio }}
-      </p>
-
-    </section>
-
-
-    <!-- ==================================================
-         EXPERIENCE
-    ================================================== -->
-
-    <section
-      class="mentor-section"
-      *ngIf="mentor()?.experience_years !== null"
-    >
-
-      <p class="section-label">
-        EXPERIENCE
-      </p>
-
-      <p class="experience-value">
-        {{ mentor()?.experience_years }}+ years
-      </p>
-
-    </section>
-
-
-    <!-- ==================================================
-         SKILLS
-    ================================================== -->
-
-    <section
-      class="mentor-section"
-      *ngIf="mentor()?.skills"
-    >
-
-      <p class="section-label">
-        SKILLS
-      </p>
-
-      <div class="skills-list">
-
-        <span
-          class="skill"
-          *ngFor="
-            let skill of mentor()?.skills?.split(',')
-          "
-        >
-          {{ skill.trim() }}
+        <span class="availability-label">
+          Available Hours
         </span>
 
-      </div>
-
-    </section>
-
-
-    <!-- ==================================================
-         AVAILABILITY
-    ================================================== -->
-
-    <section
-      class="mentor-section"
-      *ngIf="
-        mentor()?.availability_days ||
-        mentor()?.availability_start_time ||
-        mentor()?.availability_end_time
-      "
-    >
-
-      <p class="section-label">
-        AVAILABILITY
-      </p>
-
-      <div class="availability-card">
-
-        <div class="availability-item">
-
-          <span class="availability-icon">
-            ●
-          </span>
-
-          <div>
-
-            <span class="availability-label">
-              Available Days
-            </span>
-
-            <p class="availability-value">
-              {{ mentor()?.availability_days }}
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="availability-item">
-
-          <span class="availability-icon">
-            ◷
-          </span>
-
-          <div>
-
-            <span class="availability-label">
-              Available Hours
-            </span>
-
-            <p class="availability-value">
-              {{ mentor()?.availability_start_time?.slice(0, 5) }}
-              –
-              {{ mentor()?.availability_end_time?.slice(0, 5) }}
-            </p>
-
-          </div>
-
-        </div>
+        <p class="availability-value">
+          {{ mentor()?.availability_start_time?.slice(0, 5) }}
+          –
+          {{ mentor()?.availability_end_time?.slice(0, 5) }}
+        </p>
 
       </div>
-
-    </section>
-
-
-    <!-- ==================================================
-         ACTIONS
-    ================================================== -->
-
-    <div class="mentor-actions">
-
-      <button
-        type="button"
-        class="primary-button"
-        (click)="changeMentor()"
-      >
-        Change Mentor
-      </button>
 
     </div>
 
   </div>
 
 </section>
+
+
+
+
+<!-- ==================================================
+     MENTOR ACTIONS
+================================================== -->
+
+<div class="mentor-actions">
+
+  <!-- Show only when previous mentors exist -->
+  <button
+    *ngIf="previousMentors().length > 0"
+    type="button"
+    class="secondary-button"
+    (click)="viewPreviousMentors()"
+  >
+    Previous Mentors
+  </button>
+
+  <!-- Change mentor -->
+  <button
+    type="button"
+    class="primary-button"
+    (click)="changeMentor()"
+  >
+    Change Mentor
+  </button>
+
+</div>
+
+  <!-- ==================================================
+       CHANGE MENTOR CONFIRMATION MODAL
+  ================================================== -->
+
+  <div
+    class="modal-backdrop"
+    *ngIf="showChangeMentorModal()"
+    (click)="closeChangeMentorModal()"
+  >
+
+
+<div
+  class="confirmation-modal"
+  (click)="$event.stopPropagation()"
+>
+
+  <div class="modal-header">
+
+    <p class="modal-eyebrow">
+      CHANGE MENTOR
+    </p>
+
+    <h2>
+      Change your mentor?
+    </h2>
+
+  </div>
+
+
+  <div class="modal-body">
+
+    <p>
+      You can explore new mentors and send a new
+      mentorship request.
+    </p>
+
+    <p class="modal-note">
+      Your current mentor will remain active until
+      a new mentor accepts your request.
+    </p>
+
+  </div>
+
+
+  <div class="modal-actions">
+
+    <button
+      type="button"
+      class="cancel-button"
+      (click)="closeChangeMentorModal()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="continue-button"
+      (click)="confirmChangeMentor()"
+    >
+      Continue
+    </button>
+
+  </div>
+
+</div>
+
+
+  </div>
+
+</div>

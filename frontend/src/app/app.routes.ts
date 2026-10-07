@@ -43,6 +43,7 @@ import { StudentMentors } from './features/student-mentors/student-mentors';
 import { StudentMentorProfile } from './features/student-mentor-profile/student-mentor-profile';
 import { StudentMyMentor } from './features/student-my-mentor/student-my-mentor';
 import { StudentMentorRecommendations } from './features/student-mentor-recommendations/student-mentor-recommendations';
+import { StudentPreviousMentors } from './features/student-previous-mentors/student-previous-mentors';
 
 
 
@@ -305,6 +306,10 @@ export const routes: Routes = [
       {
         path: 'mentor-recommendations',
         component: StudentMentorRecommendations
+      },
+      { 
+        path: 'previous-mentors',
+        component: StudentPreviousMentors
       }
 
 

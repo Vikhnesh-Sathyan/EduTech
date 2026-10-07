@@ -22,7 +22,6 @@ import {
   ToastService
 } from '../../services/toast.service';
 
-
 @Component({
   selector: 'app-student-my-mentor',
   standalone: true,
@@ -37,12 +36,17 @@ export class StudentMyMentor implements OnInit {
   // Stores the connected mentor
   mentor = signal<any | null>(null);
 
+  // Stores previous mentors
+  previousMentors = signal<any[]>([]);
+
   // Controls loading state
   loading = signal(false);
 
   // Stores error message
   errorMessage = signal('');
 
+  // Controls the change mentor confirmation modal
+  showChangeMentorModal = signal(false);
 
   constructor(
     private studentMentorService: StudentMentorService,
@@ -50,13 +54,13 @@ export class StudentMyMentor implements OnInit {
     private toastService: ToastService
   ) {}
 
-
   ngOnInit(): void {
 
     this.loadMyMentor();
 
-  }
+    this.loadPreviousMentors();
 
+  }
 
   // Loads the student's current mentor
   loadMyMentor(): void {
@@ -109,9 +113,66 @@ export class StudentMyMentor implements OnInit {
 
   }
 
+  // Loads mentors who were previously connected
+  loadPreviousMentors(): void {
 
-  // Opens mentor recommendations
+    this.studentMentorService
+      .getPreviousMentors()
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'PREVIOUS MENTORS RESPONSE:',
+            response
+          );
+
+          this.previousMentors.set(
+            response.mentors || []
+          );
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Failed to load previous mentors:',
+            error
+          );
+
+        }
+
+      });
+
+  }
+
+  // Opens the change mentor confirmation modal
   changeMentor(): void {
+
+    this.showChangeMentorModal.set(true);
+
+  }
+
+  // Opens the previous mentors page
+  viewPreviousMentors(): void {
+
+    this.router.navigate([
+      '/previous-mentors'
+    ]);
+
+  }
+
+  // Closes the change mentor confirmation modal
+  closeChangeMentorModal(): void {
+
+    this.showChangeMentorModal.set(false);
+
+  }
+
+  // Confirms the change mentor action
+  confirmChangeMentor(): void {
+
+    this.showChangeMentorModal.set(false);
 
     this.router.navigate([
       '/mentor-recommendations'

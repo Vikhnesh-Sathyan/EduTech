@@ -1,0 +1,327 @@
+
+/* ==================================================
+   PREVIOUS MENTORS PAGE
+================================================== */
+
+.previous-mentors-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 32px 60px;
+}
+
+
+/* ==================================================
+   PAGE HEADER
+================================================== */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-description {
+  margin: 9px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* ==================================================
+   BACK BUTTON
+================================================== */
+
+.back-button {
+  padding: 10px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.back-button:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+
+/* ==================================================
+   STATE MESSAGE
+================================================== */
+
+.state-message {
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 13px;
+  text-align: center;
+}
+
+.state-message.error {
+  text-align: left;
+}
+
+.state-message h2 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 16px;
+}
+
+.state-message p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* ==================================================
+   EMPTY STATE
+================================================== */
+
+.empty-state {
+  padding: 55px 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.empty-label {
+  margin: 0 0 10px;
+  color: #9ca3af;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.empty-state h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.empty-state p:not(.empty-label) {
+  max-width: 480px;
+  margin: 10px auto 22px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* ==================================================
+   PRIMARY BUTTON
+================================================== */
+
+.primary-button {
+  padding: 10px 18px;
+  border: 1px solid #111827;
+  border-radius: 7px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.primary-button:hover {
+  background: #1f2937;
+}
+
+
+/* ==================================================
+   MENTORS LIST
+================================================== */
+
+.mentors-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+
+/* ==================================================
+   MENTOR CARD
+================================================== */
+
+.mentor-card {
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(17, 24, 39, 0.04);
+}
+
+
+/* ==================================================
+   MENTOR HEADER
+================================================== */
+
+.mentor-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mentor-avatar {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.mentor-identity h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.mentor-identity p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+
+/* ==================================================
+   SKILLS
+================================================== */
+
+.skills-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f3f5;
+}
+
+.section-label {
+  margin: 0 0 10px;
+  color: #9ca3af;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.skill {
+  padding: 6px 9px;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  background: #f9fafb;
+  color: #4b5563;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* ==================================================
+   ACTIONS
+================================================== */
+
+.mentor-actions {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #f1f3f5;
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.secondary-button:hover {
+  border-color: #9ca3af;
+  background: #f9fafb;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 760px) {
+
+  .previous-mentors-page {
+    padding: 28px 20px 45px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+
+  .page-header h1 {
+    font-size: 26px;
+  }
+
+  .back-button {
+    width: 100%;
+  }
+
+  .mentors-list {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .previous-mentors-page {
+    padding: 24px 16px 40px;
+  }
+
+  .mentor-card {
+    padding: 20px;
+  }
+
+}
