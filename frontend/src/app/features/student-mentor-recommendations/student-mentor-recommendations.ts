@@ -156,6 +156,19 @@ requestMentorship(mentorId: number): void {
 }
 
 
+// Skips the selected mentor
+skipMentor(mentorId: number): void {
+
+  this.mentors.update((mentors) =>
+    mentors.filter(
+      (mentor) =>
+        mentor.mentor_id !== mentorId
+    )
+  );
+
+}
+
+
   // Returns to the mentor directory
   goBack(): void {
 

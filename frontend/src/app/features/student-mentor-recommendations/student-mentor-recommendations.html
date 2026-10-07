@@ -230,41 +230,50 @@
 
       </div>
 
+<!-- Actions -->
 
-      <!-- Actions -->
+<div class="mentor-actions">
 
-      <div class="mentor-actions">
-
-        <button
-          type="button"
-          class="secondary-button"
-          (click)="viewProfile(mentor.mentor_id)"
-        >
-          View Profile
-        </button>
+  <button
+    type="button"
+    class="secondary-button"
+    (click)="viewProfile(mentor.mentor_id)"
+  >
+    View Profile
+  </button>
 
 
-        <button
-          type="button"
-          class="primary-button"
-          [disabled]="
-            mentor.relationship_status === 'pending' ||
-            mentor.relationship_status === 'accepted'
-          "
-          (click)="requestMentorship(mentor.mentor_id)"
-        >
+  <button
+    type="button"
+    class="skip-button"
+    (click)="skipMentor(mentor.mentor_id)"
+  >
+    Skip
+  </button>
 
-          {{
-            mentor.relationship_status === 'pending'
-              ? 'Request Sent'
-              : mentor.relationship_status === 'accepted'
-                ? 'Connected'
-                : 'Connect'
-          }}
 
-        </button>
+  <button
+    type="button"
+    class="primary-button"
+    [disabled]="
+      mentor.relationship_status === 'pending' ||
+      mentor.relationship_status === 'accepted'
+    "
+    (click)="requestMentorship(mentor.mentor_id)"
+  >
 
-      </div>
+    {{
+      mentor.relationship_status === 'pending'
+        ? 'Request Sent'
+        : mentor.relationship_status === 'accepted'
+          ? 'Connected'
+          : 'Connect'
+    }}
+
+  </button>
+
+</div>
+
 
     </article>
 
