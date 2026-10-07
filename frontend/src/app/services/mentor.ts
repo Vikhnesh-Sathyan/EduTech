@@ -45,4 +45,39 @@ submitForVerification() {
 getDashboard() {
   return this.http.get(`${this.apiUrl}/dashboard`);
 }
+
+// Gets mentorship requests sent by students
+getMentorRequests() {
+  return this.http.get(
+    'http://localhost:5000/api/mentor-student/requests'
+  );
+}
+
+// Gets a student profile for the mentor
+getStudentProfile(studentId: number) {
+  return this.http.get(
+    `http://localhost:5000/api/mentor-student/students/${studentId}`
+  );
+}
+
+// Accepts a mentorship request
+acceptMentorship(relationshipId: number) {
+  return this.http.put(
+    `http://localhost:5000/api/mentor-student/requests/${relationshipId}/accept`,
+    {}
+  );
+}
+
+
+// Rejects a mentorship request
+rejectMentorship(relationshipId: number) {
+  return this.http.put(
+    `http://localhost:5000/api/mentor-student/requests/${relationshipId}/reject`,
+    {}
+  );
+}
+
+
+
+
 }

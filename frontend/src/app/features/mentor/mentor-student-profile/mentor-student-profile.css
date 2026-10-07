@@ -1,0 +1,309 @@
+/* ==================================================
+   PAGE
+================================================== */
+
+.student-profile-page {
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  padding: 32px 24px 60px;
+}
+
+
+/* ==================================================
+   BACK BUTTON
+================================================== */
+
+.back-button {
+  margin-bottom: 20px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.back-button:hover {
+  color: #111827;
+}
+
+
+/* ==================================================
+   PROFILE CONTAINER
+================================================== */
+
+.profile-container {
+  overflow: hidden;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 14px rgba(17, 24, 39, 0.04);
+}
+
+
+/* ==================================================
+   PROFILE HEADER
+================================================== */
+
+.profile-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 30px;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  background: #fafafa;
+}
+
+.profile-avatar {
+  width: 58px;
+  height: 58px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.profile-identity h1 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 25px;
+  font-weight: 700;
+
+  letter-spacing: -0.4px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.qualification {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+
+/* ==================================================
+   PROFILE SECTION
+================================================== */
+
+.profile-section {
+  padding: 24px 30px;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.profile-section:last-child {
+  border-bottom: none;
+}
+
+.section-label {
+  margin: 0 0 12px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+
+/* ==================================================
+   EDUCATION
+================================================== */
+
+.education-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.info-item {
+  padding: 14px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  background: #f8fafc;
+}
+
+.info-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+
+  text-transform: uppercase;
+}
+
+.info-item p {
+  margin: 0;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+
+/* ==================================================
+   PROFILE VALUES
+================================================== */
+
+.section-value {
+  margin: 0;
+
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+.section-text {
+  max-width: 720px;
+
+  margin: 0;
+
+  color: #4b5563;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+/* ==================================================
+   STATES
+================================================== */
+
+.state-message {
+  padding: 36px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+.state-message.error {
+  border-color: #fecaca;
+
+  color: #b91c1c;
+}
+
+.state-message h2 {
+  margin: 0 0 8px;
+
+  color: #111827;
+
+  font-size: 17px;
+}
+
+.state-message p {
+  margin: 0 0 16px;
+}
+
+.state-message button {
+  padding: 8px 14px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 600px) {
+
+  .student-profile-page {
+    padding: 24px 16px 40px;
+  }
+
+  .profile-header {
+    padding: 24px 20px;
+  }
+
+  .profile-section {
+    padding: 20px;
+  }
+
+  .education-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

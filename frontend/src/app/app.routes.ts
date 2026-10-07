@@ -117,6 +117,13 @@ import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-das
 import { MentorProfile } from './features/mentor/mentor-profile/mentor-profile';
 
 // ======================================================
+// MENTOR - STUDENT Requests
+// ======================================================
+
+import { MentorRequests } from './features/mentor/mentor-requests/mentor-requests';
+import { MentorStudentProfile } from './features/mentor/mentor-student-profile/mentor-student-profile';
+
+// ======================================================
 // ROUTES
 // ======================================================
 
@@ -515,6 +522,16 @@ export const routes: Routes = [
       {
         path: 'mentor-profile',
         component: MentorProfile
+      },
+
+      {
+        path: 'mentor-requests',
+        component: MentorRequests
+      },
+
+      {
+         path: 'mentor-student-profile/:studentId',
+         component: MentorStudentProfile
       }
 
     ]

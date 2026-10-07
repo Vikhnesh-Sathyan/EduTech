@@ -1,0 +1,240 @@
+<!--
+  USE:
+  Displays incoming mentorship requests from students.
+-->
+
+<section class="mentor-requests-page">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        MENTORSHIP
+      </p>
+
+      <h1>
+        Mentorship Requests
+      </h1>
+
+      <p class="page-description">
+        Review students who want to connect with you.
+      </p>
+
+    </div>
+
+    <div class="request-count">
+      {{ requests().length }}
+      <span>
+        Pending
+      </span>
+    </div>
+
+  </header>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="loading()"
+  >
+    Loading requests...
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="state-message error"
+    *ngIf="
+      !loading() &&
+      errorMessage()
+    "
+  >
+    {{ errorMessage() }}
+  </div>
+
+
+  <!-- ==================================================
+       EMPTY STATE
+  ================================================== -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      requests().length === 0
+    "
+  >
+
+    <p class="empty-label">
+      NO PENDING REQUESTS
+    </p>
+
+    <h2>
+      You're all caught up.
+    </h2>
+
+    <p>
+      New mentorship requests from students
+      will appear here.
+    </p>
+
+  </div>
+
+
+  <!-- ==================================================
+       REQUEST LIST
+  ================================================== -->
+
+  <div
+    class="request-list"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      requests().length > 0
+    "
+  >
+
+    <article
+      class="request-card"
+      *ngFor="let request of requests()"
+    >
+
+      <!-- Student identity -->
+
+      <div class="student-identity">
+
+        <div class="student-avatar">
+          {{ request.name?.charAt(0) }}
+        </div>
+
+        <div>
+
+          <h2>
+            {{ request.name }}
+          </h2>
+
+          <p>
+            {{ request.highest_qualification || 'Student' }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Student information -->
+
+      <div class="student-info">
+
+        <div
+          class="info-group"
+          *ngIf="request.department"
+        >
+
+          <span class="info-label">
+            DEPARTMENT
+          </span>
+
+          <span class="info-value">
+            {{ request.department }}
+          </span>
+
+        </div>
+
+
+        <div
+          class="info-group"
+          *ngIf="request.study_year"
+        >
+
+          <span class="info-label">
+            YEAR
+          </span>
+
+          <span class="info-value">
+            {{ request.study_year }}
+          </span>
+
+        </div>
+
+
+        <div
+          class="info-group"
+          *ngIf="request.career_goal"
+        >
+
+          <span class="info-label">
+            CAREER GOAL
+          </span>
+
+          <span class="info-value">
+            {{ request.career_goal }}
+          </span>
+
+        </div>
+
+
+        <div
+          class="info-group"
+          *ngIf="request.learning_goals"
+        >
+
+          <span class="info-label">
+            LEARNING GOALS
+          </span>
+
+          <span class="info-value">
+            {{ request.learning_goals }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Actions -->
+
+      <div class="request-actions">
+
+<button
+  type="button"
+  class="secondary-button"
+  (click)="viewStudentProfile(request.student_id)"
+>
+  View Profile
+</button>
+
+
+        <button
+          type="button"
+          class="primary-button"
+        >
+          Accept
+        </button>
+
+        <button
+          type="button"
+          class="danger-button"
+        >
+          Reject
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

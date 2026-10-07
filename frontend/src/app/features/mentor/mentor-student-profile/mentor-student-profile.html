@@ -1,0 +1,197 @@
+<!--
+  USE:
+  Displays the profile of a student requesting mentorship.
+-->
+
+<section class="student-profile-page">
+
+
+  <!-- ==================================================
+       BACK
+  ================================================== -->
+
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBack()"
+  >
+    ← Back to requests
+  </button>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="loading()"
+  >
+    Loading student profile...
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="state-message error"
+    *ngIf="
+      !loading() &&
+      errorMessage()
+    "
+  >
+
+    <h2>
+      Unable to load profile
+    </h2>
+
+    <p>
+      {{ errorMessage() }}
+    </p>
+
+    <button
+      type="button"
+      (click)="goBack()"
+    >
+      Back to requests
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       PROFILE
+  ================================================== -->
+
+  <div
+    class="profile-container"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      student()
+    "
+  >
+
+
+    <!-- ==================================================
+         PROFILE HEADER
+    ================================================== -->
+
+    <header class="profile-header">
+
+      <div class="profile-avatar">
+        {{ student()?.name?.charAt(0) }}
+      </div>
+
+      <div class="profile-identity">
+
+        <p class="eyebrow">
+          STUDENT PROFILE
+        </p>
+
+        <h1>
+          {{ student()?.name }}
+        </h1>
+
+        <p class="qualification">
+          {{ student()?.highest_qualification }}
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- ==================================================
+         EDUCATION
+    ================================================== -->
+
+    <section class="profile-section">
+
+      <p class="section-label">
+        EDUCATION
+      </p>
+
+      <div class="education-grid">
+
+        <div
+          class="info-item"
+          *ngIf="student()?.department"
+        >
+
+          <span class="info-label">
+            DEPARTMENT
+          </span>
+
+          <p>
+            {{ student()?.department }}
+          </p>
+
+        </div>
+
+
+        <div
+          class="info-item"
+          *ngIf="student()?.study_year"
+        >
+
+          <span class="info-label">
+            YEAR
+          </span>
+
+          <p>
+            {{ student()?.study_year }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         CAREER GOAL
+    ================================================== -->
+
+    <section
+      class="profile-section"
+      *ngIf="student()?.career_goal"
+    >
+
+      <p class="section-label">
+        CAREER GOAL
+      </p>
+
+      <p class="section-value">
+        {{ student()?.career_goal }}
+      </p>
+
+    </section>
+
+
+    <!-- ==================================================
+         LEARNING GOALS
+    ================================================== -->
+
+    <section
+      class="profile-section"
+      *ngIf="student()?.learning_goals"
+    >
+
+      <p class="section-label">
+        LEARNING GOALS
+      </p>
+
+      <p class="section-text">
+        {{ student()?.learning_goals }}
+      </p>
+
+    </section>
+
+
+  </div>
+
+</section>

@@ -255,10 +255,73 @@ const rejectMentorship = async (req, res) => {
     }
 };
 
+// Gets a student profile for a mentor with an existing relationship
+const getStudentProfile = async (req, res) => {
+
+    const mentorId = req.user.id;
+    const { studentId } = req.params;
+
+    try {
+
+        const [students] = await db.query(
+            `
+            SELECT
+                u.id AS student_id,
+                u.name,
+
+                sp.highest_qualification,
+                sp.department,
+                sp.study_year,
+                sp.career_goal,
+                sp.learning_goals
+
+            FROM mentor_student_relationships msr
+
+            INNER JOIN users u
+                ON u.id = msr.student_id
+
+            LEFT JOIN student_profiles sp
+                ON sp.user_id = msr.student_id
+
+            WHERE msr.mentor_id = ?
+              AND msr.student_id = ?
+              AND msr.status IN ('pending', 'accepted')
+              AND u.role = 'student'
+              AND u.status = 'active'
+            `,
+            [mentorId, studentId]
+        );
+
+        if (students.length === 0) {
+
+            return res.status(404).json({
+                message: "Student profile not available"
+            });
+
+        }
+
+        return res.status(200).json({
+            student: students[0]
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Student profile fetch failed:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Failed to load student profile"
+        });
+
+    }
+};
 
 module.exports = {
     requestMentorship,
     getMentorRequests,
     acceptMentorship,
-    rejectMentorship
+    rejectMentorship,
+    getStudentProfile
 };

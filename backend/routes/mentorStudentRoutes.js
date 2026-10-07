@@ -1,22 +1,20 @@
-// Defines mentor-student relationship routes
-
 const express = require("express");
 
 const {
     requestMentorship,
     getMentorRequests,
     acceptMentorship,
-    rejectMentorship
+    rejectMentorship,
+    getStudentProfile
 } = require("../controllers/mentorStudentController");
 
 const authMiddleware = require("../middleware/AuthMiddleware");
-
 const roleMiddleware = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
 
-// STUDENT → SEND MENTORSHIP REQUEST
+// Student requests a mentor
 
 router.post(
     "/request",
@@ -26,7 +24,7 @@ router.post(
 );
 
 
-// MENTOR → VIEW MENTORSHIP REQUESTS
+// Mentor receives student requests
 
 router.get(
     "/requests",
@@ -36,7 +34,17 @@ router.get(
 );
 
 
-// MENTOR → ACCEPT REQUEST
+// Mentor views a student profile
+
+router.get(
+    "/students/:studentId",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getStudentProfile
+);
+
+
+// Mentor accepts request
 
 router.put(
     "/requests/:relationshipId/accept",
@@ -46,7 +54,7 @@ router.put(
 );
 
 
-// MENTOR → REJECT REQUEST
+// Mentor rejects request
 
 router.put(
     "/requests/:relationshipId/reject",

@@ -1,0 +1,413 @@
+/* ==================================================
+   PAGE
+================================================== */
+
+.mentor-requests-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 24px 60px;
+}
+
+
+/* ==================================================
+   PAGE HEADER
+================================================== */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+
+  color: #9ca3af;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.4px;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  letter-spacing: -0.5px;
+}
+
+.page-description {
+  margin: 8px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   REQUEST COUNT
+================================================== */
+
+.request-count {
+  min-width: 82px;
+
+  padding: 11px 14px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.request-count span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+
+/* ==================================================
+   REQUEST LIST
+================================================== */
+
+.request-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* ==================================================
+   REQUEST CARD
+================================================== */
+
+.request-card {
+  padding: 20px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 8px rgba(17, 24, 39, 0.03);
+}
+
+
+/* ==================================================
+   STUDENT IDENTITY
+================================================== */
+
+.student-identity {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 20px;
+}
+
+.student-avatar {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+
+  background: #f8fafc;
+
+  color: #374151;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.student-identity h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.student-identity p {
+  margin: 3px 0 0;
+
+  color: #6b7280;
+
+  font-size: 12px;
+}
+
+
+/* ==================================================
+   STUDENT INFORMATION
+================================================== */
+
+.student-info {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.info-group {
+  min-width: 0;
+}
+
+.info-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.9px;
+
+  text-transform: uppercase;
+}
+
+.info-value {
+  display: block;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  word-break: break-word;
+}
+
+
+/* ==================================================
+   ACTIONS
+================================================== */
+
+.request-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 20px;
+
+  padding-top: 16px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.request-actions button {
+  min-height: 34px;
+
+  padding: 7px 13px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+
+/* Primary */
+
+.primary-button {
+  border: 1px solid #111827;
+
+  background: #111827;
+
+  color: #ffffff;
+}
+
+
+/* Secondary */
+
+.secondary-button {
+  border: 1px solid #d1d5db;
+
+  background: #ffffff;
+
+  color: #374151;
+}
+
+
+/* Danger */
+
+.danger-button {
+  border: 1px solid #fecaca;
+
+  background: #ffffff;
+
+  color: #b91c1c;
+}
+
+
+/* ==================================================
+   STATE MESSAGES
+================================================== */
+
+.state-message {
+  padding: 32px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+.state-message.error {
+  border-color: #fecaca;
+
+  color: #b91c1c;
+}
+
+
+/* ==================================================
+   EMPTY STATE
+================================================== */
+
+.empty-state {
+  padding: 60px 24px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+.empty-label {
+  margin: 0 0 8px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.empty-state h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.empty-state p:last-child {
+  max-width: 420px;
+
+  margin: 8px auto 0;
+
+  color: #6b7280;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 700px) {
+
+  .mentor-requests-page {
+    padding: 28px 16px 40px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .student-info {
+    grid-template-columns: 1fr;
+  }
+
+  .request-actions {
+    justify-content: stretch;
+  }
+
+  .request-actions button {
+    flex: 1;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .request-count {
+    align-self: flex-start;
+  }
+
+  .request-actions {
+    flex-direction: column;
+  }
+
+}
