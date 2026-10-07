@@ -34,6 +34,7 @@ import { Subject } from './features/study/subject-learning/subject-learning';
 import { Diagnostic } from './features/study/diagnostic/diagnostic';
 import { DiagnosticResult } from './features/study/diagnostic-result/diagnostic-result';
 import { StudentLearningSection } from './features/study/student-learning-section/student-learning-section';
+import { StudentStudyProgress } from './features/student-study-progress/student-study-progress';
 
 // ======================================================
 // STUDENT - MENTOR Relationship
@@ -310,7 +311,12 @@ export const routes: Routes = [
       { 
         path: 'previous-mentors',
         component: StudentPreviousMentors
-      }
+      },
+      {
+        path: 'study-progress',
+        component: StudentStudyProgress,
+        canActivate: [authGuard]
+      },
 
 
 

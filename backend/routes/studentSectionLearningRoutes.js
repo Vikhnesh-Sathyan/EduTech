@@ -8,7 +8,8 @@ const {
     accessLearningSection,
     completeLearningSection,
     getSubjectStudyProgress,
-    getCurrentStudyProgress
+    getCurrentStudyProgress,
+    getAllSubjectsStudyProgress
 } = require("../controllers/studentStudyProgressController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -17,7 +18,6 @@ const roleMiddleware = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
-// Start / update progress when student opens a section
 router.post(
     "/:sectionId/access",
     authMiddleware,
@@ -25,14 +25,18 @@ router.post(
     accessLearningSection
 );
 
-
-// Get learning content for one section
-
-router.get(
-    "/:sectionId",
+router.put(
+    "/:sectionId/complete",
     authMiddleware,
     roleMiddleware("student"),
-    getSectionLearningContent
+    completeLearningSection
+);
+
+router.get(
+    "/progress/subject/:subjectId",
+    authMiddleware,
+    roleMiddleware("student"),
+    getSubjectStudyProgress
 );
 
 router.get(
@@ -42,22 +46,18 @@ router.get(
     getCurrentStudyProgress
 );
 
-// Get complete study progress for one subject
 router.get(
-    "/progress/subject/:subjectId",
+    "/progress/subjects",
     authMiddleware,
     roleMiddleware("student"),
-    getSubjectStudyProgress
+    getAllSubjectsStudyProgress
 );
 
-// Mark learning section as completed
-
-router.put(
-    "/:sectionId/complete",
+router.get(
+    "/:sectionId",
     authMiddleware,
     roleMiddleware("student"),
-    completeLearningSection
+    getSectionLearningContent
 );
-
 
 module.exports = router;

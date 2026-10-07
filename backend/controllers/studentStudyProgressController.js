@@ -797,10 +797,158 @@ const getCurrentStudyProgress = async (req, res) => {
 
 };
 
+// =====================================================
+// GET ALL SUBJECTS STUDY PROGRESS
+// =====================================================
+
+const getAllSubjectsStudyProgress = async (req, res) => {
+
+    const studentId = req.user.id;
+
+    try {
+
+        // =================================================
+        // GET ALL SUBJECTS AVAILABLE FOR THIS STUDENT
+        // =================================================
+
+        const [rows] = await db.query(
+            `
+            SELECT
+
+                s.id AS subject_id,
+                s.name AS subject_name,
+
+                COUNT(DISTINCT ls.id) AS total_sections,
+
+                COUNT(
+                    DISTINCT CASE
+                        WHEN ssp.status = 'completed'
+                        THEN ls.id
+                    END
+                ) AS completed_sections
+
+            FROM student_profiles sp
+
+            INNER JOIN subjects s
+                ON s.education_year_id = sp.education_year_id
+
+            INNER JOIN subject_topics st
+                ON st.subject_id = s.id
+                AND st.status = 'active'
+
+            INNER JOIN learning_subtopics lst
+                ON lst.topic_id = st.id
+                AND lst.status = 'active'
+
+            INNER JOIN learning_sections ls
+                ON ls.subtopic_id = lst.id
+                AND ls.status = 'active'
+
+            LEFT JOIN student_section_progress ssp
+                ON ssp.section_id = ls.id
+                AND ssp.student_id = ?
+
+            WHERE
+                sp.user_id = ?
+                AND s.status = 'active'
+
+            GROUP BY
+                s.id,
+                s.name
+
+            ORDER BY
+                s.name ASC
+            `,
+            [studentId, studentId]
+        );
+
+        // =================================================
+        // CALCULATE PERCENTAGE
+        // =================================================
+
+        const subjects = rows.map((subject) => {
+
+            const totalSections =
+                Number(subject.total_sections);
+
+            const completedSections =
+                Number(subject.completed_sections);
+
+            const progressPercentage =
+                totalSections > 0
+                    ? Math.round(
+                        (completedSections / totalSections) * 100
+                    )
+                    : 0;
+
+            return {
+                subject_id: subject.subject_id,
+                subject_name: subject.subject_name,
+                total_sections: totalSections,
+                completed_sections: completedSections,
+                progress_percentage: progressPercentage
+            };
+
+        });
+
+        // =================================================
+        // OVERALL PROGRESS
+        // =================================================
+
+        const totalSections = subjects.reduce(
+            (total, subject) =>
+                total + subject.total_sections,
+            0
+        );
+
+        const completedSections = subjects.reduce(
+            (total, subject) =>
+                total + subject.completed_sections,
+            0
+        );
+
+        const overallPercentage =
+            totalSections > 0
+                ? Math.round(
+                    (completedSections / totalSections) * 100
+                )
+                : 0;
+
+        // =================================================
+        // RESPONSE
+        // =================================================
+
+        return res.status(200).json({
+
+            subjects,
+
+            overall: {
+                total_sections: totalSections,
+                completed_sections: completedSections,
+                progress_percentage: overallPercentage
+            }
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Get all subjects study progress error:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Failed to load study progress"
+        });
+
+    }
+};
+
 module.exports = {
     accessLearningSection,
     completeLearningSection,
     getSubjectStudyProgress,
-    getCurrentStudyProgress
+    getCurrentStudyProgress,
+    getAllSubjectsStudyProgress
 };
 
