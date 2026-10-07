@@ -6,7 +6,8 @@ const {
 
 const {
     accessLearningSection,
-    completeLearningSection
+    completeLearningSection,
+    getSubjectStudyProgress
 } = require("../controllers/studentStudyProgressController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -33,6 +34,14 @@ router.get(
     getSectionLearningContent
 );
 
+
+// Get complete study progress for one subject
+router.get(
+    "/progress/subject/:subjectId",
+    authMiddleware,
+    roleMiddleware("student"),
+    getSubjectStudyProgress
+);
 
 // Mark learning section as completed
 

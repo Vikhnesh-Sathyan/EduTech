@@ -68,6 +68,79 @@
 
       </div>
 
+<!-- =====================================================
+     SUBJECT STUDY PROGRESS
+====================================================== -->
+
+@if (subjectProgress()) {
+
+  <section class="subject-progress-card">
+
+    <div class="subject-progress-header">
+
+      <div>
+
+        <p class="section-label">
+          STUDY PROGRESS
+        </p>
+
+        <h2>
+          {{ subjectProgress()?.subject?.name || subjectName() }}
+        </h2>
+
+      </div>
+
+      <div class="progress-percentage">
+
+        {{ subjectProgress()?.progress_percentage || 0 }}%
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PROGRESS BAR
+    ================================================== -->
+
+    <div class="progress-track">
+
+      <div
+        class="progress-fill"
+        [style.width.%]="subjectProgress()?.progress_percentage || 0"
+      ></div>
+
+    </div>
+
+
+    <!-- =================================================
+         PROGRESS SUMMARY
+    ================================================== -->
+
+    <div class="progress-summary">
+
+      <span>
+        {{
+          subjectProgress()?.completed_sections || 0
+        }}
+        of
+        {{
+          subjectProgress()?.total_sections || 0
+        }}
+        sections completed
+      </span>
+
+      <span>
+        {{
+          subjectProgress()?.progress_percentage || 0
+        }}%
+      </span>
+
+    </div>
+
+  </section>
+
+}
 
       <div class="topic-list">
 

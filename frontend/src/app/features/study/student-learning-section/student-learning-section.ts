@@ -18,6 +18,9 @@ export class StudentLearningSection implements OnInit {
 
   subjectName = signal('Subject');
 
+  // Stores the current subject ID
+  subjectId = signal<number | null>(null);
+
 
   // =====================================================
   // LEARNING TOPICS
@@ -39,23 +42,33 @@ export class StudentLearningSection implements OnInit {
 
   selectedSubtopicId = signal<number | null>(null);
 
+
   // =====================================================
-// SELECTED SECTION
-// =====================================================
+  // SELECTED SECTION
+  // =====================================================
 
-selectedSectionId = signal<number | null>(null);
+  selectedSectionId = signal<number | null>(null);
 
-// =====================================================
-// SELECTED SECTION CONTENT
-// =====================================================
 
-sectionContent = signal<any | null>(null);
+  // =====================================================
+  // SELECTED SECTION CONTENT
+  // =====================================================
 
-// =====================================================
-// SECTION PROGRESS
-// =====================================================
+  sectionContent = signal<any | null>(null);
 
-sectionProgress = signal<any | null>(null);
+
+  // =====================================================
+  // SECTION PROGRESS
+  // =====================================================
+
+  sectionProgress = signal<any | null>(null);
+
+
+  // =====================================================
+  // SUBJECT PROGRESS
+  // =====================================================
+
+  subjectProgress = signal<any | null>(null);
 
 
   // =====================================================
@@ -66,6 +79,10 @@ sectionProgress = signal<any | null>(null);
 
   errorMessage = signal('');
 
+
+  // =====================================================
+  // CONSTRUCTOR
+  // =====================================================
 
   constructor(
     private route: ActivatedRoute,
@@ -85,6 +102,11 @@ sectionProgress = signal<any | null>(null);
         this.route.snapshot.paramMap.get('subjectId')
       );
 
+
+    // ===================================================
+    // VALIDATE SUBJECT ID
+    // ===================================================
+
     if (!subjectId) {
 
       this.errorMessage.set(
@@ -96,7 +118,27 @@ sectionProgress = signal<any | null>(null);
       return;
     }
 
+
+    // ===================================================
+    // STORE SUBJECT ID
+    // ===================================================
+
+    this.subjectId.set(subjectId);
+
+
+    // ===================================================
+    // LOAD LEARNING STRUCTURE
+    // ===================================================
+
     this.loadLearningStructure(subjectId);
+
+
+    // ===================================================
+    // LOAD SUBJECT PROGRESS
+    // ===================================================
+
+    this.loadSubjectProgress(subjectId);
+
   }
 
 
@@ -109,6 +151,7 @@ sectionProgress = signal<any | null>(null);
     this.loading.set(true);
 
     this.errorMessage.set('');
+
 
     this.studentLearningService
       .getLearningStructure(subjectId)
@@ -159,16 +202,24 @@ sectionProgress = signal<any | null>(null);
 
       this.expandedTopicId.set(null);
 
-      // Close selected subtopic as well
+      // Close selected subtopic
       this.selectedSubtopicId.set(null);
+
+      // Close selected section
+      this.selectedSectionId.set(null);
 
       return;
     }
+
 
     this.expandedTopicId.set(topicId);
 
     // Clear previous subtopic selection
     this.selectedSubtopicId.set(null);
+
+    // Clear previous section selection
+    this.selectedSectionId.set(null);
+
   }
 
 
@@ -176,169 +227,256 @@ sectionProgress = signal<any | null>(null);
   // SELECT SUBTOPIC
   // =====================================================
 
- selectSubtopic(subtopicId: number): void {
+  selectSubtopic(subtopicId: number): void {
 
-  if (this.selectedSubtopicId() === subtopicId) {
+    if (this.selectedSubtopicId() === subtopicId) {
 
-    this.selectedSubtopicId.set(null);
+      this.selectedSubtopicId.set(null);
+
+      this.selectedSectionId.set(null);
+
+      return;
+    }
+
+
+    this.selectedSubtopicId.set(subtopicId);
+
+    // Clear previous section selection
     this.selectedSectionId.set(null);
 
-    return;
   }
 
-  this.selectedSubtopicId.set(subtopicId);
 
-  // Clear previous section selection
-  this.selectedSectionId.set(null);
-}
+  // =====================================================
+  // SELECT SECTION
+  // =====================================================
 
-// =====================================================
-// SELECT SECTION
-// =====================================================
+  selectSection(sectionId: number): void {
 
-selectSection(sectionId: number): void {
-
-  this.selectedSectionId.set(sectionId);
-
-  // Clear previous section progress
-  this.sectionProgress.set(null);
-
-  // Load the learning content
-  this.loadSectionContent(sectionId);
-
-  // Start or update section progress
-  this.accessSectionProgress(sectionId);
-
-}
+    this.selectedSectionId.set(sectionId);
 
 
-// =====================================================
-// LOAD SECTION CONTENT
-// =====================================================
-
-loadSectionContent(sectionId: number): void {
-
-  this.sectionContent.set(null);
-
-  this.studentLearningService
-    .getSectionLearningContent(sectionId)
-    .subscribe({
-
-      next: (response: any) => {
-
-        console.log(
-          'Section content:',
-          response
-        );
-
-        this.sectionContent.set(response);
-
-      },
-
-      error: (error: any) => {
-
-        console.error(
-          'Failed to load section content:',
-          error
-        );
-
-      }
-
-    });
-
-}
+    // Clear previous section progress
+    this.sectionProgress.set(null);
 
 
-// =====================================================
-// ACCESS SECTION PROGRESS
-// =====================================================
+    // Load the learning content
+    this.loadSectionContent(sectionId);
 
-accessSectionProgress(sectionId: number): void {
 
-  this.studentLearningService
-    .accessSection(sectionId)
-    .subscribe({
+    // Start or update section progress
+    this.accessSectionProgress(sectionId);
 
-      next: (response: any) => {
-
-        console.log(
-          'Section progress:',
-          response
-        );
-
-        this.sectionProgress.set(
-          response.progress || null
-        );
-
-      },
-
-      error: (error: any) => {
-
-        console.error(
-          'Failed to update section progress:',
-          error
-        );
-
-      }
-
-    });
-
-}
-
-// =====================================================
-// COMPLETE SECTION
-// =====================================================
-
-completeSection(): void {
-
-  const sectionId = this.selectedSectionId();
-
-  if (!sectionId) {
-    return;
   }
 
-  this.studentLearningService
-    .completeSection(sectionId)
-    .subscribe({
 
-      next: (response: any) => {
+  // =====================================================
+  // LOAD SECTION CONTENT
+  // =====================================================
 
-        console.log(
-          'Section completed:',
-          response
-        );
+  loadSectionContent(sectionId: number): void {
 
-        this.sectionProgress.update(
-          (progress) => ({
-            ...(progress || {}),
-            status: 'completed',
-            completed_at: new Date()
-          })
-        );
+    this.sectionContent.set(null);
 
-        this.toastService.success(
-          'Section completed successfully.'
-        );
 
-      },
+    this.studentLearningService
+      .getSectionLearningContent(sectionId)
+      .subscribe({
 
-      error: (error: any) => {
+        next: (response: any) => {
 
-        console.error(
-          'Failed to complete section:',
-          error
-        );
+          console.log(
+            'Section content:',
+            response
+          );
 
-        this.toastService.error(
-          error.error?.message ||
-          'Failed to complete section.'
-        );
+          this.sectionContent.set(response);
 
-      }
+        },
 
-    });
+        error: (error: any) => {
 
-}
+          console.error(
+            'Failed to load section content:',
+            error
+          );
 
+        }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // ACCESS SECTION PROGRESS
+  // =====================================================
+
+  accessSectionProgress(sectionId: number): void {
+
+    this.studentLearningService
+      .accessSection(sectionId)
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'Section progress:',
+            response
+          );
+
+          this.sectionProgress.set(
+            response.progress || null
+          );
+
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to update section progress:',
+            error
+          );
+
+        }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // COMPLETE SECTION
+  // =====================================================
+
+  completeSection(): void {
+
+    const sectionId =
+      this.selectedSectionId();
+
+
+    // ===================================================
+    // CHECK SECTION
+    // ===================================================
+
+    if (!sectionId) {
+
+      return;
+
+    }
+
+
+    // ===================================================
+    // COMPLETE SECTION
+    // ===================================================
+
+    this.studentLearningService
+      .completeSection(sectionId)
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'Section completed:',
+            response
+          );
+
+
+          // =============================================
+          // UPDATE CURRENT SECTION PROGRESS
+          // =============================================
+
+          this.sectionProgress.update(
+            (progress) => ({
+              ...(progress || {}),
+              status: 'completed',
+              completed_at: new Date()
+            })
+          );
+
+
+          // =============================================
+          // RELOAD SUBJECT PROGRESS
+          // =============================================
+
+          const currentSubjectId =
+            this.subjectId();
+
+
+          if (currentSubjectId) {
+
+            this.loadSubjectProgress(
+              currentSubjectId
+            );
+
+          }
+
+
+          // =============================================
+          // SUCCESS TOAST
+          // =============================================
+
+          this.toastService.success(
+            'Section completed successfully.'
+          );
+
+        },
+
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to complete section:',
+            error
+          );
+
+
+          this.toastService.error(
+            error.error?.message ||
+            'Failed to complete section.'
+          );
+
+        }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // LOAD SUBJECT STUDY PROGRESS
+  // =====================================================
+
+  loadSubjectProgress(subjectId: number): void {
+
+    this.studentLearningService
+      .getSubjectStudyProgress(subjectId)
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'Subject study progress:',
+            response
+          );
+
+          this.subjectProgress.set(
+            response
+          );
+
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to load subject study progress:',
+            error
+          );
+
+        }
+
+      });
+
+  }
 
 }

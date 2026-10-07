@@ -53,5 +53,14 @@ export class StudentLearning {
     );
 
   }
+  
+// Get complete study progress for one subject
+getSubjectStudyProgress(subjectId: number) {
+  return this.http.get(
+    `http://localhost:5000/api/student/section-learning/progress/subject/${subjectId}`
+  );
+}
+
+
 
 }
