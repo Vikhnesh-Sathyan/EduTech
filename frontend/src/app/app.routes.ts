@@ -40,8 +40,9 @@ import { StudentLearningSection } from './features/study/student-learning-sectio
 // ======================================================
 
 import { StudentMentors } from './features/student-mentors/student-mentors';
-
 import { StudentMentorProfile } from './features/student-mentor-profile/student-mentor-profile';
+import { StudentMyMentor } from './features/student-my-mentor/student-my-mentor';
+import { StudentMentorRecommendations } from './features/student-mentor-recommendations/student-mentor-recommendations';
 
 
 
@@ -295,6 +296,15 @@ export const routes: Routes = [
       { 
         path: 'mentors/:mentorId',
         component: StudentMentorProfile 
+      },
+
+      { path: 'student-my-mentor', 
+        component: StudentMyMentor
+      },
+
+      {
+        path: 'mentor-recommendations',
+        component: StudentMentorRecommendations
       }
 
 

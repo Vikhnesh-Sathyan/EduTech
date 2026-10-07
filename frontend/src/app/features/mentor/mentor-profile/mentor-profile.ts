@@ -14,6 +14,8 @@ import {
 
 import { Mentor } from '../../../services/mentor';
 
+import { ToastService } from '../../../services/toast.service';
+
 
 @Component({
   selector: 'app-mentor-profile',
@@ -87,7 +89,8 @@ export class MentorProfile implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private mentorService: Mentor
+    private mentorService: Mentor,
+    private toastService: ToastService
   ) {
 
     // Create the mentor profile form
@@ -252,6 +255,12 @@ export class MentorProfile implements OnInit {
             'Failed to load mentor profile'
           );
 
+          // Show error notification
+          this.toastService.error(
+            error.error?.message ||
+            'Failed to load mentor profile.'
+          );
+
         }
 
       });
@@ -316,6 +325,10 @@ export class MentorProfile implements OnInit {
     if (this.profileForm.invalid) {
 
       this.profileForm.markAllAsTouched();
+
+      this.toastService.error(
+        'Please complete the required profile fields.'
+      );
 
       return;
 
@@ -394,6 +407,12 @@ export class MentorProfile implements OnInit {
             'Profile saved successfully'
           );
 
+          // Show success notification
+          this.toastService.success(
+            response.message ||
+            'Profile saved successfully.'
+          );
+
         },
 
 
@@ -402,6 +421,12 @@ export class MentorProfile implements OnInit {
           this.errorMessage.set(
             error.error?.message ||
             'Failed to save mentor profile'
+          );
+
+          // Show error notification
+          this.toastService.error(
+            error.error?.message ||
+            'Failed to save mentor profile.'
           );
 
         }
@@ -414,136 +439,150 @@ export class MentorProfile implements OnInit {
   // ==========================================
   // SUBMIT FOR VERIFICATION
   // ==========================================
-// ==========================================
-// SUBMIT FOR VERIFICATION
-// ==========================================
 
-submitForVerification(): void {
+  submitForVerification(): void {
 
-  this.message.set('');
-  this.errorMessage.set('');
+    this.message.set('');
+
+    this.errorMessage.set('');
 
 
-  // ==========================================
-  // CHECK REQUIRED PROFILE INFORMATION
-  // ==========================================
+    // ==========================================
+    // CHECK REQUIRED PROFILE INFORMATION
+    // ==========================================
 
-  const professionalTitle =
-    this.profileForm.value.professional_title?.trim() || '';
+    const professionalTitle =
+      this.profileForm.value.professional_title?.trim() || '';
 
-  const specialization =
-    this.profileForm.value.specialization?.trim() || '';
+    const specialization =
+      this.profileForm.value.specialization?.trim() || '';
 
-  const bio =
-    this.profileForm.value.bio?.trim() || '';
+    const bio =
+      this.profileForm.value.bio?.trim() || '';
 
-  const skills =
-    this.profileForm.value.skills?.trim() || '';
+    const skills =
+      this.profileForm.value.skills?.trim() || '';
 
-  const experience =
-    this.profileForm.value.experience_years;
+    const experience =
+      this.profileForm.value.experience_years;
 
-  const startTime =
-    this.profileForm.value.availability_start_time || '';
+    const startTime =
+      this.profileForm.value.availability_start_time || '';
 
-  const endTime =
-    this.profileForm.value.availability_end_time || '';
-
-
-  // ==========================================
-  // FIND MISSING INFORMATION
-  // ==========================================
-
-  const missingFields: string[] = [];
+    const endTime =
+      this.profileForm.value.availability_end_time || '';
 
 
-  if (!professionalTitle) {
-    missingFields.push('Professional Title');
+    // ==========================================
+    // FIND MISSING INFORMATION
+    // ==========================================
+
+    const missingFields: string[] = [];
+
+
+    if (!professionalTitle) {
+      missingFields.push('Professional Title');
+    }
+
+    if (!specialization) {
+      missingFields.push('Specialization');
+    }
+
+    if (!bio) {
+      missingFields.push('Professional Bio');
+    }
+
+    if (!skills) {
+      missingFields.push('Skills');
+    }
+
+    if (
+      experience === null ||
+      experience === undefined
+    ) {
+      missingFields.push('Experience');
+    }
+
+    if (this.selectedDays.length === 0) {
+      missingFields.push('Available Days');
+    }
+
+    if (!startTime) {
+      missingFields.push('Start Time');
+    }
+
+    if (!endTime) {
+      missingFields.push('End Time');
+    }
+
+
+    // ==========================================
+    // STOP IF PROFILE IS INCOMPLETE
+    // ==========================================
+
+    if (missingFields.length > 0) {
+
+      const message =
+        `Please complete: ${missingFields.join(', ')}.`;
+
+      this.errorMessage.set(message);
+
+      // Show validation notification
+      this.toastService.error(message);
+
+      return;
+    }
+
+
+    // ==========================================
+    // SUBMIT PROFILE
+    // ==========================================
+
+    this.mentorService
+      .submitForVerification()
+      .subscribe({
+
+        next: (response: any) => {
+
+          // Update verification status
+          this.verificationStatus.set('pending');
+
+
+          // Clear old rejection feedback
+          this.verificationNote.set('');
+
+
+          // Show success message
+          this.message.set(
+            response.message ||
+            'Profile submitted for verification'
+          );
+
+          // Show success notification
+          this.toastService.success(
+            response.message ||
+            'Profile submitted for verification.'
+          );
+
+        },
+
+        error: (error: any) => {
+
+          this.errorMessage.set(
+            error.error?.message ||
+            'Failed to submit profile for verification'
+          );
+
+          // Show error notification
+          this.toastService.error(
+            error.error?.message ||
+            'Failed to submit profile for verification.'
+          );
+
+        }
+
+      });
+
   }
-
-  if (!specialization) {
-    missingFields.push('Specialization');
-  }
-
-  if (!bio) {
-    missingFields.push('Professional Bio');
-  }
-
-  if (!skills) {
-    missingFields.push('Skills');
-  }
-
-if (
-  experience === null ||
-  experience === undefined
-) {
-  missingFields.push('Experience');
-}
-
-  if (this.selectedDays.length === 0) {
-    missingFields.push('Available Days');
-  }
-
-  if (!startTime) {
-    missingFields.push('Start Time');
-  }
-
-  if (!endTime) {
-    missingFields.push('End Time');
-  }
-
-
-  // ==========================================
-  // STOP IF PROFILE IS INCOMPLETE
-  // ==========================================
-
-  if (missingFields.length > 0) {
-
-    this.errorMessage.set(
-      `Please complete: ${missingFields.join(', ')}.`
-    );
-
-    return;
-  }
-
-
-  // ==========================================
-  // SUBMIT PROFILE
-  // ==========================================
-
-  this.mentorService
-    .submitForVerification()
-    .subscribe({
-
-      next: (response: any) => {
-
-        // Update verification status
-        this.verificationStatus.set('pending');
-
-
-        // Clear old rejection feedback
-        this.verificationNote.set('');
-
-
-        // Show success message
-        this.message.set(
-          response.message ||
-          'Profile submitted for verification'
-        );
-
-      },
-
-      error: (error: any) => {
-
-        this.errorMessage.set(
-          error.error?.message ||
-          'Failed to submit profile for verification'
-        );
-
-      }
-
-    });
-
-}
 
 }

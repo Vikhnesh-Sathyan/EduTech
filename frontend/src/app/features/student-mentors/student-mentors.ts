@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 
 import { StudentMentorService } from '../../services/student-mentor.service';
 
+import { ToastService } from '../../services/toast.service';
+
 @Component({
   selector: 'app-student-mentors',
   standalone: true,
@@ -97,21 +99,22 @@ export class StudentMentors implements OnInit {
   });
 
 
- constructor(
-  private studentMentorService: StudentMentorService,
-  private router: Router
-) {}
+  constructor(
+    private studentMentorService: StudentMentorService,
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
 
-// Opens the selected mentor profile
-viewProfile(mentorId: number): void {
+  // Opens the selected mentor profile
+  viewProfile(mentorId: number): void {
 
-  this.router.navigate([
-    '/mentors',
-    mentorId
-  ]);
+    this.router.navigate([
+      '/mentors',
+      mentorId
+    ]);
 
-}
+  }
 
 
   ngOnInit(): void {
@@ -176,6 +179,11 @@ viewProfile(mentorId: number): void {
 
           this.loading.set(false);
 
+          // Show loading error notification
+          this.toastService.error(
+            'Unable to load mentors right now.'
+          );
+
         }
 
       });
@@ -223,7 +231,8 @@ viewProfile(mentorId: number): void {
             response
           );
 
-          alert(
+          // Show success notification
+          this.toastService.success(
             'Mentorship request sent successfully.'
           );
 
@@ -236,7 +245,8 @@ viewProfile(mentorId: number): void {
             error
           );
 
-          alert(
+          // Show error notification
+          this.toastService.error(
             error?.error?.message ||
             'Failed to send mentorship request.'
           );

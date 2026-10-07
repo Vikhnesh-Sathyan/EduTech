@@ -176,21 +176,90 @@ const getMentorRequests = async (req, res) => {
 };
 
 
-// ACCEPT MENTORSHIP REQUEST
+
+// Accepts a student's mentorship request
+// Handles both first-time connection and mentor replacement
+
 const acceptMentorship = async (req, res) => {
 
     const mentorId = req.user.id;
     const { relationshipId } = req.params;
 
+    // Start a database transaction
+    const connection = await db.getConnection();
+
     try {
 
-        const [result] = await db.query(
+        await connection.beginTransaction();
+
+        // Get the pending mentorship request
+        const [requests] = await connection.query(
+            `
+            SELECT
+                id,
+                student_id
+            FROM mentor_student_relationships
+            WHERE id = ?
+              AND mentor_id = ?
+              AND status = 'pending'
+              AND requested_by = 'student'
+            FOR UPDATE
+            `,
+            [relationshipId, mentorId]
+        );
+
+        if (requests.length === 0) {
+
+            await connection.rollback();
+
+            return res.status(404).json({
+                message: "Mentorship request not found"
+            });
+
+        }
+
+        const studentId = requests[0].student_id;
+
+        // Check whether the student already has an active mentor
+        const [activeMentors] = await connection.query(
+            `
+            SELECT
+                id,
+                mentor_id
+            FROM mentor_student_relationships
+            WHERE student_id = ?
+              AND status = 'accepted'
+              AND is_active = TRUE
+            FOR UPDATE
+            `,
+            [studentId]
+        );
+
+        /*
+          If the student already has an active mentor,
+          this request is a mentor replacement.
+        */
+        if (activeMentors.length > 0) {
+
+            // Deactivate the student's current mentor
+            await connection.query(
+                `
+                UPDATE mentor_student_relationships
+                SET
+                    is_active = FALSE
+                WHERE id = ?
+                `,
+                [activeMentors[0].id]
+            );
+        }
+
+        // Accept the new mentor and make them active
+        await connection.query(
             `
             UPDATE mentor_student_relationships
-
             SET
-                status = 'accepted'
-
+                status = 'accepted',
+                is_active = TRUE
             WHERE id = ?
               AND mentor_id = ?
               AND status = 'pending'
@@ -199,21 +268,17 @@ const acceptMentorship = async (req, res) => {
             [relationshipId, mentorId]
         );
 
-
-        if (result.affectedRows === 0) {
-
-            return res.status(404).json({
-                message: "Mentorship request not found"
-            });
-
-        }
-
+        // Complete the transaction
+        await connection.commit();
 
         return res.status(200).json({
             message: "Mentorship request accepted"
         });
 
     } catch (error) {
+
+        // Undo all changes if anything fails
+        await connection.rollback();
 
         console.error(
             "Mentorship acceptance failed:",
@@ -224,8 +289,14 @@ const acceptMentorship = async (req, res) => {
             message: "Failed to accept mentorship request"
         });
 
+    } finally {
+
+        // Release the database connection
+        connection.release();
+
     }
 };
+
 
 
 // REJECT MENTORSHIP REQUEST

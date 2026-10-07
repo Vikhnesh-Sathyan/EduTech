@@ -38,4 +38,19 @@ getMentorProfile(mentorId: number) {
 }
 
 
+// Gets the student's currently connected mentor
+getMyMentor() {
+  return this.http.get(
+    `${this.apiUrl}/my-mentor`
+  );
+}
+
+// Gets mentors recommended for the current student
+getMentorRecommendations() {
+  return this.http.get(
+    `${this.apiUrl}/recommendations`
+  );
+}
+
+
 }

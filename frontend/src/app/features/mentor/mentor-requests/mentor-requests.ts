@@ -18,6 +18,10 @@ import {
   Mentor
 } from '../../../services/mentor';
 
+import {
+  ToastService
+} from '../../../services/toast.service';
+
 
 @Component({
   selector: 'app-mentor-requests',
@@ -41,10 +45,11 @@ export class MentorRequests implements OnInit {
   errorMessage = signal('');
 
 
- constructor(
-  private mentorService: Mentor,
-  private router: Router
-) {}
+  constructor(
+    private mentorService: Mentor,
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
 
   ngOnInit(): void {
@@ -53,7 +58,6 @@ export class MentorRequests implements OnInit {
 
   }
 
-  
 
   // Loads pending mentorship requests
   loadRequests(): void {
@@ -94,95 +98,124 @@ export class MentorRequests implements OnInit {
 
           this.loading.set(false);
 
+          // Show error notification
+          this.toastService.error(
+            'Unable to load mentorship requests.'
+          );
+
         }
 
       });
 
   }
 
-  
-// Opens the selected student's profile
-viewStudentProfile(studentId: number): void {
 
-  this.router.navigate([
-    '/mentor-student-profile',
-    studentId
-  ]);
+  // Opens the selected student's profile
+  viewStudentProfile(studentId: number): void {
 
-}
+    this.router.navigate([
+      '/mentor-student-profile',
+      studentId
+    ]);
 
-// Accepts a mentorship request
-acceptRequest(relationshipId: number): void {
+  }
 
-  this.mentorService
-    .acceptMentorship(relationshipId)
-    .subscribe({
 
-      next: (response: any) => {
+  // Accepts a mentorship request
+  acceptRequest(relationshipId: number): void {
 
-        console.log(
-          'MENTORSHIP ACCEPT RESPONSE:',
-          response
-        );
+    this.mentorService
+      .acceptMentorship(relationshipId)
+      .subscribe({
 
-        // Remove the accepted request from the pending list
-        this.requests.update((requests) =>
-          requests.filter(
-            (request) =>
-              request.id !== relationshipId
-          )
-        );
+        next: (response: any) => {
 
-      },
+          console.log(
+            'MENTORSHIP ACCEPT RESPONSE:',
+            response
+          );
 
-      error: (error) => {
+          // Remove the accepted request from the pending list
+          this.requests.update((requests) =>
+            requests.filter(
+              (request) =>
+                request.id !== relationshipId
+            )
+          );
 
-        console.error(
-          'Mentorship acceptance failed:',
-          error
-        );
+          // Show success notification
+          this.toastService.success(
+            'Mentorship request accepted.'
+          );
 
-      }
+        },
 
-    });
+        error: (error) => {
 
-}
+          console.error(
+            'Mentorship acceptance failed:',
+            error
+          );
 
-// Rejects a mentorship request
-rejectRequest(relationshipId: number): void {
+          // Show error notification
+          this.toastService.error(
+            error?.error?.message ||
+            'Failed to accept mentorship request.'
+          );
 
-  this.mentorService
-    .rejectMentorship(relationshipId)
-    .subscribe({
+        }
 
-      next: (response: any) => {
+      });
 
-        console.log(
-          'MENTORSHIP REJECT RESPONSE:',
-          response
-        );
+  }
 
-        // Remove the rejected request from the pending list
-        this.requests.update((requests) =>
-          requests.filter(
-            (request) =>
-              request.id !== relationshipId
-          )
-        );
 
-      },
+  // Rejects a mentorship request
+  rejectRequest(relationshipId: number): void {
 
-      error: (error) => {
+    this.mentorService
+      .rejectMentorship(relationshipId)
+      .subscribe({
 
-        console.error(
-          'Mentorship rejection failed:',
-          error
-        );
+        next: (response: any) => {
 
-      }
+          console.log(
+            'MENTORSHIP REJECT RESPONSE:',
+            response
+          );
 
-    });
+          // Remove the rejected request from the pending list
+          this.requests.update((requests) =>
+            requests.filter(
+              (request) =>
+                request.id !== relationshipId
+            )
+          );
 
-}
+          // Show success notification
+          this.toastService.success(
+            'Mentorship request rejected.'
+          );
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Mentorship rejection failed:',
+            error
+          );
+
+          // Show error notification
+          this.toastService.error(
+            error?.error?.message ||
+            'Failed to reject mentorship request.'
+          );
+
+        }
+
+      });
+
+  }
 
 }

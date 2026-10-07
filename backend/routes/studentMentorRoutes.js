@@ -2,7 +2,9 @@ const express = require("express");
 
 const {
     getAvailableMentors,
-    getMentorProfile
+    getMentorProfile,
+    getMyMentor,
+    getMentorRecommendations
 } = require("../controllers/studentMentorController");
 
 const authMiddleware = require("../middleware/AuthMiddleware");
@@ -19,6 +21,19 @@ router.get(
     getAvailableMentors
 );
 
+router.get(
+    "/my-mentor",
+    authMiddleware,
+    roleMiddleware("student"),
+    getMyMentor
+);
+
+router.get(
+    "/recommendations",
+    authMiddleware,
+    roleMiddleware("student"),
+    getMentorRecommendations
+);
 
 // Get one approved mentor profile
 router.get(
@@ -27,6 +42,7 @@ router.get(
     roleMiddleware("student"),
     getMentorProfile
 );
+
 
 
 module.exports = router;

@@ -1,0 +1,273 @@
+<!--
+  USE:
+  Displays mentor recommendations based on
+  the student's career direction.
+-->
+
+<section class="recommendations-page">
+
+  <!-- ==================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <header class="page-header">
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()"
+    >
+      ← Back to mentors
+    </button>
+
+    <p class="eyebrow">
+      MENTORSHIP
+    </p>
+
+    <h1>
+      Recommended Mentors
+    </h1>
+
+    <p class="page-description">
+      Mentors selected based on your career direction
+      and learning goals.
+    </p>
+
+  </header>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="state-message"
+    *ngIf="loading()"
+  >
+    <p>
+      Finding mentors for you...
+    </p>
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="state-message error"
+    *ngIf="
+      !loading() &&
+      errorMessage()
+    "
+  >
+
+    <h2>
+      Unable to load recommendations
+    </h2>
+
+    <p>
+      {{ errorMessage() }}
+    </p>
+
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="loadRecommendations()"
+    >
+      Try Again
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       NO RECOMMENDATIONS
+  ================================================== -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length === 0
+    "
+  >
+
+    <p class="empty-label">
+      NO RECOMMENDATIONS
+    </p>
+
+    <h2>
+      No matching mentors found.
+    </h2>
+
+    <p>
+      Try exploring all available mentors
+      to find the right connection.
+    </p>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="goBack()"
+    >
+      Explore Mentors
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       RECOMMENDED MENTORS
+  ================================================== -->
+
+  <div
+    class="recommendation-list"
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      mentors().length > 0
+    "
+  >
+
+    <article
+      class="mentor-card"
+      *ngFor="let mentor of mentors()"
+    >
+
+      <!-- Mentor Identity -->
+
+      <div class="mentor-header">
+
+        <div class="mentor-avatar">
+          {{ mentor.name?.charAt(0) }}
+        </div>
+
+        <div class="mentor-identity">
+
+          <p class="recommendation-label">
+            RECOMMENDED FOR YOU
+          </p>
+
+          <h2>
+            {{ mentor.name }}
+          </h2>
+
+          <p class="professional-title">
+            {{ mentor.professional_title }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Specialization -->
+
+      <div
+        class="mentor-info-group"
+        *ngIf="mentor.specialization"
+      >
+
+        <p class="info-label">
+          SPECIALIZATION
+        </p>
+
+        <div class="specialization">
+          {{ mentor.specialization }}
+        </div>
+
+      </div>
+
+
+      <!-- Experience -->
+
+      <div
+        class="mentor-info-group"
+        *ngIf="
+          mentor.experience_years !== null &&
+          mentor.experience_years !== undefined
+        "
+      >
+
+        <p class="info-label">
+          EXPERIENCE
+        </p>
+
+        <p class="experience">
+          {{ mentor.experience_years }}+ years
+        </p>
+
+      </div>
+
+
+      <!-- Skills -->
+
+      <div
+        class="mentor-info-group"
+        *ngIf="mentor.skills"
+      >
+
+        <p class="info-label">
+          SKILLS
+        </p>
+
+        <div class="skills-list">
+
+          <span
+            class="skill"
+            *ngFor="
+              let skill of mentor.skills
+                .split(',')
+                .slice(0, 4)
+            "
+          >
+            {{ skill.trim() }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Actions -->
+
+      <div class="mentor-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="viewProfile(mentor.mentor_id)"
+        >
+          View Profile
+        </button>
+
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="
+            mentor.relationship_status === 'pending' ||
+            mentor.relationship_status === 'accepted'
+          "
+          (click)="requestMentorship(mentor.mentor_id)"
+        >
+
+          {{
+            mentor.relationship_status === 'pending'
+              ? 'Request Sent'
+              : mentor.relationship_status === 'accepted'
+                ? 'Connected'
+                : 'Connect'
+          }}
+
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

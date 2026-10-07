@@ -19,6 +19,10 @@ import {
   StudentMentorService
 } from '../../services/student-mentor.service';
 
+import {
+  ToastService
+} from '../../services/toast.service';
+
 
 @Component({
   selector: 'app-student-mentor-profile',
@@ -44,7 +48,8 @@ export class StudentMentorProfile implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private studentMentorService: StudentMentorService
+    private studentMentorService: StudentMentorService,
+    private toastService: ToastService
   ) {}
 
 
@@ -57,6 +62,10 @@ export class StudentMentorProfile implements OnInit {
     if (!mentorId) {
 
       this.errorMessage.set(
+        'Invalid mentor profile.'
+      );
+
+      this.toastService.error(
         'Invalid mentor profile.'
       );
 
@@ -107,6 +116,11 @@ export class StudentMentorProfile implements OnInit {
             'Unable to load mentor profile.'
           );
 
+          this.toastService.error(
+            error?.error?.message ||
+            'Unable to load mentor profile.'
+          );
+
           this.loading.set(false);
 
         }
@@ -126,65 +140,64 @@ export class StudentMentorProfile implements OnInit {
   }
 
 
+  // Sends a mentorship request
+  requestMentorship(): void {
 
-// Sends a mentorship request
-requestMentorship(): void {
+    const mentorId =
+      this.mentor()?.mentor_id;
 
-  const mentorId =
-    this.mentor()?.mentor_id;
+    if (!mentorId) {
+      return;
+    }
 
-  if (!mentorId) {
-    return;
+    this.studentMentorService
+      .requestMentorship(mentorId)
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'MENTORSHIP REQUEST RESPONSE:',
+            response
+          );
+
+          // Updates the button immediately
+          this.mentor.update((current) => {
+
+            if (!current) {
+              return current;
+            }
+
+            return {
+              ...current,
+              relationship_status: 'pending'
+            };
+
+          });
+
+          this.toastService.success(
+            'Mentorship request sent successfully.'
+          );
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Mentorship request failed:',
+            error
+          );
+
+          this.toastService.error(
+            error?.error?.message ||
+            'Failed to send mentorship request.'
+          );
+
+        }
+
+      });
+
   }
-
-  this.studentMentorService
-    .requestMentorship(mentorId)
-    .subscribe({
-
-      next: (response: any) => {
-
-        console.log(
-          'MENTORSHIP REQUEST RESPONSE:',
-          response
-        );
-
-        // Updates the button immediately
-        this.mentor.update((current) => {
-
-          if (!current) {
-            return current;
-          }
-
-          return {
-            ...current,
-            relationship_status: 'pending'
-          };
-
-        });
-
-        alert(
-          'Mentorship request sent successfully.'
-        );
-
-      },
-
-      error: (error) => {
-
-        console.error(
-          'Mentorship request failed:',
-          error
-        );
-
-        alert(
-          error?.error?.message ||
-          'Failed to send mentorship request.'
-        );
-
-      }
-
-    });
-
-}
 
 
 }

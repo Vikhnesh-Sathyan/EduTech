@@ -1,22 +1,31 @@
+
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { Auth } from '../../../../services/auth';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive
+} from '@angular/router';
+
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [
+    RouterLink,
+    RouterLinkActive
+  ],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
 export class Sidebar {
 
   constructor(
-    private auth: Auth,
     private router: Router
   ) {}
 
-  // Logs out the user and redirects to login
-  logout() {
-    this.auth.logout();
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
     this.router.navigate(['/login']);
   }
 }

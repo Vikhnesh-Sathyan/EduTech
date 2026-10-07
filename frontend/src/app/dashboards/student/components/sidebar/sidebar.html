@@ -1,3 +1,4 @@
+
 <aside class="sidebar">
 
   <!-- Logo -->
@@ -9,32 +10,86 @@
   <!-- Main Navigation -->
   <nav class="navigation">
 
-    <a routerLink="/student-dashboard">
-      <span class="nav-label">Dashboard</span>
+    <a
+      routerLink="/student-dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <span class="nav-label">
+        Dashboard
+      </span>
     </a>
 
-    <a routerLink="/study">
-      <span class="nav-label">Study</span>
+
+    <a
+      routerLink="/study"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        Study
+      </span>
     </a>
 
-    <a routerLink="/project-understanding">
-      <span class="nav-label">Projects</span>
+
+    <a
+      routerLink="/project-understanding"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        Projects
+      </span>
     </a>
 
-    <a routerLink="/practice">
-      <span class="nav-label">Practice</span>
+
+    <a
+      routerLink="/practice"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        Practice
+      </span>
     </a>
 
-    <a routerLink="/career">
-      <span class="nav-label">Career</span>
+
+    <a
+      routerLink="/career"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        Career
+      </span>
     </a>
 
-    <a routerLink="/mentors">
-      <span class="nav-label">Mentors</span>
+
+    <!-- Mentor Discovery -->
+    <a
+      routerLink="/mentors"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        Mentors
+      </span>
     </a>
 
-    <a routerLink="/profile">
-      <span class="nav-label">Profile</span>
+
+    <!-- Current Mentor -->
+    <a
+      routerLink="/student-my-mentor"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        My Mentor
+      </span>
+    </a>
+
+
+    <a
+      routerLink="/profile"
+      routerLinkActive="active"
+    >
+      <span class="nav-label">
+        Profile
+      </span>
     </a>
 
   </nav>
@@ -45,10 +100,9 @@
 
     <button
       type="button"
-      (click)="logout()">
-
+      (click)="logout()"
+    >
       Logout
-
     </button>
 
   </div>

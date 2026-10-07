@@ -1,0 +1,40 @@
+<!--
+  USE:
+  Displays global success, error and information
+  notifications across the application.
+-->
+
+<div
+  class="toast-container"
+  *ngIf="toastService.visible()"
+>
+
+  <div
+    class="toast"
+    [class.success]="toastService.type() === 'success'"
+    [class.error]="toastService.type() === 'error'"
+    [class.info]="toastService.type() === 'info'"
+  >
+
+    <div class="toast-indicator"></div>
+
+    <div class="toast-content">
+
+      <p class="toast-message">
+        {{ toastService.message() }}
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="toast-close"
+      aria-label="Close notification"
+      (click)="close()"
+    >
+      ×
+    </button>
+
+  </div>
+
+</div>
