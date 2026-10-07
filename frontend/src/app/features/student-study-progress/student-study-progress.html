@@ -1,6 +1,9 @@
 <div class="study-progress-page">
 
-  <!-- HEADER -->
+  <!-- =====================================================
+       HEADER
+  ===================================================== -->
+
   <header class="study-progress-header">
 
     <p class="page-label">
@@ -18,7 +21,10 @@
   </header>
 
 
-  <!-- LOADING -->
+  <!-- =====================================================
+       LOADING
+  ===================================================== -->
+
   @if (loading()) {
 
     <div class="study-progress-state">
@@ -28,7 +34,10 @@
   }
 
 
-  <!-- ERROR -->
+  <!-- =====================================================
+       ERROR
+  ===================================================== -->
+
   @else if (errorMessage()) {
 
     <div class="study-progress-state error-state">
@@ -38,77 +47,88 @@
   }
 
 
-  <!-- CONTENT -->
+  <!-- =====================================================
+       CONTENT
+  ===================================================== -->
+
   @else {
 
-   @if (overall(); as progress) {
+    <!-- =====================================================
+         OVERALL PROGRESS
+    ===================================================== -->
 
-  <section class="overall-progress-panel">
+    @if (overall(); as progress) {
 
-    <div class="overall-progress-top">
+      <section class="overall-progress-panel">
 
-      <div class="overall-progress-title">
+        <div class="overall-progress-top">
 
-        <p class="section-label">
-          OVERALL PROGRESS
-        </p>
+          <div class="overall-progress-title">
 
-        <h2>
-          Your learning, at a glance
-        </h2>
+            <p class="section-label">
+              OVERALL PROGRESS
+            </p>
 
-        <p>
-          Keep building momentum across your subjects.
-        </p>
+            <h2>
+              Your learning, at a glance
+            </h2>
 
-      </div>
+            <p>
+              Keep building momentum across your subjects.
+            </p>
 
-      <div class="overall-progress-value">
-
-        <span>
-          {{ progress.progress_percentage }}%
-        </span>
-
-        <small>
-          overall
-        </small>
-
-      </div>
-
-    </div>
+          </div>
 
 
-    <div class="overall-progress-bar">
+          <div class="overall-progress-value">
 
-      <div
-        class="overall-progress-bar-fill"
-        [style.width.%]="progress.progress_percentage"
-      ></div>
+            <span>
+              {{ progress.progress_percentage }}%
+            </span>
 
-    </div>
+            <small>
+              overall
+            </small>
 
+          </div>
 
-    <div class="overall-progress-footer">
-
-      <span>
-        {{ progress.completed_sections }}
-        of
-        {{ progress.total_sections }}
-        sections completed
-      </span>
-
-      <span>
-        {{ progress.progress_percentage }}% complete
-      </span>
-
-    </div>
-
-  </section>
-
-}
+        </div>
 
 
-    <!-- SUBJECTS -->
+        <div class="overall-progress-bar">
+
+          <div
+            class="overall-progress-bar-fill"
+            [style.width.%]="progress.progress_percentage"
+          ></div>
+
+        </div>
+
+
+        <div class="overall-progress-footer">
+
+          <span>
+            {{ progress.completed_sections }}
+            of
+            {{ progress.total_sections }}
+            sections completed
+          </span>
+
+          <span>
+            {{ progress.progress_percentage }}% complete
+          </span>
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- =====================================================
+         SUBJECTS
+    ===================================================== -->
+
     <section class="subjects-section">
 
       <div class="subjects-header">
@@ -126,7 +146,8 @@
         </div>
 
         <span>
-          {{ subjects().length }} subjects
+          {{ subjects().length }}
+          {{ subjects().length === 1 ? 'subject' : 'subjects' }}
         </span>
 
       </div>
@@ -136,11 +157,14 @@
 
         @for (subject of subjects(); track subject.subject_id) {
 
-          <article class="subject-progress-card">
+          <article
+  class="subject-progress-card"
+  (click)="openSubjectProgress(subject.subject_id)"
+>
 
-            <div class="subject-card-header">
+            <div class="subject-card-top">
 
-              <div>
+              <div class="subject-card-title">
 
                 <h3>
                   {{ subject.subject_name }}
@@ -155,19 +179,45 @@
 
               </div>
 
-              <strong>
+
+              <div class="subject-card-percentage">
+
                 {{ subject.progress_percentage }}%
-              </strong>
+
+              </div>
 
             </div>
 
 
-            <div class="progress-track">
+            <div class="subject-progress-bar">
 
               <div
-                class="progress-fill"
+                class="subject-progress-bar-fill"
                 [style.width.%]="subject.progress_percentage"
               ></div>
+
+            </div>
+
+
+            <div class="subject-card-footer">
+
+              <span>
+                Learning progress
+              </span>
+
+              @if (subject.progress_percentage === 100) {
+
+                <span class="subject-completed">
+                  Completed
+                </span>
+
+              } @else {
+
+                <span class="subject-status">
+                  In progress
+                </span>
+
+              }
 
             </div>
 

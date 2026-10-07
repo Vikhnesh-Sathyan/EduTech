@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 
 import { StudentLearning } from '../../services/student-learning';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-study-progress',
@@ -17,9 +18,10 @@ export class StudentStudyProgress implements OnInit {
   loading = signal(true);
   errorMessage = signal('');
 
-  constructor(
-    private studentLearningService: StudentLearning
-  ) {}
+ constructor(
+  private studentLearningService: StudentLearning,
+  private router: Router
+) {}
 
   ngOnInit(): void {
     this.loadStudyProgress();
@@ -69,4 +71,11 @@ export class StudentStudyProgress implements OnInit {
 
       });
   }
+
+  openSubjectProgress(subjectId: number): void {
+  this.router.navigate([
+    '/study-progress/subject',
+    subjectId
+  ]);
+}
 }

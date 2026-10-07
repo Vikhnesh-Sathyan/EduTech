@@ -1,0 +1,324 @@
+<div class="subject-progress-page">
+
+  <!-- =====================================================
+       LOADING
+  ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="subject-progress-state">
+      Loading subject progress...
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       ERROR
+  ===================================================== -->
+
+  @else if (errorMessage()) {
+
+    <div class="subject-progress-state error-state">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       CONTENT
+  ===================================================== -->
+
+  @else {
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    @if (subject(); as currentSubject) {
+
+      <header class="subject-progress-header">
+
+        <p class="page-label">
+          STUDY PROGRESS
+        </p>
+
+        <h1>
+          {{ currentSubject.name }}
+        </h1>
+
+        <p class="page-description">
+          Track your progress across every topic and learning section.
+        </p>
+
+      </header>
+
+    }
+
+
+    <!-- =====================================================
+         SUBJECT SUMMARY
+    ===================================================== -->
+
+    <section class="subject-summary">
+
+      <div class="subject-summary-content">
+
+        <div>
+
+          <p class="section-label">
+            SUBJECT PROGRESS
+          </p>
+
+          <h2>
+            Your progress in {{ subject()?.name }}
+          </h2>
+
+          <p>
+            {{ subject()?.description || 'Continue learning through each section and build your understanding step by step.' }}
+          </p>
+
+        </div>
+
+
+        <div class="subject-summary-value">
+
+          <span>
+            {{ subjectProgressPercentage }}%
+          </span>
+
+          <small>
+            complete
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-summary-bar">
+
+        <div
+          class="subject-summary-bar-fill"
+          [style.width.%]="subjectProgressPercentage"
+        ></div>
+
+      </div>
+
+
+      <div class="subject-summary-footer">
+
+        <span>
+          {{ subjectCompletedSections }}
+          of
+          {{ subjectTotalSections }}
+          sections completed
+        </span>
+
+        <span>
+          {{ subjectProgressPercentage }}% complete
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LEARNING STRUCTURE
+    ===================================================== -->
+
+    <section class="learning-structure">
+
+      <div class="structure-header">
+
+        <div>
+
+          <p class="section-label">
+            LEARNING STRUCTURE
+          </p>
+
+          <h2>
+            Topics
+          </h2>
+
+        </div>
+
+        <span>
+          {{ topics().length }}
+          {{ topics().length === 1 ? 'topic' : 'topics' }}
+        </span>
+
+      </div>
+
+
+      <!-- =====================================================
+           TOPICS
+      ===================================================== -->
+
+      <div class="topic-list">
+
+        @for (topic of topics(); track topic.id) {
+
+          <article class="topic-card">
+
+            <!-- TOPIC -->
+
+            <div class="topic-top">
+
+              <div class="topic-info">
+
+                <h3>
+                  {{ topic.name }}
+                </h3>
+
+                <p>
+                  {{ topic.completed_sections }}
+                  of
+                  {{ topic.total_sections }}
+                  sections completed
+                </p>
+
+              </div>
+
+
+              <div class="topic-percentage">
+
+                {{ topic.progress_percentage }}%
+
+              </div>
+
+            </div>
+
+
+            <div class="topic-progress-bar">
+
+              <div
+                class="topic-progress-bar-fill"
+                [style.width.%]="topic.progress_percentage"
+              ></div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBTOPICS
+            ================================================== -->
+
+            <div class="subtopic-list">
+
+              @for (
+                subtopic of topic.subtopics;
+                track subtopic.id
+              ) {
+
+                <div class="subtopic">
+
+                  <div class="subtopic-top">
+
+                    <div>
+
+                      <h4>
+                        {{ subtopic.title }}
+                      </h4>
+
+                      <p>
+                        {{ subtopic.completed_sections }}
+                        of
+                        {{ subtopic.total_sections }}
+                        sections completed
+                      </p>
+
+                    </div>
+
+
+                    <span class="subtopic-percentage">
+                      {{ subtopic.progress_percentage }}%
+                    </span>
+
+                  </div>
+
+
+                  <!-- ===========================================
+                       SECTIONS
+                  ============================================ -->
+
+                  <div class="section-list">
+
+                    @for (
+                      section of subtopic.sections;
+                      track section.id
+                    ) {
+
+                      <div class="section-item"(click)="openSection(section.id)">
+
+                        <div class="section-status">
+
+                          @if (
+                            section.status === 'completed'
+                          ) {
+
+                            <span class="completed-icon">
+                              ✓
+                            </span>
+
+                          } @else {
+
+                            <span class="pending-icon">
+                              ○
+                            </span>
+
+                          }
+
+                        </div>
+
+
+                        <div class="section-info">
+
+                          <span class="section-title">
+                            {{ section.title }}
+                          </span>
+
+                          <span
+                            class="section-status-text"
+                            [class.completed]="
+                              section.status === 'completed'
+                            "
+                          >
+
+                            @if (
+                              section.status === 'completed'
+                            ) {
+                              Completed
+                            } @else {
+                              Not started
+                            }
+
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    }
+
+                  </div>
+
+                </div>
+
+              }
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+</div>

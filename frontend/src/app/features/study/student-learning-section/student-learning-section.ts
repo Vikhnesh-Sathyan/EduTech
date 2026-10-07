@@ -1,7 +1,20 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  signal
+} from '@angular/core';
+
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
 import { StudentLearning } from '../../../services/student-learning';
 import { ToastService } from '../../../services/toast.service';
+
 
 @Component({
   selector: 'app-student-learning-section',
@@ -10,7 +23,9 @@ import { ToastService } from '../../../services/toast.service';
   templateUrl: './student-learning-section.html',
   styleUrl: './student-learning-section.css'
 })
-export class StudentLearningSection implements OnInit {
+export class StudentLearningSection
+  implements OnInit, OnDestroy {
+
 
   // =====================================================
   // SUBJECT
@@ -18,7 +33,6 @@ export class StudentLearningSection implements OnInit {
 
   subjectName = signal('Subject');
 
-  // Stores the current subject ID
   subjectId = signal<number | null>(null);
 
 
@@ -73,15 +87,38 @@ export class StudentLearningSection implements OnInit {
   errorMessage = signal('');
 
 
+  private queryParamsSubscription?: Subscription;
+
+
   // =====================================================
   // CONSTRUCTOR
   // =====================================================
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private studentLearningService: StudentLearning,
     private toastService: ToastService
   ) {}
+
+
+  // =====================================================
+  // BACK TO SUBJECT
+  // =====================================================
+
+  goBackToSubject(): void {
+
+    const subjectId = this.subjectId();
+
+    if (!subjectId) {
+      return;
+    }
+
+    this.router.navigate([
+      '/study',
+    ]);
+
+  }
 
 
   // =====================================================
@@ -96,10 +133,6 @@ export class StudentLearningSection implements OnInit {
       );
 
 
-    // ===================================================
-    // VALIDATE SUBJECT ID
-    // ===================================================
-
     if (!subjectId) {
 
       this.errorMessage.set(
@@ -112,18 +145,40 @@ export class StudentLearningSection implements OnInit {
     }
 
 
-    // ===================================================
-    // STORE SUBJECT ID
-    // ===================================================
-
     this.subjectId.set(subjectId);
 
 
-    // ===================================================
-    // LOAD LEARNING STRUCTURE
-    // ===================================================
-
+    // Load learning structure
     this.loadLearningStructure(subjectId);
+
+
+    // Listen for sectionId from URL
+    this.queryParamsSubscription =
+      this.route.queryParams.subscribe(params => {
+
+        const sectionId =
+          Number(params['sectionId']);
+
+
+        if (!sectionId) {
+          return;
+        }
+
+
+        /*
+         * If learning structure is already loaded,
+         * open the requested section immediately.
+         */
+
+        if (this.topics().length > 0) {
+
+          this.openSectionFromQuery(
+            sectionId
+          );
+
+        }
+
+      });
 
   }
 
@@ -132,7 +187,9 @@ export class StudentLearningSection implements OnInit {
   // LOAD LEARNING STRUCTURE
   // =====================================================
 
-  loadLearningStructure(subjectId: number): void {
+  loadLearningStructure(
+    subjectId: number
+  ): void {
 
     this.loading.set(true);
 
@@ -146,16 +203,47 @@ export class StudentLearningSection implements OnInit {
         next: (response: any) => {
 
           this.subjectName.set(
-            response.subject?.name || 'Subject'
+            response.subject?.name ||
+            'Subject'
           );
+
 
           this.topics.set(
             response.topics || []
           );
 
+
+          /*
+           * Check whether a sectionId was
+           * provided in the URL.
+           */
+
+          const sectionId =
+            Number(
+              this.route.snapshot.queryParamMap.get(
+                'sectionId'
+              )
+            );
+
+
+          /*
+           * Learning structure is now available,
+           * so we can safely find the section.
+           */
+
+          if (sectionId) {
+
+            this.openSectionFromQuery(
+              sectionId
+            );
+
+          }
+
+
           this.loading.set(false);
 
         },
+
 
         error: (error: any) => {
 
@@ -164,10 +252,12 @@ export class StudentLearningSection implements OnInit {
             error
           );
 
+
           this.errorMessage.set(
             error.error?.message ||
             'Failed to load learning structure'
           );
+
 
           this.loading.set(false);
 
@@ -179,31 +269,109 @@ export class StudentLearningSection implements OnInit {
 
 
   // =====================================================
+  // OPEN SECTION FROM URL
+  // =====================================================
+
+  openSectionFromQuery(
+    sectionId: number
+  ): void {
+
+    for (const topic of this.topics()) {
+
+      for (
+        const subtopic of
+        topic.subtopics || []
+      ) {
+
+
+        const sectionExists =
+          (subtopic.sections || []).some(
+            (section: any) =>
+              Number(section.id) === sectionId
+          );
+
+
+        if (sectionExists) {
+
+
+          // Open topic
+          this.expandedTopicId.set(
+            topic.id
+          );
+
+
+          // Open subtopic
+          this.selectedSubtopicId.set(
+            subtopic.id
+          );
+
+
+          // Select section
+          this.selectedSectionId.set(
+            sectionId
+          );
+
+
+          // Clear previous progress
+          this.sectionProgress.set(null);
+
+
+          // Load content
+          this.loadSectionContent(
+            sectionId
+          );
+
+
+          // Register access
+          this.accessSectionProgress(
+            sectionId
+          );
+
+
+          return;
+        }
+
+      }
+
+    }
+
+
+    console.warn(
+      'Section not found in learning structure:',
+      sectionId
+    );
+
+  }
+
+
+  // =====================================================
   // TOGGLE TOPIC
   // =====================================================
 
-  toggleTopic(topicId: number): void {
+  toggleTopic(
+    topicId: number
+  ): void {
 
-    if (this.expandedTopicId() === topicId) {
+    if (
+      this.expandedTopicId() === topicId
+    ) {
 
       this.expandedTopicId.set(null);
 
-      // Close selected subtopic
       this.selectedSubtopicId.set(null);
 
-      // Close selected section
       this.selectedSectionId.set(null);
 
       return;
     }
 
 
-    this.expandedTopicId.set(topicId);
+    this.expandedTopicId.set(
+      topicId
+    );
 
-    // Clear previous subtopic selection
     this.selectedSubtopicId.set(null);
 
-    // Clear previous section selection
     this.selectedSectionId.set(null);
 
   }
@@ -213,9 +381,13 @@ export class StudentLearningSection implements OnInit {
   // SELECT SUBTOPIC
   // =====================================================
 
-  selectSubtopic(subtopicId: number): void {
+  selectSubtopic(
+    subtopicId: number
+  ): void {
 
-    if (this.selectedSubtopicId() === subtopicId) {
+    if (
+      this.selectedSubtopicId() === subtopicId
+    ) {
 
       this.selectedSubtopicId.set(null);
 
@@ -225,9 +397,10 @@ export class StudentLearningSection implements OnInit {
     }
 
 
-    this.selectedSubtopicId.set(subtopicId);
+    this.selectedSubtopicId.set(
+      subtopicId
+    );
 
-    // Clear previous section selection
     this.selectedSectionId.set(null);
 
   }
@@ -237,21 +410,15 @@ export class StudentLearningSection implements OnInit {
   // SELECT SECTION
   // =====================================================
 
-  selectSection(sectionId: number): void {
+  selectSection(
+    sectionId: number
+  ): void {
 
-    this.selectedSectionId.set(sectionId);
-
-
-    // Clear previous section progress
     this.sectionProgress.set(null);
 
-
-    // Load the learning content
-    this.loadSectionContent(sectionId);
-
-
-    // Start or update section progress
-    this.accessSectionProgress(sectionId);
+    this.openSectionFromQuery(
+      sectionId
+    );
 
   }
 
@@ -260,7 +427,9 @@ export class StudentLearningSection implements OnInit {
   // LOAD SECTION CONTENT
   // =====================================================
 
-  loadSectionContent(sectionId: number): void {
+  loadSectionContent(
+    sectionId: number
+  ): void {
 
     this.sectionContent.set(null);
 
@@ -276,9 +445,13 @@ export class StudentLearningSection implements OnInit {
             response
           );
 
-          this.sectionContent.set(response);
+
+          this.sectionContent.set(
+            response
+          );
 
         },
+
 
         error: (error: any) => {
 
@@ -298,7 +471,9 @@ export class StudentLearningSection implements OnInit {
   // ACCESS SECTION PROGRESS
   // =====================================================
 
-  accessSectionProgress(sectionId: number): void {
+  accessSectionProgress(
+    sectionId: number
+  ): void {
 
     this.studentLearningService
       .accessSection(sectionId)
@@ -311,11 +486,13 @@ export class StudentLearningSection implements OnInit {
             response
           );
 
+
           this.sectionProgress.set(
             response.progress || null
           );
 
         },
+
 
         error: (error: any) => {
 
@@ -341,20 +518,10 @@ export class StudentLearningSection implements OnInit {
       this.selectedSectionId();
 
 
-    // ===================================================
-    // CHECK SECTION
-    // ===================================================
-
     if (!sectionId) {
-
       return;
-
     }
 
-
-    // ===================================================
-    // COMPLETE SECTION
-    // ===================================================
 
     this.studentLearningService
       .completeSection(sectionId)
@@ -368,21 +535,18 @@ export class StudentLearningSection implements OnInit {
           );
 
 
-          // =============================================
-          // UPDATE CURRENT SECTION PROGRESS
-          // =============================================
-
           this.sectionProgress.update(
             (progress) => ({
+
               ...(progress || {}),
+
               status: 'completed',
+
               completed_at: new Date()
+
             })
           );
 
-          // =============================================
-          // SUCCESS TOAST
-          // =============================================
 
           this.toastService.success(
             'Section completed successfully.'
@@ -407,6 +571,17 @@ export class StudentLearningSection implements OnInit {
         }
 
       });
+
+  }
+
+
+  // =====================================================
+  // CLEANUP
+  // =====================================================
+
+  ngOnDestroy(): void {
+
+    this.queryParamsSubscription?.unsubscribe();
 
   }
 

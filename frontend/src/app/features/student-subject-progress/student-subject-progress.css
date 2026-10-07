@@ -2,8 +2,9 @@
    PAGE
 ===================================================== */
 
-.study-progress-page {
+.subject-progress-page {
   min-height: 100vh;
+
   padding: 42px 48px;
 
   background: #f8fafc;
@@ -15,8 +16,8 @@
    HEADER
 ===================================================== */
 
-.study-progress-header {
-  margin-bottom: 36px;
+.subject-progress-header {
+  margin-bottom: 34px;
 }
 
 .page-label {
@@ -29,7 +30,7 @@
   color: #64748b;
 }
 
-.study-progress-header h1 {
+.subject-progress-header h1 {
   margin: 0;
 
   font-size: 30px;
@@ -41,6 +42,7 @@
 
 .page-description {
   max-width: 620px;
+
   margin: 10px 0 0;
 
   font-size: 14px;
@@ -54,7 +56,7 @@
    STATES
 ===================================================== */
 
-.study-progress-state {
+.subject-progress-state {
   padding: 32px;
 
   border: 1px solid #e2e8f0;
@@ -63,6 +65,7 @@
   background: #ffffff;
 
   font-size: 14px;
+
   color: #64748b;
 }
 
@@ -72,12 +75,13 @@
 
 
 /* =====================================================
-   OVERALL PROGRESS PANEL
+   SUBJECT SUMMARY
 ===================================================== */
 
-.overall-progress-panel {
+.subject-summary {
   margin-bottom: 46px;
-  padding: 32px;
+
+  padding: 30px 32px;
 
   border: 1px solid #e2e8f0;
   border-radius: 16px;
@@ -90,10 +94,10 @@
 
 
 /* =====================================================
-   OVERALL TOP
+   SUMMARY CONTENT
 ===================================================== */
 
-.overall-progress-top {
+.subject-summary-content {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -101,38 +105,52 @@
   gap: 40px;
 }
 
-.overall-progress-title h2 {
+.section-label {
+  margin: 0 0 8px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+
+  color: #64748b;
+}
+
+.subject-summary h2 {
   margin: 0;
 
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 700;
   letter-spacing: -0.02em;
 
   color: #0f172a;
 }
 
-.overall-progress-title > p:last-child {
+.subject-summary p:last-child {
+  max-width: 620px;
+
   margin: 8px 0 0;
 
   font-size: 13px;
+  line-height: 1.6;
+
   color: #64748b;
 }
 
 
 /* =====================================================
-   OVERALL VALUE
+   SUMMARY VALUE
 ===================================================== */
 
-.overall-progress-value {
+.subject-summary-value {
   display: flex;
   align-items: flex-end;
 
-  gap: 8px;
+  gap: 7px;
 
   white-space: nowrap;
 }
 
-.overall-progress-value span {
+.subject-summary-value span {
   font-size: 34px;
   line-height: 1;
 
@@ -142,7 +160,7 @@
   color: #2563eb;
 }
 
-.overall-progress-value small {
+.subject-summary-value small {
   padding-bottom: 3px;
 
   font-size: 11px;
@@ -152,10 +170,10 @@
 
 
 /* =====================================================
-   OVERALL PROGRESS BAR
+   SUMMARY BAR
 ===================================================== */
 
-.overall-progress-bar {
+.subject-summary-bar {
   width: 100%;
   height: 8px;
 
@@ -168,7 +186,7 @@
   background: #e2e8f0;
 }
 
-.overall-progress-bar-fill {
+.subject-summary-bar-fill {
   height: 100%;
 
   border-radius: inherit;
@@ -180,10 +198,10 @@
 
 
 /* =====================================================
-   OVERALL FOOTER
+   SUMMARY FOOTER
 ===================================================== */
 
-.overall-progress-footer {
+.subject-summary-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -197,14 +215,14 @@
 
 
 /* =====================================================
-   SUBJECTS
+   LEARNING STRUCTURE
 ===================================================== */
 
-.subjects-section {
-  max-width: 900px;
+.learning-structure {
+  max-width: 960px;
 }
 
-.subjects-header {
+.structure-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -212,7 +230,7 @@
   margin-bottom: 18px;
 }
 
-.subjects-header h2 {
+.structure-header h2 {
   margin: 0;
 
   font-size: 20px;
@@ -221,7 +239,7 @@
   color: #0f172a;
 }
 
-.subjects-header > span {
+.structure-header > span {
   font-size: 12px;
 
   color: #64748b;
@@ -229,51 +247,39 @@
 
 
 /* =====================================================
-   SUBJECT LIST
+   TOPIC LIST
 ===================================================== */
 
-.subject-list {
+.topic-list {
   display: flex;
   flex-direction: column;
 
-  gap: 12px;
+  gap: 14px;
 }
 
 
 /* =====================================================
-   SUBJECT CARD
+   TOPIC CARD
 ===================================================== */
 
-.subject-progress-card {
+.topic-card {
   padding: 24px;
-  cursor: pointer;
 
   border: 1px solid #e2e8f0;
   border-radius: 14px;
 
   background: #ffffff;
 
-   transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-}
-
-.subject-progress-card:hover {
-  border-color: #cbd5e1;
-
   box-shadow:
-    0 8px 24px rgba(15, 23, 42, 0.05);
-
-  transform: translateY(-1px);
+    0 4px 18px rgba(15, 23, 42, 0.025);
 }
 
 
 /* =====================================================
-   SUBJECT TOP
+   TOPIC HEADER
 ===================================================== */
 
-.subject-card-top {
+.topic-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -281,7 +287,7 @@
   gap: 24px;
 }
 
-.subject-card-title h3 {
+.topic-info h3 {
   margin: 0 0 6px;
 
   font-size: 16px;
@@ -290,7 +296,7 @@
   color: #0f172a;
 }
 
-.subject-card-title p {
+.topic-info p {
   margin: 0;
 
   font-size: 12px;
@@ -300,10 +306,10 @@
 
 
 /* =====================================================
-   SUBJECT PERCENTAGE
+   TOPIC PERCENTAGE
 ===================================================== */
 
-.subject-card-percentage {
+.topic-percentage {
   font-size: 20px;
   font-weight: 700;
 
@@ -312,14 +318,14 @@
 
 
 /* =====================================================
-   SUBJECT PROGRESS BAR
+   TOPIC PROGRESS BAR
 ===================================================== */
 
-.subject-progress-bar {
+.topic-progress-bar {
   width: 100%;
   height: 7px;
 
-  margin-top: 22px;
+  margin-top: 20px;
 
   overflow: hidden;
 
@@ -328,7 +334,7 @@
   background: #e2e8f0;
 }
 
-.subject-progress-bar-fill {
+.topic-progress-bar-fill {
   height: 100%;
 
   border-radius: inherit;
@@ -340,30 +346,252 @@
 
 
 /* =====================================================
-   SUBJECT FOOTER
+   SUBTOPICS
 ===================================================== */
 
-.subject-card-footer {
+.subtopic-list {
+  margin-top: 22px;
+
+  padding-left: 18px;
+
+  border-left: 2px solid #f1f5f9;
+}
+
+
+/* =====================================================
+   SUBTOPIC
+===================================================== */
+
+.subtopic {
+  padding: 18px 0;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.subtopic:last-child {
+  border-bottom: none;
+}
+
+
+/* =====================================================
+   SUBTOPIC HEADER
+===================================================== */
+
+.subtopic-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.subtopic-top h4 {
+  margin: 0 0 5px;
+
+  font-size: 14px;
+  font-weight: 650;
+
+  color: #1e293b;
+}
+
+.subtopic-top p {
+  margin: 0;
+
+  font-size: 11px;
+
+  color: #64748b;
+}
+
+.subtopic-percentage {
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #2563eb;
+}
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.section-list {
+  margin-top: 14px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.section-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  background: #f8fafc;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.section-item:hover {
+  background: #f1f5f9;
+
+  transform: translateX(2px);
+}
+
+
+/* =====================================================
+   SECTION STATUS
+===================================================== */
+
+.section-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+}
+
+.completed-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  color: #ffffff;
+}
+
+.pending-icon {
+  font-size: 18px;
+
+  color: #94a3b8;
+}
+
+
+/* =====================================================
+   SECTION INFO
+===================================================== */
+
+.section-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  margin-top: 12px;
+  width: 100%;
 
-  font-size: 11px;
+  gap: 20px;
 }
 
-.subject-card-footer > span:first-child {
+.section-title {
+  font-size: 12px;
+  font-weight: 500;
+
+  color: #334155;
+}
+
+.section-status-text {
+  font-size: 10px;
+
   color: #94a3b8;
 }
 
-.subject-status {
-  color: #64748b;
-}
-
-.subject-completed {
+.section-status-text.completed {
   font-weight: 600;
 
   color: #2563eb;
 }
 
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .subject-progress-page {
+    padding: 28px 20px;
+  }
+
+
+  .subject-progress-header h1 {
+    font-size: 25px;
+  }
+
+
+  .subject-summary {
+    padding: 24px;
+  }
+
+
+  .subject-summary-content {
+    flex-direction: column;
+
+    gap: 20px;
+  }
+
+
+  .subject-summary-value span {
+    font-size: 30px;
+  }
+
+
+  .subject-summary-footer {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 4px;
+  }
+
+
+  .structure-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 6px;
+  }
+
+
+  .topic-card {
+    padding: 20px;
+  }
+
+
+  .topic-top {
+    gap: 15px;
+  }
+
+
+  .subtopic-list {
+    padding-left: 12px;
+  }
+
+
+  .section-info {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 3px;
+  }
+
+}
