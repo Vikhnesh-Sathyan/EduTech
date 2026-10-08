@@ -547,6 +547,25 @@ export class AdminSectionLearningPage implements OnInit {
         }
 
       });
+
+      
   }
+
+  openQuestionBank(): void {
+
+  const subtopicId = this.subtopicId();
+
+  if (!subtopicId) {
+    this.errorMessage.set(
+      'Subtopic information is not available.'
+    );
+    return;
+  }
+
+  this.router.navigate([
+    '/admin/basic-challenge',
+    subtopicId
+  ]);
+}
 
 }

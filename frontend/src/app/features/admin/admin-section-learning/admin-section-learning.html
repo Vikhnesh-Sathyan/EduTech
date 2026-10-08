@@ -389,48 +389,80 @@ Value"
     </div>
 
 
-    <!-- ===================================================
-         ADVANCED LEARNING
-    ==================================================== -->
+<!-- ===================================================
+     LEARNING FEATURES
+==================================================== -->
 
-    @if (subtopicId()) {
+@if (subtopicId()) {
 
-      <div class="advanced-card">
+  <!-- ADVANCED LEARNING -->
 
-        <div class="advanced-card-content">
+  <div class="advanced-card">
 
-          <p class="section-label">
-            ADVANCED LEARNING
-          </p>
+    <div class="advanced-card-content">
 
-          <h2>
-            Go Beyond the Basics
-          </h2>
+      <p class="section-label">
+        ADVANCED LEARNING
+      </p>
 
-          <p>
-            Configure advanced learning modules for this
-            subtopic. Advanced content becomes available
-            after the Basic Challenge is completed.
-          </p>
+      <h2>
+        Go Beyond the Basics
+      </h2>
 
-        </div>
+      <p>
+        Configure advanced learning modules for this
+        subtopic. Advanced content becomes available
+        after the Basic Challenge is completed.
+      </p>
+
+    </div>
+
+    <div class="advanced-card-action">
+
+      <button
+        type="button"
+        class="advanced-button"
+        (click)="openAdvanced()"
+      >
+        Configure Advanced
+      </button>
+
+    </div>
+
+  </div>
 
 
-        <div class="advanced-card-action">
+  <!-- BASIC CHALLENGE -->
 
-          <button
-            type="button"
-            class="advanced-button"
-            (click)="openAdvanced()"
-          >
-            Configure Advanced
-          </button>
+  <div class="learning-feature-card">
 
-        </div>
+    <div>
 
-      </div>
+      <p class="card-label">
+        BASIC CHALLENGE
+      </p>
 
-    }
+      <h3>
+        Question Bank
+      </h3>
+
+      <p>
+        Manage the questions students will receive
+        in the Basic Challenge.
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      (click)="openQuestionBank()"
+    >
+      Manage Questions
+    </button>
+
+  </div>
+
+}
 
   }
 

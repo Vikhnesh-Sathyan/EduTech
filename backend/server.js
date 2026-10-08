@@ -86,6 +86,8 @@ const adminSubtopicRoutes =
 const adminProjectRoutes =
     require("./routes/adminProjectRoutes");
 
+const adminBasicChallengeRoutes = require("./routes/adminBasicChallengeRoutes");
+
 
 // =====================================================
 // STUDENT ROUTES
@@ -312,6 +314,11 @@ app.use(
 app.use(
     "/api/admin/subtopics",
     adminSubtopicRoutes
+);
+
+app.use(
+  "/api/admin/basic-challenge",
+  adminBasicChallengeRoutes
 );
 
 

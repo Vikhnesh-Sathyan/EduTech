@@ -1,0 +1,199 @@
+<div class="question-bank-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <p class="page-label">BASIC CHALLENGE</p>
+      <h1>Question Bank</h1>
+      <p class="page-description">
+        Import and manage questions used for the Basic Challenge.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- IMPORT CARD -->
+  <div class="import-card">
+
+    <div class="section-heading">
+      <div>
+        <h2>Import Questions</h2>
+        <p>Upload an Excel or CSV file containing your question bank.</p>
+      </div>
+    </div>
+
+
+    <!-- FILE SELECT -->
+    <div class="upload-area">
+
+      <input
+        #fileInput
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+
+      <button
+        type="button"
+        class="secondary-button"
+        [disabled]="loading() || importing()"
+        (click)="fileInput.click()">
+        Choose Excel / CSV
+      </button>
+
+      @if (selectedFile(); as file) {
+        <div class="selected-file">
+          <span>{{ file.name }}</span>
+
+          <button
+            type="button"
+            class="remove-button"
+            (click)="resetImport(); fileInput.value = ''">
+            Remove
+          </button>
+        </div>
+      }
+
+    </div>
+
+
+    <!-- PREVIEW BUTTON -->
+    <div class="action-row">
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="!selectedFile() || loading()"
+        (click)="previewQuestions()">
+
+        @if (loading()) {
+          Processing...
+        } @else {
+          Preview Questions
+        }
+
+      </button>
+    </div>
+
+  </div>
+
+
+  <!-- PREVIEW -->
+  @if (previewed()) {
+
+    <div class="preview-section">
+
+      <div class="section-heading">
+        <div>
+          <p class="page-label">IMPORT PREVIEW</p>
+          <h2>Review Questions</h2>
+        </div>
+      </div>
+
+
+      <!-- SUMMARY -->
+      <div class="summary-grid">
+
+        <div class="summary-card">
+          <span>Total Rows</span>
+          <strong>{{ totalRows() }}</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Valid Questions</span>
+          <strong>{{ validCount() }}</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Errors</span>
+          <strong>{{ errorCount() }}</strong>
+        </div>
+
+      </div>
+
+
+      <!-- ERRORS -->
+      @if (errors().length > 0) {
+
+        <div class="error-section">
+
+          <h3>Rows that need correction</h3>
+
+          @for (error of errors(); track $index) {
+            <div class="error-row">
+              <strong>Row {{ error.row }}</strong>
+              <span>{{ error.message }}</span>
+            </div>
+          }
+
+        </div>
+
+      }
+
+
+      <!-- QUESTIONS -->
+      @if (questions().length > 0) {
+
+        <div class="questions-section">
+
+          <h3>Valid Questions</h3>
+
+          @for (question of questions(); track $index) {
+
+            <div class="question-card">
+
+              <div class="question-number">
+                Question {{ $index + 1 }}
+              </div>
+
+              <p class="question-text">{{ question.question }}</p>
+
+              <div class="options">
+                <div><strong>A</strong> {{ question.option_a }}</div>
+                <div><strong>B</strong> {{ question.option_b }}</div>
+                <div><strong>C</strong> {{ question.option_c }}</div>
+                <div><strong>D</strong> {{ question.option_d }}</div>
+              </div>
+
+              <div class="correct-answer">
+                Correct Answer:
+                <strong>{{ question.correct_answer }}</strong>
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+
+      <!-- CONFIRM -->
+      @if (questions().length > 0 && errorCount() === 0) {
+
+        <div class="confirm-section">
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="importing()"
+            (click)="confirmImport()">
+
+            @if (importing()) {
+              Importing...
+            } @else {
+              Confirm & Import Questions
+            }
+
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

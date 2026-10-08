@@ -92,7 +92,7 @@ import { AdminLearningSectionsPage } from './features/admin/admin-learning-secti
 import { AdminSectionLearningPage } from './features/admin/admin-section-learning/admin-section-learning';
 import { AdminSubtopicsPage } from './features/admin/admin-subtopics/admin-subtopics';
 import { AdminAdvanced } from './features/admin/advanced/admin-advanced/admin-advanced';
-
+import { QuestionBank } from './features/admin/basic-challenge/question-bank/question-bank';
 
 // ======================================================
 // ADMIN - PROJECT UNDERSTANDING
@@ -464,6 +464,11 @@ export const routes: Routes = [
       {
         path: 'advanced/:subtopicId',
         component: AdminAdvanced,
+      },
+
+      {
+        path: 'basic-challenge/:subtopicId',
+        component: QuestionBank
       },
 
       // ==================================================
