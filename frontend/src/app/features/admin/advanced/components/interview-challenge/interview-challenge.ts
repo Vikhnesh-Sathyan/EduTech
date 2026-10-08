@@ -7,6 +7,8 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
+import { ToastService } from '../../../../../services/toast.service';
+
 @Component({
   selector: 'app-interview-challenge',
   standalone: true,
@@ -27,6 +29,11 @@ export class InterviewChallenge {
     new EventEmitter<any>();
 
 
+  constructor(
+    private toastService: ToastService
+  ) {}
+
+
   updateField(
     field: string,
     value: string
@@ -42,8 +49,60 @@ export class InterviewChallenge {
 
   saveContent(): void {
 
+    const title =
+      this.content.title?.trim();
+
+    const interviewQuestion =
+      this.content.interviewQuestion?.trim();
+
+    const strongAnswer =
+      this.content.strongAnswer?.trim();
+
+
+    // Validate title
+    if (!title) {
+
+      this.toastService.error(
+        'Please enter a title.'
+      );
+
+      return;
+    }
+
+
+    // Validate interview question
+    if (!interviewQuestion) {
+
+      this.toastService.error(
+        'Please enter the interview question.'
+      );
+
+      return;
+    }
+
+
+    // Validate strong answer
+    if (!strongAnswer) {
+
+      this.toastService.error(
+        'Please provide a strong answer.'
+      );
+
+      return;
+    }
+
+
+    // Save only after validation passes
     this.save.emit({
-      ...this.content
+
+      ...this.content,
+
+      title,
+
+      interviewQuestion,
+
+      strongAnswer
+
     });
 
   }

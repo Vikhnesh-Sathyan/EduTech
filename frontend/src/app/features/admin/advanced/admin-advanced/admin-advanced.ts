@@ -4,10 +4,15 @@ import {
   signal
 } from '@angular/core';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
+
 import { FormsModule } from '@angular/forms';
 
 import { AdminSubtopic } from '../../../../services/admin-subtopic';
+import { ToastService } from '../../../../services/toast.service';
 
 import { DeepDive } from '../components/deep-dive/deep-dive';
 import { BehindTheScenes } from '../components/behind-the-scenes/behind-the-scenes';
@@ -144,7 +149,8 @@ export class AdminAdvanced implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private adminSubtopic: AdminSubtopic
+    private adminSubtopic: AdminSubtopic,
+    private toastService: ToastService
   ) {}
 
 
@@ -215,6 +221,11 @@ export class AdminAdvanced implements OnInit {
 
           this.loading.set(false);
 
+          this.toastService.error(
+            error?.error?.message ||
+            'Failed to load Advanced setup.'
+          );
+
         }
 
       });
@@ -270,7 +281,7 @@ export class AdminAdvanced implements OnInit {
 
     if (modules.length === 0) {
 
-      alert(
+      this.toastService.error(
         'Select at least one Advanced module.'
       );
 
@@ -305,7 +316,10 @@ export class AdminAdvanced implements OnInit {
 
         this.saving.set(false);
 
-        // Important:
+        this.toastService.success(
+          'Advanced setup saved successfully.'
+        );
+
         // Refresh module IDs after create/update.
         this.loadAdvanced();
 
@@ -320,7 +334,8 @@ export class AdminAdvanced implements OnInit {
 
         this.saving.set(false);
 
-        alert(
+        this.toastService.error(
+          error?.error?.message ||
           'Failed to save Advanced setup.'
         );
 
@@ -343,7 +358,7 @@ export class AdminAdvanced implements OnInit {
 
     if (!module) {
 
-      alert(
+      this.toastService.error(
         'Save the Advanced setup first.'
       );
 
@@ -413,6 +428,11 @@ export class AdminAdvanced implements OnInit {
 
           this.contentLoading.set(false);
 
+          this.toastService.error(
+            error?.error?.message ||
+            'Failed to load module content.'
+          );
+
         }
 
       });
@@ -423,11 +443,6 @@ export class AdminAdvanced implements OnInit {
   saveModuleContent(
     contentData: any
   ): void {
-
-    console.log(
-    'SAVE EVENT RECEIVED:',
-    contentData
-  );
 
     const moduleType =
       this.selectedModuleForEditing();
@@ -443,7 +458,7 @@ export class AdminAdvanced implements OnInit {
 
     if (!moduleId) {
 
-      alert(
+      this.toastService.error(
         'Advanced module was not found.'
       );
 
@@ -453,8 +468,7 @@ export class AdminAdvanced implements OnInit {
 
     this.contentSaving.set(true);
 
-console.log('MODULE ID:', moduleId);
-console.log('CONTENT TO SAVE:', contentData);
+
     this.adminSubtopic
       .saveAdvancedModuleContent(
         moduleId,
@@ -470,6 +484,10 @@ console.log('CONTENT TO SAVE:', contentData);
 
           this.contentSaving.set(false);
 
+          this.toastService.success(
+            'Advanced module content saved successfully.'
+          );
+
         },
 
         error: (error) => {
@@ -481,7 +499,8 @@ console.log('CONTENT TO SAVE:', contentData);
 
           this.contentSaving.set(false);
 
-          alert(
+          this.toastService.error(
+            error?.error?.message ||
             'Failed to save module content.'
           );
 
@@ -529,12 +548,8 @@ console.log('CONTENT TO SAVE:', contentData);
   }
 
 
-  goBack(): void {
-
-    this.router.navigate([
-      '/admin'
-    ]);
-
-  }
+ goBack(): void {
+  this.router.navigate(['/admin/topics']);
+}
 
 }

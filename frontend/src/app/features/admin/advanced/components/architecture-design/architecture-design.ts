@@ -7,6 +7,8 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
+import { ToastService } from '../../../../../services/toast.service';
+
 @Component({
   selector: 'app-architecture-design',
   standalone: true,
@@ -27,6 +29,11 @@ export class ArchitectureDesign {
     new EventEmitter<any>();
 
 
+  constructor(
+    private toastService: ToastService
+  ) {}
+
+
   updateField(
     field: string,
     value: string
@@ -42,8 +49,60 @@ export class ArchitectureDesign {
 
   saveContent(): void {
 
+    const title =
+      this.content.title?.trim();
+
+    const problem =
+      this.content.problem?.trim();
+
+    const designApproach =
+      this.content.designApproach?.trim();
+
+
+    // Validate title
+    if (!title) {
+
+      this.toastService.error(
+        'Please enter a title.'
+      );
+
+      return;
+    }
+
+
+    // Validate problem
+    if (!problem) {
+
+      this.toastService.error(
+        'Please describe the problem.'
+      );
+
+      return;
+    }
+
+
+    // Validate design approach
+    if (!designApproach) {
+
+      this.toastService.error(
+        'Please enter the design approach.'
+      );
+
+      return;
+    }
+
+
+    // Save only after validation passes
     this.save.emit({
-      ...this.content
+
+      ...this.content,
+
+      title,
+
+      problem,
+
+      designApproach
+
     });
 
   }

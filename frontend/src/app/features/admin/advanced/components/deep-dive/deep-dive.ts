@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../../../../services/toast.service';
 
 @Component({
   selector: 'app-deep-dive',
@@ -20,6 +21,10 @@ export class DeepDive {
   @Output() save =
     new EventEmitter<any>();
 
+  constructor(
+    private toastService: ToastService
+  ) {}
+
   updateField(
     field: string,
     value: string
@@ -34,8 +39,36 @@ export class DeepDive {
 
   saveContent(): void {
 
+    const title =
+      this.content.title?.trim();
+
+    const detailedExplanation =
+      this.content.detailedExplanation?.trim();
+
+    // Required field validation
+    if (!title) {
+
+      this.toastService.error(
+        'Please enter a title.'
+      );
+
+      return;
+    }
+
+    if (!detailedExplanation) {
+
+      this.toastService.error(
+        'Please enter a detailed explanation.'
+      );
+
+      return;
+    }
+
+    // Save only after validation passes
     this.save.emit({
-      ...this.content
+      ...this.content,
+      title,
+      detailedExplanation
     });
 
   }

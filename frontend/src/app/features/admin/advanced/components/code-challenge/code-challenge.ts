@@ -7,6 +7,8 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
+import { ToastService } from '../../../../../services/toast.service';
+
 @Component({
   selector: 'app-code-challenge',
   standalone: true,
@@ -27,6 +29,11 @@ export class CodeChallenge {
     new EventEmitter<any>();
 
 
+  constructor(
+    private toastService: ToastService
+  ) {}
+
+
   updateField(
     field: string,
     value: string
@@ -42,8 +49,60 @@ export class CodeChallenge {
 
   saveContent(): void {
 
+    const title =
+      this.content.title?.trim();
+
+    const problemStatement =
+      this.content.problemStatement?.trim();
+
+    const starterCode =
+      this.content.starterCode?.trim();
+
+
+    // Validate title
+    if (!title) {
+
+      this.toastService.error(
+        'Please enter a title.'
+      );
+
+      return;
+    }
+
+
+    // Validate problem statement
+    if (!problemStatement) {
+
+      this.toastService.error(
+        'Please enter a problem statement.'
+      );
+
+      return;
+    }
+
+
+    // Validate starter code
+    if (!starterCode) {
+
+      this.toastService.error(
+        'Please provide the starter code.'
+      );
+
+      return;
+    }
+
+
+    // Save only after validation passes
     this.save.emit({
-      ...this.content
+
+      ...this.content,
+
+      title,
+
+      problemStatement,
+
+      starterCode
+
     });
 
   }

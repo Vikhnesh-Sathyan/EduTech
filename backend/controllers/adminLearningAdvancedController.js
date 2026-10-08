@@ -205,36 +205,237 @@ const createAdvancedSetup = async (req, res) => {
     }
 };
 
+const validateAdvancedModuleContent = (
+    moduleType,
+    contentData
+) => {
+
+    const requiredFields = {
+
+        deep_dive: [
+            "title",
+            "detailedExplanation"
+        ],
+
+        behind_the_scenes: [
+            "title",
+            "whatHappensInternally"
+        ],
+
+        concept_comparison: [
+            "title",
+            "conceptA",
+            "conceptB"
+        ],
+
+        debugging: [
+            "title",
+            "problemDescription",
+            "buggyCode",
+            "correctCode"
+        ],
+
+        real_world_scenario: [
+            "title",
+            "scenario",
+            "problem",
+            "howConceptSolvesIt"
+        ],
+
+        code_challenge: [
+            "title",
+            "problemStatement",
+            "starterCode"
+        ],
+
+        mini_hands_on_coding: [
+            "title",
+            "task",
+            "instructions",
+            "starterCode"
+        ],
+
+        architecture_design: [
+            "title",
+            "problem",
+            "designApproach"
+        ],
+
+        interview_challenge: [
+            "title",
+            "interviewQuestion",
+            "strongAnswer"
+        ]
+    };
+
+
+    const fields =
+        requiredFields[moduleType];
+
+
+    // Unknown module type
+    if (!fields) {
+
+        return {
+            valid: false,
+            message: "Invalid advanced module type"
+        };
+
+    }
+
+
+    // Check required fields
+    for (const field of fields) {
+
+        const value =
+            contentData[field];
+
+        if (
+            typeof value !== "string" ||
+            !value.trim()
+        ) {
+
+            return {
+                valid: false,
+                message: `${field} is required`
+            };
+
+        }
+
+    }
+
+
+    // Advanced Practice has special validation
+    if (moduleType === "advanced_practice") {
+
+        if (
+            !Array.isArray(contentData.options) ||
+            contentData.options.length !== 4
+        ) {
+
+            return {
+                valid: false,
+                message: "Exactly 4 options are required"
+            };
+
+        }
+
+
+        const hasEmptyOption =
+            contentData.options.some(
+                option =>
+                    typeof option !== "string" ||
+                    !option.trim()
+            );
+
+
+        if (hasEmptyOption) {
+
+            return {
+                valid: false,
+                message: "All 4 options are required"
+            };
+
+        }
+
+
+        const validAnswers = [
+            "A",
+            "B",
+            "C",
+            "D"
+        ];
+
+
+        if (
+            !validAnswers.includes(
+                contentData.correctAnswer
+            )
+        ) {
+
+            return {
+                valid: false,
+                message: "A valid correct answer is required"
+            };
+
+        }
+
+    }
+
+
+    return {
+        valid: true
+    };
+
+};
 // ======================================================
 // SAVE / UPDATE ADVANCED MODULE CONTENT
 // ======================================================
 
 const saveAdvancedModuleContent = async (req, res) => {
     try {
+
         const { moduleId } = req.params;
         const { contentData } = req.body;
 
-        if (!contentData || typeof contentData !== "object") {
+
+        // Basic content validation
+        if (
+            !contentData ||
+            typeof contentData !== "object" ||
+            Array.isArray(contentData)
+        ) {
+
             return res.status(400).json({
                 message: "Valid content data is required"
             });
+
         }
 
-        // Check that the module exists
+
+        // Get module type
         const [moduleRows] = await db.query(
             `
-            SELECT id
+            SELECT
+                id,
+                module_type
             FROM learning_subtopic_advanced_modules
             WHERE id = ?
             `,
             [moduleId]
         );
 
+
+        // Module does not exist
         if (moduleRows.length === 0) {
+
             return res.status(404).json({
                 message: "Advanced module not found"
             });
+
         }
+
+
+        const moduleType =
+            moduleRows[0].module_type;
+
+
+        // Validate according to module type
+        const validation =
+            validateAdvancedModuleContent(
+                moduleType,
+                contentData
+            );
+
+
+        if (!validation.valid) {
+
+            return res.status(400).json({
+                message: validation.message
+            });
+
+        }
+
 
         // Check whether content already exists
         const [existingRows] = await db.query(
@@ -245,6 +446,7 @@ const saveAdvancedModuleContent = async (req, res) => {
             `,
             [moduleId]
         );
+
 
         if (existingRows.length > 0) {
 
@@ -276,11 +478,14 @@ const saveAdvancedModuleContent = async (req, res) => {
                     JSON.stringify(contentData)
                 ]
             );
+
         }
+
 
         return res.status(200).json({
             message: "Advanced module content saved successfully"
         });
+
 
     } catch (error) {
 
@@ -289,9 +494,11 @@ const saveAdvancedModuleContent = async (req, res) => {
             error
         );
 
+
         return res.status(500).json({
             message: "Failed to save advanced module content"
         });
+
     }
 };
 

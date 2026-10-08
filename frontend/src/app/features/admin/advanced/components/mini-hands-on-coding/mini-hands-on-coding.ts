@@ -7,6 +7,8 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
+import { ToastService } from '../../../../../services/toast.service';
+
 @Component({
   selector: 'app-mini-hands-on-coding',
   standalone: true,
@@ -27,6 +29,11 @@ export class MiniHandsOnCoding {
     new EventEmitter<any>();
 
 
+  constructor(
+    private toastService: ToastService
+  ) {}
+
+
   updateField(
     field: string,
     value: string
@@ -42,8 +49,76 @@ export class MiniHandsOnCoding {
 
   saveContent(): void {
 
+    const title =
+      this.content.title?.trim();
+
+    const task =
+      this.content.task?.trim();
+
+    const instructions =
+      this.content.instructions?.trim();
+
+    const starterCode =
+      this.content.starterCode?.trim();
+
+
+    // Validate title
+    if (!title) {
+
+      this.toastService.error(
+        'Please enter a title.'
+      );
+
+      return;
+    }
+
+
+    // Validate task
+    if (!task) {
+
+      this.toastService.error(
+        'Please enter the coding task.'
+      );
+
+      return;
+    }
+
+
+    // Validate instructions
+    if (!instructions) {
+
+      this.toastService.error(
+        'Please provide the instructions.'
+      );
+
+      return;
+    }
+
+
+    // Validate starter code
+    if (!starterCode) {
+
+      this.toastService.error(
+        'Please provide the starter code.'
+      );
+
+      return;
+    }
+
+
+    // Save only after validation passes
     this.save.emit({
-      ...this.content
+
+      ...this.content,
+
+      title,
+
+      task,
+
+      instructions,
+
+      starterCode
+
     });
 
   }

@@ -7,6 +7,8 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
+import { ToastService } from '../../../../../services/toast.service';
+
 @Component({
   selector: 'app-debugging',
   standalone: true,
@@ -27,6 +29,11 @@ export class Debugging {
     new EventEmitter<any>();
 
 
+  constructor(
+    private toastService: ToastService
+  ) {}
+
+
   updateField(
     field: string,
     value: string
@@ -42,8 +49,76 @@ export class Debugging {
 
   saveContent(): void {
 
+    const title =
+      this.content.title?.trim();
+
+    const problemDescription =
+      this.content.problemDescription?.trim();
+
+    const buggyCode =
+      this.content.buggyCode?.trim();
+
+    const correctCode =
+      this.content.correctCode?.trim();
+
+
+    // Validate title
+    if (!title) {
+
+      this.toastService.error(
+        'Please enter a title.'
+      );
+
+      return;
+    }
+
+
+    // Validate problem description
+    if (!problemDescription) {
+
+      this.toastService.error(
+        'Please describe the problem.'
+      );
+
+      return;
+    }
+
+
+    // Validate buggy code
+    if (!buggyCode) {
+
+      this.toastService.error(
+        'Please provide the buggy code.'
+      );
+
+      return;
+    }
+
+
+    // Validate correct code
+    if (!correctCode) {
+
+      this.toastService.error(
+        'Please provide the correct code.'
+      );
+
+      return;
+    }
+
+
+    // Save only after validation passes
     this.save.emit({
-      ...this.content
+
+      ...this.content,
+
+      title,
+
+      problemDescription,
+
+      buggyCode,
+
+      correctCode
+
     });
 
   }
