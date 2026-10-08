@@ -1,0 +1,180 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Concept Comparison
+      </h3>
+
+      <p>
+        Compare two related concepts and explain when each should be used.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Example: let vs const"
+      >
+
+    </div>
+
+
+    <!-- CONCEPT A -->
+
+    <div class="form-field">
+
+      <label>
+        Concept A
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.conceptA || ''"
+        (ngModelChange)="
+          updateField('conceptA', $event)
+        "
+        placeholder="Explain concept A..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- CONCEPT B -->
+
+    <div class="form-field">
+
+      <label>
+        Concept B
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.conceptB || ''"
+        (ngModelChange)="
+          updateField('conceptB', $event)
+        "
+        placeholder="Explain concept B..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- KEY DIFFERENCES -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Key Differences
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="content.keyDifferences || ''"
+        (ngModelChange)="
+          updateField(
+            'keyDifferences',
+            $event
+          )
+        "
+        placeholder="Explain the important differences..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- WHEN TO USE A -->
+
+    <div class="form-field">
+
+      <label>
+        When to Use A
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.whenToUseA || ''"
+        (ngModelChange)="
+          updateField(
+            'whenToUseA',
+            $event
+          )
+        "
+        placeholder="When should the student use A?"
+      ></textarea>
+
+    </div>
+
+
+    <!-- WHEN TO USE B -->
+
+    <div class="form-field">
+
+      <label>
+        When to Use B
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.whenToUseB || ''"
+        (ngModelChange)="
+          updateField(
+            'whenToUseB',
+            $event
+          )
+        "
+        placeholder="When should the student use B?"
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

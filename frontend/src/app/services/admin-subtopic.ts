@@ -56,4 +56,63 @@ export class AdminSubtopic {
     );
   }
 
+    // ======================================================
+  // ADVANCED LEARNING
+  // ======================================================
+
+  // Get Advanced setup for a subtopic
+  getAdvancedSetup(subtopicId: number) {
+    return this.http.get(
+      `${this.apiUrl}/${subtopicId}/advanced`
+    );
+  }
+
+
+  // Create Advanced setup with selected modules
+  createAdvancedSetup(
+    subtopicId: number,
+    modules: string[]
+  ) {
+    return this.http.post(
+      `${this.apiUrl}/${subtopicId}/advanced`,
+      {
+        subtopicId,
+        modules
+      }
+    );
+  }
+
+
+  // Get content for an Advanced module
+  getAdvancedModuleContent(moduleId: number) {
+    return this.http.get(
+      `${this.apiUrl}/advanced/modules/${moduleId}/content`
+    );
+  }
+
+
+  // Create or update Advanced module content
+  saveAdvancedModuleContent(
+    moduleId: number,
+    contentData: any
+  ) {
+    return this.http.put(
+      `${this.apiUrl}/advanced/modules/${moduleId}/content`,
+      {
+        contentData
+      }
+    );
+  }
+updateAdvancedSetup(
+  subtopicId: number,
+  modules: string[]
+) {
+  return this.http.put(
+    `${this.apiUrl}/${subtopicId}/advanced`,
+    {
+      modules
+    }
+  );
+}
+
 }

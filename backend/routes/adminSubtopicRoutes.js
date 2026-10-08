@@ -7,6 +7,14 @@ const {
     updateSubtopicStatus
 } = require("../controllers/adminSubtopicController");
 
+const {
+    getAdvancedSetup,
+    createAdvancedSetup,
+    updateAdvancedSetup,
+    saveAdvancedModuleContent,
+    getAdvancedModuleContent
+} = require("../controllers/adminLearningAdvancedController");
+
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
@@ -46,6 +54,54 @@ router.patch(
     authMiddleware,
     roleMiddleware("admin"),
     updateSubtopicStatus
+);
+
+// ======================================================
+// ADVANCED LEARNING
+// ======================================================
+
+// Get Advanced setup for a subtopic
+router.get(
+    "/:subtopicId/advanced",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getAdvancedSetup
+);
+
+// Create Advanced setup for a subtopic
+router.post(
+    "/:subtopicId/advanced",
+    authMiddleware,
+    roleMiddleware("admin"),
+    createAdvancedSetup
+);
+
+// ======================================================
+// ADVANCED MODULE CONTENT
+// ======================================================
+
+// Get content for an Advanced module
+router.get(
+    "/advanced/modules/:moduleId/content",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getAdvancedModuleContent
+);
+
+// Create / update content for an Advanced module
+router.put(
+    "/advanced/modules/:moduleId/content",
+    authMiddleware,
+    roleMiddleware("admin"),
+    saveAdvancedModuleContent
+);
+
+// Update Advanced module selection
+router.put(
+    "/:subtopicId/advanced",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateAdvancedSetup
 );
 
 

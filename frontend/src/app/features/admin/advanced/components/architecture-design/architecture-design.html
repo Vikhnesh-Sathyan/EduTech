@@ -1,0 +1,183 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Architecture / Design Thinking
+      </h3>
+
+      <p>
+        Help the student understand how the concept influences real-world system design decisions.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter architecture or design topic"
+      >
+
+    </div>
+
+
+    <!-- PROBLEM -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Problem
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.problem || ''"
+        (ngModelChange)="
+          updateField('problem', $event)
+        "
+        placeholder="Describe the system or engineering problem..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- DESIGN APPROACH -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Design Approach
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.designApproach || ''"
+        (ngModelChange)="
+          updateField(
+            'designApproach',
+            $event
+          )
+        "
+        placeholder="Explain the proposed design approach..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- ARCHITECTURE / FLOW -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Architecture / Flow
+      </label>
+
+      <textarea
+        rows="9"
+        [ngModel]="content.architectureFlow || ''"
+        (ngModelChange)="
+          updateField(
+            'architectureFlow',
+            $event
+          )
+        "
+        placeholder="Describe the architecture, components, and request/data flow..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- WHY THIS APPROACH -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Why This Approach
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="content.whyThisApproach || ''"
+        (ngModelChange)="
+          updateField(
+            'whyThisApproach',
+            $event
+          )
+        "
+        placeholder="Explain why this design is appropriate..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- REAL-WORLD CONSIDERATIONS -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Real-world Considerations
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.realWorldConsiderations || ''"
+        (ngModelChange)="
+          updateField(
+            'realWorldConsiderations',
+            $event
+          )
+        "
+        placeholder="Discuss scalability, security, performance, maintainability, trade-offs, or other considerations..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

@@ -91,6 +91,8 @@ import { AdminTopicLearningPage } from './features/admin/admin-topic-learning/ad
 import { AdminLearningSectionsPage } from './features/admin/admin-learning-sections/admin-learning-sections';
 import { AdminSectionLearningPage } from './features/admin/admin-section-learning/admin-section-learning';
 import { AdminSubtopicsPage } from './features/admin/admin-subtopics/admin-subtopics';
+import { AdminAdvanced } from './features/admin/advanced/admin-advanced/admin-advanced';
+
 
 // ======================================================
 // ADMIN - PROJECT UNDERSTANDING
@@ -286,6 +288,7 @@ export const routes: Routes = [
         path: 'study/:subjectId/learning',
         component: StudentLearningSection
       },
+      
 
       // ==================================================
       // STUDENT MENTORS
@@ -456,6 +459,11 @@ export const routes: Routes = [
       {
         path: 'subtopic-sections/:subtopicId',
         component: AdminLearningSectionsPage
+      },
+
+      {
+        path: 'advanced/:subtopicId',
+        component: AdminAdvanced,
       },
 
       // ==================================================

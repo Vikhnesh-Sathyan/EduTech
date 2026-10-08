@@ -1,0 +1,186 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Interview Challenge
+      </h3>
+
+      <p>
+        Prepare the student to explain the concept clearly in a real technical interview.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter interview challenge title"
+      >
+
+    </div>
+
+
+    <!-- INTERVIEW QUESTION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Interview Question
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.interviewQuestion || ''"
+        (ngModelChange)="
+          updateField(
+            'interviewQuestion',
+            $event
+          )
+        "
+        placeholder="Write a realistic technical interview question..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- EXPECTED THINKING -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Expected Thinking
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.expectedThinking || ''"
+        (ngModelChange)="
+          updateField(
+            'expectedThinking',
+            $event
+          )
+        "
+        placeholder="Explain how a strong candidate should approach the question..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- STRONG ANSWER -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Strong Answer
+      </label>
+
+      <textarea
+        rows="9"
+        [ngModel]="content.strongAnswer || ''"
+        (ngModelChange)="
+          updateField(
+            'strongAnswer',
+            $event
+          )
+        "
+        placeholder="Provide an example of a strong interview answer..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- COMMON MISTAKE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Common Mistake
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="content.commonMistake || ''"
+        (ngModelChange)="
+          updateField(
+            'commonMistake',
+            $event
+          )
+        "
+        placeholder="Explain a common mistake candidates make..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- FOLLOW-UP QUESTION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Follow-up Question
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.followUpQuestion || ''"
+        (ngModelChange)="
+          updateField(
+            'followUpQuestion',
+            $event
+          )
+        "
+        placeholder="Add a deeper follow-up question an interviewer might ask..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

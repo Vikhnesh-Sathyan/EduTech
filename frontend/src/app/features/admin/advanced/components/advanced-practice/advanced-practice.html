@@ -1,0 +1,237 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Advanced Practice
+      </h3>
+
+      <p>
+        Create a challenging application-based question for advanced learners.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter practice question title"
+      >
+
+    </div>
+
+
+    <!-- QUESTION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Question / Problem
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.question || ''"
+        (ngModelChange)="
+          updateField('question', $event)
+        "
+        placeholder="Write an application-based question..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- OPTION A -->
+
+    <div class="form-field">
+
+      <label>
+        Option A
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.options?.[0] || ''"
+        (ngModelChange)="
+          updateOption(0, $event)
+        "
+        placeholder="Enter option A"
+      >
+
+    </div>
+
+
+    <!-- OPTION B -->
+
+    <div class="form-field">
+
+      <label>
+        Option B
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.options?.[1] || ''"
+        (ngModelChange)="
+          updateOption(1, $event)
+        "
+        placeholder="Enter option B"
+      >
+
+    </div>
+
+
+    <!-- OPTION C -->
+
+    <div class="form-field">
+
+      <label>
+        Option C
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.options?.[2] || ''"
+        (ngModelChange)="
+          updateOption(2, $event)
+        "
+        placeholder="Enter option C"
+      >
+
+    </div>
+
+
+    <!-- OPTION D -->
+
+    <div class="form-field">
+
+      <label>
+        Option D
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.options?.[3] || ''"
+        (ngModelChange)="
+          updateOption(3, $event)
+        "
+        placeholder="Enter option D"
+      >
+
+    </div>
+
+
+    <!-- CORRECT ANSWER -->
+
+    <div class="form-field">
+
+      <label>
+        Correct Answer
+      </label>
+
+      <select
+        [ngModel]="content.correctAnswer || ''"
+        (ngModelChange)="
+          updateField(
+            'correctAnswer',
+            $event
+          )
+        "
+      >
+
+        <option value="">
+          Select correct answer
+        </option>
+
+        <option value="A">
+          Option A
+        </option>
+
+        <option value="B">
+          Option B
+        </option>
+
+        <option value="C">
+          Option C
+        </option>
+
+        <option value="D">
+          Option D
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- EXPLANATION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Explanation
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="content.explanation || ''"
+        (ngModelChange)="
+          updateField(
+            'explanation',
+            $event
+          )
+        "
+        placeholder="Explain why the selected answer is correct..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

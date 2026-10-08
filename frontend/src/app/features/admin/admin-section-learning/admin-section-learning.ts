@@ -1,5 +1,13 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  signal
+} from '@angular/core';
+
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
 
 import { AdminSectionLearning } from '../../../services/admin-section-learning';
 
@@ -19,6 +27,10 @@ export class AdminSectionLearningPage implements OnInit {
 
   // Section ID from the URL
   sectionId = signal<number | null>(null);
+
+  // Parent subtopic ID
+  // Advanced learning belongs to the subtopic.
+  subtopicId = signal<number | null>(null);
 
   // Section and topic information
   sectionTitle = signal('');
@@ -76,6 +88,7 @@ export class AdminSectionLearningPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private adminSectionLearningService: AdminSectionLearning
   ) {}
 
@@ -101,6 +114,17 @@ export class AdminSectionLearningPage implements OnInit {
     }
 
     const sectionId = Number(id);
+
+    if (!sectionId) {
+
+      this.errorMessage.set(
+        'Invalid section ID'
+      );
+
+      this.loading.set(false);
+
+      return;
+    }
 
     this.sectionId.set(sectionId);
 
@@ -132,8 +156,6 @@ export class AdminSectionLearningPage implements OnInit {
           // SECTION INFORMATION
           // =================================================
 
-          // Section information exists even when
-          // learning content has not been created yet.
           this.sectionTitle.set(
             content?.section_title ||
             section?.title ||
@@ -145,6 +167,26 @@ export class AdminSectionLearningPage implements OnInit {
             section?.topic_name ||
             ''
           );
+
+
+          // =================================================
+          // SUBTOPIC INFORMATION
+          // =================================================
+
+          /*
+           * Advanced learning belongs to the SUBTOPIC,
+           * not to the individual section.
+           *
+           * Therefore the section response should contain
+           * the parent subtopic ID.
+           */
+          if (section?.subtopic_id) {
+
+            this.subtopicId.set(
+              Number(section.subtopic_id)
+            );
+
+          }
 
 
           // =================================================
@@ -223,8 +265,8 @@ export class AdminSectionLearningPage implements OnInit {
           );
 
 
-          // This is kept for compatibility with
-          // APIs that may return 404.
+          // API may return 404 when content
+          // does not exist yet.
           if (error.status === 404) {
 
             this.contentExists.set(false);
@@ -245,6 +287,31 @@ export class AdminSectionLearningPage implements OnInit {
         }
 
       });
+  }
+
+
+  // =====================================================
+  // OPEN ADVANCED
+  // =====================================================
+
+  openAdvanced(): void {
+
+    const subtopicId =
+      this.subtopicId();
+
+    if (!subtopicId) {
+
+      this.errorMessage.set(
+        'Subtopic information is not available.'
+      );
+
+      return;
+    }
+
+    this.router.navigate([
+      '/admin/advanced',
+      subtopicId
+    ]);
   }
 
 
@@ -333,8 +400,6 @@ export class AdminSectionLearningPage implements OnInit {
     // FORM DATA
     // =====================================================
 
-    // FormData is required because the request
-    // can contain both text and an image file.
     const formData = new FormData();
 
 
@@ -384,8 +449,6 @@ export class AdminSectionLearningPage implements OnInit {
     // IMAGE
     // =====================================================
 
-    // Only send an image when the admin selected
-    // a new image.
     if (this.selectedImage) {
 
       formData.append(
@@ -417,8 +480,6 @@ export class AdminSectionLearningPage implements OnInit {
 
             this.saving.set(false);
 
-            // Reload content so the newly uploaded
-            // image and data are displayed.
             this.loadContent(sectionId);
 
           },
@@ -464,8 +525,6 @@ export class AdminSectionLearningPage implements OnInit {
 
           this.saving.set(false);
 
-          // Reload content so the created image
-          // and content are loaded from the database.
           this.loadContent(sectionId);
 
         },

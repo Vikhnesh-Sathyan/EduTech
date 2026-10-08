@@ -1,0 +1,146 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Behind the Scenes
+      </h3>
+
+      <p>
+        Explain what happens internally when the concept is used.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter title"
+      >
+
+    </div>
+
+
+    <!-- INTERNAL PROCESS -->
+
+    <div class="form-field full-width">
+
+      <label>
+        What Happens Internally
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="
+          content.whatHappensInternally || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'whatHappensInternally',
+            $event
+          )
+        "
+        placeholder="Explain what happens internally..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- FLOW -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Step-by-step Flow
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="
+          content.stepByStepFlow || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'stepByStepFlow',
+            $event
+          )
+        "
+        placeholder="Describe the internal flow step by step..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- TECHNICAL EXPLANATION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Technical Explanation
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="
+          content.technicalExplanation || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'technicalExplanation',
+            $event
+          )
+        "
+        placeholder="Provide the technical explanation..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

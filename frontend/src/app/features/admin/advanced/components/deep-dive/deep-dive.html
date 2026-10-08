@@ -1,0 +1,152 @@
+<div class="module-editor">
+
+  <!-- HEADER -->
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Deep Dive
+      </h3>
+
+      <p>
+        Provide deeper technical understanding of this concept.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- FORM -->
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter deep dive title"
+      >
+
+    </div>
+
+
+    <!-- DETAILED EXPLANATION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Detailed Explanation
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="
+          content.detailedExplanation || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'detailedExplanation',
+            $event
+          )
+        "
+        placeholder="Explain the concept in depth..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- KEY INSIGHTS -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Key Insights
+      </label>
+
+      <textarea
+        rows="5"
+        [ngModel]="
+          content.keyInsights || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'keyInsights',
+            $event
+          )
+        "
+        placeholder="Important insights the student should understand..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- REAL-WORLD EXAMPLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Real-world Example
+      </label>
+
+      <textarea
+        rows="5"
+        [ngModel]="
+          content.realWorldExample || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'realWorldExample',
+            $event
+          )
+        "
+        placeholder="Explain a practical real-world example..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <!-- ACTIONS -->
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

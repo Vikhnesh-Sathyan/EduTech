@@ -1,0 +1,167 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Real-world Scenario
+      </h3>
+
+      <p>
+        Connect the concept to a realistic development situation.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter scenario title"
+      >
+
+    </div>
+
+
+    <!-- SCENARIO -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Scenario
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="content.scenario || ''"
+        (ngModelChange)="
+          updateField(
+            'scenario',
+            $event
+          )
+        "
+        placeholder="Describe the real-world situation..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- PROBLEM -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Problem
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.problem || ''"
+        (ngModelChange)="
+          updateField(
+            'problem',
+            $event
+          )
+        "
+        placeholder="What problem needs to be solved?"
+      ></textarea>
+
+    </div>
+
+
+    <!-- HOW CONCEPT SOLVES IT -->
+
+    <div class="form-field full-width">
+
+      <label>
+        How the Concept Solves It
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="
+          content.howConceptSolvesIt || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'howConceptSolvesIt',
+            $event
+          )
+        "
+        placeholder="Explain how the concept solves the problem..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- EXPECTED APPROACH -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Expected Approach
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="
+          content.expectedApproach || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'expectedApproach',
+            $event
+          )
+        "
+        placeholder="Describe the expected technical approach..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

@@ -1,0 +1,472 @@
+<div class="advanced-page">
+
+  <!-- HEADER -->
+
+  <div class="advanced-header">
+
+    <div>
+
+      <p class="page-label">
+        ADVANCED LEARNING
+      </p>
+
+      <h1>
+        Advanced Setup
+      </h1>
+
+      <p class="page-description">
+        Select the advanced learning modules available for this subtopic.
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()"
+    >
+      Back
+    </button>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  @if (loading()) {
+
+    <div class="loading-state">
+      Loading Advanced setup...
+    </div>
+
+  }
+
+
+  @else {
+
+    <!-- MODULE SELECTION -->
+
+    <section class="setup-card">
+
+      <div class="section-header">
+
+        <div>
+
+          <p class="section-label">
+            MODULE SELECTION
+          </p>
+
+          <h2>
+            Choose Advanced Modules
+          </h2>
+
+          <p>
+            Select only the modules that are useful for this subtopic.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="module-grid">
+
+        @for (
+          module of moduleTypes;
+          track module.type
+        ) {
+
+          <button
+            type="button"
+            class="module-card"
+            [class.selected]="
+              isSelected(module.type)
+            "
+            (click)="
+              toggleModule(module.type)
+            "
+          >
+
+            <div class="module-card-top">
+
+              <span class="module-title">
+                {{ module.label }}
+              </span>
+
+              <span
+                class="selection-indicator"
+              >
+                @if (
+                  isSelected(module.type)
+                ) {
+                  ✓
+                } @else {
+                  +
+                }
+              </span>
+
+            </div>
+
+            <p>
+              {{ module.description }}
+            </p>
+
+          </button>
+
+        }
+
+      </div>
+
+
+      <div class="setup-actions">
+
+        <span class="selected-count">
+          {{ selectedModules().length }}
+          module(s) selected
+        </span>
+
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="saving()"
+          (click)="saveAdvanced()"
+        >
+
+          @if (saving()) {
+            Saving...
+          } @else {
+            Save Advanced Setup
+          }
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONFIGURED MODULES -->
+
+    @if (
+      advancedExists() &&
+      advancedModules().length > 0
+    ) {
+
+      <section class="configured-card">
+
+        <div class="section-header">
+
+          <div>
+
+            <p class="section-label">
+              CONTENT CONFIGURATION
+            </p>
+
+            <h2>
+              Configure Modules
+            </h2>
+
+            <p>
+              Open each selected module and add its advanced learning content.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="configured-list">
+
+          @for (
+            module of advancedModules();
+            track module.id
+          ) {
+
+            <div class="configured-module">
+
+              <div>
+
+                <h3>
+                  {{ getModuleLabel(
+                    module.module_type
+                  ) }}
+                </h3>
+
+                <p>
+                  Configure the content for this module.
+                </p>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="
+                  openModuleContent(
+                    module.module_type
+                  )
+                "
+              >
+                Configure
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- MODULE EDITOR -->
+
+    @if (
+      selectedModuleForEditing()
+    ) {
+
+      <section class="editor-card">
+
+        <div class="editor-topbar">
+
+          <div>
+
+            <p class="section-label">
+              MODULE CONTENT
+            </p>
+
+            <h2>
+              {{
+                getModuleLabel(
+                  selectedModuleForEditing()!
+                )
+              }}
+            </h2>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="close-button"
+            (click)="closeModuleContent()"
+          >
+            Close
+          </button>
+
+        </div>
+
+
+        @if (contentLoading()) {
+
+          <div class="loading-state">
+            Loading module content...
+          </div>
+
+        }
+
+        @else {
+
+          @if (
+            selectedModuleForEditing()
+            === 'deep_dive'
+          ) {
+
+            <app-deep-dive
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'behind_the_scenes'
+          ) {
+
+            <app-behind-the-scenes
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'concept_comparison'
+          ) {
+
+            <app-concept-comparison
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'debugging'
+          ) {
+
+            <app-debugging
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'real_world_scenario'
+          ) {
+
+            <app-real-world-scenario
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'code_challenge'
+          ) {
+
+            <app-code-challenge
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'mini_hands_on_coding'
+          ) {
+
+            <app-mini-hands-on-coding
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'advanced_practice'
+          ) {
+
+            <app-advanced-practice
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'architecture_design'
+          ) {
+
+            <app-architecture-design
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+
+          @if (
+            selectedModuleForEditing()
+            === 'interview_challenge'
+          ) {
+
+            <app-interview-challenge
+              [content]="moduleContent()"
+              [saving]="contentSaving()"
+              (contentChange)="
+                updateModuleContent($event)
+              "
+              (save)="
+                saveModuleContent($event)
+              "
+            />
+
+          }
+
+        }
+
+      </section>
+
+    }
+
+  }
+
+</div>

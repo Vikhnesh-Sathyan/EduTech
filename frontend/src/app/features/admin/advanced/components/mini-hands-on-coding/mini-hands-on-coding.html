@@ -1,0 +1,186 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Mini Hands-on Coding
+      </h3>
+
+      <p>
+        Give the student a focused coding task to implement the concept themselves.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter hands-on task title"
+      >
+
+    </div>
+
+
+    <!-- TASK -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Task
+      </label>
+
+      <textarea
+        rows="7"
+        [ngModel]="content.task || ''"
+        (ngModelChange)="
+          updateField('task', $event)
+        "
+        placeholder="Describe what the student needs to build..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Instructions
+      </label>
+
+      <textarea
+        rows="8"
+        [ngModel]="content.instructions || ''"
+        (ngModelChange)="
+          updateField(
+            'instructions',
+            $event
+          )
+        "
+        placeholder="Provide step-by-step instructions..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- STARTER CODE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Starter Code
+      </label>
+
+      <textarea
+        class="code-input"
+        rows="12"
+        [ngModel]="content.starterCode || ''"
+        (ngModelChange)="
+          updateField(
+            'starterCode',
+            $event
+          )
+        "
+        placeholder="Provide optional starter code..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- EXPECTED OUTPUT -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Expected Output
+      </label>
+
+      <textarea
+        class="code-input"
+        rows="6"
+        [ngModel]="content.expectedOutput || ''"
+        (ngModelChange)="
+          updateField(
+            'expectedOutput',
+            $event
+          )
+        "
+        placeholder="Show what the completed solution should produce..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- SOLUTION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Solution
+      </label>
+
+      <textarea
+        class="code-input"
+        rows="12"
+        [ngModel]="content.solution || ''"
+        (ngModelChange)="
+          updateField(
+            'solution',
+            $event
+          )
+        "
+        placeholder="Provide the reference solution..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

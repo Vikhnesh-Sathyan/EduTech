@@ -1,0 +1,190 @@
+<div class="module-editor">
+
+  <div class="editor-header">
+
+    <div>
+
+      <p class="editor-label">
+        ADVANCED MODULE
+      </p>
+
+      <h3>
+        Debugging
+      </h3>
+
+      <p>
+        Teach students to identify and fix realistic development problems.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- TITLE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        type="text"
+        [ngModel]="content.title || ''"
+        (ngModelChange)="
+          updateField('title', $event)
+        "
+        placeholder="Enter debugging scenario title"
+      >
+
+    </div>
+
+
+    <!-- PROBLEM DESCRIPTION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Problem Description
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="
+          content.problemDescription || ''
+        "
+        (ngModelChange)="
+          updateField(
+            'problemDescription',
+            $event
+          )
+        "
+        placeholder="Describe the problem..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- BUGGY CODE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Buggy Code
+      </label>
+
+      <textarea
+        class="code-input"
+        rows="10"
+        [ngModel]="content.buggyCode || ''"
+        (ngModelChange)="
+          updateField(
+            'buggyCode',
+            $event
+          )
+        "
+        placeholder="Paste the buggy code here..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- WHY WRONG -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Why It Is Wrong
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.whyItIsWrong || ''"
+        (ngModelChange)="
+          updateField(
+            'whyItIsWrong',
+            $event
+          )
+        "
+        placeholder="Explain why the code is wrong..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- CORRECT CODE -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Correct Code
+      </label>
+
+      <textarea
+        class="code-input"
+        rows="10"
+        [ngModel]="content.correctCode || ''"
+        (ngModelChange)="
+          updateField(
+            'correctCode',
+            $event
+          )
+        "
+        placeholder="Enter the corrected code..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- EXPLANATION -->
+
+    <div class="form-field full-width">
+
+      <label>
+        Explanation
+      </label>
+
+      <textarea
+        rows="6"
+        [ngModel]="content.explanation || ''"
+        (ngModelChange)="
+          updateField(
+            'explanation',
+            $event
+          )
+        "
+        placeholder="Explain how the correction solves the problem..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="editor-actions">
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving"
+      (click)="saveContent()"
+    >
+
+      @if (saving) {
+
+        Saving...
+
+      } @else {
+
+        Save Module Content
+
+      }
+
+    </button>
+
+  </div>
+
+</div>
