@@ -1,20 +1,15 @@
+
 <section class="diagnostic-questions-page">
 
-  <!-- =====================================================
-       PAGE HEADER
-       ===================================================== -->
+  <!-- PAGE HEADER -->
 
   <div class="page-header">
 
     <div class="page-header-content">
 
-      <p class="eyebrow">
-        DIAGNOSTIC
-      </p>
+      <p class="eyebrow">DIAGNOSTIC</p>
 
-      <h1>
-        Diagnostic Questions
-      </h1>
+      <h1>Diagnostic Questions</h1>
 
       <p class="page-description">
         Build and manage the question bank used to assess
@@ -23,81 +18,68 @@
 
     </div>
 
-    <button
-      type="button"
-      class="add-question-button"
-      (click)="openAddQuestion()"
-    >
-      <span>+</span>
-      Add Question
-    </button>
+    <div class="page-header-actions">
+
+      <button
+        type="button"
+        class="import-question-button"
+        (click)="openImportQuestions()"
+      >
+        <span>↑</span>
+        Import Questions
+      </button>
+
+      <button
+        type="button"
+        class="add-question-button"
+        (click)="openAddQuestion()"
+      >
+        <span>+</span>
+        Add Question
+      </button>
+
+    </div>
 
   </div>
 
 
   <!-- =====================================================
-       ADD / EDIT QUESTION FORM
+       BULK QUESTION IMPORT
        ===================================================== -->
 
-  @if (showForm()) {
+  @if (showImportForm()) {
 
-    <div class="question-form-panel">
-
-      <!-- Form header -->
+    <div class="question-form-panel import-form-panel">
 
       <div class="form-header">
 
         <div>
 
-          <p class="form-eyebrow">
-            QUESTION BANK
-          </p>
+          <p class="form-eyebrow">BULK IMPORT</p>
 
-          <h2>
-            @if (editingQuestionId()) {
-              Edit Diagnostic Question
-            }
-            @else {
-              Add Diagnostic Question
-            }
-          </h2>
+          <h2>Import Diagnostic Questions</h2>
 
           <p>
-            @if (editingQuestionId()) {
-              Update the selected diagnostic question.
-            }
-            @else {
-              Create a structured question for student assessment.
-            }
+            Upload an Excel or CSV file to add multiple
+            questions to one selected topic.
           </p>
 
         </div>
 
         <div class="form-step">
-
-          @if (editingQuestionId()) {
-            EDIT QUESTION
-          }
-          @else {
-            NEW QUESTION
-          }
-
+          EXCEL / CSV
         </div>
 
       </div>
 
 
-      <!-- =================================================
-           SUBJECT + TOPIC
-           ================================================= -->
+      <!-- SUBJECT AND TOPIC -->
 
       <div class="form-section">
 
         <div class="section-heading">
 
-          <span class="section-number">
-            01
-          </span>
+          <span class="section-number">01</span>
 
           <div>
             <h3>Question Context</h3>
@@ -106,35 +88,27 @@
 
         </div>
 
-
         <div class="form-grid two-columns">
-
-          <!-- Subject -->
 
           <div class="form-group">
 
-            <label for="subject">
+            <label for="importSubject">
               Subject
             </label>
 
-            @if (loadingSubjects()) {
+            @if (loadingImportSubjects()) {
 
               <div class="form-loading">
                 Loading subjects...
               </div>
 
-            }
-
-            @else {
+            } @else {
 
               <select
-                id="subject"
-                [value]="selectedSubjectId() ?? ''"
-                (change)="
-                  loadTopics(
-                    $any($event.target).value
-                  )
-                "
+                id="importSubject"
+                [value]="importSubjectId() ?? ''"
+                [disabled]="importing()"
+                (change)="loadImportTopics($any($event.target).value)"
               >
 
                 <option value="">
@@ -142,13 +116,11 @@
                 </option>
 
                 @for (
-                  subject of subjects();
+                  subject of importSubjects();
                   track subject.id
                 ) {
 
-                  <option
-                    [value]="subject.id"
-                  >
+                  <option [value]="subject.id">
                     {{ subject.name }}
                   </option>
 
@@ -161,47 +133,41 @@
           </div>
 
 
-          <!-- Topic -->
-
           <div class="form-group">
 
-            <label for="topic">
+            <label for="importTopic">
               Topic
             </label>
 
             <select
-              id="topic"
-              [value]="selectedTopicId() ?? ''"
+              id="importTopic"
+              [value]="importTopicId() ?? ''"
               [disabled]="
-                !selectedSubjectId() ||
-                loadingTopics()
+                !importSubjectId() ||
+                loadingImportTopics() ||
+                importing()
               "
               (change)="
-                selectedTopicId.set(
-                  +$any($event.target).value
+                importTopicId.set(
+                  +$any($event.target).value || null
                 )
               "
             >
 
               <option value="">
-
-                @if (loadingTopics()) {
+                @if (loadingImportTopics()) {
                   Loading topics...
-                }
-                @else {
+                } @else {
                   Select Topic
                 }
-
               </option>
 
               @for (
-                topic of topics();
+                topic of importTopics();
                 track topic.id
               ) {
 
-                <option
-                  [value]="topic.id"
-                >
+                <option [value]="topic.id">
                   {{ topic.name }}
                 </option>
 
@@ -216,27 +182,293 @@
       </div>
 
 
-      <!-- =================================================
-           QUESTION
-           ================================================= -->
+      <!-- FILE UPLOAD -->
 
       <div class="form-section">
 
         <div class="section-heading">
 
-          <span class="section-number">
-            02
-          </span>
+          <span class="section-number">02</span>
 
           <div>
-            <h3>Question</h3>
-            <p>
-              Write the question students will answer.
-            </p>
+            <h3>Upload Questions</h3>
+            <p>Prepare your spreadsheet using the correct columns.</p>
           </div>
 
         </div>
 
+        <div class="form-group">
+
+          <label>Spreadsheet Template</label>
+
+          <p class="field-hint">
+            Download the template first to ensure your column
+            headings match the expected format.
+          </p>
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="downloadQuestionTemplate()"
+          >
+            Download CSV Template
+          </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="questionImportFile">
+            Excel or CSV File
+          </label>
+
+          <input
+            id="questionImportFile"
+            type="file"
+            accept=".xlsx,.csv"
+            [disabled]="importing()"
+            (change)="onImportFileSelected($event)"
+          />
+
+          <span class="field-hint">
+            Maximum size: 5 MB. Supported formats: .xlsx and .csv.
+          </span>
+
+        </div>
+
+
+        @if (importFile()) {
+
+          <div class="state-message">
+            Selected file: {{ importFile()!.name }}
+          </div>
+
+        }
+
+
+        @if (importMessage()) {
+
+          <div class="state-message">
+            {{ importMessage() }}
+          </div>
+
+        }
+
+
+        @if (importErrors().length > 0) {
+
+          <div class="state-message error-state">
+
+            <strong>
+              Please correct the following rows:
+            </strong>
+
+            <ul>
+              @for (item of importErrors(); track $index) {
+                <li>
+                  Row {{ item.row }}: {{ item.message }}
+                </li>
+              }
+            </ul>
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- IMPORT ACTIONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="importing()"
+          (click)="closeImportQuestions()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-question-button"
+          [disabled]="importing()"
+          (click)="importDiagnosticQuestions()"
+        >
+
+          @if (importing()) {
+            Importing...
+          } @else {
+            Import Questions
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       ADD / EDIT QUESTION FORM
+       ===================================================== -->
+
+  @if (showForm()) {
+
+    <div class="question-form-panel">
+
+      <div class="form-header">
+
+        <div>
+
+          <p class="form-eyebrow">QUESTION BANK</p>
+
+          <h2>
+            @if (editingQuestionId()) {
+              Edit Diagnostic Question
+            } @else {
+              Add Diagnostic Question
+            }
+          </h2>
+
+          <p>
+            @if (editingQuestionId()) {
+              Update the selected diagnostic question.
+            } @else {
+              Create a structured question for student assessment.
+            }
+          </p>
+
+        </div>
+
+        <div class="form-step">
+          @if (editingQuestionId()) {
+            EDIT QUESTION
+          } @else {
+            NEW QUESTION
+          }
+        </div>
+
+      </div>
+
+
+      <!-- SUBJECT AND TOPIC -->
+
+      <div class="form-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">01</span>
+
+          <div>
+            <h3>Question Context</h3>
+            <p>Select the subject and topic.</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid two-columns">
+
+          <div class="form-group">
+
+            <label for="subject">
+              Subject
+            </label>
+
+            @if (loadingSubjects()) {
+
+              <div class="form-loading">
+                Loading subjects...
+              </div>
+
+            } @else {
+
+              <select
+                id="subject"
+                [value]="selectedSubjectId() ?? ''"
+                (change)="loadTopics($any($event.target).value)"
+              >
+
+                <option value="">
+                  Select Subject
+                </option>
+
+                @for (subject of subjects(); track subject.id) {
+
+                  <option [value]="subject.id">
+                    {{ subject.name }}
+                  </option>
+
+                }
+
+              </select>
+
+            }
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="topic">
+              Topic
+            </label>
+
+            <select
+              id="topic"
+              [value]="selectedTopicId() ?? ''"
+              [disabled]="!selectedSubjectId() || loadingTopics()"
+              (change)="
+                selectedTopicId.set(
+                  +$any($event.target).value
+                )
+              "
+            >
+
+              <option value="">
+                @if (loadingTopics()) {
+                  Loading topics...
+                } @else {
+                  Select Topic
+                }
+              </option>
+
+              @for (topic of topics(); track topic.id) {
+
+                <option [value]="topic.id">
+                  {{ topic.name }}
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- QUESTION -->
+
+      <div class="form-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">02</span>
+
+          <div>
+            <h3>Question</h3>
+            <p>Write the question students will answer.</p>
+          </div>
+
+        </div>
 
         <div class="form-group">
 
@@ -247,11 +479,7 @@
           <textarea
             id="questionText"
             [value]="questionText()"
-            (input)="
-              questionText.set(
-                $any($event.target).value
-              )
-            "
+            (input)="questionText.set($any($event.target).value)"
             placeholder="Enter the diagnostic question..."
             rows="5"
           ></textarea>
@@ -265,32 +493,20 @@
       </div>
 
 
-      <!-- =================================================
-           CODE
-           ================================================= -->
+      <!-- CODE -->
 
       <div class="form-section">
 
         <div class="section-heading">
 
-          <span class="section-number">
-            03
-          </span>
+          <span class="section-number">03</span>
 
           <div>
-
-            <h3>
-              Code
-            </h3>
-
-            <p>
-              Optional code block for programming questions.
-            </p>
-
+            <h3>Code</h3>
+            <p>Optional code block for programming questions.</p>
           </div>
 
         </div>
-
 
         <div class="form-group">
 
@@ -302,11 +518,7 @@
             id="questionCode"
             class="code-input"
             [value]="code()"
-            (input)="
-              code.set(
-                $any($event.target).value
-              )
-            "
+            (input)="code.set($any($event.target).value)"
             placeholder="Paste the code here if this is a coding question..."
             rows="8"
           ></textarea>
@@ -320,145 +532,89 @@
       </div>
 
 
-      <!-- =================================================
-           ANSWER OPTIONS
-           ================================================= -->
+      <!-- ANSWER OPTIONS -->
 
       <div class="form-section">
 
         <div class="section-heading">
 
-          <span class="section-number">
-            04
-          </span>
+          <span class="section-number">04</span>
 
           <div>
-
-            <h3>
-              Answer Options
-            </h3>
-
-            <p>
-              Provide four possible answers.
-            </p>
-
+            <h3>Answer Options</h3>
+            <p>Provide four possible answers.</p>
           </div>
 
         </div>
 
-
         <div class="options-grid">
-
-          <!-- Option A -->
 
           <div class="form-group option-group">
 
             <label for="optionA">
-
-              <span class="option-badge">
-                A
-              </span>
-
+              <span class="option-badge">A</span>
               Option A
-
             </label>
 
             <input
               id="optionA"
               type="text"
               [value]="optionA()"
-              (input)="
-                optionA.set(
-                  $any($event.target).value
-                )
-              "
+              (input)="optionA.set($any($event.target).value)"
               placeholder="Enter option A"
             />
 
           </div>
 
 
-          <!-- Option B -->
-
           <div class="form-group option-group">
 
             <label for="optionB">
-
-              <span class="option-badge">
-                B
-              </span>
-
+              <span class="option-badge">B</span>
               Option B
-
             </label>
 
             <input
               id="optionB"
               type="text"
               [value]="optionB()"
-              (input)="
-                optionB.set(
-                  $any($event.target).value
-                )
-              "
+              (input)="optionB.set($any($event.target).value)"
               placeholder="Enter option B"
             />
 
           </div>
 
 
-          <!-- Option C -->
-
           <div class="form-group option-group">
 
             <label for="optionC">
-
-              <span class="option-badge">
-                C
-              </span>
-
+              <span class="option-badge">C</span>
               Option C
-
             </label>
 
             <input
               id="optionC"
               type="text"
               [value]="optionC()"
-              (input)="
-                optionC.set(
-                  $any($event.target).value
-                )
-              "
+              (input)="optionC.set($any($event.target).value)"
               placeholder="Enter option C"
             />
 
           </div>
 
 
-          <!-- Option D -->
-
           <div class="form-group option-group">
 
             <label for="optionD">
-
-              <span class="option-badge">
-                D
-              </span>
-
+              <span class="option-badge">D</span>
               Option D
-
             </label>
 
             <input
               id="optionD"
               type="text"
               [value]="optionD()"
-              (input)="
-                optionD.set(
-                  $any($event.target).value
-                )
-              "
+              (input)="optionD.set($any($event.target).value)"
               placeholder="Enter option D"
             />
 
@@ -469,36 +625,22 @@
       </div>
 
 
-      <!-- =================================================
-           CORRECT ANSWER + DIFFICULTY
-           ================================================= -->
+      <!-- ASSESSMENT SETTINGS -->
 
       <div class="form-section">
 
         <div class="section-heading">
 
-          <span class="section-number">
-            05
-          </span>
+          <span class="section-number">05</span>
 
           <div>
-
-            <h3>
-              Assessment Settings
-            </h3>
-
-            <p>
-              Define the correct answer and difficulty level.
-            </p>
-
+            <h3>Assessment Settings</h3>
+            <p>Define the correct answer and difficulty level.</p>
           </div>
 
         </div>
 
-
         <div class="form-grid two-columns">
-
-          <!-- Correct answer -->
 
           <div class="form-group">
 
@@ -509,39 +651,19 @@
             <select
               id="correctOption"
               [value]="correctOption()"
-              (change)="
-                correctOption.set(
-                  $any($event.target).value
-                )
-              "
+              (change)="correctOption.set($any($event.target).value)"
             >
 
-              <option value="">
-                Select Correct Answer
-              </option>
-
-              <option value="A">
-                Option A
-              </option>
-
-              <option value="B">
-                Option B
-              </option>
-
-              <option value="C">
-                Option C
-              </option>
-
-              <option value="D">
-                Option D
-              </option>
+              <option value="">Select Correct Answer</option>
+              <option value="A">Option A</option>
+              <option value="B">Option B</option>
+              <option value="C">Option C</option>
+              <option value="D">Option D</option>
 
             </select>
 
           </div>
 
-
-          <!-- Difficulty -->
 
           <div class="form-group">
 
@@ -552,28 +674,13 @@
             <select
               id="difficulty"
               [value]="difficulty()"
-              (change)="
-                difficulty.set(
-                  $any($event.target).value
-                )
-              "
+              (change)="difficulty.set($any($event.target).value)"
             >
 
-              <option value="">
-                Select Difficulty
-              </option>
-
-              <option value="easy">
-                Easy
-              </option>
-
-              <option value="medium">
-                Medium
-              </option>
-
-              <option value="hard">
-                Hard
-              </option>
+              <option value="">Select Difficulty</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
 
             </select>
 
@@ -584,9 +691,7 @@
       </div>
 
 
-      <!-- =================================================
-           FORM ACTIONS
-           ================================================= -->
+      <!-- FORM ACTIONS -->
 
       <div class="form-actions">
 
@@ -598,7 +703,6 @@
           Cancel
         </button>
 
-
         <button
           type="button"
           class="save-question-button"
@@ -607,8 +711,7 @@
 
           @if (editingQuestionId()) {
             Update Question
-          }
-          @else {
+          } @else {
             Save Question
           }
 
@@ -631,27 +734,19 @@
       Loading questions...
     </div>
 
-  }
-
-  @else if (errorMessage()) {
+  } @else if (errorMessage()) {
 
     <div class="state-message error-state">
       {{ errorMessage() }}
     </div>
 
-  }
-
-  @else if (questions().length === 0) {
+  } @else if (questions().length === 0) {
 
     <div class="empty-state">
 
-      <div class="empty-icon">
-        ?
-      </div>
+      <div class="empty-icon">?</div>
 
-      <h2>
-        No diagnostic questions yet
-      </h2>
+      <h2>No diagnostic questions yet</h2>
 
       <p>
         Add questions to build the diagnostic question bank.
@@ -659,53 +754,23 @@
 
     </div>
 
-  }
-
-  @else {
+  } @else {
 
     <div class="questions-card">
 
-      <!-- Table header -->
-
       <div class="table-header">
-
-        <span>
-          Question
-        </span>
-
-        <span>
-          Subject
-        </span>
-
-        <span>
-          Topic
-        </span>
-
-        <span>
-          Difficulty
-        </span>
-
-        <span>
-          Status
-        </span>
-
-        <span>
-          Action
-        </span>
-
+        <span>Question</span>
+        <span>Subject</span>
+        <span>Topic</span>
+        <span>Difficulty</span>
+        <span>Status</span>
+        <span>Action</span>
       </div>
 
 
-      <!-- Question rows -->
-
-      @for (
-        question of questions();
-        track question.id
-      ) {
+      @for (question of questions(); track question.id) {
 
         <div class="question-row">
-
-          <!-- Question -->
 
           <div class="question-content">
 
@@ -714,50 +779,35 @@
             </strong>
 
             <span>
-              Correct answer:
-              {{ question.correct_option }}
+              Correct answer: {{ question.correct_option }}
             </span>
 
             @if (question.code) {
-
               <span class="code-indicator">
                 Coding Question
               </span>
-
             }
 
           </div>
 
-
-          <!-- Subject -->
 
           <div>
             {{ question.subject_name }}
           </div>
 
 
-          <!-- Topic -->
-
           <div>
             {{ question.topic_name }}
           </div>
 
 
-          <!-- Difficulty -->
-
           <div>
 
             <span
               class="difficulty"
-              [class.easy]="
-                question.difficulty === 'easy'
-              "
-              [class.medium]="
-                question.difficulty === 'medium'
-              "
-              [class.hard]="
-                question.difficulty === 'hard'
-              "
+              [class.easy]="question.difficulty === 'easy'"
+              [class.medium]="question.difficulty === 'medium'"
+              [class.hard]="question.difficulty === 'hard'"
             >
               {{ question.difficulty }}
             </span>
@@ -765,26 +815,18 @@
           </div>
 
 
-          <!-- Status -->
-
           <div>
 
             <span
               class="status"
-              [class.active]="
-                question.status === 'active'
-              "
-              [class.inactive]="
-                question.status === 'inactive'
-              "
+              [class.active]="question.status === 'active'"
+              [class.inactive]="question.status === 'inactive'"
             >
               {{ question.status }}
             </span>
 
           </div>
 
-
-          <!-- Action -->
 
           <div class="question-action">
 

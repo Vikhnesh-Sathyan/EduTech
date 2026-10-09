@@ -379,15 +379,17 @@ export class Diagnostic implements OnInit {
           // from the backend is passed
           // through router state.
 
+          
           this.router.navigate(
-            ['/diagnostic-result'],
+            ['/diagnostic-result', this.subject()?.id],
             {
               state: {
                 result: response.result
               }
-            }
-          );
-        },
+          }
+      );
+      
+    },
 
 
         // ==========================================

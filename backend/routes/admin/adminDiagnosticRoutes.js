@@ -5,18 +5,30 @@ const {
     updateDiagnosticQuestion,
     getDiagnosticQuestions,
     getDiagnosticSubjects,
-    getDiagnosticTopics
+    getDiagnosticTopics,
+    importDiagnosticQuestions
 } = require("../../controllers/admin/adminDiagnosticController");
+
 
 const authMiddleware = require("../../middleware/authMiddleware");
 const roleMiddleware = require("../../middleware/roleMiddleware");
+const uploadDiagnosticFile = require("../../middleware/uploadDiagnosticFile");
 
 const router = express.Router();
+
 router.post(
     "/",
     authMiddleware,
     roleMiddleware("admin"),
     createDiagnosticQuestion
+);
+
+router.post(
+    "/import",
+    authMiddleware,
+    roleMiddleware("admin"),
+    uploadDiagnosticFile.single("file"),
+    importDiagnosticQuestions
 );
 
 router.put(

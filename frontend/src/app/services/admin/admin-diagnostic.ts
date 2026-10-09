@@ -74,4 +74,26 @@ export class AdminDiagnostic {
     );
   }
 
+  
+  // =====================================================
+  // IMPORT DIAGNOSTIC QUESTIONS
+  // =====================================================
+
+  importQuestions(
+    subjectId: number,
+    topicId: number,
+    file: File
+  ) {
+    const formData = new FormData();
+
+    formData.append('file', file);
+    formData.append('subjectId', String(subjectId));
+    formData.append('topicId', String(topicId));
+
+    return this.http.post(
+      `${this.apiUrl}/import`,
+      formData
+    );
+  }
+
 }
