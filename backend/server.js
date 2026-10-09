@@ -40,53 +40,53 @@ const profileRoutes =
 
 // Admin education program routes
 const educationProgramRoutes =
-    require("./routes/educationProgramRoutes");
+    require("./routes/admin/educationProgramRoutes");
 
 // Admin department routes
 const departmentRoutes =
-    require("./routes/departmentRoutes");
+    require("./routes/admin/departmentRoutes");
 
 // Admin education year routes
 const educationYearRoutes =
-    require("./routes/educationYearRoutes");
+    require("./routes/admin/educationYearRoutes");
 
 // Admin subject routes
 const subjectRoutes =
-    require("./routes/subjectRoutes");
+    require("./routes/admin/subjectRoutes");
 
 // Admin dashboard overview routes
 const adminOverviewRoutes =
-    require("./routes/adminOverviewRoutes");
+    require("./routes/admin/adminOverviewRoutes");
 
 // Admin mentor verification routes
 const adminMentorRoutes =
-    require("./routes/adminMentorRoutes");
+    require("./routes/admin/adminMentorRoutes");
 
 // Admin diagnostic question routes
 const adminDiagnosticRoutes =
-    require("./routes/adminDiagnosticRoutes");
+    require("./routes/admin/adminDiagnosticRoutes");
 
 // Admin learning section routes
 const adminLearningSectionRoutes =
-    require("./routes/adminLearningSectionRoutes");
+    require("./routes/admin/adminLearningSectionRoutes");
 
 // Admin section learning content routes
 const adminSectionLearningRoutes =
-    require("./routes/adminSectionLearningRoutes");
+    require("./routes/admin/adminSectionLearningRoutes");
 
 // Admin topic routes
 const adminTopicRoutes =
-    require("./routes/adminTopicRoutes");
+    require("./routes/admin/adminTopicRoutes");
 
 // Admin subtopic routes
 const adminSubtopicRoutes =
-    require("./routes/adminSubtopicRoutes");
+    require("./routes/admin/adminSubtopicRoutes");
 
 // Admin Project Understanding routes
 const adminProjectRoutes =
-    require("./routes/adminProjectRoutes");
+    require("./routes/admin/adminProjectRoutes");
 
-const adminBasicChallengeRoutes = require("./routes/adminBasicChallengeRoutes");
+const adminBasicChallengeRoutes = require("./routes/admin/adminBasicChallengeRoutes");
 
 
 // =====================================================
@@ -95,37 +95,38 @@ const adminBasicChallengeRoutes = require("./routes/adminBasicChallengeRoutes");
 
 // Student education lookup routes
 const educationRoutes =
-    require("./routes/educationRoutes");
+    require("./routes/student/educationRoutes");
 
 // Student subject routes
 const studentSubjectRoutes =
-    require("./routes/studentSubjectRoutes");
+    require("./routes/student/studentSubjectRoutes");
 
 // Student section learning routes
 const studentSectionLearningRoutes =
-    require("./routes/studentSectionLearningRoutes");
+    require("./routes/student/studentSectionLearningRoutes");
 
 // Student Project Understanding routes
 const studentProjectRoutes =
-    require("./routes/studentProjectRoutes");
+    require("./routes/student/studentProjectRoutes");
 
 // Student Basic Challenge routes
 const studentBasicChallengeRoutes =
-    require("./routes/studentBasicChallengeRoutes");
+    require("./routes/student/studentBasicChallengeRoutes");
     
 const studentAdvancedRoutes = 
-    require("./routes/studentAdvancedRoutes");
+    require("./routes/student/studentAdvancedRoutes");
+    
 // =====================================================
 // STUDY AND DIAGNOSTIC ROUTES
 // =====================================================
 
 // Student study routes
 const studyRoutes =
-    require("./routes/studyRoutes");
+    require("./routes/student/studyRoutes");
 
 // Student diagnostic routes
 const diagnosticRoutes =
-    require("./routes/diagnosticRoutes");
+    require("./routes/student/diagnosticRoutes");
 
 
 // =====================================================
@@ -134,10 +135,10 @@ const diagnosticRoutes =
 
 // Handles mentorship requests and relationships
 const mentorStudentRoutes =
-    require("./routes/mentorStudentRoutes");
+    require("./routes/mentor/mentorStudentRoutes");
 
 const studentMentorRoutes =
-    require("./routes/studentMentorRoutes");
+    require("./routes/mentor/studentMentorRoutes");
 
 // =====================================================
 // MENTOR ROUTES
@@ -145,7 +146,7 @@ const studentMentorRoutes =
 
 // Mentor profile and dashboard routes
 const mentorRoutes =
-    require("./routes/mentorRoutes");
+    require("./routes/mentor/mentorRoutes");
 
 
 // =====================================================
@@ -409,3 +410,4 @@ app.listen(PORT, () => {
     );
 
 });
+

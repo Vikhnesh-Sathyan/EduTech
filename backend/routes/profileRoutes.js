@@ -5,7 +5,7 @@ const express = require("express");
 const {
     getProfile,
     saveProfile
-} = require("../controllers/profileController");
+} = require("../controllers/student/profileController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 
