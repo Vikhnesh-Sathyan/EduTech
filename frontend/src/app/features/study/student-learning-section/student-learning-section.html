@@ -863,6 +863,105 @@
 
         </section>
 
+       
+@if (selectedSubtopicId()) {
+  <section class="basic-challenge-card">
+
+    <div class="challenge-content">
+      <p class="section-label">BASIC CHALLENGE</p>
+
+      @if (challengeStatusLoading()) {
+        <h2>Checking your progress...</h2>
+        <p>Loading your challenge status.</p>
+      } @else if (challengeStatus(); as status) {
+
+        @if (status.challengePassed) {
+          <h2>Challenge Passed</h2>
+          <p>
+            You have already passed this challenge.
+            Your Advanced Learning access remains unlocked.
+          </p>
+
+          <div class="challenge-meta">
+            <span>✓ Challenge Passed</span>
+            <span>✓ Advanced Unlocked</span>
+          </div>
+
+        } @else {
+          <h2>Test Your Understanding</h2>
+
+          <p>
+            Complete all learning sections in this subtopic
+            to unlock your challenge.
+          </p>
+
+          <div class="challenge-meta">
+            <span>
+              {{ status.completedSections }} /
+              {{ status.totalSections }} Sections Completed
+            </span>
+            <span>5 Questions</span>
+            <span>20 Marks</span>
+          </div>
+
+          @if (status.allSectionsCompleted) {
+            <p class="challenge-status-unlocked">
+              All sections completed. Your challenge is unlocked.
+            </p>
+          } @else {
+            <p class="challenge-status-locked">
+              🔒 Complete all sections to unlock the challenge.
+            </p>
+          }
+        }
+
+      } @else {
+        <h2>Challenge Status Unavailable</h2>
+        <p>
+          We couldn't load your challenge status.
+          Please try selecting this subtopic again.
+        </p>
+      }
+    </div>
+
+    <div class="challenge-action">
+      @if (!challengeStatusLoading() && challengeStatus(); as status) {
+
+       
+@if (status.challengePassed) {
+  <button
+    type="button"
+    class="start-button"
+    (click)="openAdvancedLearning()"
+  >
+    Advanced Learning <span>→</span>
+  </button>
+}
+ @else if (status.allSectionsCompleted) {
+          <button
+            type="button"
+            class="start-button"
+            (click)="startBasicChallenge()"
+          >
+            Start Challenge <span>→</span>
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="start-button"
+            disabled
+          >
+            Challenge Locked
+          </button>
+        }
+
+      }
+    </div>
+
+  </section>
+}
+
+
       }
 
 

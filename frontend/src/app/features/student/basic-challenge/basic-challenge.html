@@ -1,0 +1,267 @@
+<div class="challenge-page">
+
+  @if (loading()) {
+
+    <div class="loading">
+      Loading challenge...
+    </div>
+
+  } @else if (result(); as challengeResult) {
+
+    <!-- Challenge Result -->
+
+    <section class="question-card challenge-result">
+
+      <p class="page-label">CHALLENGE RESULT</p>
+
+      <h1>
+        {{ challengeResult.passed
+          ? 'Challenge Passed!'
+          : 'Challenge Not Passed' }}
+      </h1>
+
+      <p class="result-score">
+        {{ challengeResult.score }} /
+        {{ challengeResult.totalMarks }}
+      </p>
+
+      <p>
+        Correct answers:
+        {{ challengeResult.correctAnswers }} / 5
+      </p>
+
+      <p>
+        Incorrect answers:
+        {{ challengeResult.wrongAnswers }} / 5
+      </p>
+
+      <p>
+        Attempt {{ challengeResult.attemptNumber }}
+        of 5 — Cycle {{ challengeResult.cycleNumber }}
+      </p>
+
+      @if (challengeResult.advancedUnlocked) {
+
+        <div class="result-success">
+          <h2>Advanced Learning Unlocked</h2>
+          <p>
+            You passed the Basic Challenge and can continue
+            to Advanced Learning.
+          </p>
+        </div>
+
+      } @else {
+
+        <div class="result-review">
+          <h2>Keep Practising</h2>
+          <p>
+            Review your learning materials and strengthen
+            your understanding before trying again.
+          </p>
+        </div>
+
+      }
+
+    </section>
+
+  } @else if (questions().length === 5) {
+
+    @let question = questions()[currentIndex()];
+
+    <!-- Header -->
+
+    <div class="challenge-header">
+
+      <p class="page-label">BASIC CHALLENGE</p>
+
+      <h1>Test Your Understanding</h1>
+
+      <p>
+        Apply what you learned in the Basic Learning section.
+      </p>
+
+    </div>
+
+    <!-- Progress -->
+
+    <div class="progress-row">
+
+      <span>
+        Question {{ currentIndex() + 1 }}
+        of {{ questions().length }}
+      </span>
+
+      <span>
+        {{ currentIndex() + 1 }} / {{ questions().length }}
+      </span>
+
+    </div>
+
+    <div class="progress-bar">
+
+      <div
+        class="progress-fill"
+        [style.width.%]="
+          ((currentIndex() + 1) / questions().length) * 100
+        ">
+      </div>
+
+    </div>
+
+    <!-- Question Card -->
+
+    <div class="question-card">
+
+      <div class="question-number">
+        QUESTION {{ currentIndex() + 1 }}
+      </div>
+
+      <h2>
+        {{ question.question }}
+      </h2>
+
+      <!-- Options -->
+
+      <div class="options">
+
+        <button
+          type="button"
+          class="option"
+          [class.selected]="selectedAnswer() === 'A'"
+          (click)="selectAnswer('A')">
+
+          <span>A</span>
+          {{ question.option_a }}
+
+        </button>
+
+        <button
+          type="button"
+          class="option"
+          [class.selected]="selectedAnswer() === 'B'"
+          (click)="selectAnswer('B')">
+
+          <span>B</span>
+          {{ question.option_b }}
+
+        </button>
+
+        <button
+          type="button"
+          class="option"
+          [class.selected]="selectedAnswer() === 'C'"
+          (click)="selectAnswer('C')">
+
+          <span>C</span>
+          {{ question.option_c }}
+
+        </button>
+
+        <button
+          type="button"
+          class="option"
+          [class.selected]="selectedAnswer() === 'D'"
+          (click)="selectAnswer('D')">
+
+          <span>D</span>
+          {{ question.option_d }}
+
+        </button>
+
+      </div>
+
+      <!-- Confidence -->
+
+      <div class="confidence-section">
+
+        <h3>How confident are you?</h3>
+
+        <div class="confidence-options">
+
+          <button
+            type="button"
+            [class.selected]="confidence() === 'low'"
+            (click)="selectConfidence('low')">
+            Low
+          </button>
+
+          <button
+            type="button"
+            [class.selected]="confidence() === 'medium'"
+            (click)="selectConfidence('medium')">
+            Medium
+          </button>
+
+          <button
+            type="button"
+            [class.selected]="confidence() === 'high'"
+            (click)="selectConfidence('high')">
+            High
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Navigation -->
+
+      <div class="navigation">
+
+        <button
+          type="button"
+          class="secondary-button"
+          [disabled]="currentIndex() === 0 || submitting()"
+          (click)="previousQuestion()">
+
+          Previous
+
+        </button>
+
+        @if (currentIndex() < questions().length - 1) {
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="submitting()"
+            (click)="nextQuestion()">
+
+            Next
+
+          </button>
+
+        } @else {
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="submitting()"
+            (click)="submitChallenge()">
+
+            {{ submitting()
+              ? 'Submitting...'
+              : 'Submit Challenge' }}
+
+          </button>
+
+        }
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <div class="question-card">
+
+      <h2>Challenge Unavailable</h2>
+
+      <p>
+        Five questions could not be loaded.
+        Please check your challenge question bank and try again.
+      </p>
+
+    </div>
+
+  }
+
+</div>

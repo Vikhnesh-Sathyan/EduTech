@@ -109,7 +109,12 @@ const studentSectionLearningRoutes =
 const studentProjectRoutes =
     require("./routes/studentProjectRoutes");
 
-
+// Student Basic Challenge routes
+const studentBasicChallengeRoutes =
+    require("./routes/studentBasicChallengeRoutes");
+    
+const studentAdvancedRoutes = 
+    require("./routes/studentAdvancedRoutes");
 // =====================================================
 // STUDY AND DIAGNOSTIC ROUTES
 // =====================================================
@@ -371,6 +376,10 @@ app.use(
     "/api/diagnostic",
     diagnosticRoutes
 );
+app.use(
+    "/api/student/advanced", 
+    studentAdvancedRoutes
+);
 
 
 // =====================================================
@@ -383,6 +392,11 @@ app.use(
     studentProjectRoutes
 );
 
+// Student Basic Challenge
+app.use(
+    "/api/student/basic-challenge",
+    studentBasicChallengeRoutes
+);
 
 // =====================================================
 // START SERVER

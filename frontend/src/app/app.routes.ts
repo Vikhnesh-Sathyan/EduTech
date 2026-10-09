@@ -36,9 +36,13 @@ import { DiagnosticResult } from './features/study/diagnostic-result/diagnostic-
 import { StudentLearningSection } from './features/study/student-learning-section/student-learning-section';
 import { StudentStudyProgress } from './features/student-study-progress/student-study-progress';
 import { StudentSubjectProgress } from './features/student-subject-progress/student-subject-progress';
+import { BasicChallenge } from './features/student/basic-challenge/basic-challenge';
+
+// Student Advanced Learning
+import { StudentAdvanced } from './features/student/advanced/student-advanced/student-advanced';
 
 // ======================================================
-// STUDENT - MENTOR Relationship
+// STUDENT - MENTORS
 // ======================================================
 
 import { StudentMentors } from './features/student-mentors/student-mentors';
@@ -46,9 +50,6 @@ import { StudentMentorProfile } from './features/student-mentor-profile/student-
 import { StudentMyMentor } from './features/student-my-mentor/student-my-mentor';
 import { StudentMentorRecommendations } from './features/student-mentor-recommendations/student-mentor-recommendations';
 import { StudentPreviousMentors } from './features/student-previous-mentors/student-previous-mentors';
-
-
-
 
 // ======================================================
 // STUDENT - PROJECT UNDERSTANDING
@@ -122,10 +123,6 @@ import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
 import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
 import { MentorProfile } from './features/mentor/mentor-profile/mentor-profile';
 
-// ======================================================
-// MENTOR - STUDENT Requests
-// ======================================================
-
 import { MentorRequests } from './features/mentor/mentor-requests/mentor-requests';
 import { MentorStudentProfile } from './features/mentor/mentor-student-profile/mentor-student-profile';
 
@@ -141,7 +138,8 @@ export const routes: Routes = [
 
   {
     path: '',
-    component: Home
+    component: Home,
+    pathMatch: 'full'
   },
 
   // ====================================================
@@ -161,150 +159,116 @@ export const routes: Routes = [
   // ====================================================
   // STUDENT ROUTES
   // ====================================================
-  //
-  // All student pages use StudentLayout.
-  //
-  // Student pages:
-  // Dashboard
-  // Profile
-  // Study
-  // Project Understanding
-  //
-  // ====================================================
 
   {
     path: '',
     component: StudentLayout,
-
-    canActivate: [
-      authGuard
-    ],
+    canActivate: [authGuard],
 
     children: [
-
-      // --------------------------------------------------
-      // Student Dashboard
-      // --------------------------------------------------
 
       {
         path: 'student-dashboard',
         component: StudentDashboard
       },
 
-      // ==================================================
-      // STUDENT PROJECT UNDERSTANDING
-      // ==================================================
-      //
-      // Student can:
-      // - Explore categories
-      // - Explore topics
-      // - Explore sections
-      // - Read learning content
-      //
-      // Base URL:
-      // /project-understanding
-      //
-      // ==================================================
+      // Project Understanding
 
       {
         path: 'project-understanding',
         component: StudentProjectUnderstanding
       },
 
-      // Student Project Topics
-      // /project-understanding/:categoryId/topics
-
       {
         path: 'project-understanding/:categoryId/topics',
         component: StudentProjectTopics
       },
-
-      // Student Project Sections
-      // /project-understanding/:categoryId/topics/:topicId/sections
 
       {
         path: 'project-understanding/:categoryId/topics/:topicId/sections',
         component: StudentProjectSections
       },
 
-      // Student Project Section Content
-      // /project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content
-
       {
         path: 'project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content',
         component: StudentProjectSectionContent
       },
 
-      // --------------------------------------------------
-      // Student Profile
-      // --------------------------------------------------
+      // Profile
 
       {
         path: 'profile',
         component: Profile
       },
 
-      // ==================================================
-      // STUDY
-      // ==================================================
+      // Study
 
       {
         path: 'study',
         component: Study
       },
 
-      // --------------------------------------------------
-      // Subject Learning
-      // --------------------------------------------------
-
       {
         path: 'study/:subjectId',
         component: Subject
       },
-
-      // --------------------------------------------------
-      // Diagnostic
-      // --------------------------------------------------
 
       {
         path: 'study/:subjectId/diagnostic',
         component: Diagnostic
       },
 
-      // --------------------------------------------------
-      // Diagnostic Result
-      // --------------------------------------------------
-
       {
         path: 'diagnostic-result/:subjectId',
         component: DiagnosticResult
       },
 
-      // --------------------------------------------------
-      // Learning Section
-      // --------------------------------------------------
-
       {
         path: 'study/:subjectId/learning',
         component: StudentLearningSection
       },
-      
 
-      // ==================================================
-      // STUDENT MENTORS
-      // ==================================================
+      // Basic Challenge
+
+      {
+        path: 'basic-challenge/:subtopicId',
+        component: BasicChallenge
+      },
+
+      // Student Advanced Learning
+      // URL: /advanced-learning/:subtopicId
+
+      {
+        path: 'advanced-learning/:subtopicId',
+        component: StudentAdvanced
+      },
+
+      // Study Progress
+
+      {
+        path: 'study-progress',
+        component: StudentStudyProgress
+      },
+
+      {
+        path: 'study-progress/subject/:subjectId',
+        component: StudentSubjectProgress
+      },
+
+      // Student Mentors
 
       {
         path: 'mentors',
         component: StudentMentors
       },
-      
-      { 
+
+      {
         path: 'mentors/:mentorId',
-        component: StudentMentorProfile 
+        component: StudentMentorProfile
       },
 
-      { path: 'student-my-mentor', 
+      {
+        path: 'student-my-mentor',
         component: StudentMyMentor
       },
 
@@ -312,253 +276,155 @@ export const routes: Routes = [
         path: 'mentor-recommendations',
         component: StudentMentorRecommendations
       },
-      { 
+
+      {
         path: 'previous-mentors',
         component: StudentPreviousMentors
-      },
-      {
-        path: 'study-progress',
-        component: StudentStudyProgress,
-        canActivate: [authGuard]
-      },
-
-      {
-         path: 'study-progress/subject/:subjectId',
-         component: StudentSubjectProgress,
-        canActivate: [authGuard]
-      },
-
-
-
+      }
     ]
   },
 
   // ====================================================
   // ADMIN DASHBOARD
   // ====================================================
-  //
-  // Main Admin Dashboard
-  //
-  // URL:
-  // /admin-dashboard
-  //
-  // ====================================================
 
   {
     path: 'admin-dashboard',
     component: AdminDashboard,
-
-    canActivate: [
-      authGuard,
-      adminRoleGuard
-    ]
+    canActivate: [authGuard, adminRoleGuard]
   },
 
   // ====================================================
-  // ADMIN MANAGEMENT
-  // ====================================================
-  //
-  // All Admin management pages use AdminLayout.
-  //
-  // Base URL:
-  // /admin
-  //
+  // ADMIN ROUTES
   // ====================================================
 
   {
     path: 'admin',
     component: AdminLayout,
-
-    canActivate: [
-      authGuard,
-      adminRoleGuard
-    ],
+    canActivate: [authGuard, adminRoleGuard],
 
     children: [
 
-      // ==================================================
-      // EDUCATION MANAGEMENT
-      // ==================================================
-
-      // /admin/education-programs
+      // Education Management
 
       {
         path: 'education-programs',
         component: EducationPrograms
       },
 
-      // /admin/departments
-
       {
         path: 'departments',
         component: Departments
       },
-
-      // /admin/education-years
 
       {
         path: 'education-years',
         component: EducationYears
       },
 
-      // /admin/subjects
-
       {
         path: 'subjects',
         component: Subjects
       },
 
-      // ==================================================
-      // LEARNING MANAGEMENT
-      // ==================================================
-
-      // /admin/topics
+      // Learning Management
 
       {
         path: 'topics',
         component: Topics
       },
 
-      // /admin/diagnostic-questions
-
       {
         path: 'diagnostic-questions',
         component: DiagnosticQuestions
       },
-
-      // /admin/topic-learning/:topicId
 
       {
         path: 'topic-learning/:topicId',
         component: AdminTopicLearningPage
       },
 
-      // /admin/topic-sections/:topicId
-
       {
         path: 'topic-sections/:topicId',
         component: AdminLearningSectionsPage
       },
-
-      // /admin/section-learning/:sectionId
 
       {
         path: 'section-learning/:sectionId',
         component: AdminSectionLearningPage
       },
 
-      // /admin/subtopics/:topicId
-
       {
         path: 'subtopics/:topicId',
         component: AdminSubtopicsPage
       },
-
-      // /admin/subtopic-sections/:subtopicId
 
       {
         path: 'subtopic-sections/:subtopicId',
         component: AdminLearningSectionsPage
       },
 
+      // Admin Advanced Learning Editor
+      // URL: /admin/advanced/:subtopicId
+
       {
         path: 'advanced/:subtopicId',
-        component: AdminAdvanced,
+        component: AdminAdvanced
       },
+
+      // Admin Basic Challenge Question Bank
 
       {
         path: 'basic-challenge/:subtopicId',
         component: QuestionBank
       },
 
-      // ==================================================
-      // ADMIN PROJECT UNDERSTANDING
-      // ==================================================
-      //
-      // Admin can:
-      // - Manage categories
-      // - Manage topics
-      // - Manage sections
-      // - Manage section content
-      //
-      // Base URL:
-      // /admin/project-understanding
-      //
-      // ==================================================
-
-      // Admin Project Categories
-      // /admin/project-understanding
+      // Admin Project Understanding
 
       {
         path: 'project-understanding',
         component: ProjectUnderstanding
       },
 
-      // Admin Project Topics
-      // /admin/project-understanding/:categoryId/topics
-
       {
         path: 'project-understanding/:categoryId/topics',
         component: ProjectTopics
       },
 
-      // Admin Project Sections
       {
         path: 'project-understanding/:categoryId/topics/:topicId/sections',
         component: ProjectSections
       },
 
-      // Admin Project Section Content
       {
         path: 'project-understanding/:categoryId/topics/:topicId/sections/:sectionId/content',
         component: ProjectSectionContent
       },
 
-      // ==================================================
-      // MENTOR MANAGEMENT
-      // ==================================================
-
-      // /admin/mentor-verification
+      // Mentor Verification
 
       {
         path: 'mentor-verification',
         component: MentorVerification
       }
-
     ]
   },
 
   // ====================================================
   // MENTOR ROUTES
   // ====================================================
-  //
-  // All mentor pages use MentorLayout.
-  //
-  // ====================================================
 
   {
     path: '',
     component: MentorLayout,
-
-    canActivate: [
-      authGuard,
-      mentorRoleGuard
-    ],
+    canActivate: [authGuard, mentorRoleGuard],
 
     children: [
-
-      // --------------------------------------------------
-      // Mentor Dashboard
-      // --------------------------------------------------
 
       {
         path: 'mentor-dashboard',
         component: MentorDashboard
       },
-
-      // --------------------------------------------------
-      // Mentor Profile
-      // --------------------------------------------------
 
       {
         path: 'mentor-profile',
@@ -571,11 +437,18 @@ export const routes: Routes = [
       },
 
       {
-         path: 'mentor-student-profile/:studentId',
-         component: MentorStudentProfile
+        path: 'mentor-student-profile/:studentId',
+        component: MentorStudentProfile
       }
-
     ]
-  }
+  },
 
+  // ====================================================
+  // FALLBACK
+  // ====================================================
+
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];

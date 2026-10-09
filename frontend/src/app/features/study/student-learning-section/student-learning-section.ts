@@ -13,6 +13,7 @@ import {
 import { Subscription } from 'rxjs';
 
 import { StudentLearning } from '../../../services/student-learning';
+import { StudentBasicChallengeService } from '../../../services/student-basic-challenge.service';
 import { ToastService } from '../../../services/toast.service';
 
 
@@ -65,6 +66,15 @@ export class StudentLearningSection
 
 
   // =====================================================
+  // BASIC CHALLENGE STATUS
+  // =====================================================
+
+  challengeStatus = signal<any | null>(null);
+
+  challengeStatusLoading = signal(false);
+
+
+  // =====================================================
   // SELECTED SECTION CONTENT
   // =====================================================
 
@@ -98,6 +108,7 @@ export class StudentLearningSection
     private route: ActivatedRoute,
     private router: Router,
     private studentLearningService: StudentLearning,
+    private challengeService: StudentBasicChallengeService,
     private toastService: ToastService
   ) {}
 
@@ -115,7 +126,7 @@ export class StudentLearningSection
     }
 
     this.router.navigate([
-      '/study',
+      '/study'
     ]);
 
   }
@@ -148,11 +159,17 @@ export class StudentLearningSection
     this.subjectId.set(subjectId);
 
 
+    // ---------------------------------------------------
     // Load learning structure
+    // ---------------------------------------------------
+
     this.loadLearningStructure(subjectId);
 
 
+    // ---------------------------------------------------
     // Listen for sectionId from URL
+    // ---------------------------------------------------
+
     this.queryParamsSubscription =
       this.route.queryParams.subscribe(params => {
 
@@ -294,35 +311,60 @@ export class StudentLearningSection
         if (sectionExists) {
 
 
+          // ---------------------------------------------
           // Open topic
+          // ---------------------------------------------
+
           this.expandedTopicId.set(
             topic.id
           );
 
 
+          // ---------------------------------------------
           // Open subtopic
+          // ---------------------------------------------
+
           this.selectedSubtopicId.set(
             subtopic.id
           );
 
 
+          // ---------------------------------------------
+          // Load challenge status
+          // ---------------------------------------------
+
+          this.loadChallengeStatus();
+
+
+          // ---------------------------------------------
           // Select section
+          // ---------------------------------------------
+
           this.selectedSectionId.set(
             sectionId
           );
 
 
+          // ---------------------------------------------
           // Clear previous progress
+          // ---------------------------------------------
+
           this.sectionProgress.set(null);
 
 
+          // ---------------------------------------------
           // Load content
+          // ---------------------------------------------
+
           this.loadSectionContent(
             sectionId
           );
 
 
+          // ---------------------------------------------
           // Register access
+          // ---------------------------------------------
+
           this.accessSectionProgress(
             sectionId
           );
@@ -362,6 +404,8 @@ export class StudentLearningSection
 
       this.selectedSectionId.set(null);
 
+      this.challengeStatus.set(null);
+
       return;
     }
 
@@ -374,6 +418,8 @@ export class StudentLearningSection
 
     this.selectedSectionId.set(null);
 
+    this.challengeStatus.set(null);
+
   }
 
 
@@ -381,27 +427,78 @@ export class StudentLearningSection
   // SELECT SUBTOPIC
   // =====================================================
 
-  selectSubtopic(
-    subtopicId: number
-  ): void {
 
-    if (
-      this.selectedSubtopicId() === subtopicId
-    ) {
+selectSubtopic(subtopicId: number): void {
+  if (this.selectedSubtopicId() === subtopicId) {
+    this.selectedSubtopicId.set(null);
+    this.selectedSectionId.set(null);
+    this.challengeStatus.set(null);
+    return;
+  }
 
-      this.selectedSubtopicId.set(null);
+  // Select the new subtopic
+  this.selectedSubtopicId.set(subtopicId);
+  this.selectedSectionId.set(null);
 
-      this.selectedSectionId.set(null);
+  // Clear the previous subtopic's status immediately
+  this.challengeStatus.set(null);
+
+  // Load status specifically for the selected subtopic
+  this.loadChallengeStatus();
+}
+
+
+  // =====================================================
+  // LOAD BASIC CHALLENGE STATUS
+  // =====================================================
+
+  loadChallengeStatus(): void {
+
+    const subtopicId =
+      this.selectedSubtopicId();
+
+
+    if (!subtopicId) {
+
+      this.challengeStatus.set(null);
 
       return;
     }
 
 
-    this.selectedSubtopicId.set(
-      subtopicId
-    );
+    this.challengeStatusLoading.set(true);
 
-    this.selectedSectionId.set(null);
+
+    this.challengeService
+      .getChallengeStatus(subtopicId)
+      .subscribe({
+
+        next: (response: any) => {
+
+          this.challengeStatus.set(
+            response
+          );
+
+          this.challengeStatusLoading.set(false);
+
+        },
+
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to load challenge status:',
+            error
+          );
+
+
+          this.challengeStatus.set(null);
+
+          this.challengeStatusLoading.set(false);
+
+        }
+
+      });
 
   }
 
@@ -535,6 +632,10 @@ export class StudentLearningSection
           );
 
 
+          // ---------------------------------------------
+          // Update current section progress
+          // ---------------------------------------------
+
           this.sectionProgress.update(
             (progress) => ({
 
@@ -547,6 +648,17 @@ export class StudentLearningSection
             })
           );
 
+
+          // ---------------------------------------------
+          // Refresh challenge status
+          // ---------------------------------------------
+
+          this.loadChallengeStatus();
+
+
+          // ---------------------------------------------
+          // Success message
+          // ---------------------------------------------
 
           this.toastService.success(
             'Section completed successfully.'
@@ -574,6 +686,70 @@ export class StudentLearningSection
 
   }
 
+
+  // =====================================================
+  // GET SELECTED SUBTOPIC
+  // =====================================================
+
+  getSelectedSubtopic(): any | null {
+
+    const subtopicId =
+      this.selectedSubtopicId();
+
+
+    if (!subtopicId) {
+      return null;
+    }
+
+
+    for (const topic of this.topics()) {
+
+      const subtopic =
+        (topic.subtopics || []).find(
+          (item: any) =>
+            Number(item.id) === Number(subtopicId)
+        );
+
+
+      if (subtopic) {
+        return subtopic;
+      }
+
+    }
+
+
+    return null;
+
+  }
+
+
+  // =====================================================
+  // START BASIC CHALLENGE
+  // =====================================================
+
+  startBasicChallenge(): void {
+
+    const subtopicId =
+      this.selectedSubtopicId();
+
+
+    if (!subtopicId) {
+      return;
+    }
+
+
+    this.router.navigate([
+      '/basic-challenge',
+      subtopicId
+    ]);
+
+  }
+openAdvancedLearning(): void {
+  this.router.navigate([
+    '/advanced-learning',
+    this.selectedSubtopicId()
+  ]);
+}
 
   // =====================================================
   // CLEANUP
