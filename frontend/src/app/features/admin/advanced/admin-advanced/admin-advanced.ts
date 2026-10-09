@@ -11,7 +11,7 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
-import { AdminSubtopic } from '../../../../services/admin-subtopic';
+import { AdminSubtopic } from '../../../../services/admin/admin-subtopic';
 import { ToastService } from '../../../../services/toast.service';
 
 import { DeepDive } from '../components/deep-dive/deep-dive';

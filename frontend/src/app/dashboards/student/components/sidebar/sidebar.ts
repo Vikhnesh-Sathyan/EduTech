@@ -5,7 +5,7 @@ import {
   RouterLinkActive
 } from '@angular/router';
 
-import { StudentLearning } from '../../../../services/student-learning';
+import { StudentLearning } from '../../../../services/student/student-learning';
 
 @Component({
   selector: 'app-sidebar',

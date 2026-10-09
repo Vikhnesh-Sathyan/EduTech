@@ -10,7 +10,7 @@ import { NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
 import { Sidebar } from '../components/sidebar/sidebar';
-import { Mentor } from '../../../services/mentor';
+import { Mentor } from '../../../services/mentor/mentor';
 
 
 @Component({

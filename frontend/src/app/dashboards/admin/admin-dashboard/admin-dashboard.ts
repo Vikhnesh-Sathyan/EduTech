@@ -7,7 +7,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Sidebar } from '../components/sidebar/sidebar';
 import { Topbar } from '../components/topbar/topbar';
 
-import { AdminOverview } from '../../../services/admin-overview';
+import { AdminOverview } from '../../../services/admin/admin-overview';
 
 @Component({
   selector: 'app-admin-dashboard',
