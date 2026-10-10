@@ -46,32 +46,21 @@
       (input)="updateSearch($event)"
     />
 
-    <select
-      aria-label="Filter by specialization"
-      (change)="updateSpecialization($event)"
-    >
+ 
+<select
+  aria-label="Filter by specialization"
+  (change)="updateSpecialization($event)"
+>
+  <option value="">All Specializations</option>
 
-      <option value="">
-        All Specializations
-      </option>
+  <option
+    *ngFor="let specialization of specializations()"
+    [value]="specialization"
+  >
+    {{ specialization }}
+  </option>
+</select>
 
-      <option value="full-stack">
-        Full Stack Development
-      </option>
-
-      <option value="frontend">
-        Frontend Development
-      </option>
-
-      <option value="backend">
-        Backend Development
-      </option>
-
-      <option value="data">
-        Data & Analytics
-      </option>
-
-    </select>
 
   </section>
 

@@ -1,6 +1,5 @@
 
 // Displays and filters approved mentors for students
-
 import {
   Component,
   OnInit,
@@ -9,11 +8,9 @@ import {
 } from '@angular/core';
 
 import { Router } from '@angular/router';
-
 import { CommonModule } from '@angular/common';
 
 import { StudentMentorService } from '../../../../services/student/student-mentor.service';
-
 import { ToastService } from '../../../../services/toast.service';
 
 @Component({
@@ -30,21 +27,23 @@ export class StudentMentors implements OnInit {
   // Stores all mentors returned by the backend
   mentors = signal<any[]>([]);
 
+  // Stores specializations dynamically from mentor data
+  specializations = signal<string[]>([]);
+
   // Stores the current search text
   searchTerm = signal('');
 
-  // Stores the currently selected mentor
-  selectedMentor = signal<any | null>(null);
-
   // Stores the selected specialization
   selectedSpecialization = signal('');
+
+  // Stores the currently selected mentor
+  selectedMentor = signal<any | null>(null);
 
   // Controls loading state
   loading = signal(false);
 
   // Stores an error message
   errorMessage = signal('');
-
 
   // Filters mentors based on search and specialization
   filteredMentors = computed(() => {
@@ -53,10 +52,9 @@ export class StudentMentors implements OnInit {
       .trim()
       .toLowerCase();
 
-    const specialization =
-      this.selectedSpecialization()
-        .trim()
-        .toLowerCase();
+    const specialization = this.selectedSpecialization()
+      .trim()
+      .toLowerCase();
 
     return this.mentors().filter((mentor) => {
 
@@ -64,7 +62,7 @@ export class StudentMentors implements OnInit {
         mentor.name?.toLowerCase() || '';
 
       const mentorSpecialization =
-        mentor.specialization?.toLowerCase() || '';
+        mentor.specialization?.trim().toLowerCase() || '';
 
       const professionalTitle =
         mentor.professional_title?.toLowerCase() || '';
@@ -72,9 +70,7 @@ export class StudentMentors implements OnInit {
       const skills =
         mentor.skills?.toLowerCase() || '';
 
-
-      // Search by mentor name, title,
-      // specialization, or skills
+      // Search by mentor name, title, specialization, or skills
       const matchesSearch =
         !search ||
         name.includes(search) ||
@@ -82,22 +78,16 @@ export class StudentMentors implements OnInit {
         professionalTitle.includes(search) ||
         skills.includes(search);
 
-
-      // Filter by specialization
+      // Match the selected specialization exactly
       const matchesSpecialization =
         !specialization ||
-        mentorSpecialization.includes(specialization);
+        mentorSpecialization === specialization;
 
-
-      return (
-        matchesSearch &&
-        matchesSpecialization
-      );
+      return matchesSearch && matchesSpecialization;
 
     });
 
   });
-
 
   constructor(
     private studentMentorService: StudentMentorService,
@@ -105,46 +95,32 @@ export class StudentMentors implements OnInit {
     private toastService: ToastService
   ) {}
 
+  ngOnInit(): void {
+    this.loadMentors();
+  }
 
   // Opens the selected mentor profile
   viewProfile(mentorId: number): void {
-
     this.router.navigate([
       '/mentors',
       mentorId
     ]);
-
   }
-
-
-  ngOnInit(): void {
-
-    this.loadMentors();
-
-  }
-
 
   // Opens the full skills popup
   showSkills(mentor: any): void {
-
     this.selectedMentor.set(mentor);
-
   }
-
 
   // Closes the skills popup
   closeSkills(): void {
-
     this.selectedMentor.set(null);
-
   }
 
-
-  // Loads approved mentors from the backend
+  // Loads approved mentors and builds specialization options
   loadMentors(): void {
 
     this.loading.set(true);
-
     this.errorMessage.set('');
 
     this.studentMentorService
@@ -158,9 +134,33 @@ export class StudentMentors implements OnInit {
             response
           );
 
-          this.mentors.set(
-            response.mentors || []
-          );
+          const mentors = Array.isArray(response?.mentors)
+            ? response.mentors
+            : [];
+
+          this.mentors.set(mentors);
+
+          // Extract unique, non-empty specializations dynamically
+         
+const uniqueSpecializations: string[] = [
+  ...new Set<string>(
+    mentors
+      .map((mentor: any): string =>
+        typeof mentor.specialization === 'string'
+          ? mentor.specialization.trim()
+          : ''
+      )
+      .filter((specialization: string) =>
+        specialization.length > 0
+      )
+  )
+].sort((a: string, b: string) =>
+  a.localeCompare(b)
+);
+
+this.specializations.set(uniqueSpecializations);
+
+          this.specializations.set(uniqueSpecializations);
 
           this.loading.set(false);
 
@@ -177,9 +177,10 @@ export class StudentMentors implements OnInit {
             'Unable to load mentors right now.'
           );
 
+          this.mentors.set([]);
+          this.specializations.set([]);
           this.loading.set(false);
 
-          // Show loading error notification
           this.toastService.error(
             'Unable to load mentors right now.'
           );
@@ -190,19 +191,15 @@ export class StudentMentors implements OnInit {
 
   }
 
-
   // Updates the mentor search text
   updateSearch(event: Event): void {
 
     const input =
       event.target as HTMLInputElement;
 
-    this.searchTerm.set(
-      input.value
-    );
+    this.searchTerm.set(input.value);
 
   }
-
 
   // Updates the selected specialization
   updateSpecialization(event: Event): void {
@@ -215,7 +212,6 @@ export class StudentMentors implements OnInit {
     );
 
   }
-
 
   // Sends a mentorship request
   requestMentorship(mentorId: number): void {
@@ -231,7 +227,6 @@ export class StudentMentors implements OnInit {
             response
           );
 
-          // Show success notification
           this.toastService.success(
             'Mentorship request sent successfully.'
           );
@@ -245,7 +240,6 @@ export class StudentMentors implements OnInit {
             error
           );
 
-          // Show error notification
           this.toastService.error(
             error?.error?.message ||
             'Failed to send mentorship request.'
