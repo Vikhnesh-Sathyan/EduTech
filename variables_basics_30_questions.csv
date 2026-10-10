@@ -1,0 +1,31 @@
+question,option_a,option_b,option_c,option_d,correct_answer
+Which statement best describes a variable in programming?,A fixed value that can never change,A named storage location used to hold a value,A function that performs a task,A loop that repeats code,B
+Which is the main purpose of giving a variable a name?,To make the program run faster,To identify and access a stored value,To delete the value automatically,To create a database table,B
+"If x = 10 and later x = 20, what happens to x?",x keeps both values at the same time,x becomes 20,x becomes 30,x becomes undefined,B
+Which value is stored in x after this code: let x = 25;?,The text 'x',25,let,undefined,B
+Which of these is a good variable name for storing a student's age?,a1,studentAge,data,x,B
+Why should variable names be meaningful?,They reduce the need for a computer,They make code easier to understand and maintain,They automatically prevent all errors,They increase internet speed,B
+What is the value of total after: let total = 10; total = 15;?,10,15,25,0,B
+What is happening when a program assigns 50 to a variable named score?,The variable is deleted,The value 50 is stored and associated with score,The program creates a loop,The variable becomes a function,B
+Which variable name is most suitable for storing a user's email address?,e,email,number1,temp,B
+What is reassignment of a variable?,Creating a variable for the first time,Changing the value currently stored in a variable,Deleting the entire program,Changing the programming language,B
+"If let count = 5; count = count + 1;, what is count?",5,6,1,10,B
+Which of the following is a boolean value?,25,Hello,true,3.14,C
+Which value represents text in most programming languages?,A string,A boolean,A loop,A function call,A
+"If name = 'Vikhnesh', what kind of value is stored in name?",Number,String,Boolean,Array index,B
+Which variable would be most appropriate for storing a product price?,productName,productPrice,isAvailable,userLoggedIn,B
+"If isLoggedIn = true, what does the variable most likely represent?",A user's age,Whether a user is logged in,The user's name,The number of users,B
+What is the likely result of storing 100 in a variable called maxScore?,The name describes the purpose of the value,The variable becomes a function,The value becomes text automatically,The variable cannot be changed,A
+Which situation is a good use of a variable?,Storing a user's current shopping cart total,Writing a comment only,Adding spaces to a file,Opening the computer,A
+A program stores a user's name in userName. What is the benefit?,The program can refer to the name later,The name disappears immediately,It prevents all syntax errors,It converts the name to a number,A
+What is the best variable name for the number of items in a cart?,cartItemsCount,abc,thing,value1,A
+"If let temperature = 30; temperature = 35;, why is this useful?",The program can update changing information,It creates two temperatures permanently,It prevents reassignment,It converts temperature to text,A
+Which example shows two different variables storing different information?,let name = 'Anu'; let age = 22;,let x = 1; x = 2;,let value = 5; value = 5;,let a = 10; a = 10;,A
+A variable called isAvailable stores true or false. Which type of information is this?,Boolean,String,Number,Object name,A
+Why is using a single variable better than repeating the same value throughout code?,The value can be changed in one place,It always makes code shorter than one line,It removes the need for logic,It prevents the program from running,A
+"If price = 500 and discount = 50, which variable could store the final price?",finalPrice,randomValue,loop,textData,A
+What should you generally avoid when naming variables?,Names that clearly describe the data,Consistent naming conventions,Unclear names such as x for important data,Names related to their purpose,C
+A variable stores the number of login attempts. Which name is clearest?,n,attempts,loginAttemptCount,data,C
+"If let userName = 'Alex';, what does userName represent?",The variable's name,The stored string value,A boolean condition,A mathematical operator,A
+A program needs to keep track of a user's score as they play. Why use a variable?,The score can be updated during the program,The score can never change,Variables only store text,Variables automatically save data permanently,A
+Which statement about variables is most accurate?,A variable can only store numbers,A variable is used to hold data that a program can work with,A variable is always a function,A variable permanently stores data in the database,B

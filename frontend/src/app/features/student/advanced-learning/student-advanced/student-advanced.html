@@ -1,14 +1,19 @@
-
 <div class="advanced-page">
 
+  <!-- Page Header -->
   <header class="page-header">
-    <button class="back-button" type="button" (click)="backToStudy()">
+    <button
+      class="back-button"
+      type="button"
+      (click)="backToStudy()">
       ← Back to Study
     </button>
 
     <div class="header-content">
       <span class="eyebrow">ADVANCED LEARNING</span>
+
       <h1>Go beyond the basics.</h1>
+
       <p>
         Explore deeper concepts, practical scenarios, debugging exercises,
         and interview preparation.
@@ -16,16 +21,25 @@
     </div>
   </header>
 
+  <!-- Loading State -->
   @if (loading()) {
+
     <section class="state-card">
       <div class="loader"></div>
+
       <h2>Preparing your learning space</h2>
+
       <p>Loading your advanced learning content...</p>
     </section>
+
   } @else if (errorMessage()) {
+
+    <!-- Error State -->
     <section class="state-card error-state">
       <div class="state-icon">!</div>
+
       <h2>Advanced Learning unavailable</h2>
+
       <p>{{ errorMessage() }}</p>
 
       <button
@@ -35,12 +49,16 @@
         Try Again
       </button>
     </section>
+
   } @else if (advanced(); as setup) {
 
+    <!-- Learning Summary -->
     <section class="learning-summary">
       <div>
         <span class="summary-label">YOUR LEARNING PATH</span>
+
         <h2>{{ setup.title || 'Advanced Concepts' }}</h2>
+
         <p>
           Build a stronger understanding through focused learning modules.
         </p>
@@ -48,220 +66,338 @@
 
       <div class="module-count">
         <strong>{{ modules().length }}</strong>
-        <span>{{ modules().length === 1 ? 'Module' : 'Modules' }}</span>
+
+        <span>
+          {{ modules().length === 1 ? 'Module' : 'Modules' }}
+        </span>
       </div>
     </section>
 
+    <!-- Empty Modules State -->
     @if (modules().length === 0) {
+
       <section class="state-card">
         <h2>Content is being prepared</h2>
-        <p>No learning modules are available for this topic yet.</p>
+
+        <p>
+          No learning modules are available for this topic yet.
+        </p>
       </section>
+
     } @else {
+
+      <!-- Learning Modules -->
       <div class="module-list">
 
         @for (module of modules(); track module.id; let i = $index) {
+
           <article class="module-card">
 
+            <!-- Module Heading -->
             <div class="module-heading">
               <div class="module-number">
                 {{ (i + 1).toString().padStart(2, '0') }}
               </div>
 
               <div class="module-heading-text">
-                <span class="module-label">MODULE {{ i + 1 }}</span>
+                <span class="module-label">
+                  MODULE {{ i + 1 }}
+                </span>
+
                 <h2>{{ moduleTitle(module.moduleType) }}</h2>
               </div>
             </div>
 
+            <!-- Module Content -->
             @if (module.content; as content) {
+
               <div class="module-content">
 
                 @switch (module.moduleType) {
 
                   @case ('deep_dive') {
+
                     <h3>{{ content.title }}</h3>
+
                     <p class="content-text">
                       {{ content.detailedExplanation }}
                     </p>
+
                   }
 
                   @case ('behind_the_scenes') {
+
                     <h3>{{ content.title }}</h3>
+
                     <p class="content-text">
                       {{ content.whatHappensInternally }}
                     </p>
+
                   }
 
                   @case ('concept_comparison') {
+
                     <h3>{{ content.title }}</h3>
 
                     <div class="comparison-grid">
+
                       <section class="comparison-panel">
                         <span class="panel-label">CONCEPT A</span>
+
                         <p>{{ content.conceptA }}</p>
                       </section>
 
                       <section class="comparison-panel">
                         <span class="panel-label">CONCEPT B</span>
+
                         <p>{{ content.conceptB }}</p>
                       </section>
+
                     </div>
+
                   }
 
                   @case ('debugging') {
+
                     <h3>{{ content.title }}</h3>
+
                     <p class="content-text">
                       {{ content.problemDescription }}
                     </p>
 
                     <div class="code-section">
                       <span class="code-label">BUGGY CODE</span>
+
                       <pre><code>{{ content.buggyCode }}</code></pre>
                     </div>
 
                     <div class="code-section">
                       <span class="code-label">CORRECTED CODE</span>
+
                       <pre><code>{{ content.correctCode }}</code></pre>
                     </div>
+
                   }
 
                   @case ('real_world_scenario') {
+
                     <h3>{{ content.title }}</h3>
 
                     <div class="info-panel">
                       <span class="panel-label">SCENARIO</span>
+
                       <p>{{ content.scenario }}</p>
                     </div>
 
                     <div class="info-panel">
                       <span class="panel-label">THE PROBLEM</span>
+
                       <p>{{ content.problem }}</p>
                     </div>
 
                     <div class="info-panel solution-panel">
-                      <span class="panel-label">HOW THE CONCEPT HELPS</span>
+                      <span class="panel-label">
+                        HOW THE CONCEPT HELPS
+                      </span>
+
                       <p>{{ content.howConceptSolvesIt }}</p>
                     </div>
+
                   }
 
                   @case ('code_challenge') {
+
                     <h3>{{ content.title }}</h3>
 
                     <div class="info-panel">
                       <span class="panel-label">PROBLEM STATEMENT</span>
+
                       <p>{{ content.problemStatement }}</p>
                     </div>
 
                     <div class="code-section">
                       <span class="code-label">STARTER CODE</span>
+
                       <pre><code>{{ content.starterCode }}</code></pre>
                     </div>
+
                   }
 
                   @case ('mini_hands_on_coding') {
+
                     <h3>{{ content.title }}</h3>
 
                     <div class="info-panel">
                       <span class="panel-label">YOUR TASK</span>
+
                       <p>{{ content.task }}</p>
                     </div>
 
                     <div class="info-panel">
                       <span class="panel-label">INSTRUCTIONS</span>
+
                       <p>{{ content.instructions }}</p>
                     </div>
 
                     <div class="code-section">
                       <span class="code-label">STARTER CODE</span>
+
                       <pre><code>{{ content.starterCode }}</code></pre>
                     </div>
+
                   }
 
                   @case ('advanced_practice') {
+
                     <h3>{{ content.title }}</h3>
 
                     @if (content.question) {
+
                       <div class="info-panel">
                         <span class="panel-label">QUESTION</span>
+
                         <p>{{ content.question }}</p>
                       </div>
+
                     }
 
                     @if (content.options?.length) {
+
                       <div class="practice-options">
+
                         @for (option of content.options; track $index) {
+
                           <div class="practice-option">
                             <strong>
                               {{ ['A', 'B', 'C', 'D'][$index] }}
                             </strong>
+
                             <span>{{ option }}</span>
                           </div>
+
                         }
+
                       </div>
+
                     }
+
                   }
 
                   @case ('architecture_design') {
+
                     <h3>{{ content.title }}</h3>
 
                     <div class="info-panel">
                       <span class="panel-label">DESIGN PROBLEM</span>
+
                       <p>{{ content.problem }}</p>
                     </div>
 
                     <div class="info-panel solution-panel">
                       <span class="panel-label">DESIGN APPROACH</span>
+
                       <p>{{ content.designApproach }}</p>
                     </div>
+
                   }
 
                   @case ('interview_challenge') {
+
                     <h3>{{ content.title }}</h3>
 
                     <div class="info-panel">
                       <span class="panel-label">INTERVIEW QUESTION</span>
+
                       <p>{{ content.interviewQuestion }}</p>
                     </div>
 
                     <div class="info-panel solution-panel">
                       <span class="panel-label">STRONG ANSWER</span>
+
                       <p>{{ content.strongAnswer }}</p>
                     </div>
+
                   }
 
                   @default {
+
                     <p class="content-text">
                       This module type does not have a display template yet.
                     </p>
+
                   }
 
                 }
 
               </div>
+
             } @else {
+
               <div class="empty-module">
-                <p>Content for this module has not been added yet.</p>
+                <p>
+                  Content for this module has not been added yet.
+                </p>
               </div>
+
             }
 
           </article>
+
         }
 
       </div>
+
     }
 
+    <!-- Mentor Support -->
+    <section class="mentor-help-card">
+
+      <div class="mentor-help-top">
+
+        <div class="mentor-help-icon">
+          <span>?</span>
+        </div>
+
+        <span class="mentor-status">
+          PERSONALIZED GUIDANCE
+        </span>
+
+      </div>
+
+      <div class="mentor-help-content">
+
+        <h2>Need help with a concept?</h2>
+
+        <p>
+          Advanced topics can be challenging. Reach out to your assigned
+          mentor for guidance, explanations, and practical advice.
+        </p>
+
+        <button
+          class="mentor-help-button"
+          type="button"
+          (click)="askMyMentor()">
+
+          <span>Ask My Mentor</span>
+
+          <span class="mentor-button-arrow">→</span>
+
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- Learning Footer -->
     <footer class="learning-footer">
+
+      <div class="footer-indicator"></div>
+
       <p>
-        Keep going. Understanding the details is what builds confidence.
+        Keep exploring. Every concept you understand brings you one step
+        closer to becoming a confident developer.
       </p>
 
-      <button
-        class="secondary-button"
-        type="button"
-        (click)="backToStudy()">
-        Back to Study
-      </button>
     </footer>
 
   }

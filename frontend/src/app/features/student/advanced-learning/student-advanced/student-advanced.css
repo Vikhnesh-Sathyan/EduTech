@@ -390,6 +390,203 @@
   flex-shrink: 0;
 }
 
+
+/* =========================================
+   MENTOR SUPPORT CARD
+========================================= */
+
+.mentor-help-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  margin-top: 32px;
+  padding: 30px;
+  overflow: hidden;
+  border: 1px solid #dedfff;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    #f7f7ff 0%,
+    #ffffff 60%,
+    #f4f6ff 100%
+  );
+}
+
+.mentor-help-card::after {
+  content: "";
+  position: absolute;
+  top: -65px;
+  right: -45px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.07);
+  pointer-events: none;
+}
+
+.mentor-help-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mentor-help-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border: 1px solid #dedfff;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+.mentor-help-icon span {
+  font-size: 23px;
+  font-weight: 750;
+}
+
+.mentor-status {
+  color: #4f46e5;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 1.4px;
+}
+
+.mentor-help-content {
+  position: relative;
+  z-index: 1;
+}
+
+.mentor-help-content h2 {
+  margin: 0 0 10px;
+  color: #172033;
+  font-size: 23px;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+}
+
+.mentor-help-content p {
+  max-width: 650px;
+  margin: 0;
+  color: #68758b;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.mentor-help-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 22px;
+  padding: 13px 19px;
+  border: 1px solid #4f46e5;
+  border-radius: 11px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.mentor-help-button:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.mentor-help-button:focus-visible {
+  outline: 3px solid #c7d2fe;
+  outline-offset: 3px;
+}
+
+.mentor-button-arrow {
+  font-size: 17px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.mentor-help-button:hover .mentor-button-arrow {
+  transform: translateX(3px);
+}
+
+/* =========================================
+   LEARNING FOOTER
+========================================= */
+
+.learning-footer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 26px;
+  padding: 20px 2px 0;
+  border-top: 1px solid #e4e8f0;
+}
+
+.footer-indicator {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: #818cf8;
+}
+
+.learning-footer p {
+  max-width: 650px;
+  margin: 0;
+  color: #68758b;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 650px) {
+  .mentor-help-card {
+    gap: 18px;
+    margin-top: 24px;
+    padding: 22px;
+    border-radius: 16px;
+  }
+
+  .mentor-help-content h2 {
+    font-size: 20px;
+  }
+
+  .mentor-help-content p {
+    font-size: 13px;
+  }
+
+  .mentor-help-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .learning-footer {
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+}
+
+
+@media (max-width: 640px) {
+  .mentor-help-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mentor-help-card button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 650px) {
   .advanced-page {
     padding: 22px 15px 32px;

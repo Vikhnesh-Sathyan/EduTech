@@ -8,6 +8,12 @@ const {
     getMentorRecommendations
 } = require("../../controllers/student/studentMentorController");
 
+
+const {
+    createMentorQuestion,
+    getMyMentorQuestions
+} = require("../../controllers/student/studentMentorQuestionController");
+
 const authMiddleware = require("../../middleware/authMiddleware");
 const roleMiddleware = require("../../middleware/roleMiddleware");
 
@@ -42,6 +48,24 @@ router.get(
     roleMiddleware("student"),
     getMentorRecommendations
 );
+
+
+// Ask the assigned mentor a question
+router.post(
+    "/questions",
+    authMiddleware,
+    roleMiddleware("student"),
+    createMentorQuestion
+);
+
+// Get my mentor questions and responses
+router.get(
+    "/questions",
+    authMiddleware,
+    roleMiddleware("student"),
+    getMyMentorQuestions
+);
+
 
 // Get one approved mentor profile
 router.get(

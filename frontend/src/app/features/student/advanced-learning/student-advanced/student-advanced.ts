@@ -4,10 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StudentAdvancedService } from '../../../../services/student/student-advanced.service';
 import { ToastService } from '../../../../services/toast.service';
 
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-student-advanced',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './student-advanced.html',
   styleUrl: './student-advanced.css'
 })
@@ -101,4 +103,10 @@ export class StudentAdvanced implements OnInit {
   trackByModuleId(index: number, module: any): number {
     return module.id;
   }
+
+  askMyMentor(): void {
+  this.toastService.info(
+    'Mentor questions will be available soon.'
+  );
+}
 }

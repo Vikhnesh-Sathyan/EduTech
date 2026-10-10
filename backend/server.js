@@ -14,6 +14,20 @@ const cors = require("cors");
 const path = require("path");
 
 
+// Import Node.js built-in HTTP module.
+// Used to create an HTTP server that supports both Express and Socket.IO.
+const http = require("http");
+
+// Import the Socket.IO Server class.
+// Used to enable real-time communication between students and mentors.
+const { Server } = require("socket.io");
+
+// Import the chat socket registration function.
+// This file handles chat authentication, conversation rooms,
+// sending messages, and receiving real-time messages.
+const registerChatSocket = require("./sockets/chatSocket");
+
+
 // =====================================================
 // IMPORT DATABASE CONNECTION
 // =====================================================
@@ -115,6 +129,12 @@ const studentBasicChallengeRoutes =
     
 const studentAdvancedRoutes = 
     require("./routes/student/studentAdvancedRoutes");
+
+// =====================================================
+// STUDENT MENTOR CHAT ROUTES
+// =====================================================
+
+const chatRoutes = require("./routes/chat/chatRoutes");
     
 // =====================================================
 // STUDY AND DIAGNOSTIC ROUTES
@@ -400,14 +420,30 @@ app.use(
 );
 
 // =====================================================
-// START SERVER
+// STUDENT MENTOR CHAT ROUTES
 // =====================================================
 
-app.listen(PORT, () => {
+app.use("/api/chat", chatRoutes);
 
-    console.log(
-        `Server running on port ${PORT}`
-    );
+// =====================================================
+// START SERVER WITH SOCKET.IO
+// =====================================================
 
+const server = http.createServer(app);
+
+const io = new Server(server, {
+cors: {
+origin: "*",
+methods: ["GET", "POST"]
+}
 });
 
+app.set("io", io);
+
+// Register chat authentication and events.
+registerChatSocket(io);
+
+server.listen(PORT, () => {
+console.log(`Server running on port ${PORT}`);
+console.log("Socket.IO is ready");
+});
