@@ -17,3 +17,9 @@ dist/
 # OS files
 .DS_Store
 Thumbs.db
+
+
+# Local question and practice files
+/javascript_scope_questions.xlsx
+/variables_basics_30_questions.csv
+/variables_basics_30_questions.xlsx
