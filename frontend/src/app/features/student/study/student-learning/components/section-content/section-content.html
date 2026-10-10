@@ -1,0 +1,112 @@
+<!-- SECTION CONTENT -->
+
+@if (sectionContent(); as content) {
+
+  <div class="content-header">
+    <p class="content-label">LEARNING SECTION</p>
+
+
+<h1>{{ content.title }}</h1>
+
+@if (content.description) {
+  <p class="content-intro">{{ content.description }}</p>
+}
+
+
+  </div>
+
+  <!-- SIMPLE EXPLANATION -->
+
+@if (content.simple_explanation) { <section class="content-section"> <p class="section-label">SIMPLE EXPLANATION</p> <h2>{{ content.title }}</h2> <p>{{ content.simple_explanation }}</p> </section>
+}
+
+  <!-- REAL-WORLD EXAMPLE -->
+
+@if (content.real_world_example) { <section class="content-section"> <p class="section-label">REAL WORLD</p> <h2>Real-world Example</h2> <p>{{ content.real_world_example }}</p> </section>
+}
+
+  <!-- VISUAL EXPLANATION -->
+
+@if (content.visual_image_url || content.visual_text) { <section class="content-section"> <p class="section-label">VISUAL</p> <h2>Visual Explanation</h2>
+
+
+  @if (content.visual_image_url) {
+    <div class="learning-image">
+      <img
+        [src]="'http://localhost:5000' + content.visual_image_url"
+        [alt]="content.title"
+      >
+    </div>
+  }
+
+  @if (content.visual_text) {
+    <pre class="visual-text">{{ content.visual_text }}</pre>
+  }
+</section>
+
+
+}
+
+  <!-- CODE EXAMPLE -->
+
+@if (content.code_example) { <section class="content-section"> <p class="section-label">CODE</p> <h2>Code Example</h2>
+
+
+  <div class="code-block">
+    <div class="code-header">
+      <span>Code Example</span>
+    </div>
+
+    <pre><code>{{ content.code_example }}</code></pre>
+  </div>
+</section>
+
+
+}
+
+  <!-- COMMON MISTAKE -->
+
+@if (content.common_mistake) { <section class="content-section"> <p class="section-label">IMPORTANT</p> <h2>Common Mistake</h2> <p>{{ content.common_mistake }}</p> </section>
+}
+
+  <!-- WHERE USED -->
+
+@if (content.where_used) { <section class="content-section"> <p class="section-label">REAL WORLD</p> <h2>Where is it used?</h2> <p>{{ content.where_used }}</p> </section>
+}
+
+  <!-- LEARNING PROGRESS -->
+
+  <section class="learning-progress-card">
+    <div class="progress-content">
+      <p class="section-label">LEARNING PROGRESS</p>
+
+  <h2>
+    {{ sectionProgress()?.status === 'completed'
+      ? 'Section completed'
+      : 'Continue your learning' }}
+  </h2>
+
+  <p>
+    {{ sectionProgress()?.status === 'completed'
+      ? 'You have completed this learning section.'
+      : 'Mark this section as completed when you are finished studying it.' }}
+  </p>
+</div>
+
+<div class="progress-action">
+  @if (sectionProgress()?.status === 'completed') {
+    <div class="completed-status">✓ Completed</div>
+  } @else {
+    <button
+      type="button"
+      class="complete-button"
+      (click)="completeSection.emit()"
+    >
+      Mark as Completed
+    </button>
+  }
+</div>
+
+
+  </section>
+}

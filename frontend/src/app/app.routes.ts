@@ -26,7 +26,7 @@ import { Subject } from './features/student/study/subject-learning/subject-learn
 
 import { Diagnostic } from './features/student/study/diagnostic/diagnostic';
 import { DiagnosticResult } from './features/student/study/diagnostic-result/diagnostic-result';
-import { StudentLearningSection } from './features/student/study/student-learning-section/student-learning-section';
+import { StudentLearningSection } from './features/student/study/student-learning/student-learning-section/student-learning-section';
 
 // Student challenges and progress
 import { BasicChallenge } from './features/student/challenges/basic-challenge/basic-challenge';

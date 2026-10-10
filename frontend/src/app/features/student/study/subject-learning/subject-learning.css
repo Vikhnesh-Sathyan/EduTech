@@ -1,9 +1,13 @@
+
+/* ==========================================
+   SUBJECT PAGE
+========================================== */
+
 .subject-page {
   max-width: 1080px;
   margin: 0 auto;
   padding: 40px 32px 64px;
 }
-
 
 /* ==========================================
    SUBJECT HEADER
@@ -15,17 +19,14 @@
 
 .eyebrow {
   margin: 0 0 10px;
-
   font-size: 13px;
   font-weight: 700;
-
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .subject-header h1 {
   margin: 0 0 12px;
-
   font-size: 38px;
   line-height: 1.15;
   font-weight: 700;
@@ -33,28 +34,24 @@
 
 .subject-description {
   max-width: 680px;
-
   margin: 0;
-
   font-size: 16px;
   line-height: 1.6;
 }
-
 
 /* ==========================================
    SECTION LABEL
 ========================================== */
 
 .section-label {
-  margin: 0 0 7px;
-
-  font-size: 12px;
+  display: block;
+  margin: 0 0 10px;
+  color: #6b7280;
+  font-size: 11px;
   font-weight: 700;
-
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-
 
 /* ==========================================
    LEARNING CARD
@@ -64,22 +61,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 24px;
-
   padding: 28px;
-
   margin-bottom: 40px;
-
   border: 1px solid #e5e7eb;
   border-radius: 16px;
-
   background: #ffffff;
 }
 
 .learning-card h2 {
   margin: 0 0 8px;
-
   font-size: 21px;
   line-height: 1.3;
   font-weight: 650;
@@ -87,111 +78,182 @@
 
 .learning-card p:last-child {
   max-width: 650px;
-
   margin: 0;
-
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
+  color: #6b7280;
 }
-
 
 /* ==========================================
    STATUS
 ========================================== */
 
-/* .status {
+.status {
   display: flex;
   align-items: center;
   gap: 8px;
-
   flex-shrink: 0;
-
   padding: 8px 12px;
-
   border: 1px solid #e5e7eb;
   border-radius: 999px;
-
   font-size: 13px;
   font-weight: 600;
-} */
+}
 
 .status-dot {
   width: 7px;
   height: 7px;
-
+  flex-shrink: 0;
   border-radius: 50%;
-
   background: #9ca3af;
 }
-
 
 /* ==========================================
    GETTING STARTED
 ========================================== */
 
 .start-section {
-  padding: 28px;
-
+  padding: 32px;
   border: 1px solid #e5e7eb;
-  border-radius: 16px;
-
-  background: #ffffff;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.035);
 }
 
 .start-section h2 {
-  margin: 0 0 10px;
-
-  font-size: 21px;
+  margin: 0 0 12px;
+  color: #111827;
+  font-size: 26px;
   line-height: 1.3;
-  font-weight: 650;
+  font-weight: 700;
+  letter-spacing: -0.035em;
 }
 
 .start-section > p:not(.section-label) {
   max-width: 650px;
-
   margin: 0 0 24px;
-
+  color: #6b7280;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.8;
 }
 
-
 /* ==========================================
-   START BUTTON
+   GETTING STARTED ACTIONS
 ========================================== */
 
+.action-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Primary diagnostic button */
+
 .start-button {
-  min-height: 44px;
-
-  padding: 0 18px;
-
-  border: none;
-  border-radius: 9px;
-
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid #111827;
+  border-radius: 10px;
   background: #111827;
   color: #ffffff;
-
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition:
     background 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .start-button:hover {
-  background: #1f2937;
-
+  background: #273449;
+  border-color: #273449;
+  box-shadow: 0 5px 14px rgba(17, 24, 39, 0.14);
   transform: translateY(-1px);
 }
 
-.start-button:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.2);
-  outline-offset: 2px;
+.start-button:active {
+  transform: translateY(0);
 }
 
+.start-button:focus-visible,
+.skip-button:focus-visible,
+.start-learning-button:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.3);
+  outline-offset: 3px;
+}
+
+/* Secondary skip button */
+
+.skip-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.skip-button:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+  color: #111827;
+}
+
+/* Supporting note */
+
+.helper-text {
+  display: block;
+  margin-top: 18px;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   START LEARNING BUTTON
+========================================== */
+
+.start-learning-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.start-learning-button:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
 
 /* ==========================================
    LOADING / ERROR
@@ -199,50 +261,36 @@
 
 .state-message {
   padding: 40px;
-
   border: 1px solid #e5e7eb;
   border-radius: 16px;
-
   background: #ffffff;
-
   text-align: center;
 }
 
 .state-message p {
   margin: 0;
-
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .error-state {
   border-color: #fecaca;
 }
 
-/* =====================================================
-   DIAGNOSTIC RESULT — PRIORITY PANEL
-   ===================================================== */
+/* ==========================================
+   DIAGNOSTIC RESULT SUMMARY
+========================================== */
 
 .diagnostic-summary {
   width: min(100%, 520px);
-
+  box-sizing: border-box;
   margin: 28px 0 32px;
   padding: 28px 30px;
-
   border: 1px solid #30343a;
-  border-radius: 12px;
-
-  background:
-    linear-gradient(
-      145deg,
-      #171a1e 0%,
-      #101214 100%
-    );
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #171a1e 0%, #101214 100%);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
 }
-
 
 /* Score area */
 
@@ -253,63 +301,36 @@
   gap: 24px;
 }
 
-
-/* 7 / 10 */
+/* Score: 7 / 10 */
 
 .summary-score strong {
   color: #ffffff;
-
   font-size: clamp(38px, 5vw, 52px);
   font-weight: 500;
-
   line-height: 1;
   letter-spacing: -0.05em;
 }
 
-
-/* 70% */
+/* Percentage */
 
 .summary-score span {
   color: #d7d9dc;
-
   font-size: 20px;
   font-weight: 500;
-
   padding-bottom: 4px;
 }
 
-
-/* Small label */
+/* Result label */
 
 .diagnostic-summary p {
   margin: 18px 0 0;
-
   padding-top: 16px;
-
   border-top: 1px solid #292d32;
-
   color: #858a91;
-
   font-size: 11px;
   font-weight: 600;
-
   letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-
-.start-learning-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  padding: 8px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #374151;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 /* ==========================================
@@ -317,7 +338,6 @@
 ========================================== */
 
 @media (max-width: 700px) {
-
   .subject-page {
     padding: 28px 20px 48px;
   }
@@ -332,9 +352,7 @@
 
   .learning-card {
     align-items: flex-start;
-
     flex-direction: column;
-
     padding: 24px;
   }
 
@@ -346,4 +364,34 @@
     padding: 24px;
   }
 
+  .start-section h2 {
+    font-size: 23px;
+  }
+
+  .action-buttons {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .start-button,
+  .skip-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .diagnostic-summary {
+    padding: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .start-button,
+  .skip-button,
+  .start-learning-button {
+    transition: none;
+  }
+
+  .start-button:hover {
+    transform: none;
+  }
 }

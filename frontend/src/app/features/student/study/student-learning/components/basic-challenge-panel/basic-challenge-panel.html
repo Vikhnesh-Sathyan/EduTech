@@ -1,0 +1,97 @@
+@if (selectedSubtopicId()) {
+
+  <section class="basic-challenge-card">
+    <div class="challenge-heading">
+      <div class="challenge-icon">✦</div>
+
+
+  <div>
+    <h2>Basic Challenge</h2>
+    <p>Complete your learning sections to unlock the challenge.</p>
+  </div>
+</div>
+
+@if (challengeStatusLoading()) {
+  <div class="challenge-loading">
+    Loading your challenge status...
+  </div>
+} @else if (challengeStatus(); as status) {
+  @if (status.challengePassed) {
+    <div class="challenge-status-passed">
+      <span class="status-icon">✓</span>
+
+      <div>
+        <h3>Challenge Passed</h3>
+        <p>You have successfully completed the basic challenge.</p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="challenge-button advanced-button"
+      (click)="openAdvancedLearning.emit()"
+    >
+      Advanced Learning
+      <span>→</span>
+    </button>
+  } @else {
+    <div class="challenge-meta">
+      <div class="challenge-progress-text">
+        <span>Sections completed</span>
+
+        <strong>
+          {{ status.completedSections ?? 0 }} /
+          {{ status.totalSections ?? 0 }}
+        </strong>
+      </div>
+
+      <div class="challenge-progress-track">
+        <div
+          class="challenge-progress-fill"
+          [style.width]="
+            (status.totalSections
+              ? (status.completedSections / status.totalSections) * 100
+              : 0) + '%'
+          "
+        ></div>
+      </div>
+    </div>
+
+    @if (status.allSectionsCompleted) {
+      <div class="challenge-status-unlocked">
+        <span>✓</span>
+        Basic challenge unlocked! You can start now.
+      </div>
+
+      <button
+        type="button"
+        class="challenge-button"
+        (click)="startBasicChallenge.emit()"
+      >
+        Start Basic Challenge
+        <span>→</span>
+      </button>
+    } @else {
+      <div class="challenge-status-locked">
+        <span>🔒</span>
+        Complete all learning sections to unlock the challenge.
+      </div>
+
+      <button
+        type="button"
+        class="challenge-button"
+        disabled
+      >
+        Complete Sections First
+      </button>
+    }
+  }
+} @else {
+  <div class="challenge-empty">
+    Challenge status is not available yet.
+  </div>
+}
+
+
+  </section>
+}

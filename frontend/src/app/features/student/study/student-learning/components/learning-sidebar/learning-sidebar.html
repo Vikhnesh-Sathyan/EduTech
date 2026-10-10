@@ -1,0 +1,67 @@
+<aside class="learning-sidebar">
+
+  <div class="sidebar-header">
+    <p class="sidebar-label">{{ subjectName() }}</p>
+    <h2>Learning</h2>
+  </div>
+
+  <div class="topic-list">
+    @for (topic of topics(); track topic.id) {
+      <div class="topic-group">
+
+
+    <button
+      type="button"
+      class="topic-button"
+      [class.active]="expandedTopicId() === topic.id"
+      (click)="toggleTopic.emit(topic.id)"
+    >
+      <span class="topic-icon">
+        {{ expandedTopicId() === topic.id ? '⌄' : '›' }}
+      </span>
+      <span>{{ topic.name }}</span>
+    </button>
+
+    @if (
+      topic.subtopics?.length &&
+      expandedTopicId() === topic.id
+    ) {
+      <div class="subtopic-list">
+        @for (subtopic of topic.subtopics; track subtopic.id) {
+          <button
+            type="button"
+            class="subtopic-button"
+            [class.active]="selectedSubtopicId() === subtopic.id"
+            (click)="selectSubtopic.emit(subtopic.id)"
+          >
+            <span class="subtopic-dot"></span>
+            <span>{{ subtopic.title }}</span>
+          </button>
+
+          @if (
+            selectedSubtopicId() === subtopic.id &&
+            subtopic.sections?.length
+          ) {
+            <div class="section-list">
+              @for (section of subtopic.sections; track section.id) {
+                <button
+                  type="button"
+                  class="section-button"
+                  [class.active]="selectedSectionId() === section.id"
+                  (click)="selectSection.emit(section.id)"
+                >
+                  {{ section.title }}
+                </button>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+}
+
+
+  </div>
+
+</aside>

@@ -1,0 +1,150 @@
+<!-- HOME INTRODUCTION -->
+
+<div class="content-header">
+  <p class="content-label">INTRODUCTION</p>
+
+  <h1>{{ subjectName() }}</h1>
+
+  <p class="content-intro">
+    Explore the topics and concepts available in
+    {{ subjectName() }} and build your knowledge step by step.
+  </p>
+</div>
+
+<!-- LEARNING PATH -->
+
+<section class="content-section">
+  <p class="section-label">LEARNING PATH</p>
+
+  <h2>What You'll Learn</h2>
+
+  <p>
+    Choose a topic to explore its subtopics and learning sections.
+  </p>
+
+@if (topics().length > 0) { <div class="learning-topics">
+@for (topic of topics(); track topic.id; let i = $index) { <div class="learning-topic-group">
+<button
+type="button"
+class="learning-topic-button"
+(click)="selectTopic.emit(topic.id)"
+> <span class="learning-topic-left"> <span class="learning-topic-number">
+{{ (i + 1).toString().padStart(2, '0') }} </span>
+
+          <span>{{ topic.name }}</span>
+        </span>
+
+        <span class="learning-topic-arrow">→</span>
+      </button>
+
+      @if (topic.subtopics?.length) {
+        <div class="learning-subtopics">
+          @for (
+            subtopic of topic.subtopics;
+            track subtopic.id
+          ) {
+            <button
+              type="button"
+              class="learning-subtopic-button"
+              (click)="selectSubtopic.emit(subtopic.id)"
+            >
+              {{ subtopic.title }}
+              <span>→</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+
+} @else { <p class="empty-state">
+No learning topics are available for this subject yet. </p>
+}
+
+</section>
+
+<!-- BASIC CHALLENGE -->
+
+@if (selectedSubtopicId()) {
+
+  <section class="basic-challenge-card">
+    <div class="challenge-content">
+      <p class="section-label">BASIC CHALLENGE</p>
+
+
+  @if (challengeStatusLoading()) {
+    <h2>Checking your progress...</h2>
+    <p>Loading your challenge status.</p>
+  } @else if (challengeStatus(); as status) {
+    @if (status.challengePassed) {
+      <h2>Challenge Passed</h2>
+      <p>
+        You have already passed this challenge.
+        Your Advanced Learning access remains unlocked.
+      </p>
+    } @else {
+      <h2>Test Your Understanding</h2>
+
+      <p>
+        Complete all learning sections in this subtopic
+        to unlock your challenge.
+      </p>
+
+      <div class="challenge-meta">
+        <span>
+          {{ status.completedSections }} /
+          {{ status.totalSections }} Sections Completed
+        </span>
+        <span>5 Questions</span>
+        <span>20 Marks</span>
+      </div>
+
+      @if (status.allSectionsCompleted) {
+        <p class="challenge-status-unlocked">
+          All sections completed. Your challenge is unlocked.
+        </p>
+      } @else {
+        <p class="challenge-status-locked">
+          Complete all sections to unlock the challenge.
+        </p>
+      }
+    }
+  } @else {
+    <h2>Challenge Status Unavailable</h2>
+    <p>
+      We couldn't load your challenge status.
+      Please select this subtopic again to retry.
+    </p>
+  }
+</div>
+
+<div class="challenge-action">
+  @if (!challengeStatusLoading() && challengeStatus(); as status) {
+    @if (status.challengePassed) {
+      <button
+        type="button"
+        class="start-button"
+        (click)="openAdvancedLearning.emit()"
+      >
+        Advanced Learning <span>→</span>
+      </button>
+    } @else if (status.allSectionsCompleted) {
+      <button
+        type="button"
+        class="start-button"
+        (click)="startBasicChallenge.emit()"
+      >
+        Start Challenge <span>→</span>
+      </button>
+    } @else {
+      <button type="button" class="start-button" disabled>
+        Challenge Locked
+      </button>
+    }
+  }
+</div>
+
+  </section>
+}

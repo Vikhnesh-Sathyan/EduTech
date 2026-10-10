@@ -1,0 +1,131 @@
+
+<section class="learning-page">
+
+  <!-- TOP BAR -->
+  <header class="learning-header">
+
+    <div class="header-left">
+
+      <button
+        type="button"
+        class="mobile-menu-button"
+        aria-label="Learning menu"
+      >
+        ☰
+      </button>
+
+      <div class="breadcrumb">
+        <span>Study</span>
+        <span class="separator">/</span>
+        <strong>{{ subjectName() }}</strong>
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBackToSubject()"
+    >
+      ← Back to Subject
+    </button>
+
+  </header>
+
+  <!-- LEARNING BODY -->
+  <div class="learning-body">
+
+    @if (loading()) {
+
+      <div class="page-message">
+        <p>Loading your learning content...</p>
+      </div>
+
+    } @else if (errorMessage()) {
+
+      <div class="page-message error-message">
+        <h2>Unable to load learning content</h2>
+        <p>{{ errorMessage() }}</p>
+
+        <button
+          type="button"
+          class="back-button"
+          (click)="goBackToSubject()"
+        >
+          ← Back to Study
+        </button>
+      </div>
+
+    } @else {
+
+      <!-- LEARNING SIDEBAR -->
+      <app-learning-sidebar
+        [subjectName]="subjectName()"
+        [topics]="topics()"
+        [expandedTopicId]="expandedTopicId()"
+        [selectedSubtopicId]="selectedSubtopicId()"
+        [selectedSectionId]="selectedSectionId()"
+        (toggleTopic)="toggleTopic($event)"
+        (selectSubtopic)="selectSubtopic($event)"
+        (selectSection)="selectSection($event)"
+      />
+
+      <!-- MAIN CONTENT -->
+      <main class="learning-content">
+
+        @if (!selectedSectionId()) {
+
+          <!-- DYNAMIC LEARNING HOME -->
+          <app-learning-home
+            [subjectName]="subjectName()"
+            [topics]="topics()"
+            [selectedSubtopicId]="selectedSubtopicId()"
+            [challengeStatus]="challengeStatus()"
+            [challengeStatusLoading]="challengeStatusLoading()"
+            (selectTopic)="toggleTopic($event)"
+            (selectSubtopic)="selectSubtopic($event)"
+            (startBasicChallenge)="startBasicChallenge()"
+            (openAdvancedLearning)="openAdvancedLearning()"
+          />
+
+          <!-- BASIC CHALLENGE -->
+          @if (selectedSubtopicId()) {
+
+            <app-basic-challenge-panel
+              [selectedSubtopicId]="selectedSubtopicId()"
+              [challengeStatus]="challengeStatus()"
+              [challengeStatusLoading]="challengeStatusLoading()"
+              (startBasicChallenge)="startBasicChallenge()"
+              (openAdvancedLearning)="openAdvancedLearning()"
+            />
+
+          }
+
+        } @else {
+
+          @if (sectionContent()) {
+
+            <!-- SELECTED SECTION CONTENT -->
+            <app-section-content
+              [sectionContent]="sectionContent()"
+              [sectionProgress]="sectionProgress()"
+              (completeSection)="completeSection()"
+            />
+
+          } @else {
+
+            <div class="page-message">
+              <p>Loading section content...</p>
+            </div>
+
+          }
+
+        }
+
+      </main>
+
+    }
+
+  </div>
+
+</section>

@@ -1,0 +1,116 @@
+.learning-sidebar {
+width: 280px;
+min-width: 280px;
+padding: 24px 16px;
+border-right: 1px solid #e2e8f0;
+background: #fff;
+overflow-y: auto;
+}
+
+.sidebar-header {
+padding: 0 10px 20px;
+}
+
+.sidebar-label {
+margin: 0 0 6px;
+color: #64748b;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 1px;
+overflow-wrap: anywhere;
+}
+
+.sidebar-header h2 {
+margin: 0;
+color: #172033;
+font-size: 22px;
+}
+
+.topic-list,
+.subtopic-list,
+.section-list {
+display: grid;
+gap: 6px;
+}
+
+.topic-group {
+min-width: 0;
+}
+
+.topic-button,
+.subtopic-button,
+.section-button {
+display: flex;
+width: 100%;
+align-items: center;
+gap: 10px;
+padding: 12px;
+border: 1px solid transparent;
+border-radius: 9px;
+background: transparent;
+color: #334155;
+text-align: left;
+overflow-wrap: anywhere;
+cursor: pointer;
+}
+
+.topic-button {
+font-weight: 600;
+}
+
+.topic-button:hover,
+.subtopic-button:hover,
+.section-button:hover {
+background: #f8fafc;
+}
+
+.topic-button.active,
+.subtopic-button.active,
+.section-button.active {
+border-color: #e0e7ff;
+background: #eef2ff;
+color: #4338ca;
+}
+
+.topic-icon {
+flex-shrink: 0;
+width: 16px;
+text-align: center;
+}
+
+.subtopic-list {
+margin: 6px 0 10px 12px;
+}
+
+.subtopic-button {
+font-size: 13px;
+}
+
+.subtopic-dot {
+width: 6px;
+height: 6px;
+flex-shrink: 0;
+border-radius: 50%;
+background: #94a3b8;
+}
+
+.section-list {
+margin: 4px 0 8px 16px;
+padding-left: 10px;
+border-left: 1px solid #e2e8f0;
+}
+
+.section-button {
+padding: 9px 10px;
+color: #64748b;
+font-size: 12px;
+}
+
+@media (max-width: 768px) {
+.learning-sidebar {
+width: 100%;
+min-width: 0;
+border-right: none;
+border-bottom: 1px solid #e2e8f0;
+}
+}

@@ -1,213 +1,197 @@
+
 <section class="subject-page">
 
-  <!-- ==========================================
-       LOADING STATE
-  ========================================== -->
-
+  <!-- LOADING STATE -->
   @if (loading()) {
 
     <div class="state-message">
-
-      <p>
-        Loading subject...
-      </p>
-
+      <p>Loading subject...</p>
     </div>
 
   }
 
-
-  <!-- ==========================================
-       ERROR STATE
-  ========================================== -->
-
+  <!-- ERROR STATE -->
   @else if (errorMessage()) {
 
     <div class="state-message error-state">
-
-      <p>
-        {{ errorMessage() }}
-      </p>
-
+      <p>{{ errorMessage() }}</p>
     </div>
 
   }
 
-
-  <!-- ==========================================
-       SUBJECT
-  ========================================== -->
-
+  <!-- SUBJECT CONTENT -->
   @else if (subject()) {
 
+    <!-- SUBJECT HEADER -->
     <div class="subject-header">
 
-      <p class="eyebrow">
-        Study
-      </p>
+      <p class="eyebrow">Study</p>
 
       <h1>
         {{ subject().name }}
       </h1>
 
       @if (subject().description) {
-
         <p class="subject-description">
           {{ subject().description }}
         </p>
-
       }
 
     </div>
 
-
-    <!-- ==========================================
-         LEARNING STATUS
-    ========================================== -->
-
+    <!-- LEARNING STATUS -->
     <section class="learning-card">
 
       <div>
+        <p class="section-label">YOUR LEARNING</p>
 
-        <p class="section-label">
-          Your Learning
-        </p>
-
-        <h2>
-          Ready to begin
-        </h2>
+        <h2>Ready to begin</h2>
 
         <p>
           Start learning this subject step by step
           and build your understanding through
           focused practice.
         </p>
-
       </div>
 
       <div class="status">
-  <!-- <span class="status-dot"></span>
-  Not started -->
-
-  <button
-    type="button"
-    class="start-learning-button"
-    (click)="startLearning()"
-  >
-    Start Learning
-  </button>
-</div>
+        <button
+          type="button"
+          class="start-learning-button"
+          (click)="startLearning()"
+        >
+          Start Learning
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
 
     </section>
 
-
-    <!-- ==========================================
-         GETTING STARTED
-    ========================================== -->
-
+    <!-- GETTING STARTED -->
     <section class="start-section">
-
-      <p class="section-label">
-        Getting Started
-      </p>
-
-
-      <!-- ==========================================
-           CHECKING DIAGNOSTIC
-      ========================================== -->
 
       @if (checkingDiagnostic()) {
 
-        <h2>
-          Checking your learning status
-        </h2>
+        <!-- CHECKING DIAGNOSTIC STATUS -->
+        <h2>Preparing your learning experience</h2>
 
         <p>
-          Preparing your personalized learning
-          experience...
+          Checking your diagnostic status so we can
+          help you make the most of your learning.
         </p>
 
       }
-
-
-      <!-- ==========================================
-           DIAGNOSTIC NOT COMPLETED
-      ========================================== -->
 
       @else if (!diagnosticCompleted()) {
 
-        <h2>
-          Build your foundation
-        </h2>
+        <!-- DIAGNOSTIC NOT COMPLETED -->
+        <div class="getting-started">
 
-        <p>
-          Before starting your personalized learning
-          path, we will understand your current
-          knowledge of this subject.
-        </p>
+          <p class="section-label">
+            GETTING STARTED
+          </p>
 
-        <button
-          type="button"
-          class="start-button"
-          (click)="startDiagnostic()"
-        >
-          Start Diagnostic
-        </button>
+          <h2>Build Your Learning Path</h2>
 
-      }
+          <p>
+            Discover what you already know and identify
+            areas where you can improve. Take a short
+            diagnostic for personalized learning
+            recommendations, or start learning directly.
+          </p>
 
+          <div class="action-buttons">
 
-      <!-- ==========================================
-           DIAGNOSTIC COMPLETED
-      ========================================== -->
+            <button
+              type="button"
+              class="start-button"
+              (click)="startDiagnostic()"
+            >
+              Take Diagnostic
+              <span aria-hidden="true">→</span>
+            </button>
 
-      @else {
-
-        <h2>
-          Your diagnostic is complete
-        </h2>
-
-        <p>
-          Your initial diagnostic has already been
-          completed. You can review your baseline
-          learning profile before continuing.
-        </p>
-
-
-        @if (diagnosticResult()) {
-
-          <div class="diagnostic-summary">
-
-            <div class="summary-score">
-
-              <strong>
-                {{ diagnosticResult().correctAnswers }}
-                /
-                {{ diagnosticResult().totalQuestions }}
-              </strong>
-
-              <span>
-                {{ diagnosticResult().percentage }}%
-              </span>
-
-            </div>
-
-            <p>
-              Initial diagnostic score
-            </p>
+            <button
+              type="button"
+              class="skip-button"
+              (click)="startLearning()"
+            >
+              Skip and Start Learning
+            </button>
 
           </div>
 
-        }
+          <span class="helper-text">
+            Recommended for beginners · Optional for experienced learners
+          </span>
 
+        </div>
 
-        <button
-          type="button"
-          class="start-button"
-          (click)="viewDiagnosticResult()"
-        >
-          View Diagnostic Result
-        </button>
+      }
+
+      @else {
+
+        <!-- DIAGNOSTIC COMPLETED -->
+        <div class="getting-started">
+
+          <p class="section-label">
+            YOUR PROGRESS
+          </p>
+
+          <h2>Your Diagnostic Is Complete</h2>
+
+          <p>
+            Your initial assessment is complete.
+            Review your results anytime or continue
+            learning and improving your skills.
+          </p>
+
+          @if (diagnosticResult()) {
+
+            <div class="diagnostic-summary">
+
+              <div class="summary-score">
+
+                <strong>
+                  {{ diagnosticResult().correctAnswers }}
+                  /
+                  {{ diagnosticResult().totalQuestions }}
+                </strong>
+
+                <span>
+                  {{ diagnosticResult().percentage }}%
+                </span>
+
+              </div>
+
+              <p>INITIAL DIAGNOSTIC SCORE</p>
+
+            </div>
+
+          }
+
+          <div class="action-buttons">
+
+            <button
+              type="button"
+              class="start-button"
+              (click)="viewDiagnosticResult()"
+            >
+              View Diagnostic Result
+              <span aria-hidden="true">→</span>
+            </button>
+
+            <button
+              type="button"
+              class="skip-button"
+              (click)="startLearning()"
+            >
+              Continue Learning
+            </button>
+
+          </div>
+
+        </div>
 
       }
 
