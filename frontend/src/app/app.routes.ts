@@ -41,6 +41,10 @@ import { StudentMyMentor } from './features/student/mentors/student-my-mentor/st
 import { StudentMentorRecommendations } from './features/student/mentors/student-mentor-recommendations/student-mentor-recommendations';
 import { StudentPreviousMentors } from './features/student/mentors/student-previous-mentors/student-previous-mentors';
 
+// Student mentors chat
+import { StudentChatComponent } from './features/chat/student-chat/student-chat';
+
+
 // Student project learning
 import {
   ProjectUnderstanding as StudentProjectUnderstanding
@@ -97,7 +101,8 @@ import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-das
 import { MentorProfile } from './features/mentor/profile/mentor-profile/mentor-profile';
 import { MentorRequests } from './features/mentor/requests/mentor-requests/mentor-requests';
 import { MentorStudentProfile } from './features/mentor/students/mentor-student-profile/mentor-student-profile';
-
+import { MentorInboxComponent } from './features/chat/mentor-inbox/mentor-inbox';
+import { MentorChatComponent } from './features/chat/mentor-chat/mentor-chat';
 
 export const routes: Routes = [
 
@@ -216,7 +221,13 @@ export const routes: Routes = [
       {
         path: 'previous-mentors',
         component: StudentPreviousMentors
-      }
+      },
+      
+      {
+        path: 'student-chat',
+        component: StudentChatComponent
+      },
+
     ]
   },
 
@@ -340,7 +351,18 @@ export const routes: Routes = [
       {
         path: 'mentor-student-profile/:studentId',
         component: MentorStudentProfile
-      }
+      },
+      
+      {
+        path: 'mentor-chat',
+        component: MentorInboxComponent
+      },
+
+      {
+        path: 'mentor/chat/:conversationId',
+        component: MentorChatComponent
+      },
+
     ]
   },
 

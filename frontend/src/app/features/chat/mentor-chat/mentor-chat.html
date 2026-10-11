@@ -1,0 +1,179 @@
+<div class="chat-page">
+
+  <!-- Chat header -->
+  <header class="chat-header">
+    <button
+      class="back-btn"
+      type="button"
+      (click)="goBack()"
+      aria-label="Back to inbox">
+      ←
+    </button>
+
+    <div class="mentor-avatar">
+      <span>M</span>
+    </div>
+
+    <div class="header-info">
+      <h2>Student Conversation</h2>
+      <p>
+        <span
+          class="status-dot"
+          [class.read-only-dot]="!isActiveMentorship()">
+        </span>
+
+        {{ isActiveMentorship()
+          ? 'Mentor support chat'
+          : 'Previous mentorship · Read only' }}
+      </p>
+    </div>
+
+    <div class="header-badge">
+      <span>✦</span>
+      Mentor Inbox
+    </div>
+  </header>
+
+  <!-- Loading state -->
+  @if (loading()) {
+    <div class="chat-state">
+      <div class="loading-spinner"></div>
+      <p>Loading conversation...</p>
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (!loading() && errorMessage()) {
+    <div class="chat-state error-state">
+      <div class="error-icon">!</div>
+      <h3>Unable to open chat</h3>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="retry-btn"
+        (click)="retry()">
+        Try Again
+      </button>
+
+      <button
+        type="button"
+        class="back-link"
+        (click)="goBack()">
+        Back to inbox
+      </button>
+    </div>
+  }
+
+  <!-- Conversation -->
+  @if (showConversation()) {
+
+    <!-- Read-only notice -->
+    @if (!isActiveMentorship()) {
+      <div class="readonly-notice" role="status">
+        <div class="readonly-icon">🔒</div>
+
+        <div class="readonly-copy">
+          <h3>Previous Mentorship — Read Only</h3>
+          <p>
+            This mentorship is no longer active. You can still view
+            your previous messages, but sending new messages is disabled.
+          </p>
+        </div>
+      </div>
+    }
+
+    <main class="messages-area">
+
+      @if (!hasMessages()) {
+        <!-- Empty conversation -->
+        <div class="empty-chat">
+          <div class="empty-chat-icon">
+            {{ isActiveMentorship() ? '✉' : '🔒' }}
+          </div>
+
+          <h3>
+            {{ isActiveMentorship()
+              ? 'Start the conversation'
+              : 'No previous messages' }}
+          </h3>
+
+          <p>
+            {{ isActiveMentorship()
+              ? 'Send a message to help your student move forward.'
+              : 'This historical conversation has no messages to display.' }}
+          </p>
+        </div>
+      } @else {
+        <!-- Message history -->
+        <div class="message-list">
+
+          @for (message of messages(); track message.id) {
+            <div
+              class="message-row"
+              [class.my-message]="isMyMessage(message.sender_id)"
+              [class.their-message]="!isMyMessage(message.sender_id)">
+
+              <div class="message-bubble">
+                <p class="message-text">{{ message.message }}</p>
+
+                <div class="message-meta">
+                  <time>{{ message.created_at | date:'shortTime' }}</time>
+
+                  @if (isMyMessage(message.sender_id)) {
+                    <span class="read-indicator">
+                      {{ message.is_read ? '✓✓' : '✓' }}
+                    </span>
+                  }
+                </div>
+              </div>
+
+            </div>
+          }
+
+        </div>
+      }
+
+    </main>
+
+    <!-- Active mentorship composer only -->
+    @if (isActiveMentorship()) {
+      <footer class="message-composer">
+
+        <div class="composer-inner">
+
+          <input
+            type="text"
+            [(ngModel)]="newMessage"
+            (keyup.enter)="sendMessage()"
+            placeholder="Write a message to your student..."
+            maxlength="5000"
+            [disabled]="sending()"
+            aria-label="Write a message" />
+
+          <button
+            type="button"
+            class="send-btn"
+            (click)="sendMessage()"
+            [disabled]="!canSend()"
+            aria-label="Send message">
+
+            @if (!sending()) {
+              <span>➤</span>
+            } @else {
+              <span class="send-spinner"></span>
+            }
+
+          </button>
+
+        </div>
+
+        <p class="composer-hint">
+          Keep your messages helpful, respectful, and focused on learning.
+        </p>
+      </footer>
+    }
+
+  }
+
+</div>

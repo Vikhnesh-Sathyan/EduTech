@@ -1,0 +1,161 @@
+<div class="inbox-page">
+
+  <!-- Page Header -->
+  <header class="inbox-header">
+    <div>
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>Messages</h1>
+      <p>Stay connected with your students and guide their progress.</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      (click)="loadInbox()"
+      [disabled]="loading()">
+
+      <span>↻</span> Refresh
+    </button>
+  </header>
+
+  <!-- Inbox Summary -->
+  <section class="inbox-summary">
+    <div class="summary-icon">✉</div>
+
+    <div>
+      <h3>Your conversations</h3>
+
+      <p>
+        {{ conversations().length }}
+        {{ conversations().length === 1
+            ? 'conversation'
+            : 'conversations' }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Search -->
+  <div class="search-box">
+    <span class="search-icon">⌕</span>
+
+    <input
+      type="text"
+      [ngModel]="searchText()"
+      (ngModelChange)="searchText.set($event)"
+      placeholder="Search students by name or email..."
+      aria-label="Search students" />
+  </div>
+
+  <!-- Loading -->
+  <div class="inbox-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading your conversations...</p>
+  </div>
+
+  <!-- Error -->
+  <div
+    class="inbox-state"
+    *ngIf="!loading() && errorMessage()">
+
+    <div class="state-icon">!</div>
+
+    <h3>Couldn't load messages</h3>
+
+    <p>{{ errorMessage() }}</p>
+
+    <button class="primary-btn" (click)="loadInbox()">
+      Try again
+    </button>
+  </div>
+
+  <!-- Conversation List -->
+  <section
+    class="conversation-list"
+    *ngIf="!loading() && !errorMessage()">
+
+    <!-- Conversation Card -->
+    <div
+      class="conversation-card"
+      *ngFor="let conversation of filteredConversations()"
+      (click)="openConversation(conversation)"
+      (keydown.enter)="openConversation(conversation)"
+      (keydown.space)="
+        $event.preventDefault();
+        openConversation(conversation)
+      "
+      tabindex="0"
+      role="button">
+
+      <!-- Student Avatar -->
+      <div class="student-avatar">
+        {{
+          (conversation.student_name || 'S')
+            .charAt(0)
+            .toUpperCase()
+        }}
+      </div>
+
+      <!-- Conversation Details -->
+      <div class="conversation-content">
+
+        <div class="conversation-top">
+          <h3>{{ conversation.student_name }}</h3>
+
+          <span
+            class="message-time"
+            *ngIf="conversation.last_message_at">
+
+            {{ conversation.last_message_at | date:'short' }}
+          </span>
+        </div>
+
+        <div class="conversation-bottom">
+          <p>{{ getLastMessage(conversation) }}</p>
+
+          <span
+            class="unread-badge"
+            *ngIf="getUnreadCount(conversation) > 0">
+
+            {{ getUnreadCount(conversation) }}
+          </span>
+        </div>
+
+        <span class="student-email">
+          {{ conversation.student_email }}
+        </span>
+
+      </div>
+
+      <span class="open-arrow">›</span>
+
+    </div>
+
+    <!-- No Conversations -->
+    <div
+      class="empty-inbox"
+      *ngIf="conversations().length === 0">
+
+      <div class="empty-icon">✉</div>
+
+      <h3>No conversations yet</h3>
+
+      <p>
+        Messages from your assigned students will appear here.
+      </p>
+    </div>
+
+    <!-- No Search Results -->
+    <div
+      class="empty-inbox"
+      *ngIf="
+        conversations().length > 0 &&
+        filteredConversations().length === 0
+      ">
+
+      <h3>No students found</h3>
+
+      <p>Try another name or email address.</p>
+    </div>
+
+  </section>
+
+</div>
