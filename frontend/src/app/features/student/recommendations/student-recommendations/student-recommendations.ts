@@ -1,14 +1,22 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { Resources } from '../resources/resources';
+import { CommunityDoubts } from '../community-doubts/community-doubts';
+import { InterviewPrep } from '../interview-prep/interview-prep';
 
 type RecommendationTab = 'resources' | 'doubts' | 'interviews';
 
 @Component({
   selector: 'app-student-recommendations',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    Resources,
+    CommunityDoubts,
+    InterviewPrep
+  ],
   templateUrl: './student-recommendations.html',
   styleUrl: './student-recommendations.css'
 })

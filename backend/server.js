@@ -130,6 +130,10 @@ const studentBasicChallengeRoutes =
 const studentAdvancedRoutes = 
     require("./routes/student/studentAdvancedRoutes");
 
+//student recommendations
+const studentRecommendationsRoutes =
+    require("./routes/student/studentRecommendationsRoutes");
+
 // =====================================================
 // STUDENT MENTOR CHAT ROUTES
 // =====================================================
@@ -241,6 +245,12 @@ app.use(
 app.use(
     "/api/profile",
     profileRoutes
+);
+
+//student - student recommendations
+app.use(
+    "/api/student/recommendations",
+    studentRecommendationsRoutes
 );
 
 
