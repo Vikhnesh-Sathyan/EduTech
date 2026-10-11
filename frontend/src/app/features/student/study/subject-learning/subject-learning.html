@@ -197,6 +197,72 @@
 
     </section>
 
+    <!-- CHOOSE YOUR LEARNING PATH -->
+    <section class="learning-path-section">
+
+      <div class="learning-path-header">
+
+        <p class="section-label">EXPLORE</p>
+
+        <h2>Choose Your Learning Path</h2>
+
+        <p>
+          Learn from official lessons or explore helpful resources
+          shared by other students.
+        </p>
+
+      </div>
+
+      <div class="learning-path-grid">
+
+        <!-- OFFICIAL LEARNING -->
+        <button
+          type="button"
+          class="learning-path-card official-card"
+          (click)="startLearning()"
+        >
+
+          <div class="learning-path-icon">📘</div>
+
+          <h3>Official Learning</h3>
+
+          <p>
+            Explore structured lessons, explanations,
+            examples, and code for this subject.
+          </p>
+
+          <span class="learning-path-link">
+            Open Official Learning →
+          </span>
+
+        </button>
+
+        <!-- STUDENT RECOMMENDATIONS -->
+        <button
+          type="button"
+          class="learning-path-card recommendations-card"
+          (click)="openStudentRecommendations()"
+        >
+
+          <div class="learning-path-icon">🤝</div>
+
+          <h3>Student Recommendations</h3>
+
+          <p>
+            Discover study tips, shared resources,
+            contributions, questions, and discussions.
+          </p>
+
+          <span class="learning-path-link">
+            Explore Recommendations →
+          </span>
+
+        </button>
+
+      </div>
+
+    </section>
+
   }
 
 </section>

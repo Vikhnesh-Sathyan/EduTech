@@ -1,0 +1,448 @@
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.recommendations-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+  box-sizing: border-box;
+  color: var(--text-primary, #1f2937);
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  color: var(--text-primary, #1f2937);
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 10px;
+  color: #6478d9;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+
+.page-description {
+  max-width: 700px;
+  margin: 14px 0 0;
+  color: var(--text-secondary, #64748b);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.recommendation-tabs {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  margin-bottom: 30px;
+}
+
+.tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  position: relative;
+  padding: 14px 2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-button:hover {
+  color: var(--text-primary, #1f2937);
+}
+
+.tab-button.active {
+  color: #5368cf;
+  border-bottom-color: #6478e8;
+}
+
+.tab-icon {
+  font-size: 1.1rem;
+}
+
+.tab-content {
+  min-height: 300px;
+}
+
+.content-heading {
+  margin-bottom: 22px;
+}
+
+.content-heading h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.content-heading > div > p:last-child {
+  margin: 10px 0 0;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.7;
+}
+
+.empty-state {
+  padding: 38px 28px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 18px;
+  background: var(--card-background, #ffffff);
+  text-align: center;
+}
+
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  background: var(--surface-background, #f3f5fb);
+  font-size: 1.9rem;
+}
+
+.empty-state > h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 750;
+}
+
+.empty-state > p {
+  max-width: 540px;
+  margin: 12px auto 0;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.8;
+}
+
+.resource-types {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.resource-types span {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 20px;
+  background: var(--surface-background, #f8fafc);
+  color: var(--text-secondary, #475569);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.discussion-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 12px;
+  background: var(--surface-background, #f8fafc);
+}
+
+.feature-item > span {
+  font-size: 1.25rem;
+}
+
+.feature-item h4 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.feature-item p {
+  margin: 7px 0 0;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.moderation-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 12px;
+  background: var(--surface-background, #f8fafc);
+}
+
+.moderation-notice > span {
+  font-size: 1.15rem;
+}
+
+.moderation-notice p {
+  margin: 0;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+button:focus-visible {
+  outline: 3px solid #6478e8;
+  outline-offset: 3px;
+}
+
+
+/* ==========================================
+   INTERVIEW PREPARATION
+========================================== */
+
+.interview-content {
+  animation: interview-fade-in 0.25s ease;
+}
+
+@keyframes interview-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.interview-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px;
+  margin-bottom: 26px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 18px;
+  background: var(--surface-background, #f8fafc);
+}
+
+.interview-hero-content {
+  max-width: 680px;
+}
+
+.interview-label {
+  color: #6478d9;
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 1.2px;
+}
+
+.interview-hero h3 {
+  margin: 12px 0 10px;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+.interview-hero p {
+  margin: 0;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.8;
+}
+
+.interview-hero-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 20px;
+  background: var(--card-background, #ffffff);
+  font-size: 2.3rem;
+}
+
+.interview-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.interview-category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 16px;
+  background: var(--card-background, #ffffff);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.interview-category-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.category-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: var(--surface-background, #f3f5fb);
+  font-size: 1.45rem;
+  font-weight: 750;
+}
+
+.interview-category-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.interview-category-card > p {
+  margin: 10px 0 20px;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.category-status {
+  margin-top: auto;
+  padding: 7px 10px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 20px;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.interview-contribution-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 14px;
+  background: var(--surface-background, #f8fafc);
+}
+
+.interview-contribution-note > span {
+  font-size: 1.4rem;
+}
+
+.interview-contribution-note h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 750;
+}
+
+.interview-contribution-note p {
+  margin: 8px 0 0;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 650px) {
+  .interview-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-hero {
+    padding: 22px;
+  }
+
+  .interview-hero-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 15px;
+    font-size: 1.8rem;
+  }
+
+  .interview-category-card {
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interview-content {
+    animation: none;
+  }
+
+  .interview-category-card {
+    transition: none;
+  }
+
+  .interview-category-card:hover {
+    transform: none;
+  }
+}
+
+
+@media (max-width: 760px) {
+  .discussion-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .recommendations-page {
+    padding: 20px 16px 32px;
+  }
+
+  .recommendation-tabs {
+    gap: 22px;
+  }
+
+  .empty-state {
+    padding: 30px 18px;
+  }
+
+  .tab-button {
+    font-size: 0.9rem;
+  }
+}

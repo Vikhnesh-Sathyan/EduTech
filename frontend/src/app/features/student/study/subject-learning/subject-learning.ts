@@ -268,4 +268,20 @@ startLearning(): void {
 
 }
 
+openStudentRecommendations(): void {
+  const subjectId =
+    this.route.snapshot.paramMap.get('subjectId');
+
+  if (!subjectId) {
+    this.errorMessage.set('Subject ID is missing');
+    return;
+  }
+
+  this.router.navigate([
+    '/study',
+    subjectId,
+    'recommendations'
+  ]);
+}
+
 }

@@ -44,6 +44,8 @@ import { StudentPreviousMentors } from './features/student/mentors/student-previ
 // Student mentors chat
 import { StudentChatComponent } from './features/chat/student-chat/student-chat';
 
+// Student recommendations
+import { StudentRecommendations } from './features/student/recommendations/student-recommendations/student-recommendations';
 
 // Student project learning
 import {
@@ -145,6 +147,10 @@ export const routes: Routes = [
       {
         path: 'study',
         component: Study
+      },
+      {
+        path: 'study/:subjectId/recommendations',
+        component: StudentRecommendations
       },
       {
         path: 'study/:subjectId',
