@@ -1,73 +1,82 @@
+
 const db = require("../../../config/db");
+const fs = require("fs");
 
-// =====================================================
-// GET APPROVED RESOURCES FOR A SUBJECT
-// GET /api/student/recommendations/resources?subjectId=1
-// =====================================================
+// Delete an uploaded file when a submission fails validation or saving.
+const removeUploadedFile = (file) => {
+    if (file && fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+    }
+};
 
+// ==========================================
+// GET APPROVED RESOURCES
+// ==========================================
 const getApprovedResources = async (req, res) => {
     try {
-        const { subjectId } = req.query;
+        const { subject_id, resource_type } = req.query;
 
-        if (
-            !subjectId ||
-            !Number.isInteger(Number(subjectId)) ||
-            Number(subjectId) <= 0
-        ) {
-            return res.status(400).json({
-                message: "A valid subject ID is required"
-            });
-        }
-
-        const [resources] = await db.query(
-            `SELECT
+        let sql = `
+            SELECT
                 r.id,
+                r.student_id,
                 r.subject_id,
                 r.title,
                 r.description,
                 r.resource_type,
                 r.resource_url,
                 r.resource_content,
+                r.status,
                 r.created_at,
-                u.name AS student_name
-             FROM student_recommendation_resources r
-             INNER JOIN users u
-                ON u.id = r.student_id
-             INNER JOIN subjects s
-                ON s.id = r.subject_id
-             WHERE r.subject_id = ?
-               AND r.status = 'approved'
-               AND s.status = 'active'
-               AND u.status = 'active'
-             ORDER BY r.created_at DESC`,
-            [Number(subjectId)]
-        );
+                u.name AS contributor_name,
+                s.name AS subject_name
+            FROM student_recommendation_resources r
+            JOIN users u ON u.id = r.student_id
+            JOIN subjects s ON s.id = r.subject_id
+            WHERE r.status = 'approved'
+        `;
 
-        return res.status(200).json({
-            message: "Resources fetched successfully",
-            resources
-        });
+        const params = [];
 
+        if (subject_id) {
+            sql += " AND r.subject_id = ?";
+            params.push(subject_id);
+        }
+
+        if (resource_type) {
+            const allowedTypes = [
+                "notes", "pdf", "video", "image", "study_tips"
+            ];
+
+            if (!allowedTypes.includes(resource_type)) {
+                return res.status(400).json({
+                    message: "Invalid resource type"
+                });
+            }
+
+            sql += " AND r.resource_type = ?";
+            params.push(resource_type);
+        }
+
+        sql += " ORDER BY r.created_at DESC";
+
+        const [resources] = await db.query(sql, params);
+
+        return res.status(200).json({ resources });
     } catch (error) {
         console.error("Get approved resources error:", error);
 
         return res.status(500).json({
-            message: "Failed to fetch resources"
+            message: "Failed to fetch approved resources"
         });
     }
 };
 
-
-// =====================================================
-// CREATE RESOURCE SUBMISSION
-// POST /api/student/recommendations/resources
-// New submissions require admin approval.
-// =====================================================
-
-const createResource = async (req, res) => {
+// ==========================================
+// SUBMIT A RESOURCE
+// ==========================================
+const submitResource = async (req, res) => {
     try {
-        const studentId = req.user.id;
-
         const {
             subject_id,
             title,
@@ -77,197 +86,147 @@ const createResource = async (req, res) => {
             resource_content
         } = req.body;
 
-        const allowedTypes = [
-            "notes",
-            "pdf",
-            "explanation",
-            "code",
-            "video",
-            "exam_tips",
-            "study_tricks",
-            "image",
-            "other"
-        ];
+        if (req.user.role !== "student") {
+            removeUploadedFile(req.file);
 
-        // Validate subject ID
-        if (
-            !subject_id ||
-            !Number.isInteger(Number(subject_id)) ||
-            Number(subject_id) <= 0
-        ) {
-            return res.status(400).json({
-                message: "A valid subject is required"
+            return res.status(403).json({
+                message: "Only students can submit learning resources"
             });
         }
 
-        // Validate title
-        if (typeof title !== "string" || !title.trim()) {
+        if (
+            !subject_id ||
+            !Number.isInteger(Number(subject_id)) ||
+            Number(subject_id) <= 0 ||
+            !title?.trim() ||
+            !resource_type
+        ) {
+            removeUploadedFile(req.file);
+
             return res.status(400).json({
-                message: "Resource title is required"
+                message: "A valid subject, title and resource type are required"
             });
         }
 
         if (title.trim().length > 200) {
+            removeUploadedFile(req.file);
+
             return res.status(400).json({
                 message: "Title cannot exceed 200 characters"
             });
         }
 
-        // Validate resource category
+        const allowedTypes = [
+            "notes",
+            "pdf",
+            "video",
+            "image",
+            "study_tips"
+        ];
+
         if (!allowedTypes.includes(resource_type)) {
+            removeUploadedFile(req.file);
+
             return res.status(400).json({
-                message: "A valid resource type is required"
+                message: "Invalid resource type"
             });
         }
 
-        const cleanDescription =
-            typeof description === "string"
-                ? description.trim()
-                : null;
-
-        const cleanContent =
-            typeof resource_content === "string"
-                ? resource_content.trim()
-                : null;
-
-        // Use the uploaded file path when a file is provided.
-        const uploadedFileUrl = req.file
-            ? `/uploads/resources/${req.file.filename}`
-            : null;
-
-        const submittedUrl =
-            typeof resource_url === "string"
-                ? resource_url.trim()
-                : "";
-
-        // Uploaded files take priority over external URLs.
-        const cleanUrl = uploadedFileUrl || submittedUrl || null;
-
-        // Validate external URLs when supplied.
-        if (submittedUrl) {
-            try {
-                const parsedUrl = new URL(submittedUrl);
-
-                if (
-                    !["http:", "https:"].includes(parsedUrl.protocol)
-                ) {
-                    throw new Error("Invalid URL protocol");
-                }
-            } catch {
-                return res.status(400).json({
-                    message: "Please provide a valid HTTP or HTTPS resource URL"
-                });
-            }
-
-            if (submittedUrl.length > 500) {
-                return res.status(400).json({
-                    message: "Resource URL cannot exceed 500 characters"
-                });
-            }
-        }
-
-        // PDF resources must contain an uploaded PDF.
-        if (resource_type === "pdf") {
-            if (!req.file) {
-                return res.status(400).json({
-                    message: "Please upload a PDF file"
-                });
-            }
-
-            if (
-                req.file.mimetype !== "application/pdf" ||
-                !req.file.originalname.toLowerCase().endsWith(".pdf")
-            ) {
-                return res.status(400).json({
-                    message: "Only PDF files are allowed"
-                });
-            }
-        }
-
-        // Image resources must contain an uploaded image.
-        if (resource_type === "image") {
-            const allowedImageTypes = [
-                "image/jpeg",
-                "image/png",
-                "image/webp",
-                "image/gif"
-            ];
-
-            const allowedExtensions = [
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".webp",
-                ".gif"
-            ];
-
-            const path = require("path");
-            const extension = path.extname(
-                req.file?.originalname || ""
-            ).toLowerCase();
-
-            if (!req.file) {
-                return res.status(400).json({
-                    message: "Please upload an image"
-                });
-            }
-
-            if (
-                !allowedImageTypes.includes(req.file.mimetype) ||
-                !allowedExtensions.includes(extension)
-            ) {
-                return res.status(400).json({
-                    message: "Only JPG, PNG, WEBP, and GIF images are allowed"
-                });
-            }
-
-            // Enforce the 5 MB image limit on the backend.
-            if (req.file.size > 5 * 1024 * 1024) {
-                return res.status(400).json({
-                    message: "Image size cannot exceed 5 MB"
-                });
-            }
-        }
-
-        // Text-based resources need content or a URL.
-        if (
-            ["notes", "exam_tips", "code", "explanation", "other"].includes(
-                resource_type
-            ) &&
-            !cleanContent &&
-            !cleanUrl
-        ) {
-            return res.status(400).json({
-                message: "Provide resource content or a resource URL"
-            });
-        }
-
-        // Video resources need a URL.
-        if (resource_type === "video" && !cleanUrl) {
-            return res.status(400).json({
-                message: "A video URL is required"
-            });
-        }
-
-        // Confirm the subject exists and is active.
+        // Check that the selected subject exists.
         const [subjects] = await db.query(
-            `SELECT id
-             FROM subjects
-             WHERE id = ?
-               AND status = 'active'
-             LIMIT 1`,
+            "SELECT id FROM subjects WHERE id = ?",
             [Number(subject_id)]
         );
 
         if (subjects.length === 0) {
-            return res.status(404).json({
-                message: "Active subject not found"
+            removeUploadedFile(req.file);
+
+            return res.status(400).json({
+                message: "Selected subject does not exist"
             });
         }
 
-        // Save the resource for admin approval.
+        let savedResourceUrl = null;
+        let savedResourceContent = null;
+
+        // PDF and image submissions must include a matching file.
+        if (resource_type === "pdf" || resource_type === "image") {
+            if (!req.file) {
+                return res.status(400).json({
+                    message: "Please select a file to upload"
+                });
+            }
+
+            const isPdf =
+                resource_type === "pdf" &&
+                req.file.mimetype === "application/pdf";
+
+            const isImage =
+                resource_type === "image" &&
+                req.file.mimetype.startsWith("image/");
+
+            if (!isPdf && !isImage) {
+                removeUploadedFile(req.file);
+
+                return res.status(400).json({
+                    message: resource_type === "pdf"
+                        ? "Please upload a PDF file"
+                        : "Please upload an image file"
+                });
+            }
+
+            // Public path served by the existing /uploads route.
+            savedResourceUrl =
+                `/uploads/recommendation/${req.file.filename}`;
+        } else {
+            // Other resource types must not upload a file.
+            if (req.file) {
+                removeUploadedFile(req.file);
+
+                return res.status(400).json({
+                    message: "Files are only allowed for PDF and image resources"
+                });
+            }
+
+            if (resource_type === "video") {
+                if (!resource_url?.trim()) {
+                    return res.status(400).json({
+                        message: "A video URL is required"
+                    });
+                }
+
+                let parsedUrl;
+
+                try {
+                    parsedUrl = new URL(resource_url.trim());
+                } catch {
+                    return res.status(400).json({
+                        message: "Please provide a valid video URL"
+                    });
+                }
+
+                if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+                    return res.status(400).json({
+                        message: "Video URL must use HTTP or HTTPS"
+                    });
+                }
+
+                savedResourceUrl = parsedUrl.href;
+            } else {
+                if (!resource_content?.trim()) {
+                    return res.status(400).json({
+                        message: "Resource content is required"
+                    });
+                }
+
+                savedResourceContent = resource_content.trim();
+            }
+        }
+
+        // Every new submission waits for admin approval.
         const [result] = await db.query(
-            `INSERT INTO student_recommendation_resources (
+            `INSERT INTO student_recommendation_resources
+            (
                 student_id,
                 subject_id,
                 title,
@@ -279,24 +238,25 @@ const createResource = async (req, res) => {
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
             [
-                studentId,
+                req.user.id,
                 Number(subject_id),
                 title.trim(),
-                cleanDescription || null,
+                description?.trim() || null,
                 resource_type,
-                cleanUrl,
-                cleanContent || null
+                savedResourceUrl,
+                savedResourceContent
             ]
         );
 
         return res.status(201).json({
-            message: "Resource submitted successfully. It is awaiting admin review.",
+            message: "Resource submitted successfully. Waiting for admin approval.",
             resourceId: result.insertId,
             status: "pending"
         });
-
     } catch (error) {
-        console.error("Create resource error:", error);
+        removeUploadedFile(req.file);
+
+        console.error("Submit resource error:", error);
 
         return res.status(500).json({
             message: "Failed to submit resource"
@@ -304,62 +264,529 @@ const createResource = async (req, res) => {
     }
 };
 
-
-
-// =====================================================
-// GET THE LOGGED-IN STUDENT'S RESOURCE SUBMISSIONS
-// GET /api/student/recommendations/resources/my
-// Includes pending, approved and rejected submissions.
-// =====================================================
-
+// ==========================================
+// GET MY RESOURCE SUBMISSIONS
+// ==========================================
 const getMyResources = async (req, res) => {
     try {
-        const studentId = req.user.id;
+        if (req.user.role !== "student") {
+            return res.status(403).json({
+                message: "Only students can view their submissions"
+            });
+        }
 
         const [resources] = await db.query(
             `SELECT
-                r.id,
-                r.subject_id,
-                s.name AS subject_name,
-                r.title,
-                r.description,
-                r.resource_type,
-                r.resource_url,
-                r.resource_content,
-                r.status,
-                r.rejection_reason,
-                r.created_at,
-                r.updated_at,
-                r.reviewed_at
-             FROM student_recommendation_resources r
-             INNER JOIN subjects s
-                ON s.id = r.subject_id
-             WHERE r.student_id = ?
-             ORDER BY r.created_at DESC`,
-            [studentId]
+                id,
+                subject_id,
+                title,
+                description,
+                resource_type,
+                resource_url,
+                resource_content,
+                status,
+                rejection_reason,
+                created_at,
+                updated_at,
+                reviewed_at
+             FROM student_recommendation_resources
+             WHERE student_id = ?
+             ORDER BY created_at DESC`,
+            [req.user.id]
         );
 
-        return res.status(200).json({
-            message: "Your resource submissions fetched successfully",
-            resources
-        });
-
+        return res.status(200).json({ resources });
     } catch (error) {
         console.error("Get my resources error:", error);
 
         return res.status(500).json({
-            message: "Failed to fetch your resource submissions"
+            message: "Failed to fetch your submissions"
         });
     }
 };
 
 
-// =====================================================
-// EXPORT CONTROLLER FUNCTIONS
-// =====================================================
+/* ==========================================
+   ADMIN: APPROVE A RESOURCE
+========================================== */
+const approveResource = async (req, res) => {
+    try {
+        if (req.user.role !== "admin") {
+            return res.status(403).json({
+                message: "Only admins can approve resources"
+            });
+        }
+
+        const resourceId = Number(req.params.id);
+
+        if (!Number.isInteger(resourceId) || resourceId <= 0) {
+            return res.status(400).json({
+                message: "Invalid resource ID"
+            });
+        }
+
+        const [result] = await db.query(
+            `UPDATE student_recommendation_resources
+             SET status = 'approved',
+                 rejection_reason = NULL,
+                 reviewed_at = CURRENT_TIMESTAMP
+             WHERE id = ?
+               AND status = 'pending'`,
+            [resourceId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Pending resource not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Resource approved successfully",
+            resourceId,
+            status: "approved"
+        });
+    } catch (error) {
+        console.error("Approve resource error:", error);
+
+        return res.status(500).json({
+            message: "Failed to approve resource"
+        });
+    }
+};
+
+
+/* ==========================================
+   ADMIN: REJECT A RESOURCE
+========================================== */
+const rejectResource = async (req, res) => {
+    try {
+        if (req.user.role !== "admin") {
+            return res.status(403).json({
+                message: "Only admins can reject resources"
+            });
+        }
+
+        const resourceId = Number(req.params.id);
+        const { rejection_reason } = req.body;
+
+        if (!Number.isInteger(resourceId) || resourceId <= 0) {
+            return res.status(400).json({
+                message: "Invalid resource ID"
+            });
+        }
+
+        if (
+            typeof rejection_reason !== "string" ||
+            !rejection_reason.trim()
+        ) {
+            return res.status(400).json({
+                message: "Please provide a reason for rejection"
+            });
+        }
+
+        const [result] = await db.query(
+            `UPDATE student_recommendation_resources
+             SET status = 'rejected',
+                 rejection_reason = ?,
+                 reviewed_at = CURRENT_TIMESTAMP
+             WHERE id = ?
+               AND status = 'pending'`,
+            [rejection_reason.trim(), resourceId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Pending resource not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Resource rejected successfully",
+            resourceId,
+            status: "rejected",
+            rejection_reason: rejection_reason.trim()
+        });
+    } catch (error) {
+        console.error("Reject resource error:", error);
+
+        return res.status(500).json({
+            message: "Failed to reject resource"
+        });
+    }
+};
+
+
+/* ==========================================
+   STUDENT: EDIT OWN RESOURCE
+========================================== */
+
+const updateResource = async (req, res) => {
+    let databaseUpdated = false;
+
+    try {
+        if (req.user.role !== "student") {
+            removeUploadedFile(req.file);
+
+            return res.status(403).json({
+                message: "Only students can edit their resources"
+            });
+        }
+
+        const resourceId = Number(req.params.id);
+
+        if (!Number.isInteger(resourceId) || resourceId <= 0) {
+            removeUploadedFile(req.file);
+
+            return res.status(400).json({
+                message: "Invalid resource ID"
+            });
+        }
+
+        const {
+            subject_id,
+            title,
+            description,
+            resource_type,
+            resource_url,
+            resource_content
+        } = req.body;
+
+        if (
+            !subject_id ||
+            !Number.isInteger(Number(subject_id)) ||
+            Number(subject_id) <= 0 ||
+            typeof title !== "string" ||
+            !title.trim() ||
+            title.trim().length > 200 ||
+            !resource_type
+        ) {
+            removeUploadedFile(req.file);
+
+            return res.status(400).json({
+                message: "A valid subject, title and resource type are required"
+            });
+        }
+
+        const allowedTypes = [
+            "notes", "pdf", "video", "image", "study_tips"
+        ];
+
+        if (!allowedTypes.includes(resource_type)) {
+            removeUploadedFile(req.file);
+
+            return res.status(400).json({
+                message: "Invalid resource type"
+            });
+        }
+
+        const [existingRows] = await db.query(
+            `SELECT *
+             FROM student_recommendation_resources
+             WHERE id = ? AND student_id = ?`,
+            [resourceId, req.user.id]
+        );
+
+        if (existingRows.length === 0) {
+            removeUploadedFile(req.file);
+
+            return res.status(404).json({
+                message: "Resource not found or you do not own it"
+            });
+        }
+
+        const existing = existingRows[0];
+
+        const [subjects] = await db.query(
+            "SELECT id FROM subjects WHERE id = ?",
+            [Number(subject_id)]
+        );
+
+        if (subjects.length === 0) {
+            removeUploadedFile(req.file);
+
+            return res.status(400).json({
+                message: "Selected subject does not exist"
+            });
+        }
+
+        let savedUrl = null;
+        let savedContent = null;
+
+        // PDF and image resources
+        if (resource_type === "pdf" || resource_type === "image") {
+            if (req.file) {
+                const isPdf =
+                    resource_type === "pdf" &&
+                    req.file.mimetype === "application/pdf";
+
+                const isImage =
+                    resource_type === "image" &&
+                    ["image/jpeg", "image/png", "image/webp", "image/gif"]
+                        .includes(req.file.mimetype);
+
+                if (!isPdf && !isImage) {
+                    removeUploadedFile(req.file);
+
+                    return res.status(400).json({
+                        message: "Uploaded file does not match the resource type"
+                    });
+                }
+
+                savedUrl = `/uploads/recommendation/${req.file.filename}`;
+            } else {
+                const oldFileMatchesType =
+                    resource_type === "pdf"
+                        ? existing.resource_type === "pdf"
+                        : existing.resource_type === "image";
+
+                if (
+                    !oldFileMatchesType ||
+                    !existing.resource_url?.startsWith(
+                        "/uploads/recommendation/"
+                    )
+                ) {
+                    return res.status(400).json({
+                        message: "Please upload a file for this resource type"
+                    });
+                }
+
+                savedUrl = existing.resource_url;
+            }
+        } else if (resource_type === "video") {
+            if (req.file) {
+                removeUploadedFile(req.file);
+
+                return res.status(400).json({
+                    message: "Video resources require a URL, not an uploaded file"
+                });
+            }
+
+            if (
+                typeof resource_url !== "string" ||
+                !resource_url.trim()
+            ) {
+                return res.status(400).json({
+                    message: "A video URL is required"
+                });
+            }
+
+            try {
+                const parsedUrl = new URL(resource_url.trim());
+
+                if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+                    throw new Error("Invalid protocol");
+                }
+
+                savedUrl = parsedUrl.href;
+            } catch {
+                return res.status(400).json({
+                    message: "Please provide a valid HTTP or HTTPS video URL"
+                });
+            }
+        } else {
+            if (req.file) {
+                removeUploadedFile(req.file);
+
+                return res.status(400).json({
+                    message: "This resource type does not accept uploaded files"
+                });
+            }
+
+            if (
+                typeof resource_content !== "string" ||
+                !resource_content.trim()
+            ) {
+                return res.status(400).json({
+                    message: "Resource content is required"
+                });
+            }
+
+            savedContent = resource_content.trim();
+        }
+
+        // Update the database and require ownership to still match.
+        const [updateResult] = await db.query(
+            `UPDATE student_recommendation_resources
+             SET subject_id = ?,
+                 title = ?,
+                 description = ?,
+                 resource_type = ?,
+                 resource_url = ?,
+                 resource_content = ?,
+                 status = 'pending',
+                 rejection_reason = NULL,
+                 reviewed_at = NULL
+             WHERE id = ? AND student_id = ?`,
+            [
+                Number(subject_id),
+                title.trim(),
+                typeof description === "string" && description.trim()
+                    ? description.trim()
+                    : null,
+                resource_type,
+                savedUrl,
+                savedContent,
+                resourceId,
+                req.user.id
+            ]
+        );
+
+        if (updateResult.affectedRows === 0) {
+            // The record may have disappeared before the update.
+            removeUploadedFile(req.file);
+
+            return res.status(404).json({
+                message: "Resource was not found or could not be updated"
+            });
+        }
+
+        // From here onward, never delete the new file in the catch block.
+        databaseUpdated = true;
+
+        // Clean up the previous uploaded file after the DB update.
+        if (
+            req.file &&
+            existing.resource_url?.startsWith("/uploads/recommendation/")
+        ) {
+            const path = require("path");
+
+            const oldFilePath = path.join(
+                __dirname,
+                "../../../uploads/recommendation",
+                path.basename(existing.resource_url)
+            );
+
+            try {
+                if (fs.existsSync(oldFilePath)) {
+                    fs.unlinkSync(oldFilePath);
+                }
+            } catch (fileError) {
+                console.error(
+                    "Resource updated, but old file cleanup failed:",
+                    fileError
+                );
+            }
+        }
+
+        return res.status(200).json({
+            message: "Resource updated successfully. It is pending admin approval again.",
+            resourceId,
+            status: "pending"
+        });
+
+    } catch (error) {
+        // Only remove the newly uploaded file if the database
+        // update did not succeed.
+        if (!databaseUpdated) {
+            removeUploadedFile(req.file);
+        }
+
+        console.error("Update resource error:", error);
+
+        return res.status(500).json({
+            message: databaseUpdated
+                ? "Resource updated, but a follow-up operation failed"
+                : "Failed to update resource"
+        });
+    }
+};
+
+
+/* ==========================================
+   STUDENT: DELETE OWN RESOURCE
+========================================== */
+
+const deleteResource = async (req, res) => {
+    try {
+        if (req.user.role !== "student") {
+            return res.status(403).json({
+                message: "Only students can delete their resources"
+            });
+        }
+
+        const resourceId = Number(req.params.id);
+
+        if (!Number.isInteger(resourceId) || resourceId <= 0) {
+            return res.status(400).json({
+                message: "Invalid resource ID"
+            });
+        }
+
+        // Find only a resource owned by this student
+        const [rows] = await db.query(
+            `SELECT resource_url
+             FROM student_recommendation_resources
+             WHERE id = ? AND student_id = ?`,
+            [resourceId, req.user.id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                message: "Resource not found or you do not own it"
+            });
+        }
+
+        const resourceUrl = rows[0].resource_url;
+
+        // Delete the database record first
+        const [result] = await db.query(
+            `DELETE FROM student_recommendation_resources
+             WHERE id = ? AND student_id = ?`,
+            [resourceId, req.user.id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Resource was not found"
+            });
+        }
+
+        // Remove the uploaded file, if one exists
+        if (resourceUrl?.startsWith("/uploads/recommendation/")) {
+            const path = require("path");
+
+            const filePath = path.join(
+                __dirname,
+                "../../../uploads/recommendation",
+                path.basename(resourceUrl)
+            );
+
+            try {
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            } catch (fileError) {
+                // Keep the successful database deletion.
+                // Log the leftover file so it can be cleaned up later.
+                console.error(
+                    "Resource deleted, but uploaded file cleanup failed:",
+                    fileError
+                );
+            }
+        }
+
+        return res.status(200).json({
+            message: "Resource deleted successfully",
+            resourceId
+        });
+
+    } catch (error) {
+        console.error("Delete resource error:", error);
+
+        return res.status(500).json({
+            message: "Failed to delete resource"
+        });
+    }
+};
+
 
 module.exports = {
     getApprovedResources,
-    createResource,
-    getMyResources
+    submitResource,
+    getMyResources,
+    approveResource,
+    rejectResource,
+    updateResource,
+    deleteResource
 };

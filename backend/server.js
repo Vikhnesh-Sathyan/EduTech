@@ -130,9 +130,6 @@ const studentBasicChallengeRoutes =
 const studentAdvancedRoutes = 
     require("./routes/student/studentAdvancedRoutes");
 
-//student recommendations
-const studentRecommendationsRoutes =
-    require("./routes/student/studentRecommendationsRoutes");
 
 // =====================================================
 // STUDENT MENTOR CHAT ROUTES
@@ -163,6 +160,9 @@ const mentorStudentRoutes =
 
 const studentMentorRoutes =
     require("./routes/mentor/studentMentorRoutes");
+
+// students recommendations
+const recommendationRoutes = require("./routes/student/recommendation/recommendationRoutes");
 
 // =====================================================
 // MENTOR ROUTES
@@ -247,11 +247,6 @@ app.use(
     profileRoutes
 );
 
-//student - student recommendations
-app.use(
-    "/api/student/recommendations",
-    studentRecommendationsRoutes
-);
 
 
 // =====================================================
@@ -434,6 +429,12 @@ app.use(
 // =====================================================
 
 app.use("/api/chat", chatRoutes);
+
+// =====================================================
+// STUDENT RECOMMENDATIONS
+// =====================================================
+
+app.use("/api/recommendation", recommendationRoutes);
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
