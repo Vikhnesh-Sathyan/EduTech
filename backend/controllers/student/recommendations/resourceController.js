@@ -113,7 +113,7 @@ const createResource = async (req, res) => {
             });
         }
 
-        // Validate resource type
+        // Validate resource category
         if (!allowedTypes.includes(resource_type)) {
             return res.status(400).json({
                 message: "A valid resource type is required"
@@ -125,30 +125,131 @@ const createResource = async (req, res) => {
                 ? description.trim()
                 : null;
 
-        const cleanUrl =
-            typeof resource_url === "string"
-                ? resource_url.trim()
-                : null;
-
         const cleanContent =
             typeof resource_content === "string"
                 ? resource_content.trim()
                 : null;
 
-        // Require a URL or actual resource content
-        if (!cleanUrl && !cleanContent) {
+        // Use the uploaded file path when a file is provided.
+        const uploadedFileUrl = req.file
+            ? `/uploads/resources/${req.file.filename}`
+            : null;
+
+        const submittedUrl =
+            typeof resource_url === "string"
+                ? resource_url.trim()
+                : "";
+
+        // Uploaded files take priority over external URLs.
+        const cleanUrl = uploadedFileUrl || submittedUrl || null;
+
+        // Validate external URLs when supplied.
+        if (submittedUrl) {
+            try {
+                const parsedUrl = new URL(submittedUrl);
+
+                if (
+                    !["http:", "https:"].includes(parsedUrl.protocol)
+                ) {
+                    throw new Error("Invalid URL protocol");
+                }
+            } catch {
+                return res.status(400).json({
+                    message: "Please provide a valid HTTP or HTTPS resource URL"
+                });
+            }
+
+            if (submittedUrl.length > 500) {
+                return res.status(400).json({
+                    message: "Resource URL cannot exceed 500 characters"
+                });
+            }
+        }
+
+        // PDF resources must contain an uploaded PDF.
+        if (resource_type === "pdf") {
+            if (!req.file) {
+                return res.status(400).json({
+                    message: "Please upload a PDF file"
+                });
+            }
+
+            if (
+                req.file.mimetype !== "application/pdf" ||
+                !req.file.originalname.toLowerCase().endsWith(".pdf")
+            ) {
+                return res.status(400).json({
+                    message: "Only PDF files are allowed"
+                });
+            }
+        }
+
+        // Image resources must contain an uploaded image.
+        if (resource_type === "image") {
+            const allowedImageTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif"
+            ];
+
+            const allowedExtensions = [
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp",
+                ".gif"
+            ];
+
+            const path = require("path");
+            const extension = path.extname(
+                req.file?.originalname || ""
+            ).toLowerCase();
+
+            if (!req.file) {
+                return res.status(400).json({
+                    message: "Please upload an image"
+                });
+            }
+
+            if (
+                !allowedImageTypes.includes(req.file.mimetype) ||
+                !allowedExtensions.includes(extension)
+            ) {
+                return res.status(400).json({
+                    message: "Only JPG, PNG, WEBP, and GIF images are allowed"
+                });
+            }
+
+            // Enforce the 5 MB image limit on the backend.
+            if (req.file.size > 5 * 1024 * 1024) {
+                return res.status(400).json({
+                    message: "Image size cannot exceed 5 MB"
+                });
+            }
+        }
+
+        // Text-based resources need content or a URL.
+        if (
+            ["notes", "exam_tips", "code", "explanation", "other"].includes(
+                resource_type
+            ) &&
+            !cleanContent &&
+            !cleanUrl
+        ) {
             return res.status(400).json({
-                message: "Provide a resource URL or resource content"
+                message: "Provide resource content or a resource URL"
             });
         }
 
-        if (cleanUrl && cleanUrl.length > 500) {
+        // Video resources need a URL.
+        if (resource_type === "video" && !cleanUrl) {
             return res.status(400).json({
-                message: "Resource URL cannot exceed 500 characters"
+                message: "A video URL is required"
             });
         }
 
-        // Confirm that the subject exists and is active
+        // Confirm the subject exists and is active.
         const [subjects] = await db.query(
             `SELECT id
              FROM subjects
@@ -164,7 +265,7 @@ const createResource = async (req, res) => {
             });
         }
 
-        // Save the resource as pending for admin review
+        // Save the resource for admin approval.
         const [result] = await db.query(
             `INSERT INTO student_recommendation_resources (
                 student_id,
@@ -183,7 +284,7 @@ const createResource = async (req, res) => {
                 title.trim(),
                 cleanDescription || null,
                 resource_type,
-                cleanUrl || null,
+                cleanUrl,
                 cleanContent || null
             ]
         );
@@ -202,6 +303,7 @@ const createResource = async (req, res) => {
         });
     }
 };
+
 
 
 // =====================================================

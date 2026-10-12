@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authMiddleware = require("../../middleware/authMiddleware");
 const roleMiddleware = require("../../middleware/roleMiddleware");
+const uploadResource = require("../../middleware/resourceUpload");
 
 // =====================================================
 // IMPORT RESOURCE CONTROLLER
@@ -62,6 +63,7 @@ router.post(
     "/resources",
     authMiddleware,
     roleMiddleware("student"),
+    uploadResource,
     createResource
 );
 

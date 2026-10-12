@@ -29,19 +29,56 @@ export class StudentRecommendationsService {
     );
   }
 
-  createResource(data: {
-    subject_id: number;
-    title: string;
-    description?: string;
-    resource_type: string;
-    resource_url?: string;
-    resource_content?: string;
-  }) {
+createResource(data: {
+  subject_id: number;
+  title: string;
+  description?: string;
+  resource_type: 'notes' | 'pdf' | 'code' | 'exam_tips' | 'video' | 'image';
+  resource_url?: string;
+  resource_content?: string;
+  code_language?: string;
+  code_annotations?: {
+    line: number;
+    type: 'important' | 'explanation' | 'mistake' | 'output';
+    note?: string;
+  }[];
+  file?: File;
+}) {
+  // Use multipart/form-data when submitting an uploaded file.
+  if (data.file) {
+    const formData = new FormData();
+
+    formData.append('subject_id', String(data.subject_id));
+    formData.append('title', data.title);
+    formData.append('resource_type', data.resource_type);
+    formData.append('file', data.file, data.file.name);
+
+    if (data.description) {
+      formData.append('description', data.description);
+    }
+
+    if (data.resource_url) {
+      formData.append('resource_url', data.resource_url);
+    }
+
+    if (data.resource_content) {
+      formData.append('resource_content', data.resource_content);
+    }
+
     return this.http.post(
       `${this.apiUrl}/resources`,
-      data
+      formData
     );
   }
+
+  // Keep normal JSON submissions for text-based resources.
+  const { file, ...resourceData } = data;
+
+  return this.http.post(
+    `${this.apiUrl}/resources`,
+    resourceData
+  );
+}
 
   // ==========================================
   // COMMUNITY DOUBTS
