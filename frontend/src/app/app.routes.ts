@@ -46,6 +46,7 @@ import { StudentChatComponent } from './features/chat/student-chat/student-chat'
 
 // Student recommendations and learning resources
 import { ResourcesComponent } from './features/student/recommendation/resources/resources';
+import { RecommendationComponent } from './features/student/recommendation/recommendation';
 
 
 // Student project learning
@@ -141,6 +142,11 @@ export const routes: Routes = [
         component: StudentDashboard
       },
 
+     // Student recommendations and learning resources
+      {
+        path: 'student-recommendation',
+        component: RecommendationComponent
+      },
       {
         path: 'learning-resources',
         component: ResourcesComponent

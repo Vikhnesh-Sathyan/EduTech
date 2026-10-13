@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Resource } from '../../../../../services/student/resource.service';
+import { Resource } from '../../../../../../services/student/resource.service';
 
 @Component({
   selector: 'app-resource-card',

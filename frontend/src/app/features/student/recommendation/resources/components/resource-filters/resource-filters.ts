@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { Study } from '../../../../../services/student/study';
+import { Study } from '../../../../../../services/student/study';
 
 @Component({
   selector: 'app-resource-filters',

@@ -6,10 +6,10 @@ import {
   ResourceService
 } from '../../../../services/student/resource.service';
 
-import { ResourceListComponent } from '../components/resource-list/resource-list';
-import { ResourceFiltersComponent } from '../components/resource-filters/resource-filters';
-import { ResourceFormComponent } from '../components/resource-form/resource-form';
-import { MyResourcesComponent } from '../components/my-resources/my-resources';
+import { ResourceListComponent } from './components/resource-list/resource-list';
+import { ResourceFiltersComponent } from './components/resource-filters/resource-filters';
+import { ResourceFormComponent } from './components/resource-form/resource-form';
+import { MyResourcesComponent } from './components/my-resources/my-resources';
 
 @Component({
   selector: 'app-resources',

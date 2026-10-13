@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import {
   Resource,
   ResourceService
-} from '../../../../../services/student/resource.service';
+} from '../../../../../../services/student/resource.service';
 
 @Component({
   selector: 'app-my-resources',

@@ -9,7 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Study } from '../../../../../services/student/study';
+import { Study } from '../../../../../../services/student/study';
 
 @Component({
   selector: 'app-resource-form',

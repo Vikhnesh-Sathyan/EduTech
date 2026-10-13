@@ -1,0 +1,41 @@
+<section class="recommendation-page">
+  <header class="page-header">
+    <span class="eyebrow">STUDENT LEARNING</span>
+    <h1>Student Recommendation</h1>
+    <p>Explore learning materials and connect with fellow students.</p>
+  </header>
+
+  <nav class="feature-navigation" aria-label="Student learning features">
+    <button
+      type="button"
+      class="feature-button"
+      [class.active]="activeSection() === 'resources'"
+      [attr.aria-current]="activeSection() === 'resources' ? 'page' : null"
+      (click)="showResources()"
+    >
+      <span class="feature-icon">📚</span>
+      <span>Learning Resources</span>
+    </button>
+
+    <button
+      type="button"
+      class="feature-button"
+      [class.active]="activeSection() === 'doubts'"
+      [attr.aria-current]="activeSection() === 'doubts' ? 'page' : null"
+      (click)="showDoubts()"
+    >
+      <span class="feature-icon">💬</span>
+      <span>Community Doubts</span>
+    </button>
+  </nav>
+
+  <main class="feature-content">
+    <app-resources
+      *ngIf="activeSection() === 'resources'"
+    />
+
+    <app-doubts
+      *ngIf="activeSection() === 'doubts'"
+    />
+  </main>
+</section>

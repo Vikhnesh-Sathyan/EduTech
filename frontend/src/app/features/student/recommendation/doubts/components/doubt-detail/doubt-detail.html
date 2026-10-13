@@ -1,0 +1,147 @@
+<section class="doubt-detail">
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBack()"
+  >
+    ← Back to Community Doubts
+  </button>
+
+  <div *ngIf="loading()" class="state-message">
+    Loading discussion...
+  </div>
+
+  <div
+    *ngIf="!loading() && errorMessage()"
+    class="state-message error"
+    role="alert"
+  >
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadDoubt(doubtId())"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <ng-container *ngIf="!loading() && !errorMessage() && doubt() as currentDoubt">
+    <article class="question-card">
+      <div class="question-meta">
+        <span class="subject-badge">
+          {{ currentDoubt.subject_name || 'General' }}
+        </span>
+
+        <span class="posted-date">
+          {{ currentDoubt.created_at | date:'medium' }}
+        </span>
+      </div>
+
+      <h1>{{ currentDoubt.title }}</h1>
+
+      <div class="author-info">
+        <span class="author-avatar">
+          {{ (currentDoubt.student_name || 'S').charAt(0).toUpperCase() }}
+        </span>
+
+        <span>
+          Asked by
+          <strong>{{ currentDoubt.student_name || 'Student' }}</strong>
+        </span>
+      </div>
+
+      <div class="question-body">
+        {{ currentDoubt.question }}
+      </div>
+    </article>
+
+    <section class="replies-section">
+      <header class="section-header">
+        <div>
+          <span class="eyebrow">COMMUNITY DISCUSSION</span>
+          <h2>Replies</h2>
+        </div>
+
+        <span class="reply-total">
+          {{ (currentDoubt.replies || []).length }}
+        </span>
+      </header>
+
+      <div
+        *ngIf="!currentDoubt.replies || currentDoubt.replies.length === 0"
+        class="empty-replies"
+      >
+        <h3>No replies yet</h3>
+        <p>Be the first to help this student understand the topic.</p>
+      </div>
+
+      <article
+        class="reply-card"
+        *ngFor="let reply of currentDoubt.replies"
+      >
+        <div class="reply-author">
+          <span class="author-avatar small">
+            {{ (reply.student_name || 'S').charAt(0).toUpperCase() }}
+          </span>
+
+          <div class="author-details">
+            <strong>{{ reply.student_name || 'Student' }}</strong>
+            <span>{{ reply.created_at | date:'medium' }}</span>
+          </div>
+        </div>
+
+        <p class="reply-content">{{ reply.reply }}</p>
+      </article>
+    </section>
+
+    <section class="reply-form-section">
+      <h2>Share your answer</h2>
+      <p class="form-description">
+        Explain your solution or share a helpful suggestion.
+      </p>
+
+      <form (ngSubmit)="submitReply()" #replyForm="ngForm">
+        <div class="form-group">
+          <label for="reply">Your reply</label>
+
+          <textarea
+            id="reply"
+            name="reply"
+            [ngModel]="replyText()"
+            (ngModelChange)="replyText.set($event)"
+            placeholder="Write a helpful explanation..."
+            rows="5"
+            required
+            [disabled]="submittingReply()"
+          ></textarea>
+        </div>
+
+        <div
+          *ngIf="replyError()"
+          class="message error"
+          role="alert"
+        >
+          {{ replyError() }}
+        </div>
+
+        <div
+          *ngIf="successMessage()"
+          class="message success"
+          role="status"
+        >
+          {{ successMessage() }}
+        </div>
+
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="submittingReply() || !replyText().trim()"
+        >
+          {{ submittingReply() ? 'Posting Reply...' : 'Post Reply' }}
+        </button>
+      </form>
+    </section>
+  </ng-container>
+</section>

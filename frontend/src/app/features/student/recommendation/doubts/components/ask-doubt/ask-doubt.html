@@ -1,0 +1,104 @@
+<section class="ask-doubt">
+  <header class="form-header">
+    <span class="eyebrow">COMMUNITY QUESTIONS</span>
+    <h2>Ask a Doubt</h2>
+    <p>Explain what you're stuck on so other students can help.</p>
+  </header>
+
+  <form (ngSubmit)="submitDoubt()" #doubtForm="ngForm">
+    <div class="form-group">
+      <label for="subject">Subject</label>
+
+      <select
+        id="subject"
+        name="subjectId"
+        [ngModel]="subjectId()"
+        (ngModelChange)="subjectId.set($event)"
+        required
+        [disabled]="loadingSubjects() || submitting()"
+      >
+        <option [ngValue]="null" disabled>
+          {{
+            loadingSubjects()
+              ? 'Loading subjects...'
+              : 'Select a subject'
+          }}
+        </option>
+
+        <option
+          *ngFor="let subject of subjects()"
+          [ngValue]="subject.id"
+        >
+          {{ subject.name }}
+        </option>
+      </select>
+
+      <small
+        *ngIf="!loadingSubjects() && subjects().length === 0"
+      >
+        No available subjects found.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="title">Question title</label>
+
+      <input
+        id="title"
+        type="text"
+        name="title"
+        [ngModel]="title()"
+        (ngModelChange)="title.set($event)"
+        placeholder="e.g. How does recursion work?"
+        maxlength="200"
+        required
+        [disabled]="submitting()"
+      />
+
+      <small>{{ title().length }}/200 characters</small>
+    </div>
+
+    <div class="form-group">
+      <label for="question">Describe your doubt</label>
+
+      <textarea
+        id="question"
+        name="question"
+        [ngModel]="question()"
+        (ngModelChange)="question.set($event)"
+        placeholder="Explain the concept or problem you're having difficulty with..."
+        rows="6"
+        required
+        [disabled]="submitting()"
+      ></textarea>
+    </div>
+
+    <div
+      *ngIf="errorMessage()"
+      class="message error"
+      role="alert"
+    >
+      {{ errorMessage() }}
+    </div>
+
+    <div
+      *ngIf="successMessage()"
+      class="message success"
+      role="status"
+    >
+      {{ successMessage() }}
+    </div>
+
+    <button
+      type="submit"
+      class="submit-button"
+      [disabled]="
+        submitting() ||
+        loadingSubjects() ||
+        subjects().length === 0
+      "
+    >
+      {{ submitting() ? 'Posting...' : 'Post Doubt' }}
+    </button>
+  </form>
+</section>

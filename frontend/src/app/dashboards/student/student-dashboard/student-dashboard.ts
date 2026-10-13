@@ -42,8 +42,9 @@ export class StudentDashboard {
     });
   }
 
-  // Navigate to the Learning Resources page
-  openLearningResources(): void {
-    this.router.navigate(['/learning-resources']);
-  }
+// Navigate to the Student Recommendation page
+openStudentRecommendation(): void {
+  this.router.navigate(['/student-recommendation']);
+}
+
 }

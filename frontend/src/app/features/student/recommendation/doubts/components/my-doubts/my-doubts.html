@@ -1,0 +1,103 @@
+<section class="my-doubts">
+  <header class="list-header">
+    <div>
+      <span class="eyebrow">YOUR CONTRIBUTIONS</span>
+      <h2>My Doubts</h2>
+      <p>View and manage the questions you've shared with the community.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="refreshDoubts()"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Loading...' : 'Refresh' }}
+    </button>
+  </header>
+
+  <div
+    *ngIf="successMessage()"
+    class="message success"
+    role="status"
+  >
+    {{ successMessage() }}
+  </div>
+
+  <div
+    *ngIf="errorMessage()"
+    class="message error"
+    role="alert"
+  >
+    {{ errorMessage() }}
+  </div>
+
+  <div *ngIf="loading()" class="state-message">
+    Loading your doubts...
+  </div>
+
+  <div
+    *ngIf="!loading() && !errorMessage() && doubts().length === 0"
+    class="empty-state"
+  >
+    <h3>You haven't asked any doubts yet</h3>
+    <p>
+      When you post a question, it will appear here so you can keep track
+      of the discussion.
+    </p>
+  </div>
+
+  <div
+    *ngIf="!loading() && doubts().length > 0"
+    class="doubt-cards"
+  >
+    <article
+      class="doubt-card"
+      *ngFor="let doubt of doubts()"
+    >
+      <div class="card-top">
+        <span class="subject-badge">
+          {{ doubt.subject_name || 'General' }}
+        </span>
+
+        <span class="reply-count">
+          {{ doubt.reply_count || 0 }}
+          {{ doubt.reply_count === 1 ? 'reply' : 'replies' }}
+        </span>
+      </div>
+
+      <h3>{{ doubt.title }}</h3>
+
+      <p class="question-preview">
+        {{ doubt.question }}
+      </p>
+
+      <div class="posted-date">
+        Posted {{ doubt.created_at | date:'mediumDate' }}
+      </div>
+
+      <div class="card-actions">
+        <button
+          type="button"
+          class="view-button"
+          (click)="openDoubt(doubt.id)"
+        >
+          View Discussion
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deleteDoubt(doubt.id)"
+          [disabled]="deletingId() === doubt.id"
+        >
+          {{
+            deletingId() === doubt.id
+              ? 'Deleting...'
+              : 'Delete'
+          }}
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

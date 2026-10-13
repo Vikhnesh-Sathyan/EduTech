@@ -1,0 +1,63 @@
+<section class="community-doubts">
+  <header class="page-header">
+    <div class="page-heading">
+      <span class="eyebrow">STUDENT COMMUNITY</span>
+      <h1>Community Doubts</h1>
+      <p>
+        Ask questions, share knowledge, and learn together with fellow students.
+      </p>
+    </div>
+  </header>
+
+  <nav class="doubt-navigation" aria-label="Community doubt navigation">
+    <button
+      type="button"
+      class="nav-button"
+      [class.active]="activeView() === 'browse'"
+      (click)="showBrowse()"
+    >
+      Browse Doubts
+    </button>
+
+    <button
+      type="button"
+      class="nav-button"
+      [class.active]="activeView() === 'ask'"
+      (click)="showAsk()"
+    >
+      Ask a Doubt
+    </button>
+
+    <button
+      type="button"
+      class="nav-button"
+      [class.active]="activeView() === 'mine'"
+      (click)="showMyDoubts()"
+    >
+      My Doubts
+    </button>
+  </nav>
+
+  <main class="doubt-content">
+    <app-doubt-list
+      *ngIf="activeView() === 'browse'"
+      (doubtSelected)="openDoubt($event)"
+    />
+
+    <app-ask-doubt
+      *ngIf="activeView() === 'ask'"
+      (doubtSubmitted)="onDoubtSubmitted()"
+    />
+
+    <app-my-doubts
+      *ngIf="activeView() === 'mine'"
+      (doubtSelected)="openDoubt($event)"
+    />
+
+    <app-doubt-detail
+      *ngIf="activeView() === 'detail' && selectedDoubtId() !== null"
+      [doubtId]="selectedDoubtId()!"
+      (backToList)="showBrowse()"
+    />
+  </main>
+</section>

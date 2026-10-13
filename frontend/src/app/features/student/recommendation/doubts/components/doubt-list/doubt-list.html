@@ -1,0 +1,93 @@
+<section class="doubt-list">
+  <header class="list-header">
+    <div>
+      <span class="eyebrow">STUDENT COMMUNITY</span>
+      <h2>Community Doubts</h2>
+      <p>Explore questions and help fellow students learn.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="refreshDoubts()"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Loading...' : 'Refresh' }}
+    </button>
+  </header>
+
+  <div *ngIf="loading()" class="state-message">
+    <p>Loading community doubts...</p>
+  </div>
+
+  <div
+    *ngIf="!loading() && errorMessage()"
+    class="state-message error"
+    role="alert"
+  >
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="refreshDoubts()"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <div
+    *ngIf="!loading() && !errorMessage() && doubts().length === 0"
+    class="empty-state"
+  >
+    <h3>No doubts yet</h3>
+    <p>Be the first to ask a question and help start a discussion!</p>
+  </div>
+
+  <div
+    *ngIf="!loading() && !errorMessage() && doubts().length > 0"
+    class="doubt-cards"
+  >
+    <article
+      class="doubt-card"
+      *ngFor="let doubt of doubts()"
+    >
+      <div class="card-top">
+        <span class="subject-badge">
+          {{ doubt.subject_name || 'General' }}
+        </span>
+
+        <span class="reply-count">
+          {{ doubt.reply_count || 0 }}
+          {{ doubt.reply_count === 1 ? 'reply' : 'replies' }}
+        </span>
+      </div>
+
+      <h3>{{ doubt.title }}</h3>
+
+      <p class="question-preview">
+        {{ doubt.question }}
+      </p>
+
+      <div class="card-footer">
+        <div class="student-info">
+          <span class="student-name">
+            {{ doubt.student_name || 'Student' }}
+          </span>
+
+          <span class="posted-date">
+            {{ doubt.created_at | date:'mediumDate' }}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          class="view-button"
+          (click)="openDoubt(doubt.id)"
+        >
+          View Discussion →
+        </button>
+      </div>
+    </article>
+  </div>
+</section>
