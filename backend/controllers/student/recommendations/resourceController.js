@@ -305,6 +305,49 @@ const getMyResources = async (req, res) => {
     }
 };
 
+// ==========================================
+// ADMIN: GET PENDING RESOURCES
+// ==========================================
+const getPendingResources = async (req, res) => {
+    try {
+        if (req.user.role !== "admin") {
+            return res.status(403).json({
+                message: "Only admins can view pending resources"
+            });
+        }
+
+        const [resources] = await db.query(
+            `SELECT
+                r.id,
+                r.student_id,
+                r.subject_id,
+                r.title,
+                r.description,
+                r.resource_type,
+                r.resource_url,
+                r.resource_content,
+                r.status,
+                r.created_at,
+                u.name AS contributor_name,
+                s.name AS subject_name
+             FROM student_recommendation_resources r
+             JOIN users u ON u.id = r.student_id
+             JOIN subjects s ON s.id = r.subject_id
+             WHERE r.status = 'pending'
+             ORDER BY r.created_at ASC`
+        );
+
+        return res.status(200).json({ resources });
+
+    } catch (error) {
+        console.error("Get pending resources error:", error);
+
+        return res.status(500).json({
+            message: "Failed to fetch pending resources"
+        });
+    }
+};
+
 
 /* ==========================================
    ADMIN: APPROVE A RESOURCE
@@ -781,8 +824,10 @@ const deleteResource = async (req, res) => {
 };
 
 
+
 module.exports = {
     getApprovedResources,
+    getPendingResources,
     submitResource,
     getMyResources,
     approveResource,

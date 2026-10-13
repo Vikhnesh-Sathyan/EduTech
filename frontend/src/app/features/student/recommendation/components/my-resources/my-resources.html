@@ -1,0 +1,149 @@
+<section class="my-resources">
+  <header class="section-header">
+    <div>
+      <span class="eyebrow">YOUR CONTRIBUTIONS</span>
+      <h2>My Resources</h2>
+      <p>Track your submissions and check their approval status.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadMyResources()"
+      [disabled]="loading()"
+    >
+      Refresh
+    </button>
+  </header>
+
+  <!-- Success message -->
+  <div
+    *ngIf="successMessage()"
+    class="message success-message"
+    role="status"
+  >
+    {{ successMessage() }}
+  </div>
+
+  <!-- Error message -->
+  <div
+    *ngIf="errorMessage()"
+    class="message error-message"
+    role="alert"
+  >
+    {{ errorMessage() }}
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadMyResources()"
+    >
+      Try again
+    </button>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading()" class="state-message">
+    <span class="loader"></span>
+    <p>Loading your submissions...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      resources().length === 0
+    "
+    class="empty-state"
+  >
+    <span class="material-symbols-outlined empty-icon">
+      library_books
+    </span>
+
+    <h3>No submissions yet</h3>
+
+    <p>
+      Resources you submit will appear here so you can track their status.
+    </p>
+  </div>
+
+  <!-- Resource submissions -->
+  <div
+    *ngIf="!loading() && resources().length > 0"
+    class="submission-list"
+  >
+    <article
+      class="submission-card"
+      *ngFor="let resource of resources()"
+    >
+      <div class="submission-main">
+        <div class="submission-icon">
+          <span class="material-symbols-outlined">
+            {{
+              resource.resource_type === 'pdf'
+                ? 'picture_as_pdf'
+                : resource.resource_type === 'video'
+                  ? 'play_circle'
+                  : resource.resource_type === 'image'
+                    ? 'image'
+                    : resource.resource_type === 'study_tips'
+                      ? 'lightbulb'
+                      : 'description'
+            }}
+          </span>
+        </div>
+
+        <div class="submission-info">
+          <h3>{{ resource.title }}</h3>
+
+          <p class="resource-meta">
+            {{ resource.subject_name || 'Subject' }}
+            <span class="meta-separator">·</span>
+            {{ resource.resource_type | titlecase }}
+          </p>
+
+          <p
+            *ngIf="resource.description"
+            class="resource-description"
+          >
+            {{ resource.description }}
+          </p>
+
+          <p
+            *ngIf="
+              resource.status === 'rejected' &&
+              resource.rejection_reason
+            "
+            class="rejection-reason"
+          >
+            <strong>Reason:</strong>
+            {{ resource.rejection_reason }}
+          </p>
+        </div>
+      </div>
+
+      <div class="submission-footer">
+        <span
+          class="status-badge"
+          [ngClass]="'status-' + resource.status"
+        >
+          {{ getStatusLabel(resource.status) }}
+        </span>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deleteResource(resource)"
+          [disabled]="deletingResourceId() === resource.id"
+        >
+          {{
+            deletingResourceId() === resource.id
+              ? 'Deleting...'
+              : 'Delete'
+          }}
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

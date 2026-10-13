@@ -1,0 +1,151 @@
+<section class="pending-resources">
+  <header class="section-header">
+    <div>
+      <span class="eyebrow">CONTENT MODERATION</span>
+      <h2>Pending Resources</h2>
+      <p>Review student submissions before publishing them.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadPendingResources()"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </header>
+
+  @if (successMessage()) {
+    <div class="alert success-alert" role="status">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error-alert" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="state-message">
+      Loading pending resources...
+    </div>
+  } @else if (resources().length === 0) {
+    <div class="empty-state">
+      <h3>All caught up!</h3>
+      <p>There are no resources waiting for approval.</p>
+    </div>
+  } @else {
+    <div class="resource-list">
+      @for (resource of resources(); track resource.id) {
+        <article class="resource-card">
+          <div class="resource-header">
+            <div>
+              <span class="resource-type">
+                {{ resource.resource_type.replace('_', ' ') }}
+              </span>
+
+              <h3>{{ resource.title }}</h3>
+            </div>
+
+            <span class="status-badge">Pending review</span>
+          </div>
+
+          <div class="resource-meta">
+            <span>
+              <strong>Subject:</strong>
+              {{ resource.subject_name || 'Unknown subject' }}
+            </span>
+
+            <span>
+              <strong>Submitted by:</strong>
+              {{ resource.contributor_name || 'Unknown student' }}
+            </span>
+
+            @if (resource.created_at) {
+              <span>
+                <strong>Submitted:</strong>
+                {{ resource.created_at | date:'mediumDate' }}
+              </span>
+            }
+          </div>
+
+          @if (resource.description) {
+            <div class="resource-description">
+              <h4>Description</h4>
+              <p>{{ resource.description }}</p>
+            </div>
+          }
+
+          @if (resource.resource_type === 'video' && resource.resource_url) {
+            <p class="resource-link">
+              <strong>Video URL:</strong>
+              <a
+                [href]="resource.resource_url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open video
+              </a>
+            </p>
+          }
+
+          @if (
+            (resource.resource_type === 'pdf' ||
+             resource.resource_type === 'image') &&
+            resource.resource_url
+          ) {
+            <p class="resource-link">
+              <strong>Uploaded file:</strong>
+              <a
+                [href]="'http://localhost:5000' + resource.resource_url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View uploaded file
+              </a>
+            </p>
+          }
+
+          @if (
+            resource.resource_type !== 'pdf' &&
+            resource.resource_type !== 'image' &&
+            resource.resource_type !== 'video' &&
+            resource.resource_content
+          ) {
+            <div class="resource-content">
+              <h4>Resource content</h4>
+              <p>{{ resource.resource_content }}</p>
+            </div>
+          }
+
+          <div class="review-actions">
+            <button
+              type="button"
+              class="approve-button"
+              (click)="approveResource(resource)"
+              [disabled]="processingResourceId() !== null"
+            >
+              {{
+                processingResourceId() === resource.id
+                  ? 'Processing...'
+                  : 'Approve'
+              }}
+            </button>
+
+            <button
+              type="button"
+              class="reject-button"
+              (click)="rejectResource(resource)"
+              [disabled]="processingResourceId() !== null"
+            >
+              Reject
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

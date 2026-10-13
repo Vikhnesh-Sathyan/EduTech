@@ -42,3 +42,60 @@
 .dashboard-main {
   padding: 32px 36px;
 }
+
+/* Learning Resources dashboard shortcut */
+.dashboard-shortcut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 24px;
+  padding: 24px;
+  background: var(--surface-card, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.shortcut-content h2 {
+  margin: 0 0 8px;
+  color: var(--text-primary, #111827);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.shortcut-content p {
+  margin: 0;
+  color: var(--text-secondary, #667085);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dashboard-shortcut button {
+  flex-shrink: 0;
+  padding: 12px 18px;
+  color: #ffffff;
+  background: #4f46e5;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dashboard-shortcut button:hover {
+  background: #4338ca;
+}
+
+@media (max-width: 600px) {
+  .dashboard-shortcut {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .dashboard-shortcut button {
+    width: 100%;
+  }
+}

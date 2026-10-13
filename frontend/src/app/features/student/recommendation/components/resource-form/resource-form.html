@@ -1,0 +1,159 @@
+<form class="resource-form" (ngSubmit)="submitForm()">
+
+  <div class="form-header">
+    <h2>Share a Learning Resource</h2>
+    <p>Help other students learn by sharing useful materials.</p>
+  </div>
+
+  <div *ngIf="errorMessage()" class="form-error">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="form-group">
+    <label for="resourceTitle">Resource Title *</label>
+
+    <input
+      id="resourceTitle"
+      type="text"
+      name="title"
+      [ngModel]="title()"
+      (ngModelChange)="title.set($event)"
+      placeholder="Enter a resource title"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="resourceSubject">Subject *</label>
+
+    <select
+      id="resourceSubject"
+      name="subjectId"
+      [ngModel]="subjectId()"
+      (ngModelChange)="subjectId.set($event)"
+      required
+    >
+      <option value="">Select a subject</option>
+
+      <option
+        *ngFor="let subject of subjects()"
+        [value]="subject.id"
+      >
+        {{ subject.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="resourceType">Resource Type *</label>
+
+    <select
+      id="resourceType"
+      name="resourceType"
+      [ngModel]="resourceType()"
+      (ngModelChange)="resourceType.set($event)"
+      required
+    >
+      <option
+        *ngFor="let type of resourceTypes"
+        [value]="type.value"
+      >
+        {{ type.label }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="resourceDescription">Description</label>
+
+    <textarea
+      id="resourceDescription"
+      name="description"
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+      rows="3"
+      placeholder="Briefly describe this resource (optional)"
+    ></textarea>
+  </div>
+
+  <!-- PDF and image upload -->
+  <div
+    *ngIf="resourceType() === 'pdf' || resourceType() === 'image'"
+    class="form-group"
+  >
+    <label for="resourceFile">Upload File *</label>
+
+    <input
+      id="resourceFile"
+      type="file"
+      name="file"
+      [accept]="
+        resourceType() === 'pdf'
+          ? '.pdf,application/pdf'
+          : 'image/*'
+      "
+      (change)="onFileSelected($event)"
+      required
+    />
+
+    <p class="field-hint" *ngIf="selectedFile()">
+      Selected: {{ selectedFile()?.name }}
+    </p>
+  </div>
+
+  <!-- Video URL -->
+  <div *ngIf="resourceType() === 'video'" class="form-group">
+    <label for="resourceUrl">Video URL *</label>
+
+    <input
+      id="resourceUrl"
+      type="url"
+      name="resourceUrl"
+      [ngModel]="resourceUrl()"
+      (ngModelChange)="resourceUrl.set($event)"
+      placeholder="https://..."
+      required
+    />
+  </div>
+
+  <!-- Notes and study tips content -->
+  <div
+    *ngIf="
+      resourceType() === 'notes' ||
+      resourceType() === 'study_tips'
+    "
+    class="form-group"
+  >
+    <label for="resourceContent">Resource Content *</label>
+
+    <textarea
+      id="resourceContent"
+      name="resourceContent"
+      [ngModel]="resourceContent()"
+      (ngModelChange)="resourceContent.set($event)"
+      rows="6"
+      placeholder="Write your notes or study tips here..."
+      required
+    ></textarea>
+  </div>
+
+  <div class="form-actions">
+    <button
+      type="button"
+      class="cancel-button"
+      (click)="cancelForm()"
+    >
+      Cancel
+    </button>
+
+    <button type="submit" class="submit-button">
+      Submit Resource
+    </button>
+  </div>
+
+  <p class="approval-note">
+    Your resource will be reviewed by an administrator before it becomes
+    visible to other students.
+  </p>
+
+</form>

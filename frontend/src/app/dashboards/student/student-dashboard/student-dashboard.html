@@ -12,7 +12,24 @@
         [userName]="userName()">
       </app-welcome-section>
 
-      <app-current-focus></app-current-focus>
+<app-current-focus></app-current-focus>
+
+<!-- Learning Resources shortcut -->
+<section class="dashboard-shortcut">
+  <div class="shortcut-content">
+    <h2>Learning Resources</h2>
+    <p>
+      Explore study notes, PDFs, videos, and study tips shared by students.
+    </p>
+  </div>
+
+ <button
+  type="button"
+  (click)="openLearningResources()"
+>
+  Explore Resources →
+</button>
+</section>
 
     </section>
 

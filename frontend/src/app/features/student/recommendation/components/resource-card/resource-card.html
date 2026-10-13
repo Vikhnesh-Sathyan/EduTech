@@ -1,0 +1,63 @@
+<article class="resource-card">
+
+  <div class="card-top">
+    <div class="resource-icon">
+      <span class="material-symbols-outlined">
+        {{ getResourceIcon() }}
+      </span>
+    </div>
+
+    <span class="resource-type">
+      {{ getResourceLabel() }}
+    </span>
+  </div>
+
+  <div class="card-content">
+
+    <p class="subject-name">
+      {{ resource().subject_name || 'Learning Resource' }}
+    </p>
+
+    <h3>{{ resource().title }}</h3>
+
+    <p
+      class="resource-description"
+      *ngIf="getContentPreview()"
+    >
+      {{ getContentPreview() }}
+    </p>
+
+  </div>
+
+  <div class="card-footer">
+
+    <span
+      class="contributor"
+      *ngIf="resource().contributor_name"
+    >
+      Shared by {{ resource().contributor_name }}
+    </span>
+
+    <a
+      *ngIf="getResourceLink() as resourceLink"
+      class="open-resource"
+      [href]="resourceLink"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Open resource
+      <span class="material-symbols-outlined">
+        arrow_outward
+      </span>
+    </a>
+
+    <span
+      *ngIf="!getResourceLink() && resource().resource_content"
+      class="content-available"
+    >
+      Content available
+    </span>
+
+  </div>
+
+</article>

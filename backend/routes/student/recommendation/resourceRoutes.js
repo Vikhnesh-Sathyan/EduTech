@@ -7,6 +7,7 @@ const resourceUpload = require("../../../middleware/recommendation/resourceUploa
 
 const {
     getApprovedResources,
+    getPendingResources,
     submitResource,
     getMyResources,
     approveResource,
@@ -20,6 +21,13 @@ router.get(
     "/approved",
     authMiddleware,
     getApprovedResources
+);
+
+// ADMIN: View pending resources
+router.get(
+    "/pending",
+    authMiddleware,
+    getPendingResources
 );
 
 // STUDENT: View own submissions

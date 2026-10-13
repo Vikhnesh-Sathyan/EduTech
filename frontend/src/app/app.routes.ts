@@ -44,7 +44,9 @@ import { StudentPreviousMentors } from './features/student/mentors/student-previ
 // Student mentors chat
 import { StudentChatComponent } from './features/chat/student-chat/student-chat';
 
-// Student recommendations
+// Student recommendations and learning resources
+import { ResourcesComponent } from './features/student/recommendation/resources/resources';
+
 
 // Student project learning
 import {
@@ -80,6 +82,9 @@ import { AdminTopicLearningPage } from './features/admin/learning-content/admin-
 import { AdminLearningSectionsPage } from './features/admin/learning-content/admin-learning-sections/admin-learning-sections';
 import { AdminSectionLearningPage } from './features/admin/learning-content/admin-section-learning/admin-section-learning';
 import { AdminSubtopicsPage } from './features/admin/learning-content/admin-subtopics/admin-subtopics';
+
+//Admin accepts student recommendations
+import { AdminResourcesComponent } from './features/admin/recommendation/resources/resources';
 
 // Admin advanced learning and question bank
 import { AdminAdvanced } from './features/admin/advanced/admin-advanced/admin-advanced';
@@ -136,6 +141,10 @@ export const routes: Routes = [
         component: StudentDashboard
       },
 
+      {
+        path: 'learning-resources',
+        component: ResourcesComponent
+      },
       // Student profile
       {
         path: 'profile',
@@ -327,7 +336,12 @@ export const routes: Routes = [
       {
         path: 'mentor-verification',
         component: MentorVerification
-      }
+      },
+      // Admin resource management
+      {
+        path: 'resources',
+        component: AdminResourcesComponent
+      },
     ]
   },
 

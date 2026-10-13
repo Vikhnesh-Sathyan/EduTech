@@ -1,0 +1,37 @@
+<section class="resource-list">
+
+  <!-- Display resource cards -->
+  <div
+    *ngIf="resources().length > 0"
+    class="resource-grid"
+  >
+
+    <app-resource-card
+      *ngFor="let resource of resources()"
+      [resource]="resource"
+    ></app-resource-card>
+
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="resources().length === 0"
+    class="empty-state"
+  >
+
+    <div class="empty-icon">
+      <span class="material-symbols-outlined">
+        menu_book
+      </span>
+    </div>
+
+    <h3>No resources found</h3>
+
+    <p>
+      There are no approved resources matching your selection yet.
+      Try changing the filters or check back later.
+    </p>
+
+  </div>
+
+</section>
