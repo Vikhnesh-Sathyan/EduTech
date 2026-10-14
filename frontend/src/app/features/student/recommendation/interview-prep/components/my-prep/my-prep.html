@@ -1,0 +1,157 @@
+<section class="my-prep-section">
+  <header class="my-prep-heading">
+    <div>
+      <span class="eyebrow">YOUR CONTRIBUTIONS</span>
+      <h2>My Preparation Posts</h2>
+      <p>Manage the interview preparation materials you've shared.</p>
+    </div>
+
+    <span class="post-count">
+      {{ posts().length }}
+      {{ posts().length === 1 ? 'post' : 'posts' }}
+    </span>
+  </header>
+
+  <!-- Success message -->
+  <div
+    *ngIf="successMessage()"
+    class="status-message success-message"
+    role="status"
+  >
+    <span class="material-symbols-outlined">check_circle</span>
+    <p>{{ successMessage() }}</p>
+  </div>
+
+  <!-- Error message -->
+  <div
+    *ngIf="errorMessage()"
+    class="status-message error-message"
+    role="alert"
+  >
+    <span class="material-symbols-outlined">error</span>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadMyPosts()"
+      [disabled]="loading()"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading()"
+    class="state-card"
+    role="status"
+  >
+    <span class="material-symbols-outlined loading-icon">
+      progress_activity
+    </span>
+    <p>Loading your preparation posts...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="!loading() && !errorMessage() && posts().length === 0"
+    class="state-card empty-state"
+  >
+    <span class="material-symbols-outlined empty-icon">
+      folder_open
+    </span>
+
+    <h3>No preparation posts yet</h3>
+
+    <p>
+      You haven't shared any interview preparation materials.
+      Create your first post to help other students.
+    </p>
+  </div>
+
+  <!-- Posts -->
+  <div
+    *ngIf="!loading() && posts().length > 0"
+    class="my-post-grid"
+  >
+    <article
+      class="my-post-card"
+      *ngFor="let post of posts(); trackBy: trackById"
+    >
+      <div class="card-top">
+        <span class="type-label">
+          {{ getTypeLabel(post.prep_type) }}
+        </span>
+
+        <span
+          *ngIf="post.difficulty"
+          class="difficulty-label"
+          [ngClass]="'difficulty-' + post.difficulty"
+        >
+          {{ getDifficultyLabel(post.difficulty) }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <p class="subject-label">
+          {{ post.subject_name || 'General Preparation' }}
+        </p>
+
+        <h3>{{ post.title }}</h3>
+
+        <p
+          *ngIf="post.description"
+          class="post-description"
+        >
+          {{ post.description }}
+        </p>
+
+        <p class="content-preview">
+          {{ getContentPreview(post.content) }}
+        </p>
+      </div>
+
+      <div class="card-meta">
+        <span class="post-date">
+          <span class="material-symbols-outlined">calendar_today</span>
+          {{ post.created_at | date:'mediumDate' }}
+        </span>
+      </div>
+
+      <div class="card-actions">
+        <button
+          type="button"
+          class="view-button"
+          (click)="openPost(post)"
+        >
+          <span class="material-symbols-outlined">visibility</span>
+          View
+        </button>
+
+        <button
+          type="button"
+          class="edit-button"
+          (click)="editPost(post)"
+          [disabled]="deletingId() !== null"
+        >
+          <span class="material-symbols-outlined">edit</span>
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deletePost(post)"
+          [disabled]="deletingId() !== null"
+        >
+          <span class="material-symbols-outlined">
+            {{ deletingId() === post.id ? 'progress_activity' : 'delete' }}
+          </span>
+
+          {{ deletingId() === post.id ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

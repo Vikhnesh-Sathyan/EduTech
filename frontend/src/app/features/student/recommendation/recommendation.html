@@ -2,7 +2,10 @@
   <header class="page-header">
     <span class="eyebrow">STUDENT LEARNING</span>
     <h1>Student Recommendation</h1>
-    <p>Explore learning materials and connect with fellow students.</p>
+    <p>
+      Explore learning materials, connect with fellow students,
+      and prepare for your future career.
+    </p>
   </header>
 
   <nav class="feature-navigation" aria-label="Student learning features">
@@ -27,6 +30,17 @@
       <span class="feature-icon">💬</span>
       <span>Community Doubts</span>
     </button>
+
+    <button
+      type="button"
+      class="feature-button"
+      [class.active]="activeSection() === 'interview'"
+      [attr.aria-current]="activeSection() === 'interview' ? 'page' : null"
+      (click)="showInterviewPrep()"
+    >
+      <span class="feature-icon">🎯</span>
+      <span>Interview Preparation</span>
+    </button>
   </nav>
 
   <main class="feature-content">
@@ -36,6 +50,10 @@
 
     <app-doubts
       *ngIf="activeSection() === 'doubts'"
+    />
+
+    <app-interview-prep
+      *ngIf="activeSection() === 'interview'"
     />
   </main>
 </section>

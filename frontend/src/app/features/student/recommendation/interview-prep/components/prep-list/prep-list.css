@@ -1,0 +1,373 @@
+/* ================================
+   PREPARATION LIST
+================================ */
+
+.prep-list {
+  width: 100%;
+  min-width: 0;
+}
+
+.list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.list-heading h2 {
+  margin: 0 0 6px;
+  color: #172033;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+.list-heading p {
+  margin: 0;
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.post-count {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ================================
+   POST GRID
+================================ */
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.prep-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e8edf5;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgb(15 23 42 / 3%);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.prep-card:hover {
+  transform: translateY(-3px);
+  border-color: #c7d2fe;
+  box-shadow: 0 12px 28px rgb(15 23 42 / 7%);
+}
+
+/* ================================
+   CARD TOP
+================================ */
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.type-label,
+.difficulty-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.type-label {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.difficulty-label {
+  border: 1px solid transparent;
+}
+
+.difficulty-beginner {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.difficulty-intermediate {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.difficulty-advanced {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+/* ================================
+   CARD CONTENT
+================================ */
+
+.card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.subject-label {
+  margin: 0 0 8px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.card-content h3 {
+  margin: 0 0 10px;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.post-description {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.content-preview {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+/* ================================
+   CARD META
+================================ */
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f3f8;
+}
+
+.author {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.author .material-symbols-outlined {
+  font-size: 17px;
+  color: #64748b;
+}
+
+.post-date {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+/* ================================
+   READ BUTTON
+================================ */
+
+.view-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px 14px;
+  border: 1px solid #e0e7ff;
+  border-radius: 9px;
+  background: #f5f7ff;
+  color: #4338ca;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.view-button:hover {
+  border-color: #4338ca;
+  background: #4338ca;
+  color: #ffffff;
+}
+
+.view-button .material-symbols-outlined {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.view-button:hover .material-symbols-outlined {
+  transform: translateX(3px);
+}
+
+/* ================================
+   LOADING / EMPTY / ERROR STATES
+================================ */
+
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 230px;
+  padding: 30px 20px;
+  border: 1px dashed #dbe3ef;
+  border-radius: 16px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.state-card p {
+  max-width: 380px;
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.loading-icon,
+.empty-icon,
+.state-card > .material-symbols-outlined:first-child {
+  font-size: 38px;
+  color: #6366f1;
+}
+
+.loading-icon {
+  animation: prep-spin 1.2s linear infinite;
+}
+
+.empty-state h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.empty-state .empty-icon {
+  color: #94a3b8;
+}
+
+.error-state {
+  border-color: #fecaca;
+  background: #fffafa;
+}
+
+.error-state > .material-symbols-outlined:first-child {
+  color: #dc2626;
+}
+
+.retry-button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4338ca;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.retry-button:hover {
+  background: #3730a3;
+}
+
+@keyframes prep-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 900px) {
+  .post-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .list-heading {
+    align-items: flex-start;
+  }
+
+  .list-heading h2 {
+    font-size: 19px;
+  }
+
+  .list-heading p {
+    font-size: 13px;
+  }
+
+  .prep-card {
+    padding: 17px;
+  }
+
+  .card-content h3 {
+    font-size: 16px;
+  }
+
+  .card-meta {
+    align-items: flex-start;
+  }
+
+  .post-date {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prep-card,
+  .view-button,
+  .view-button .material-symbols-outlined {
+    transition: none;
+  }
+
+  .loading-icon {
+    animation: none;
+  }
+}

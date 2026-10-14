@@ -1,0 +1,97 @@
+<section class="interview-prep-page">
+  <header class="page-header">
+    <div class="page-heading">
+      <span class="eyebrow">CAREER DEVELOPMENT</span>
+
+      <h1>Interview Preparation</h1>
+
+      <p>
+        Practice technical questions, prepare for HR interviews,
+        explore coding challenges, and learn from real interview experiences.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="showCreate()"
+    >
+      <span class="material-symbols-outlined">add</span>
+      Share Preparation
+    </button>
+  </header>
+
+  <nav
+    class="prep-navigation"
+    aria-label="Interview preparation sections"
+  >
+    <button
+      type="button"
+      [class.active]="activeView() === 'browse'"
+      (click)="showBrowse()"
+    >
+      <span class="material-symbols-outlined">explore</span>
+      Explore
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeView() === 'create'"
+      (click)="showCreate()"
+    >
+      <span class="material-symbols-outlined">edit_note</span>
+      Share Preparation
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeView() === 'mine'"
+      (click)="showMyPosts()"
+    >
+      <span class="material-symbols-outlined">folder_shared</span>
+      My Posts
+    </button>
+  </nav>
+
+  <main class="prep-content">
+    <!-- Explore and filter preparation posts -->
+    <section
+      *ngIf="activeView() === 'browse'"
+      class="browse-section"
+    >
+      <app-prep-filters
+        (filtersChanged)="onFiltersChanged($event)"
+      />
+
+      <app-prep-list
+        [filters]="activeFilters()"
+        (postSelected)="showDetail($event)"
+      />
+    </section>
+
+ 
+<app-prep-form
+  *ngIf="activeView() === 'create'"
+  [postId]="selectedPostId()"
+  (postSaved)="onPostSaved()"
+  (cancelled)="showBrowse()"
+/>
+
+<app-my-prep
+  *ngIf="activeView() === 'mine'"
+  (postSelected)="showDetail($event)"
+  (editRequested)="showEdit($event)"
+/>
+
+
+    <!-- View selected preparation post -->
+    <app-prep-detail
+      *ngIf="
+        activeView() === 'detail' &&
+        selectedPostId() !== null
+      "
+      [postId]="selectedPostId()!"
+      (back)="showBrowse()"
+    />
+  </main>
+</section>

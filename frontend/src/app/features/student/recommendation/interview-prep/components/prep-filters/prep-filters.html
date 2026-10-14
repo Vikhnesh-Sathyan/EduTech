@@ -1,0 +1,101 @@
+<section class="prep-filters">
+  <div class="filters-heading">
+    <div>
+      <h2>Explore Preparation</h2>
+      <p>Find questions and tips that match your learning goals.</p>
+    </div>
+
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()"
+    >
+      <span class="material-symbols-outlined">restart_alt</span>
+      Clear filters
+    </button>
+  </div>
+
+  <div class="filter-grid">
+    <div class="filter-group search-group">
+      <label for="prep-search">Search</label>
+
+      <div class="search-input">
+        <span class="material-symbols-outlined">search</span>
+        <input
+          id="prep-search"
+          type="search"
+          placeholder="Search questions, topics, tips..."
+          [ngModel]="search()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label for="prep-type">Preparation type</label>
+      <select
+        id="prep-type"
+        [ngModel]="prepType()"
+        (ngModelChange)="onPrepTypeChange($event)"
+      >
+        <option value="">All types</option>
+        <option
+          *ngFor="let type of prepTypes"
+          [value]="type.value"
+        >
+          {{ type.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="prep-subject">Subject</label>
+      <select
+        id="prep-subject"
+        [ngModel]="subjectId() ?? ''"
+        (ngModelChange)="onSubjectChange($event)"
+        [disabled]="loadingSubjects()"
+      >
+        <option value="">
+          {{ loadingSubjects() ? 'Loading subjects...' : 'All subjects' }}
+        </option>
+        <option
+          *ngFor="let subject of subjects()"
+          [value]="subject.id"
+        >
+          {{ subject.name }}
+        </option>
+      </select>
+
+      <p class="field-error" *ngIf="subjectError()">
+        {{ subjectError() }}
+      </p>
+    </div>
+
+    <div class="filter-group">
+      <label for="prep-difficulty">Difficulty</label>
+      <select
+        id="prep-difficulty"
+        [ngModel]="difficulty()"
+        (ngModelChange)="onDifficultyChange($event)"
+      >
+        <option value="">All levels</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="prep-sort">Sort by</label>
+      <select
+        id="prep-sort"
+        [ngModel]="sort()"
+        (ngModelChange)="onSortChange($event)"
+      >
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+  </div>
+</section>

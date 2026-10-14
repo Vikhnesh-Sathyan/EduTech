@@ -65,8 +65,14 @@
   color: #fff;
 }
 
+.feature-button:focus-visible {
+  outline: 3px solid #a5b4fc;
+  outline-offset: 3px;
+}
+
 .feature-icon {
   font-size: 1.15rem;
+  line-height: 1;
 }
 
 .feature-content {

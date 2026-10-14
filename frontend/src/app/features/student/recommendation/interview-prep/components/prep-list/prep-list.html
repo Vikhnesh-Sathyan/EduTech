@@ -1,0 +1,97 @@
+<section class="prep-list">
+  <header class="list-heading">
+    <div>
+      <h2>Preparation Library</h2>
+      <p>Learn from questions, challenges, and shared experiences.</p>
+    </div>
+
+    <span class="post-count">
+      {{ posts().length }} {{ posts().length === 1 ? 'post' : 'posts' }}
+    </span>
+  </header>
+
+  <div *ngIf="loading()" class="state-card" role="status">
+    <span class="material-symbols-outlined loading-icon">progress_activity</span>
+    <p>Loading preparation posts...</p>
+  </div>
+
+  <div *ngIf="!loading() && errorMessage()" class="state-card error-state" role="alert">
+    <span class="material-symbols-outlined">error</span>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" class="retry-button" (click)="loadPosts(filters())">
+      Try again
+    </button>
+  </div>
+
+  <div
+    *ngIf="!loading() && !errorMessage() && posts().length === 0"
+    class="state-card empty-state"
+  >
+    <span class="material-symbols-outlined empty-icon">school</span>
+    <h3>No preparation posts found</h3>
+    <p>
+      Try changing your filters, or be the first to share something helpful.
+    </p>
+  </div>
+
+  <div
+    *ngIf="!loading() && !errorMessage() && posts().length > 0"
+    class="post-grid"
+  >
+    <article
+      class="prep-card"
+      *ngFor="let post of posts(); trackBy: trackById"
+    >
+      <div class="card-top">
+        <span class="type-label">
+          {{ getTypeLabel(post.prep_type) }}
+        </span>
+
+        <span
+          *ngIf="post.difficulty"
+          class="difficulty-label"
+          [ngClass]="'difficulty-' + post.difficulty"
+        >
+          {{ getDifficultyLabel(post.difficulty) }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <p class="subject-label">
+          {{ post.subject_name || 'General Preparation' }}
+        </p>
+
+        <h3>{{ post.title }}</h3>
+
+        <p *ngIf="post.description" class="post-description">
+          {{ post.description }}
+        </p>
+
+        <p class="content-preview">
+          {{ getContentPreview(post.content) }}
+        </p>
+      </div>
+
+      <div class="card-meta">
+        <span class="author" *ngIf="post.student_name">
+          <span class="material-symbols-outlined">person</span>
+          {{ post.student_name }}
+        </span>
+
+        <span class="post-date">
+          {{ post.created_at | date:'mediumDate' }}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="view-button"
+        (click)="openPost(post)"
+      >
+        Read preparation
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </article>
+  </div>
+</section>

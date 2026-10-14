@@ -1,0 +1,114 @@
+<section class="prep-detail">
+  <!-- Back navigation -->
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBack()"
+  >
+    <span class="material-symbols-outlined">arrow_back</span>
+    Back to Preparation
+  </button>
+
+  <!-- Loading state -->
+  <div
+    *ngIf="loading()"
+    class="detail-state"
+    role="status"
+  >
+    <span class="material-symbols-outlined loading-icon">
+      progress_activity
+    </span>
+    <p>Loading preparation details...</p>
+  </div>
+
+  <!-- Error state -->
+  <div
+    *ngIf="!loading() && errorMessage()"
+    class="detail-state error-state"
+    role="alert"
+  >
+    <span class="material-symbols-outlined">error</span>
+    <h3>Unable to load preparation</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="retry()"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <!-- Preparation content -->
+  <article
+    *ngIf="!loading() && !errorMessage() && post() as item"
+    class="detail-card"
+  >
+    <header class="detail-header">
+      <div class="detail-labels">
+        <span class="type-label">
+          {{ getTypeLabel(item.prep_type) }}
+        </span>
+
+        <span
+          *ngIf="item.difficulty"
+          class="difficulty-label"
+          [ngClass]="'difficulty-' + item.difficulty"
+        >
+          {{ getDifficultyLabel(item.difficulty) }}
+        </span>
+      </div>
+
+      <p class="subject-label">
+        <span class="material-symbols-outlined">menu_book</span>
+        {{ item.subject_name || 'General Preparation' }}
+      </p>
+
+      <h1>{{ item.title }}</h1>
+
+      <p
+        *ngIf="item.description"
+        class="detail-description"
+      >
+        {{ item.description }}
+      </p>
+
+      <div class="detail-meta">
+        <span *ngIf="item.student_name" class="meta-item">
+          <span class="material-symbols-outlined">person</span>
+          {{ item.student_name }}
+        </span>
+
+        <span *ngIf="item.created_at" class="meta-item">
+          <span class="material-symbols-outlined">calendar_today</span>
+          {{ item.created_at | date:'mediumDate' }}
+        </span>
+      </div>
+    </header>
+
+    <div class="detail-divider"></div>
+
+    <section class="content-section">
+      <h2>
+        <span class="material-symbols-outlined">article</span>
+        Preparation Content
+      </h2>
+
+      <div class="full-content">{{ item.content }}</div>
+    </section>
+
+    <footer class="detail-footer">
+      <div class="footer-icon">
+        <span class="material-symbols-outlined">school</span>
+      </div>
+
+      <div>
+        <h3>Keep learning together</h3>
+        <p>
+          Use these shared materials to strengthen your interview preparation.
+        </p>
+      </div>
+    </footer>
+  </article>
+</section>

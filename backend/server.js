@@ -168,6 +168,8 @@ const resourceRoutes = require("./routes/student/recommendation/resourceRoutes")
 
 const doubtRoutes = require("./routes/student/recommendation/doubtRoutes");
 
+const interviewPrepRoutes = require("./routes/student/recommendation/interviewPrepRoutes");
+
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -443,6 +445,8 @@ app.use("/api/recommendation", recommendationRoutes);
 app.use("/api/recommendation/resources", resourceRoutes);
 
 app.use("/api/recommendation/doubts", doubtRoutes);
+
+app.use("/api/recommendation/interview-prep", interviewPrepRoutes);
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
