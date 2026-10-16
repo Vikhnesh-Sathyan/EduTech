@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { ResourcesComponent } from './resources/resources';
 import { DoubtsComponent } from './doubts/doubts';
 import { InterviewPrepComponent } from './interview-prep/interview-prep';
+import { CodingComponent } from './coding/coding';
 
 type RecommendationSection =
   | 'resources'
   | 'doubts'
-  | 'interview';
+  | 'interview'
+  | 'coding';
 
 @Component({
   selector: 'app-recommendation',
@@ -17,7 +19,8 @@ type RecommendationSection =
     CommonModule,
     ResourcesComponent,
     DoubtsComponent,
-    InterviewPrepComponent
+    InterviewPrepComponent,
+    CodingComponent
   ],
   templateUrl: './recommendation.html',
   styleUrl: './recommendation.css'
@@ -36,4 +39,8 @@ export class RecommendationComponent {
   showInterviewPrep(): void {
     this.activeSection.set('interview');
   }
+
+  showCoding(): void {
+  this.activeSection.set('coding');
+}
 }

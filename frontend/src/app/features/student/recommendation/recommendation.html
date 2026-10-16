@@ -41,6 +41,19 @@
       <span class="feature-icon">🎯</span>
       <span>Interview Preparation</span>
     </button>
+
+ 
+<button
+  type="button"
+  class="feature-button"
+  [class.active]="activeSection() === 'coding'"
+  [attr.aria-current]="activeSection() === 'coding' ? 'page' : null"
+  (click)="showCoding()"
+>
+  <span class="feature-icon">💻</span>
+  <span>Coding</span>
+</button>
+
   </nav>
 
   <main class="feature-content">
@@ -55,5 +68,7 @@
     <app-interview-prep
       *ngIf="activeSection() === 'interview'"
     />
+
+    <app-coding *ngIf="activeSection() === 'coding'" />
   </main>
 </section>

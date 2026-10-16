@@ -1,0 +1,66 @@
+
+<div *ngIf="loadingPosts()" class="coding-empty-state">
+  <span class="empty-icon">⏳</span>
+  <h3>Loading coding questions...</h3>
+</div>
+
+<div *ngIf="postsError() && !loadingPosts()" class="coding-empty-state">
+  <span class="empty-icon">⚠️</span>
+  <h3>Unable to load coding questions</h3>
+  <p>{{ postsError() }}</p>
+
+  <button
+    type="button"
+    class="search-button"
+    (click)="retry.emit()"
+  >
+    Try Again
+  </button>
+</div>
+
+<div
+  *ngIf="!loadingPosts() && !postsError() && codePosts().length === 0"
+  class="coding-empty-state"
+>
+  <span class="empty-icon">💻</span>
+  <h3>No coding questions found</h3>
+  <p>Try another search or select a different subject.</p>
+</div>
+
+<div
+  *ngIf="!loadingPosts() && !postsError() && codePosts().length > 0"
+  class="coding-question-list"
+>
+  <article
+  class="coding-question-card"
+  *ngFor="let post of codePosts()"
+  (click)="selectQuestion.emit(post)"
+  role="button"
+  tabindex="0"
+  (keydown.enter)="selectQuestion.emit(post)"
+>
+    <h3>{{ post.title }}</h3>
+
+    <div class="question-meta">
+      <span *ngIf="post.subject_name">
+        📚 {{ post.subject_name }}
+      </span>
+
+      <span *ngIf="post.difficulty">
+        🎯 {{ post.difficulty | titlecase }}
+      </span>
+
+      <span *ngIf="post.student_name">
+        👤 {{ post.student_name }}
+      </span>
+    </div>
+
+    <p class="question-description">
+      {{ post.problem_statement || post.description }}
+    </p>
+
+    <p class="question-date" *ngIf="post.created_at">
+      Posted {{ post.created_at | date:'mediumDate' }}
+    </p>
+  </article>
+</div>

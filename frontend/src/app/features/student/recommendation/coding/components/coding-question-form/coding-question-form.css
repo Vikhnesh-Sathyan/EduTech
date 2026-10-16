@@ -1,0 +1,158 @@
+
+:host {
+  display: block;
+}
+
+.coding-form {
+  padding: 24px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 16px;
+}
+
+.form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-header h3 {
+  margin: 0 0 8px;
+  color: var(--text-color, #111827);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.form-header p {
+  margin: 0;
+  color: var(--muted-text-color, #6b7280);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.close-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--muted-text-color, #6b7280);
+  background: transparent;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.coding-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  color: var(--text-color, #374151);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  color: var(--text-color, #111827);
+  background: var(--input-background, #ffffff);
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: 10px;
+  font: inherit;
+}
+
+.form-field input,
+.form-field select {
+  min-height: 46px;
+}
+
+.form-field textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 2px solid var(--primary-color, #6366f1);
+  outline-offset: 1px;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: var(--muted-text-color, #9ca3af);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-button,
+.submit-button {
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cancel-button {
+  color: var(--text-color, #374151);
+  background: transparent;
+  border: 1px solid var(--border-color, #d1d5db);
+}
+
+.submit-button {
+  color: #ffffff;
+  background: var(--primary-color, #4f46e5);
+  border: 1px solid transparent;
+}
+
+.cancel-button:hover,
+.submit-button:hover,
+.close-button:hover {
+  opacity: 0.85;
+}
+
+.cancel-button:focus-visible,
+.submit-button:focus-visible,
+.close-button:focus-visible {
+  outline: 2px solid var(--primary-color, #6366f1);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .coding-form {
+    padding: 18px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-button,
+  .submit-button {
+    width: 100%;
+  }
+}

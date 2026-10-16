@@ -1,0 +1,129 @@
+
+<section class="coding-form">
+  <div class="form-header">
+    <div>
+      <h3>Create Coding Question</h3>
+      <p>Share a coding problem and its solution with other students.</p>
+    </div>
+
+    <button
+      type="button"
+      class="close-button"
+      aria-label="Close form"
+      (click)="closeForm()"
+    >
+      ✕
+    </button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label for="coding-title">Question title *</label>
+      <input
+        id="coding-title"
+        name="title"
+        type="text"
+        [ngModel]="title()"
+        (ngModelChange)="title.set($event)"
+        placeholder="e.g. Second Largest Number"
+        required
+        maxlength="200"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="coding-form-subject">Subject *</label>
+      <select
+        id="coding-form-subject"
+        name="subjectId"
+        [ngModel]="subjectId()"
+        (ngModelChange)="subjectId.set($event)"
+        [disabled]="loadingSubjects()"
+        required
+      >
+        <option value="">Select a subject</option>
+        <option *ngFor="let subject of subjects()" [value]="subject.id">
+          {{ subject.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="coding-problem">Problem statement *</label>
+      <textarea
+        id="coding-problem"
+        name="problemStatement"
+        [ngModel]="problemStatement()"
+        (ngModelChange)="problemStatement.set($event)"
+        placeholder="Explain the coding problem clearly..."
+        rows="5"
+        required
+      ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="coding-description">Additional description</label>
+      <textarea
+        id="coding-description"
+        name="description"
+        [ngModel]="description()"
+        (ngModelChange)="description.set($event)"
+        placeholder="Add examples, constraints, or extra details (optional)"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="coding-difficulty">Difficulty</label>
+      <select
+        id="coding-difficulty"
+        name="difficulty"
+        [ngModel]="difficulty()"
+        (ngModelChange)="difficulty.set($event)"
+      >
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="coding-keywords">Search keywords</label>
+      <input
+        id="coding-keywords"
+        name="searchKeywords"
+        type="text"
+        [ngModel]="searchKeywords()"
+        (ngModelChange)="searchKeywords.set($event)"
+        placeholder="e.g. arrays, sorting, loops"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="coding-code">Code solution *</label>
+      <textarea
+        id="coding-code"
+        name="code"
+        [ngModel]="code()"
+        (ngModelChange)="code.set($event)"
+        placeholder="Paste your easiest code solution here..."
+        rows="10"
+        required
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="closeForm()"
+      >
+        Cancel
+      </button>
+
+      <button type="submit" class="submit-button">
+        Publish Question
+      </button>
+    </div>
+  </form>
+</section>

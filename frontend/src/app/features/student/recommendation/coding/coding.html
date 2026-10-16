@@ -1,0 +1,169 @@
+
+<section class="coding-page">
+  <header class="coding-header">
+    <div>
+      <span class="coding-eyebrow">PRACTICE • LEARN • SHARE</span>
+      <h2>Coding Hub</h2>
+      <p>
+        Explore coding questions, learn different solutions,
+        and understand algorithms step by step.
+      </p>
+    </div>
+
+    <button
+      *ngIf="!showQuestionForm() && !selectedQuestion()"
+      type="button"
+      class="create-question-button"
+      (click)="openQuestionForm()"
+    >
+      + Create Question
+    </button>
+  </header>
+
+  <!-- Create Question Form -->
+  <app-coding-question-form
+    *ngIf="showQuestionForm()"
+    [subjects]="subjects()"
+    [loadingSubjects]="loadingSubjects()"
+    (closed)="closeQuestionForm()"
+    (submitQuestion)="createCodeQuestion($event)"
+  />
+
+  <ng-container *ngIf="!showQuestionForm()">
+
+    <!-- Selected Question Details -->
+    <section
+      *ngIf="selectedQuestion() as question"
+      class="coding-results"
+    >
+      <button
+        type="button"
+        class="create-question-button"
+        (click)="selectedQuestion.set(null)"
+      >
+        ← Back to Questions
+      </button>
+
+      <div class="results-heading">
+        <div>
+          <h3>{{ question.title }}</h3>
+          <p>
+            {{ question.problem_statement || question.description }}
+          </p>
+        </div>
+      </div>
+
+      <div class="question-meta">
+        <span *ngIf="question.subject_name">
+          📚 {{ question.subject_name }}
+        </span>
+
+        <span *ngIf="question.difficulty">
+          🎯 {{ question.difficulty | titlecase }}
+        </span>
+
+        <span *ngIf="question.student_name">
+          👤 {{ question.student_name }}
+        </span>
+      </div>
+
+      <p *ngIf="question.description">
+        {{ question.description }}
+      </p>
+
+      <p *ngIf="question.search_keywords">
+        <strong>Keywords:</strong>
+        {{ question.search_keywords }}
+      </p>
+
+      <p
+        class="question-date"
+        *ngIf="question.created_at"
+      >
+        Posted {{ question.created_at | date:'mediumDate' }}
+      </p>
+
+      <!-- Code Solutions -->
+      <section class="code-solutions-section">
+        <h3>Code Solutions</h3>
+
+        <p *ngIf="codeSolutions().length === 0">
+          No code solutions found for this question.
+        </p>
+
+        <article
+          class="code-solution-card"
+          *ngFor="let solution of codeSolutions()"
+        >
+          <div class="solution-header">
+            <h4>
+              {{ solution.solution_title || 'Code Solution' }}
+            </h4>
+
+            <span>
+              {{ solution.programming_language || 'Language not specified' }}
+            </span>
+          </div>
+
+          <p *ngIf="solution.student_name">
+            Shared by {{ solution.student_name }}
+          </p>
+
+          <pre><code>{{ solution.code }}</code></pre>
+
+          <div *ngIf="solution.algorithm_explanation">
+            <h4>Algorithm Explanation</h4>
+            <p>{{ solution.algorithm_explanation }}</p>
+          </div>
+
+          <div class="solution-complexity">
+            <p *ngIf="solution.time_complexity">
+              <strong>Time Complexity:</strong>
+              {{ solution.time_complexity }}
+            </p>
+
+            <p *ngIf="solution.space_complexity">
+              <strong>Space Complexity:</strong>
+              {{ solution.space_complexity }}
+            </p>
+          </div>
+        </article>
+      </section>
+    </section>
+
+    <!-- Search and Question List -->
+    <ng-container *ngIf="!selectedQuestion()">
+
+      <app-coding-search
+        [subjects]="subjects()"
+        [loadingSubjects]="loadingSubjects()"
+        [subjectError]="subjectError()"
+        [searchText]="searchText"
+        (searchTextChange)="searchText = $event"
+        [selectedSubjectId]="selectedSubjectId"
+        (selectedSubjectIdChange)="selectedSubjectId = $event"
+        (search)="searchCodingQuestions()"
+      />
+
+      <section class="coding-results">
+        <div class="results-heading">
+          <div>
+            <h3>Coding Questions</h3>
+            <p>
+              Discover questions and compare student solutions.
+            </p>
+          </div>
+        </div>
+
+        <app-coding-question-list
+          [codePosts]="codePosts()"
+          [loadingPosts]="loadingPosts()"
+          [postsError]="postsError()"
+          (retry)="searchCodingQuestions()"
+          (selectQuestion)="openQuestion($event)"
+        />
+      </section>
+
+    </ng-container>
+  </ng-container>
+</section>

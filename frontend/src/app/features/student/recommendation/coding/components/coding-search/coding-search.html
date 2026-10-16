@@ -1,0 +1,46 @@
+
+<section class="coding-search">
+  <div class="search-field">
+    <label for="coding-search-input">Search coding questions</label>
+    <input
+      id="coding-search-input"
+      type="text"
+      [ngModel]="searchText()"
+      (ngModelChange)="onSearchTextChange($event)"
+      placeholder="e.g. Second Largest Number"
+      (keyup.enter)="onSearch()"
+    />
+  </div>
+
+  <div class="search-field">
+    <label for="coding-subject">Subject</label>
+
+    <select
+      id="coding-subject"
+      [ngModel]="selectedSubjectId()"
+      (ngModelChange)="onSubjectChange($event)"
+      [disabled]="loadingSubjects()"
+    >
+      <option value="">All subjects</option>
+
+      <option
+        *ngFor="let subject of subjects()"
+        [value]="subject.id"
+      >
+        {{ subject.name }}
+      </option>
+    </select>
+
+    <p *ngIf="subjectError()" class="subject-error">
+      {{ subjectError() }}
+    </p>
+  </div>
+
+  <button
+    type="button"
+    class="search-button"
+    (click)="onSearch()"
+  >
+    Search
+  </button>
+</section>
