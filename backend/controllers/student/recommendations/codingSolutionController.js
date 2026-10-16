@@ -297,8 +297,6 @@ if (
     }
 };
 
-module.exports.updateCodeSolution = updateCodeSolution;
-
 // ==========================================
 // GET SOLUTIONS FOR A CODING QUESTION
 // ==========================================
@@ -381,9 +379,6 @@ if (!Number.isInteger(postId) || postId <= 0) {
         });
     }
 };
-
-module.exports.getCodeSolutions = getCodeSolutions;
-
 
 module.exports = {
     createCodeSolution,

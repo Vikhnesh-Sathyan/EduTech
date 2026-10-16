@@ -10,6 +10,7 @@ export class CodingService {
 
   constructor(private http: HttpClient) {}
 
+  // Get coding question cards
   getCodePosts(searchText = '', subjectId = '') {
     let params = new HttpParams();
 
@@ -24,6 +25,12 @@ export class CodingService {
     return this.http.get(this.apiUrl, { params });
   }
 
+  // Get one question with its existing submitted code
+  getCodePostById(postId: number) {
+    return this.http.get(`${this.apiUrl}/${postId}`);
+  }
+
+  // Create a coding question
   createCodePost(question: {
     title: string;
     subject_id: number;
@@ -35,6 +42,7 @@ export class CodingService {
     return this.http.post(this.apiUrl, question);
   }
 
+  // Save the original code submitted with the question
   createCodeSolution(
     postId: number,
     solution: {
@@ -50,9 +58,46 @@ export class CodingService {
   }
 
   
-getCodeSolutions(postId: number) {
+getCodeHighlights(solutionId: number) {
   return this.http.get(
-    `${this.apiUrl}/${postId}/solutions`
+    `${this.apiUrl}/solutions/${solutionId}/highlights`
+  );
+}
+
+createCodeHighlight(
+  solutionId: number,
+  highlight: {
+    start_line: number;
+    end_line: number;
+    explanation: string;
+    highlight_color?: string;
+  }
+) {
+  return this.http.post(
+    `${this.apiUrl}/solutions/${solutionId}/highlights`,
+    highlight
+  );
+}
+
+updateCodeHighlight(
+  solutionId: number,
+  highlightId: number,
+  highlight: {
+    start_line: number;
+    end_line: number;
+    explanation: string;
+    highlight_color?: string;
+  }
+) {
+  return this.http.put(
+    `${this.apiUrl}/solutions/${solutionId}/highlights/${highlightId}`,
+    highlight
+  );
+}
+
+deleteCodeHighlight(solutionId: number, highlightId: number) {
+  return this.http.delete(
+    `${this.apiUrl}/solutions/${solutionId}/highlights/${highlightId}`
   );
 }
 

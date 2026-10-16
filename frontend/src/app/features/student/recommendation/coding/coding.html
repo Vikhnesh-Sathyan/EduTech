@@ -5,8 +5,8 @@
       <span class="coding-eyebrow">PRACTICE • LEARN • SHARE</span>
       <h2>Coding Hub</h2>
       <p>
-        Explore coding questions, learn different solutions,
-        and understand algorithms step by step.
+        Explore coding questions, understand submitted code,
+        and learn algorithms step by step.
       </p>
     </div>
 
@@ -39,11 +39,12 @@
       <button
         type="button"
         class="create-question-button"
-        (click)="selectedQuestion.set(null)"
+        (click)="closeSelectedQuestion()"
       >
         ← Back to Questions
       </button>
 
+      <!-- Question Information -->
       <div class="results-heading">
         <div>
           <h3>{{ question.title }}</h3>
@@ -83,57 +84,69 @@
         Posted {{ question.created_at | date:'mediumDate' }}
       </p>
 
-      <!-- Code Solutions -->
-      <section class="code-solutions-section">
-        <h3>Code Solutions</h3>
+      <!-- Existing Submitted Code -->
+      <section class="question-code-section">
+        <h3>Submitted Code</h3>
 
-        <p *ngIf="codeSolutions().length === 0">
-          No code solutions found for this question.
-        </p>
-
-        <article
-          class="code-solution-card"
-          *ngFor="let solution of codeSolutions()"
+        <ng-container
+          *ngIf="question.solutions?.length > 0; else noCode"
         >
-          <div class="solution-header">
-            <h4>
-              {{ solution.solution_title || 'Code Solution' }}
-            </h4>
+          <article
+            *ngFor="let solution of question.solutions"
+            class="code-solution-card"
+          >
+            <div class="solution-header">
+              <div>
+                <h4>
+                  {{ solution.solution_title || 'Original Code' }}
+                </h4>
 
-            <span>
-              {{ solution.programming_language || 'Language not specified' }}
-            </span>
-          </div>
+                <span class="solution-language">
+                  {{ solution.programming_language || 'Language not specified' }}
+                </span>
+              </div>
+            </div>
 
-          <p *ngIf="solution.student_name">
-            Shared by {{ solution.student_name }}
+            <pre><code>{{ solution.code }}</code></pre>
+
+            <div
+              *ngIf="solution.algorithm_explanation"
+              class="solution-explanation"
+            >
+              <h4>Algorithm Explanation</h4>
+              <p>{{ solution.algorithm_explanation }}</p>
+            </div>
+          </article>
+        </ng-container>
+
+        <ng-template #noCode>
+          <p class="no-code-message">
+            No code has been saved for this question yet.
           </p>
-
-          <pre><code>{{ solution.code }}</code></pre>
-
-          <div *ngIf="solution.algorithm_explanation">
-            <h4>Algorithm Explanation</h4>
-            <p>{{ solution.algorithm_explanation }}</p>
-          </div>
-
-          <div class="solution-complexity">
-            <p *ngIf="solution.time_complexity">
-              <strong>Time Complexity:</strong>
-              {{ solution.time_complexity }}
-            </p>
-
-            <p *ngIf="solution.space_complexity">
-              <strong>Space Complexity:</strong>
-              {{ solution.space_complexity }}
-            </p>
-          </div>
-        </article>
+        </ng-template>
       </section>
     </section>
 
-    <!-- Search and Question List -->
-    <ng-container *ngIf="!selectedQuestion()">
+    <!-- Loading Question Details -->
+    <p
+      *ngIf="loadingQuestion()"
+      class="solutions-loading"
+    >
+      Loading question and submitted code...
+    </p>
 
+    <!-- Question Details Error -->
+    <p
+      *ngIf="postsError() && !selectedQuestion() && !loadingQuestion()"
+      class="solution-error"
+    >
+      {{ postsError() }}
+    </p>
+
+    <!-- Search and Question List -->
+    <ng-container
+      *ngIf="!selectedQuestion() && !loadingQuestion()"
+    >
       <app-coding-search
         [subjects]="subjects()"
         [loadingSubjects]="loadingSubjects()"
@@ -150,7 +163,7 @@
           <div>
             <h3>Coding Questions</h3>
             <p>
-              Discover questions and compare student solutions.
+              Browse coding questions and learn from the code students submitted.
             </p>
           </div>
         </div>
@@ -163,7 +176,7 @@
           (selectQuestion)="openQuestion($event)"
         />
       </section>
-
     </ng-container>
+
   </ng-container>
 </section>
