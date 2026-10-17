@@ -65,9 +65,9 @@ if (solutions.length === 0) {
         message: "Code solution not found."
     });
 }
-console.log('Logged-in user ID:', req.user.id);
-console.log('Solution owner ID:', solutions[0].student_id);
-console.log('Solution ID:', solutionId);
+// console.log('Logged-in user ID:', req.user.id);
+// console.log('Solution owner ID:', solutions[0].student_id);
+// console.log('Solution ID:', solutionId);
 if (Number(solutions[0].student_id) !== Number(req.user.id)) {
     return res.status(403).json({
         message: "You can only highlight code in your own solutions."
