@@ -341,23 +341,32 @@ const getCodePostById = async (req, res) => {
             });
         }
 
-        const [solutions] = await db.query(
-            `SELECT
-                id,
-                solution_title,
-                programming_language,
-                code,
-                algorithm_explanation,
-                time_complexity,
-                space_complexity,
-                version,
-                created_at,
-                updated_at
-             FROM student_code_solutions
-             WHERE post_id = ?
-             ORDER BY created_at ASC`,
-            [postId]
-        );
+        
+
+const [solutions] = await db.query(
+    `SELECT
+        cs.id,
+        cs.student_id,
+        cs.solution_title,
+        cs.programming_language,
+        cs.code,
+        cs.algorithm_explanation,
+        cs.time_complexity,
+        cs.space_complexity,
+        cs.version,
+        cs.created_at,
+        cs.updated_at,
+        CASE
+            WHEN cs.student_id = ? THEN TRUE
+            ELSE FALSE
+        END AS is_owner
+     FROM student_code_solutions cs
+     WHERE cs.post_id = ?
+     ORDER BY cs.created_at ASC, cs.id ASC`,
+    [req.user.id, postId]
+);
+
+
 
         return res.status(200).json({
             ...posts[0],

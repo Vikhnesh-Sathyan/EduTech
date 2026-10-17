@@ -8,6 +8,7 @@ import { CodingService } from '../../../../services/student/coding';
 import { CodingSearchComponent } from './components/coding-search/coding-search';
 import { CodingQuestionListComponent } from './components/coding-question-list/coding-question-list';
 import { CodingQuestionFormComponent } from './components/coding-question-form/coding-question-form';
+import { CodeHighlightComponent } from './components/code-highlight/code-highlight';
 
 @Component({
   selector: 'app-coding',
@@ -16,7 +17,8 @@ import { CodingQuestionFormComponent } from './components/coding-question-form/c
     CommonModule,
     CodingSearchComponent,
     CodingQuestionListComponent,
-    CodingQuestionFormComponent
+    CodingQuestionFormComponent,
+    CodeHighlightComponent
   ],
   templateUrl: './coding.html',
   styleUrl: './coding.css'

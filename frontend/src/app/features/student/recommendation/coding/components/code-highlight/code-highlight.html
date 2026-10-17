@@ -1,0 +1,161 @@
+<section class="code-highlight-section">
+  <p *ngIf="loading()" class="status-message">
+    Loading code highlights...
+  </p>
+
+  <p *ngIf="error()" class="error-message">
+    {{ error() }}
+  </p>
+
+  <div class="code-viewer" *ngIf="!loading()">
+    <div
+      class="code-line"
+      *ngFor="let line of codeLines; let i = index"
+      [class.highlighted-line]="getHighlightForLine(i + 1)"
+    >
+      <span class="line-number">{{ i + 1 }}</span>
+
+      <code class="line-code">{{ line || ' ' }}</code>
+
+      <button
+        *ngIf="getHighlightForLine(i + 1) as highlight"
+        type="button"
+        class="highlight-menu-button"
+        aria-label="View explanation for highlighted code"
+        title="Why is this important?"
+        (click)="openExplanation(highlight)"
+      >
+        ⋯
+      </button>
+
+      <button
+        *ngIf="canEdit && !getHighlightForLine(i + 1)"
+        type="button"
+        class="add-highlight-button"
+        aria-label="Explain this line"
+        title="Highlight this line"
+        (click)="openCreateForm(i + 1)"
+      >
+        +
+      </button>
+    </div>
+  </div>
+
+  <p
+    *ngIf="!loading() && highlights().length === 0 && !canEdit"
+    class="empty-message"
+  >
+    No important lines have been highlighted yet.
+  </p>
+
+  <div class="highlight-overlay" *ngIf="selectedHighlight() as highlight">
+    <div class="highlight-dialog">
+      <div class="dialog-heading">
+        <h3>Why is this important?</h3>
+
+        <button
+          type="button"
+          class="close-button"
+          aria-label="Close explanation"
+          (click)="closeExplanation()"
+        >
+          ×
+        </button>
+      </div>
+
+      <p class="line-reference">
+        Lines {{ highlight.start_line }}–{{ highlight.end_line }}
+      </p>
+
+      <p class="highlight-explanation">
+        {{ highlight.explanation }}
+      </p>
+
+      <div class="dialog-actions" *ngIf="canEdit">
+        <button
+          type="button"
+          class="edit-button"
+          (click)="openEditForm(highlight)"
+        >
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deleteHighlight(highlight)"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-overlay" *ngIf="showForm()">
+    <form class="highlight-dialog" (ngSubmit)="saveHighlight()">
+      <div class="dialog-heading">
+        <h3>
+          {{ editingHighlightId() ? 'Edit Highlight' : 'Explain Important Lines' }}
+        </h3>
+
+        <button
+          type="button"
+          class="close-button"
+          aria-label="Close form"
+          (click)="closeForm()"
+        >
+          ×
+        </button>
+      </div>
+
+      <label for="startLine">Start line</label>
+      <input
+        id="startLine"
+        type="number"
+        min="1"
+        [max]="codeLines.length"
+        [value]="startLine()"
+        (input)="startLine.set(+$any($event.target).value)"
+        required
+      />
+
+      <label for="endLine">End line</label>
+      <input
+        id="endLine"
+        type="number"
+        min="1"
+        [max]="codeLines.length"
+        [value]="endLine()"
+        (input)="endLine.set(+$any($event.target).value)"
+        required
+      />
+
+      <label for="highlightExplanation">
+        Why are these lines important?
+      </label>
+
+      <textarea
+        id="highlightExplanation"
+        rows="4"
+        [value]="explanation()"
+        (input)="explanation.set($any($event.target).value)"
+        placeholder="Explain what this code does and why it matters..."
+        required
+      ></textarea>
+
+      <p *ngIf="error()" class="error-message">
+        {{ error() }}
+      </p>
+
+      <div class="dialog-actions">
+        <button type="button" class="cancel-button" (click)="closeForm()">
+          Cancel
+        </button>
+
+        <button type="submit" class="save-button">
+          Save Highlight
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
