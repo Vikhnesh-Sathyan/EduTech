@@ -25,7 +25,7 @@ export class CodingService {
     return this.http.get(this.apiUrl, { params });
   }
 
-  // Get one question with its existing submitted code
+  // Get one question
   getCodePostById(postId: number) {
     return this.http.get(`${this.apiUrl}/${postId}`);
   }
@@ -42,7 +42,7 @@ export class CodingService {
     return this.http.post(this.apiUrl, question);
   }
 
-  // Save the original code submitted with the question
+  // Save code solution
   createCodeSolution(
     postId: number,
     solution: {
@@ -57,48 +57,82 @@ export class CodingService {
     return this.http.post(`${this.apiUrl}/${postId}/solutions`, solution);
   }
 
-  
-getCodeHighlights(solutionId: number) {
-  return this.http.get(
-    `${this.apiUrl}/solutions/${solutionId}/highlights`
-  );
-}
-
-createCodeHighlight(
-  solutionId: number,
-  highlight: {
-    start_line: number;
-    end_line: number;
-    explanation: string;
-    highlight_color?: string;
+  // Get code highlights
+  getCodeHighlights(solutionId: number) {
+    return this.http.get(
+      `${this.apiUrl}/solutions/${solutionId}/highlights`
+    );
   }
-) {
-  return this.http.post(
-    `${this.apiUrl}/solutions/${solutionId}/highlights`,
-    highlight
-  );
-}
 
-updateCodeHighlight(
-  solutionId: number,
-  highlightId: number,
-  highlight: {
-    start_line: number;
-    end_line: number;
-    explanation: string;
-    highlight_color?: string;
+  // Create code highlight
+  createCodeHighlight(
+    solutionId: number,
+    highlight: {
+      start_line: number;
+      end_line: number;
+      explanation: string;
+      highlight_color?: string;
+    }
+  ) {
+    return this.http.post(
+      `${this.apiUrl}/solutions/${solutionId}/highlights`,
+      highlight
+    );
   }
-) {
-  return this.http.put(
-    `${this.apiUrl}/solutions/${solutionId}/highlights/${highlightId}`,
-    highlight
-  );
-}
 
-deleteCodeHighlight(solutionId: number, highlightId: number) {
-  return this.http.delete(
-    `${this.apiUrl}/solutions/${solutionId}/highlights/${highlightId}`
-  );
-}
+  // Update code highlight
+  updateCodeHighlight(
+    solutionId: number,
+    highlightId: number,
+    highlight: {
+      start_line: number;
+      end_line: number;
+      explanation: string;
+      highlight_color?: string;
+    }
+  ) {
+    return this.http.put(
+      `${this.apiUrl}/solutions/${solutionId}/highlights/${highlightId}`,
+      highlight
+    );
+  }
 
+  // Delete code highlight
+  deleteCodeHighlight(solutionId: number, highlightId: number) {
+    return this.http.delete(
+      `${this.apiUrl}/solutions/${solutionId}/highlights/${highlightId}`
+    );
+  }
+
+  // Generate algorithm steps using Gemini AI
+  generateAlgorithm(solutionId: number) {
+    return this.http.post(
+      `${this.apiUrl}/solutions/${solutionId}/algorithm-generate`,
+      {}
+    );
+  }
+
+  // Save reviewed algorithm steps
+  createAlgorithmSteps(
+    solutionId: number,
+    steps: {
+      step_title: string;
+      step_description: string;
+      step_type: 'start' | 'input' | 'process' | 'condition' | 'output' | 'loop' | 'end';
+      code_line_start: number | null;
+      code_line_end: number | null;
+    }[]
+  ) {
+    return this.http.post(
+      `${this.apiUrl}/solutions/${solutionId}/algorithm-steps`,
+      { steps }
+    );
+  }
+
+  // Get saved algorithm steps
+  getAlgorithmSteps(solutionId: number) {
+    return this.http.get(
+      `${this.apiUrl}/solutions/${solutionId}/algorithm-steps`
+    );
+  }
 }

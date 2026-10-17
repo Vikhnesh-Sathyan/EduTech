@@ -9,7 +9,7 @@ import { CodingSearchComponent } from './components/coding-search/coding-search'
 import { CodingQuestionListComponent } from './components/coding-question-list/coding-question-list';
 import { CodingQuestionFormComponent } from './components/coding-question-form/coding-question-form';
 import { CodeHighlightComponent } from './components/code-highlight/code-highlight';
-
+import { CodeAlgorithmComponent } from './components/code-algorithm/code-algorithm';
 @Component({
   selector: 'app-coding',
   standalone: true,
@@ -18,7 +18,8 @@ import { CodeHighlightComponent } from './components/code-highlight/code-highlig
     CodingSearchComponent,
     CodingQuestionListComponent,
     CodingQuestionFormComponent,
-    CodeHighlightComponent
+    CodeHighlightComponent,
+    CodeAlgorithmComponent
   ],
   templateUrl: './coding.html',
   styleUrl: './coding.css'

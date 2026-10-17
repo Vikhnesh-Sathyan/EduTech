@@ -17,18 +17,32 @@ const {
 } = require("../../../controllers/student/recommendations/codingSolutionController");
 
 // ==========================================
-// CODE HIGHLIGHTS AND ALGORITHM STEPS
+// CODE HIGHLIGHTS
 // ==========================================
 const {
     createCodeHighlight,
     updateCodeHighlight,
     deleteCodeHighlight,
-    createAlgorithmSteps,
     getCodeHighlights,
+   
+} = require("../../../controllers/student/recommendations/codingLearningController");
+
+
+// ==========================================
+//  ALGORITHM STEPS
+// ==========================================
+
+const {
+    
+    createAlgorithmSteps,
     getAlgorithmSteps,
     updateAlgorithmStep,
     deleteAlgorithmStep
-} = require("../../../controllers/student/recommendations/codingLearningController");
+} = require("../../../controllers/student/recommendations/codingAlgorithmController");
+
+const {
+    generateAlgorithm
+} = require("../../../controllers/student/recommendations/codingAlgorithmGeneratorController");
 
 // ==========================================
 // FLOWCHART CONTROLLER
@@ -186,6 +200,12 @@ router.delete(
     "/solutions/:solutionId/algorithm-steps/:stepId",
     authMiddleware,
     deleteAlgorithmStep
+);
+
+router.post(
+    "/solutions/:solutionId/algorithm-generate",
+    authMiddleware,
+    generateAlgorithm
 );
 
 

@@ -1,3 +1,4 @@
+
 <section class="coding-page">
   <header class="coding-header">
     <div>
@@ -26,7 +27,7 @@
     [loadingSubjects]="loadingSubjects()"
     (closed)="closeQuestionForm()"
     (submitQuestion)="createCodeQuestion($event)"
-  />
+  ></app-coding-question-form>
 
   <ng-container *ngIf="!showQuestionForm()">
 
@@ -94,6 +95,7 @@
             *ngFor="let solution of question.solutions"
             class="code-solution-card"
           >
+            <!-- Solution Header -->
             <div class="solution-header">
               <div>
                 <h4>
@@ -107,11 +109,18 @@
             </div>
 
             <!-- Code Highlighting -->
-<app-code-highlight
-  [solutionId]="solution.id"
-  [code]="solution.code || ''"
-  [canEdit]="solution.is_owner == 1"
-></app-code-highlight>
+            <app-code-highlight
+              [solutionId]="solution.id"
+              [code]="solution.code || ''"
+              [canEdit]="solution.is_owner == 1"
+            ></app-code-highlight>
+
+            <!-- Algorithm Generation and Review -->
+            <app-code-algorithm
+              [solutionId]="solution.id"
+            ></app-code-algorithm>
+
+            <!-- Existing Algorithm Explanation -->
             <div
               *ngIf="solution.algorithm_explanation"
               class="solution-explanation"
@@ -159,7 +168,7 @@
         [selectedSubjectId]="selectedSubjectId"
         (selectedSubjectIdChange)="selectedSubjectId = $event"
         (search)="searchCodingQuestions()"
-      />
+      ></app-coding-search>
 
       <section class="coding-results">
         <div class="results-heading">
@@ -177,7 +186,7 @@
           [postsError]="postsError()"
           (retry)="searchCodingQuestions()"
           (selectQuestion)="openQuestion($event)"
-        />
+        ></app-coding-question-list>
       </section>
     </ng-container>
 

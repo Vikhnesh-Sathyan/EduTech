@@ -1,0 +1,86 @@
+
+<section class="algorithm-section">
+  <div class="algorithm-header">
+    <div>
+      <h4>Algorithm Steps</h4>
+      <p>Generate an algorithm from your code, review it, and save it.</p>
+    </div>
+
+    <button
+      type="button"
+      class="algorithm-generate-button"
+      (click)="generateAlgorithm()"
+      [disabled]="generating() || saving() || loading()"
+    >
+      {{ generating() ? 'Generating...' : '✨ Generate Algorithm' }}
+    </button>
+  </div>
+
+  <p *ngIf="loading()" class="algorithm-status">
+    Loading saved algorithm steps...
+  </p>
+
+  <p *ngIf="errorMessage()" class="algorithm-error">
+    {{ errorMessage() }}
+  </p>
+
+  <p *ngIf="successMessage()" class="algorithm-success">
+    {{ successMessage() }}
+  </p>
+
+  <div *ngIf="!loading() && steps().length === 0" class="algorithm-empty">
+    <span>🧠</span>
+    <p>No algorithm steps yet. Generate them from your code to get started.</p>
+  </div>
+
+  <div *ngIf="steps().length > 0" class="algorithm-step-list">
+    <article
+      *ngFor="let step of steps(); let i = index"
+      class="algorithm-step-card"
+    >
+      <div class="algorithm-step-heading">
+        <span class="algorithm-step-number">{{ i + 1 }}</span>
+        <span class="algorithm-step-type">
+          {{ step.step_type | titlecase }}
+        </span>
+      </div>
+
+      <label [for]="'algorithm-title-' + i">Step title</label>
+      <input
+        [id]="'algorithm-title-' + i"
+        type="text"
+        [ngModel]="step.step_title"
+        (ngModelChange)="updateStep(i, 'step_title', $event)"
+        placeholder="Enter step title"
+      />
+
+      <label [for]="'algorithm-description-' + i">Description</label>
+     <textarea
+  [id]="'algorithm-description-' + i"
+  rows="3"
+  [value]="step.step_description"
+  (input)="updateStep(i, 'step_description', $any($event.target).value)"
+  placeholder="Explain this algorithm step"
+></textarea>
+
+      <p
+        *ngIf="step.code_line_start !== null"
+        class="algorithm-code-lines"
+      >
+        Code lines {{ step.code_line_start }}
+        <span *ngIf="step.code_line_end !== null">
+          – {{ step.code_line_end }}
+        </span>
+      </p>
+    </article>
+
+    <button
+      type="button"
+      class="algorithm-save-button"
+      (click)="saveAlgorithm()"
+      [disabled]="saving() || generating()"
+    >
+      {{ saving() ? 'Saving...' : 'Save Algorithm Steps' }}
+    </button>
+  </div>
+</section>
