@@ -20,6 +20,7 @@
     </button>
   </header>
 
+  <!-- Create Question Form -->
   <app-coding-question-form
     *ngIf="showQuestionForm()"
     [subjects]="subjects()"
@@ -30,6 +31,7 @@
 
   <ng-container *ngIf="!showQuestionForm()">
 
+    <!-- Selected Question Details -->
     <section
       *ngIf="selectedQuestion() as question"
       class="coding-results"
@@ -81,6 +83,7 @@
         Posted {{ question.created_at | date:'mediumDate' }}
       </p>
 
+      <!-- Submitted Code -->
       <section class="question-code-section">
         <h3>Submitted Code</h3>
 
@@ -91,6 +94,7 @@
             *ngFor="let solution of question.solutions"
             class="code-solution-card"
           >
+            <!-- Solution Header -->
             <div class="solution-header">
               <div>
                 <h4>
@@ -103,35 +107,133 @@
               </div>
             </div>
 
-            <app-code-highlight
-              [solutionId]="solution.id"
-              [code]="solution.code || ''"
-              [canEdit]="solution.is_owner == 1"
-            ></app-code-highlight>
-
-            <app-code-algorithm
-              [solutionId]="solution.id"
-            ></app-code-algorithm>
-
-            <div class="flowchart-actions">
+            <!-- Learning Workspace Tabs -->
+            <div
+              class="learning-tabs"
+              role="tablist"
+              aria-label="Coding learning features"
+            >
               <button
                 type="button"
-                class="flowchart-toggle-button"
-                (click)="toggleFlowchart(solution.id)"
+                role="tab"
+                id="code-tab-{{ solution.id }}"
+                aria-controls="code-panel-{{ solution.id }}"
+                [attr.aria-selected]="getLearningTab(solution.id) === 'code'"
+                [class.active]="getLearningTab(solution.id) === 'code'"
+                (click)="setLearningTab(solution.id, 'code')"
               >
-                {{
-                  isFlowchartOpen(solution.id)
-                    ? 'Hide Flowchart'
-                    : 'Generate Flowchart'
-                }}
+                Code
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                id="algorithm-tab-{{ solution.id }}"
+                aria-controls="algorithm-panel-{{ solution.id }}"
+                [attr.aria-selected]="getLearningTab(solution.id) === 'algorithm'"
+                [class.active]="getLearningTab(solution.id) === 'algorithm'"
+                (click)="setLearningTab(solution.id, 'algorithm')"
+              >
+                Algorithm
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                id="flowchart-tab-{{ solution.id }}"
+                aria-controls="flowchart-panel-{{ solution.id }}"
+                [attr.aria-selected]="getLearningTab(solution.id) === 'flowchart'"
+                [class.active]="getLearningTab(solution.id) === 'flowchart'"
+                (click)="setLearningTab(solution.id, 'flowchart')"
+              >
+                Flowchart
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                id="animation-tab-{{ solution.id }}"
+                aria-controls="animation-panel-{{ solution.id }}"
+                [attr.aria-selected]="getLearningTab(solution.id) === 'animation'"
+                [class.active]="getLearningTab(solution.id) === 'animation'"
+                (click)="setLearningTab(solution.id, 'animation')"
+              >
+                Animation
               </button>
             </div>
 
-            <app-code-flowchart
-              *ngIf="isFlowchartOpen(solution.id)"
-              [solutionId]="+solution.id"
-            ></app-code-flowchart>
+            <!-- Code Tab -->
+            <div
+              *ngIf="getLearningTab(solution.id) === 'code'"
+              role="tabpanel"
+              id="code-panel-{{ solution.id }}"
+              [attr.aria-labelledby]="'code-tab-' + solution.id"
+              class="learning-tab-panel"
+            >
+              <app-code-highlight
+                [solutionId]="solution.id"
+                [code]="solution.code || ''"
+                [canEdit]="solution.is_owner == 1"
+              ></app-code-highlight>
+            </div>
 
+            <!-- Algorithm Tab -->
+            <div
+              *ngIf="getLearningTab(solution.id) === 'algorithm'"
+              role="tabpanel"
+              id="algorithm-panel-{{ solution.id }}"
+              [attr.aria-labelledby]="'algorithm-tab-' + solution.id"
+              class="learning-tab-panel"
+            >
+              <app-code-algorithm
+                [solutionId]="solution.id"
+              ></app-code-algorithm>
+            </div>
+
+            <!-- Flowchart Tab -->
+            <div
+              *ngIf="getLearningTab(solution.id) === 'flowchart'"
+              role="tabpanel"
+              id="flowchart-panel-{{ solution.id }}"
+              [attr.aria-labelledby]="'flowchart-tab-' + solution.id"
+              class="learning-tab-panel"
+            >
+              <div class="flowchart-actions">
+                <button
+                  type="button"
+                  class="flowchart-toggle-button"
+                  (click)="toggleFlowchart(solution.id)"
+                >
+                  {{
+                    isFlowchartOpen(solution.id)
+                      ? 'Hide Flowchart'
+                      : 'Generate Flowchart'
+                  }}
+                </button>
+              </div>
+
+              <app-code-flowchart
+                *ngIf="isFlowchartOpen(solution.id)"
+                [solutionId]="+solution.id"
+              ></app-code-flowchart>
+            </div>
+
+            <!-- Animation Tab -->
+            <div
+              *ngIf="getLearningTab(solution.id) === 'animation'"
+              role="tabpanel"
+              id="animation-panel-{{ solution.id }}"
+              [attr.aria-labelledby]="'animation-tab-' + solution.id"
+              class="learning-tab-panel"
+            >
+              <app-code-animation
+                [solutionId]="+solution.id"
+                [canEdit]="solution.is_owner == 1"
+                [code]="solution.code || ''">
+              </app-code-animation>
+            </div>
+
+            <!-- Existing Algorithm Explanation -->
             <div
               *ngIf="solution.algorithm_explanation"
               class="solution-explanation"
@@ -150,6 +252,7 @@
       </section>
     </section>
 
+    <!-- Loading Question -->
     <p
       *ngIf="loadingQuestion()"
       class="solutions-loading"
@@ -157,6 +260,7 @@
       Loading question and submitted code...
     </p>
 
+    <!-- Question Details Error -->
     <p
       *ngIf="postsError() && !selectedQuestion() && !loadingQuestion()"
       class="solution-error"
@@ -164,6 +268,7 @@
       {{ postsError() }}
     </p>
 
+    <!-- Question Search and List -->
     <ng-container
       *ngIf="!selectedQuestion() && !loadingQuestion()"
     >

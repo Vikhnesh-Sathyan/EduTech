@@ -11,6 +11,7 @@ import { CodingQuestionFormComponent } from './components/coding-question-form/c
 import { CodeHighlightComponent } from './components/code-highlight/code-highlight';
 import { CodeAlgorithmComponent } from './components/code-algorithm/code-algorithm';
 import { CodeFlowchart } from './components/code-flowchart/code-flowchart';
+import { CodeAnimationComponent } from './components/code-animation/code-animation';
 
 @Component({
   selector: 'app-coding',
@@ -22,7 +23,8 @@ import { CodeFlowchart } from './components/code-flowchart/code-flowchart';
     CodingQuestionFormComponent,
     CodeHighlightComponent,
     CodeAlgorithmComponent,
-    CodeFlowchart
+    CodeFlowchart,  
+    CodeAnimationComponent
   ],
   templateUrl: './coding.html',
   styleUrl: './coding.css'
@@ -38,6 +40,9 @@ export class CodingComponent implements OnInit {
   showQuestionForm = signal(false);
 
   showFlowchartFor = signal<number | null>(null);
+
+  // Track the active learning tab for each solution
+activeLearningTab = signal<Record<number, string>>({});
 
   subjectError = signal('');
   postsError = signal('');
@@ -187,6 +192,7 @@ export class CodingComponent implements OnInit {
 openQuestion(post: any): void {
   this.selectedQuestion.set(null);
   this.showFlowchartFor.set(null);
+  this.activeLearningTab.set({});
   this.loadingQuestion.set(true);
   this.postsError.set('');
 
@@ -203,6 +209,20 @@ openQuestion(post: any): void {
       this.loadingQuestion.set(false);
     }
   });
+}
+
+setLearningTab(
+  solutionId: number | string,
+  tab: string
+): void {
+  this.activeLearningTab.update(current => ({
+    ...current,
+    [Number(solutionId)]: tab
+  }));
+}
+
+getLearningTab(solutionId: number | string): string {
+  return this.activeLearningTab()[Number(solutionId)] || 'code';
 }
 
 }

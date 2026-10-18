@@ -69,6 +69,9 @@ const {
     getCodeAnimationSteps
 } = require("../../../controllers/student/recommendations/codingAnimationController");
 
+const {
+    generateCodeAnimation
+} = require("../../../controllers/student/recommendations/codingAnimationGeneratorController");
 // ==========================================
 // TEST CASE CONTROLLER
 // ==========================================
@@ -231,6 +234,13 @@ router.get(
 // ==========================================
 // CODE ANIMATION ROUTES
 // ==========================================
+
+// Generate animation steps using Gemini.
+router.post(
+    "/solutions/:solutionId/animation-generate",
+    authMiddleware,
+    generateCodeAnimation
+);
 
 // Create animation steps for a solution.
 router.post(

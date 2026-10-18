@@ -1,0 +1,208 @@
+
+<section class="animation-container">
+  <div class="animation-header">
+    <div>
+      <h3>Code Animation</h3>
+      <p>Follow the algorithm one step at a time.</p>
+    </div>
+
+    <span class="step-counter" *ngIf="steps().length > 0 && !isReviewing()">
+      Step {{ currentStepIndex() + 1 }} of {{ steps().length }}
+    </span>
+  </div>
+
+  <div *ngIf="loading()" class="animation-message">
+    Loading animation steps...
+  </div>
+
+  <div *ngIf="generating()" class="animation-message">
+    Gemini is analyzing your code and generating animation steps...
+  </div>
+
+  <div *ngIf="saving()" class="animation-message">
+    Saving animation steps...
+  </div>
+
+  <div *ngIf="error()" class="animation-error">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="success()" class="animation-success">
+    {{ success() }}
+  </div>
+
+  <!-- Generate animation -->
+  <div
+    *ngIf="canEdit && !isReviewing() && !generating() && !loading()"
+    class="animation-actions"
+  >
+    <button type="button" (click)="generateAnimation()">
+      {{ steps().length > 0 ? 'Regenerate Animation' : 'Generate Animation' }}
+    </button>
+  </div>
+
+  <!-- Review generated steps before saving -->
+  <div *ngIf="isReviewing()" class="animation-review">
+    <div class="review-header">
+      <div>
+        <h4>Review Animation Steps</h4>
+        <p>Check the generated steps before saving them.</p>
+      </div>
+
+      <span class="step-counter">
+        {{ generatedSteps().length }} steps
+      </span>
+    </div>
+
+    <div class="review-step-list">
+      <article
+        class="review-step-card"
+        *ngFor="let step of generatedSteps(); let i = index"
+      >
+        <div class="review-step-heading">
+          <span class="step-number">{{ i + 1 }}</span>
+          <span class="action-type">{{ step.action_type }}</span>
+        </div>
+
+        <label [for]="'animation-title-' + i">Step title</label>
+        <input
+          [id]="'animation-title-' + i"
+          type="text"
+          [value]="step.step_title"
+          (input)="updateGeneratedStep(i, 'step_title', $any($event.target).value)"
+        />
+
+        <label [for]="'animation-explanation-' + i">Explanation</label>
+        <textarea
+          [id]="'animation-explanation-' + i"
+          rows="2"
+          [value]="step.explanation"
+          (input)="updateGeneratedStep(i, 'explanation', $any($event.target).value)"
+        ></textarea>
+
+        <p *ngIf="step.code_line != null" class="code-line">
+          Code line: {{ step.code_line }}
+        </p>
+
+        <div
+          *ngIf="step.variable_state && objectKeys(step.variable_state).length > 0"
+          class="variable-state"
+        >
+          <h5>Variable Values</h5>
+
+          <div
+            class="variable-item"
+            *ngFor="let key of objectKeys(step.variable_state)"
+          >
+            <span>{{ key }}</span>
+            <strong>{{ step.variable_state[key] | json }}</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="animation-controls">
+      <button
+        type="button"
+        (click)="cancelReview()"
+        [disabled]="saving()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        (click)="saveAnimation()"
+        [disabled]="saving() || generatedSteps().length === 0"
+      >
+        {{ saving() ? 'Saving...' : 'Save Animation' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Play saved animation -->
+  <div
+    *ngIf="!loading() && !error() && !isReviewing() && steps().length === 0"
+    class="animation-empty"
+  >
+    <h4>No animation steps yet</h4>
+    <p *ngIf="canEdit">
+      Generate animation steps and review them before saving.
+    </p>
+    <p *ngIf="!canEdit">
+      The author has not saved animation steps yet.
+    </p>
+  </div>
+
+  <ng-container *ngIf="!loading() && !error() && !isReviewing() && currentStep() as step">
+    <!-- Original code with active line highlighting -->
+<div class="animation-code-panel" *ngIf="code">
+  <div class="animation-code-header">
+    <h4>Code Execution</h4>
+    <span>Line {{ step.code_line ?? '—' }}</span>
+  </div>
+
+  <div class="animation-code">
+    <div
+      *ngFor="let line of getCodeLines(); let i = index"
+      class="animation-code-line"
+      [class.active-line]="isActiveLine(i + 1)"
+    >
+      <span class="line-number">{{ i + 1 }}</span>
+      <code>{{ line || ' ' }}</code>
+    </div>
+  </div>
+</div>
+    <div class="step-card">
+      <div class="step-number">
+        {{ currentStepIndex() + 1 }}
+      </div>
+
+      <div class="step-content">
+        <span class="action-type">{{ step.action_type }}</span>
+
+        <h4>{{ step.step_title }}</h4>
+        <p>{{ step.explanation }}</p>
+
+        <p *ngIf="step.code_line != null" class="code-line">
+          Code line: {{ step.code_line }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="variable-state"
+      *ngIf="step.variable_state as variables"
+    >
+      <h4>Variable Values</h4>
+
+      <div class="variable-list" *ngIf="objectKeys(variables).length > 0">
+        <div
+          class="variable-item"
+          *ngFor="let key of objectKeys(variables)"
+        >
+          <span>{{ key }}</span>
+          <strong>{{ variables[key] | json }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="animation-controls">
+      <button
+        type="button"
+        (click)="previousStep()"
+        [disabled]="currentStepIndex() === 0"
+      >
+        ← Previous
+      </button>
+
+      <button
+        type="button"
+        (click)="nextStep()"
+        [disabled]="currentStepIndex() === steps().length - 1"
+      >
+        Next →
+      </button>
+    </div>
+  </ng-container>
+</section>

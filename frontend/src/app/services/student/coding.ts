@@ -170,4 +170,45 @@ export class CodingService {
       flowchart
     );
   }
+
+  
+  // Get saved code animation steps
+  getCodeAnimationSteps(solutionId: number) {
+    return this.http.get(
+      `${this.apiUrl}/solutions/${solutionId}/animation-steps`
+    );
+  }
+
+  // Save code animation steps
+  createCodeAnimationSteps(
+    solutionId: number,
+    steps: {
+      step_title: string;
+      explanation: string;
+      code_line: number | null;
+      variable_state: Record<string, any> | null;
+      action_type:
+        | 'initialize'
+        | 'input'
+        | 'assignment'
+        | 'comparison'
+        | 'loop'
+        | 'output'
+        | 'complete';
+    }[]
+  ) {
+    return this.http.post(
+      `${this.apiUrl}/solutions/${solutionId}/animation-steps`,
+      { steps }
+    );
+  }
+
+  // Generate code animation steps using Gemini
+  generateCodeAnimationSteps(solutionId: number) {
+    return this.http.post(
+      `${this.apiUrl}/solutions/${solutionId}/animation-generate`,
+      {}
+    );
+  }
+
 }

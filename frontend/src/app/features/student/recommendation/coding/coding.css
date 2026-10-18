@@ -334,3 +334,237 @@
 .flowchart-toggle-button:active {
   transform: translateY(0);
 }
+
+
+
+/* ==========================================
+   PREMIUM CODING LEARNING WORKSPACE
+========================================== */
+
+.code-solution-card {
+  overflow: hidden;
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #e7eaf0;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow:
+    0 2px 5px rgba(15, 23, 42, 0.025),
+    0 12px 32px rgba(15, 23, 42, 0.035);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.code-solution-card:hover {
+  border-color: #d8e0ed;
+  box-shadow:
+    0 4px 8px rgba(15, 23, 42, 0.025),
+    0 16px 36px rgba(15, 23, 42, 0.055);
+}
+
+.solution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.solution-header h4 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.solution-language {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid #e0e7ff;
+  border-radius: 7px;
+  background: #f5f7ff;
+  color: #4f46a5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Learning tabs */
+.learning-tabs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 22px;
+  padding: 5px;
+  overflow-x: auto;
+  border: 1px solid #e9edf4;
+  border-radius: 12px;
+  background: #f7f8fb;
+  scrollbar-width: thin;
+}
+
+.learning-tabs button {
+  position: relative;
+  flex: 1 0 auto;
+  min-width: 90px;
+  padding: 11px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #697386;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.learning-tabs button:hover {
+  background: #ffffff;
+  color: #27344a;
+}
+
+.learning-tabs button.active {
+  border-color: #e5e9f3;
+  background: #ffffff;
+  color: #315be8;
+  box-shadow: 0 2px 5px rgba(20, 35, 70, 0.06);
+}
+
+.learning-tabs button:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.25);
+  outline-offset: 2px;
+}
+
+/* Selected tab content */
+.learning-tab-panel {
+  min-width: 0;
+  padding: 2px 0;
+  animation: learning-panel-enter 0.2s ease-out;
+}
+
+@keyframes learning-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Flowchart action */
+.flowchart-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 18px;
+}
+
+.flowchart-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid #dbe4ff;
+  border-radius: 9px;
+  background: #f4f7ff;
+  color: #315be8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.flowchart-toggle-button:hover {
+  border-color: #b9caff;
+  background: #eaf0ff;
+}
+
+.flowchart-toggle-button:active {
+  transform: translateY(1px);
+}
+
+/* Existing explanation */
+.solution-explanation {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid #e7eaf0;
+  border-radius: 12px;
+  background: #fafbfe;
+}
+
+.solution-explanation h4 {
+  margin: 0 0 8px;
+  color: #27344a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.solution-explanation p {
+  margin: 0;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+/* Responsive workspace */
+@media (max-width: 640px) {
+  .code-solution-card {
+    margin-top: 18px;
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .solution-header {
+    margin-bottom: 17px;
+  }
+
+  .solution-header h4 {
+    font-size: 17px;
+  }
+
+  .learning-tabs {
+    gap: 3px;
+    margin-right: -2px;
+    margin-bottom: 17px;
+    padding: 4px;
+    border-radius: 10px;
+  }
+
+  .learning-tabs button {
+    min-width: 82px;
+    padding: 10px 13px;
+    font-size: 12px;
+  }
+
+  .solution-explanation {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learning-tab-panel {
+    animation: none;
+  }
+
+  .code-solution-card,
+  .learning-tabs button,
+  .flowchart-toggle-button {
+    transition: none;
+  }
+}
