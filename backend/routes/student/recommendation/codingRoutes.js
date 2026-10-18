@@ -118,13 +118,15 @@ router.get("/", authMiddleware, getAllCodePosts);
 // Create a new coding question.
 router.post("/", authMiddleware, createCodePost);
 
-// Get the student's bookmarked coding questions.
-// Keep this before the generic "/:id" route.
+// Get my bookmarked coding questions.
+// Keep this before the generic question ID route.
+router.get("/bookmarks", authMiddleware, getMyCodeBookmarks);
+
+// Get the student's bookmarked coding questions (legacy URL).
 router.get("/my-bookmarks", authMiddleware, getMyCodeBookmarks);
 
 // Get a specific coding question by ID.
 router.get("/:id", authMiddleware, getCodePostById);
-
 
 // ==========================================
 // CODING SOLUTION ROUTES

@@ -1,0 +1,137 @@
+<section class="bookmarks-page">
+  <!-- Page Header -->
+  <header class="bookmarks-header">
+    <div class="header-content">
+      <span class="bookmarks-eyebrow">YOUR PERSONAL COLLECTION</span>
+      <h2>My Bookmarks</h2>
+      <p>
+        Your saved coding questions, all in one place.
+        Pick up where you left off and keep practising.
+      </p>
+    </div>
+
+    <div class="bookmark-summary">
+      <span class="summary-star">★</span>
+      <div>
+        <strong>{{ bookmarkedQuestions().length }}</strong>
+        <span>Saved questions</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Back Button -->
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBackToCoding()"
+  >
+    <span aria-hidden="true">←</span>
+    Back to Coding Hub
+  </button>
+
+  <!-- Loading -->
+  <div *ngIf="loadingBookmarks()" class="bookmarks-state">
+    <span class="loading-spinner"></span>
+    <p>Loading your saved questions...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loadingBookmarks() && bookmarksError()" class="bookmarks-state error-state">
+    <p>{{ bookmarksError() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadMyCodeBookmarks()"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <!-- Saved Questions -->
+  <ng-container *ngIf="!loadingBookmarks() && !bookmarksError()">
+    <div
+      class="bookmarks-grid"
+      *ngIf="bookmarkedQuestions().length > 0; else emptyBookmarks"
+    >
+      <article
+        class="saved-question-card"
+        *ngFor="let question of bookmarkedQuestions()"
+      >
+        <div class="saved-card-top">
+          <span class="saved-label">
+            <span aria-hidden="true">★</span>
+            Saved question
+          </span>
+
+          <button
+            type="button"
+            class="remove-bookmark-button"
+            (click)="removeBookmark(question)"
+            [attr.aria-label]="'Remove bookmark for ' + question.title"
+            title="Remove bookmark"
+          >
+            ★
+          </button>
+        </div>
+
+        <h3>{{ question.title }}</h3>
+
+        <p class="question-description">
+          {{ question.problem_statement || question.description || 'No description available.' }}
+        </p>
+
+        <div class="saved-question-meta">
+          <span *ngIf="question.subject_name">
+            {{ question.subject_name }}
+          </span>
+
+          <span
+            *ngIf="question.difficulty"
+            class="difficulty-tag"
+            [ngClass]="'difficulty-' + question.difficulty.toLowerCase()"
+          >
+            {{ question.difficulty | titlecase }}
+          </span>
+        </div>
+
+        <div class="saved-card-footer">
+          <span class="solution-count">
+            {{ question.solution_count || 0 }}
+            {{ question.solution_count === 1 ? 'solution' : 'solutions' }}
+          </span>
+
+          <button
+            type="button"
+            class="practise-button"
+            (click)="openQuestion(question)"
+          >
+            Practise question
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #emptyBookmarks>
+      <div class="empty-bookmarks">
+        <div class="empty-star">☆</div>
+        <h3>No bookmarks yet</h3>
+        <p>
+          When you find a coding question worth revisiting,
+          tap its star and it will appear here.
+        </p>
+
+        <button
+          type="button"
+          class="practise-button"
+          (click)="goBackToCoding()"
+        >
+          Explore coding questions
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </ng-template>
+  </ng-container>
+</section>

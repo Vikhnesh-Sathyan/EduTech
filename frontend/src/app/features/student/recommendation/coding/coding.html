@@ -18,6 +18,18 @@
     >
       + Create Question
     </button>
+
+    
+<button
+  *ngIf="!showQuestionForm() && !selectedQuestion()"
+  type="button"
+  class="bookmarks-nav-button"
+  (click)="openBookmarksPage()"
+>
+  <span aria-hidden="true">★</span>
+  My Bookmarks
+</button>
+
   </header>
 
   <!-- Create Question Form -->
@@ -53,18 +65,20 @@
     </p>
   </div>
 
-  <button
-    type="button"
-    class="bookmark-button"
-    [class.bookmarked]="isBookmarked(question.id)"
-    [disabled]="bookmarkingPostIds().includes(+question.id)"
-    (click)="toggleBookmark(question.id)"
-  >
-    <span aria-hidden="true">
-      {{ isBookmarked(question.id) ? '★' : '☆' }}
-    </span>
-    {{ isBookmarked(question.id) ? 'Bookmarked' : 'Bookmark' }}
-  </button>
+<button
+  type="button"
+  class="bookmark-button"
+  [class.bookmarked]="isBookmarked(question.id)"
+  [disabled]="bookmarkingPostIds().includes(+question.id)"
+  (click)="toggleBookmark(question.id)"
+  [attr.aria-label]="isBookmarked(question.id) ? 'Remove bookmark' : 'Add bookmark'"
+  [attr.title]="isBookmarked(question.id) ? 'Remove bookmark' : 'Add bookmark'"
+>
+  <span aria-hidden="true">
+    {{ isBookmarked(question.id) ? '★' : '☆' }}
+  </span>
+</button>
+
 </div>
 
 

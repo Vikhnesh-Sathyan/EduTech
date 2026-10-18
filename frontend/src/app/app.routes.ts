@@ -47,7 +47,8 @@ import { StudentChatComponent } from './features/chat/student-chat/student-chat'
 // Student recommendations and learning resources
 import { ResourcesComponent } from './features/student/recommendation/resources/resources';
 import { RecommendationComponent } from './features/student/recommendation/recommendation';
-
+import { CodingComponent } from './features/student/recommendation/coding/coding';
+import { CodingBookmarks } from './features/student/recommendation/coding/components/coding-bookmarks/coding-bookmarks';
 
 // Student project learning
 import {
@@ -146,6 +147,14 @@ export const routes: Routes = [
       {
         path: 'student-recommendation',
         component: RecommendationComponent
+      },
+      {
+        path: 'student/recommendation/coding',
+        component: CodingComponent
+      },
+      {
+        path: 'student/recommendation/coding-bookmarks',
+        component: CodingBookmarks
       },
       {
         path: 'learning-resources',

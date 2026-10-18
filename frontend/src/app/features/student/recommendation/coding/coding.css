@@ -569,59 +569,129 @@
   }
 }
 
-
 /* ==========================================
-   BOOKMARK BUTTON
+   PREMIUM STAR-ONLY BOOKMARK
 ========================================== */
 
+.results-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.results-heading > div {
+  flex: 1;
+  min-width: 0;
+}
+
 .bookmark-button {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid #dbe3ef;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  margin-top: 4px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   background: #ffffff;
-  color: #334155;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease, transform 0.2s ease;
-}
-
-.bookmark-button span {
-  font-size: 18px;
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 25px;
   line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease,
+              transform 0.2s ease;
 }
 
 .bookmark-button:hover:not(:disabled) {
-  border-color: #93c5fd;
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #f59e0b;
+  transform: translateY(-2px);
 }
 
 .bookmark-button.bookmarked {
-  border-color: #bfdbfe;
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #f59e0b;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
 }
 
 .bookmark-button:disabled {
   cursor: wait;
-  opacity: 0.65;
+  opacity: 0.6;
 }
 
 .bookmark-button:focus-visible {
-  outline: 3px solid #93c5fd;
+  outline: 3px solid rgba(245, 158, 11, 0.3);
   outline-offset: 3px;
 }
 
 @media (max-width: 480px) {
   .bookmark-button {
-    padding: 8px 12px;
+    width: 38px;
+    height: 38px;
+    font-size: 23px;
+  }
+}
+
+
+/* ==========================================
+   PREMIUM MY BOOKMARKS SECTION
+========================================== */
+
+.bookmarks-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border: 1px solid #b88625;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #292315, #3b2f17);
+  color: #fcd34d;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 5px 16px rgba(217, 160, 35, 0.12);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.bookmarks-nav-button span {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.bookmarks-nav-button:hover {
+  transform: translateY(-2px);
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, #3b2f17, #51401b);
+  box-shadow: 0 8px 22px rgba(217, 160, 35, 0.2);
+}
+
+.bookmarks-nav-button:active {
+  transform: translateY(0);
+}
+
+.bookmarks-nav-button:focus-visible {
+  outline: 2px solid #fcd34d;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .bookmarks-nav-button {
+    padding: 10px 13px;
     font-size: 12px;
   }
 }

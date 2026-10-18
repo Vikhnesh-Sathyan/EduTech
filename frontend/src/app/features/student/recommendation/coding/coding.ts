@@ -1,9 +1,13 @@
 
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 import { Study as StudyService } from '../../../../services/student/study';
 import { CodingService } from '../../../../services/student/coding';
+
+import { Router } from '@angular/router';
 
 import { CodingSearchComponent } from './components/coding-search/coding-search';
 import { CodingQuestionListComponent } from './components/coding-question-list/coding-question-list';
@@ -36,7 +40,6 @@ export class CodingComponent implements OnInit {
 
   // Bookmark state
   bookmarkedPostIds = signal<number[]>([]);
-  loadingBookmarks = signal(false);
   bookmarkingPostIds = signal<number[]>([]);
 
   loadingSubjects = signal(true);
@@ -57,13 +60,23 @@ activeLearningTab = signal<Record<number, string>>({});
 
   constructor(
     private studyService: StudyService,
-    private codingService: CodingService
+    private codingService: CodingService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
  ngOnInit(): void {
   this.loadSubjects();
   this.searchCodingQuestions();
   this.loadMyCodeBookmarks();
+
+  this.route.queryParamMap.pipe(take(1)).subscribe(params => {
+    const questionId = Number(params.get('questionId'));
+
+    if (Number.isInteger(questionId) && questionId > 0) {
+      this.openQuestion({ id: questionId });
+    }
+  });
 }
 
   loadSubjects(): void {
@@ -203,10 +216,14 @@ openQuestion(post: any): void {
   this.postsError.set('');
 
   this.codingService.getCodePostById(Number(post.id)).subscribe({
-    next: (response: any) => {
-      this.selectedQuestion.set(response);
-      this.loadingQuestion.set(false);
-    },
+  next: (response: any) => {
+  console.log('Selected question details:', response);
+  console.log('Question ID:', response.id);
+  console.log('Post ID:', response.post_id);
+
+  this.selectedQuestion.set(response);
+  this.loadingQuestion.set(false);
+},
     error: (error: any) => {
       console.error('Failed to load coding question details:', error);
       this.postsError.set(
@@ -230,28 +247,22 @@ setLearningTab(
 getLearningTab(solutionId: number | string): string {
   return this.activeLearningTab()[Number(solutionId)] || 'code';
 }
-
 // Load my bookmarked coding questions
 loadMyCodeBookmarks(): void {
-  this.loadingBookmarks.set(true);
-
   this.codingService.getMyCodeBookmarks().subscribe({
-  next: (response: any) => {
-  console.log('Bookmarks API response:', response);
+    next: (response: any) => {
+      console.log('Bookmarks API response:', response);
 
-  const bookmarks = response.bookmarks || [];
+      const bookmarks = response.bookmarks || [];
 
-  this.bookmarkedPostIds.set(
-    bookmarks.map((bookmark: any) => Number(bookmark.post_id))
-  );
+      this.bookmarkedPostIds.set(
+        bookmarks.map((bookmark: any) => Number(bookmark.post_id))
+      );
 
-  console.log('Loaded bookmarked IDs:', this.bookmarkedPostIds());
-
-  this.loadingBookmarks.set(false);
-},
+      console.log('Loaded bookmarked IDs:', this.bookmarkedPostIds());
+    },
     error: (error: any) => {
       console.error('Failed to load bookmarks:', error);
-      this.loadingBookmarks.set(false);
     }
   });
 }
@@ -290,6 +301,7 @@ toggleBookmark(postId: number | string): void {
       this.bookmarkingPostIds.update(ids =>
         ids.filter(bookmarkId => bookmarkId !== id)
       );
+      this.loadMyCodeBookmarks();
     },
     error: (error: any) => {
       console.error('Failed to update bookmark:', error);
@@ -299,5 +311,9 @@ toggleBookmark(postId: number | string): void {
       );
     }
   });
+}
+
+openBookmarksPage(): void {
+  this.router.navigate(['/student/recommendation/coding-bookmarks']);
 }
 }
