@@ -226,4 +226,19 @@ export class CodingService {
     return this.http.delete(`${this.apiUrl}/${postId}/bookmark`);
   }
 
+    // Vote on a coding question
+  voteCodePost(
+    postId: number,
+    voteType: 'helpful' | 'not_helpful'
+  ) {
+    return this.http.post(`${this.apiUrl}/${postId}/vote`, {
+      vote_type: voteType
+    });
+  }
+
+  // Get coding question vote counts and my vote
+  getCodePostVotes(postId: number) {
+    return this.http.get(`${this.apiUrl}/${postId}/votes`);
+  }
+
 }

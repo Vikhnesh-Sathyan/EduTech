@@ -42,6 +42,10 @@ export class CodingComponent implements OnInit {
   bookmarkedPostIds = signal<number[]>([]);
   bookmarkingPostIds = signal<number[]>([]);
 
+  // Voting state
+  voteCounts = signal<any | null>(null);
+  submittingVote = signal(false);
+
   loadingSubjects = signal(true);
   loadingPosts = signal(false);
   loadingQuestion = signal(false);
@@ -222,6 +226,7 @@ openQuestion(post: any): void {
   console.log('Post ID:', response.post_id);
 
   this.selectedQuestion.set(response);
+  this.loadCodePostVotes(Number(response.id ?? response.post_id));
   this.loadingQuestion.set(false);
 },
     error: (error: any) => {
@@ -309,6 +314,58 @@ toggleBookmark(postId: number | string): void {
       this.bookmarkingPostIds.update(ids =>
         ids.filter(bookmarkId => bookmarkId !== id)
       );
+    }
+  });
+}
+// Load vote counts for a coding question
+loadCodePostVotes(postId: number): void {
+  this.voteCounts.set(null);
+
+  this.codingService.getCodePostVotes(postId).subscribe({
+    next: (response: any) => {
+      this.voteCounts.set(response);
+    },
+    error: (error: any) => {
+      console.error('Failed to load coding question votes:', error);
+      this.voteCounts.set(null);
+    }
+  });
+}
+
+// Submit or update my vote
+
+voteOnCodePost(voteType: 'helpful' | 'not_helpful'): void {
+  const postId = Number(
+    this.selectedQuestion()?.id ?? this.selectedQuestion()?.post_id
+  );
+
+  if (
+    !Number.isInteger(postId) ||
+    postId <= 0 ||
+    this.submittingVote()
+  ) {
+    return;
+  }
+
+  this.submittingVote.set(true);
+
+  this.codingService.voteCodePost(postId, voteType).subscribe({
+    next: () => {
+      this.codingService.getCodePostVotes(postId).subscribe({
+        next: (response: any) => {
+          this.voteCounts.set(response);
+          this.submittingVote.set(false);
+        },
+        error: (error: any) => {
+          console.error('Failed to refresh coding question votes:', error);
+          this.voteCounts.set(null);
+          this.submittingVote.set(false);
+        }
+      });
+    },
+    error: (error: any) => {
+      console.error('Failed to submit vote:', error);
+      this.submittingVote.set(false);
     }
   });
 }

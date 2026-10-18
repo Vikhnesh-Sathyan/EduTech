@@ -72,13 +72,6 @@ const {
 const {
     generateCodeAnimation
 } = require("../../../controllers/student/recommendations/codingAnimationGeneratorController");
-// ==========================================
-// TEST CASE CONTROLLER
-// ==========================================
-const {
-    createCodeTestCases,
-    getCodeTestCases
-} = require("../../../controllers/student/recommendations/codingTestCaseController");
 
 // ==========================================
 // BOOKMARK CONTROLLER
@@ -96,17 +89,6 @@ const {
     voteCodePost,
     getCodePostVotes
 } = require("../../../controllers/student/recommendations/codingVoteController");
-
-// ==========================================
-// COMMENT CONTROLLER
-// ==========================================
-const {
-    createCodeComment,
-    getCodeComments,
-    updateCodeComment,
-    deleteCodeComment
-} = require("../../../controllers/student/recommendations/codingCommentController");
-
 
 // ==========================================
 // CODING QUESTION ROUTES
@@ -260,30 +242,8 @@ router.get(
 
 
 // ==========================================
-// TEST CASE ROUTES
-// ==========================================
-
-// Add test cases to a solution.
-router.post(
-    "/solutions/:solutionId/test-cases",
-    authMiddleware,
-    createCodeTestCases
-);
-
-// Get test cases for a solution.
-router.get(
-    "/solutions/:solutionId/test-cases",
-    authMiddleware,
-    getCodeTestCases
-);
-
-
-// ==========================================
 // BOOKMARK ROUTES
 // ==========================================
-
-// Get my bookmarked coding questions.
-router.get("/bookmarks", authMiddleware, getMyCodeBookmarks);
 
 // Bookmark a coding question.
 router.post("/:postId/bookmark", authMiddleware, bookmarkCodePost);
@@ -301,30 +261,6 @@ router.post("/:postId/vote", authMiddleware, voteCodePost);
 // Get vote counts for a coding question.
 router.get("/:postId/votes", authMiddleware, getCodePostVotes);
 
-
-// ==========================================
-// COMMENT AND REPLY ROUTES
-// ==========================================
-
-// Add a comment or reply.
-router.post("/:postId/comments", authMiddleware, createCodeComment);
-
-// Get comments and replies for a coding question.
-router.get("/:postId/comments", authMiddleware, getCodeComments);
-
-// Edit your own comment or reply.
-router.put(
-    "/:postId/comments/:commentId",
-    authMiddleware,
-    updateCodeComment
-);
-
-// Delete your own comment or reply.
-router.delete(
-    "/:postId/comments/:commentId",
-    authMiddleware,
-    deleteCodeComment
-);
 
 
 // ==========================================

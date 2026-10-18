@@ -43,26 +43,42 @@ if (!Number.isInteger(postId) || postId <= 0) {
             });
         }
 
-        const [existingVotes] = await db.query(
-            `SELECT id
-             FROM student_code_votes
-             WHERE student_id = ? AND post_id = ?`,
-            [req.user.id, postId]
+const [existingVotes] = await db.query(
+    `SELECT id, vote_type
+     FROM student_code_votes
+     WHERE student_id = ? AND post_id = ?`,
+    [req.user.id, postId]
+);
+
+if (existingVotes.length > 0) {
+    const existingVote = existingVotes[0];
+
+    if (existingVote.vote_type === vote_type) {
+        await db.query(
+            `DELETE FROM student_code_votes WHERE id = ?`,
+            [existingVote.id]
         );
 
-        if (existingVotes.length > 0) {
-            await db.query(
-                `UPDATE student_code_votes
-                 SET vote_type = ?
-                 WHERE student_id = ? AND post_id = ?`,
-                [vote_type, req.user.id, postId]
-            );
+        return res.status(200).json({
+            message: "Your vote has been removed.",
+            vote_type: null
+        });
+    }
 
-            return res.status(200).json({
-                message: "Your vote has been updated.",
-                vote_type
-            });
-        }
+    await db.query(
+        `UPDATE student_code_votes
+         SET vote_type = ?
+         WHERE id = ?`,
+        [vote_type, existingVote.id]
+    );
+
+    return res.status(200).json({
+        message: "Your vote has been updated.",
+        vote_type
+    });
+}
+
+
 
         await db.query(
             `INSERT INTO student_code_votes

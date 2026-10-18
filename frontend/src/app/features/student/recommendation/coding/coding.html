@@ -111,7 +111,34 @@
       >
         Posted {{ question.created_at | date:'mediumDate' }}
       </p>
+      <!-- Coding Question Voting -->
+<section class="coding-voting">
+  <p class="voting-title">Was this coding question helpful?</p>
 
+  <div class="voting-actions">
+    <button
+      type="button"
+      class="vote-button helpful-button"
+      [class.selected]="voteCounts()?.my_vote === 'helpful'"
+      [disabled]="submittingVote() || !voteCounts()"
+      (click)="voteOnCodePost('helpful')"
+    >
+      👍 Helpful
+      <span>{{ voteCounts()?.helpful_count ?? 0 }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="vote-button not-helpful-button"
+      [class.selected]="voteCounts()?.my_vote === 'not_helpful'"
+      [disabled]="submittingVote() || !voteCounts()"
+      (click)="voteOnCodePost('not_helpful')"
+    >
+      👎 Not helpful
+      <span>{{ voteCounts()?.not_helpful_count ?? 0 }}</span>
+    </button>
+  </div>
+</section>
       <!-- Submitted Code -->
       <section class="question-code-section">
         <h3>Submitted Code</h3>
