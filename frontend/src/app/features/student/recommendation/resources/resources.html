@@ -1,14 +1,11 @@
-<section class="resources-page">
+
+<section class="resources-page" *ngIf="!selectedResource()">
 
   <header class="page-header">
     <div class="page-heading">
       <span class="eyebrow">STUDENT LEARNING</span>
-
       <h1>Learning Resources</h1>
-
-      <p>
-        Discover notes, PDFs, videos, and study tips shared by students.
-      </p>
+      <p>Discover notes, PDFs, videos, and study tips shared by students.</p>
     </div>
 
     <div class="header-actions">
@@ -25,36 +22,20 @@
         class="primary-button"
         (click)="toggleSubmitForm()"
       >
-        {{
-          showSubmitForm()
-            ? 'Cancel Submission'
-            : '+ Share Resource'
-        }}
+        {{ showSubmitForm() ? 'Cancel Submission' : '+ Share Resource' }}
       </button>
     </div>
   </header>
 
-  <!-- Success message -->
-  <div
-    *ngIf="successMessage()"
-    class="page-message success-message"
-    role="status"
-  >
+  <div *ngIf="successMessage()" class="page-message success-message" role="status">
     {{ successMessage() }}
   </div>
 
-  <!-- Error message -->
-  <div
-    *ngIf="errorMessage()"
-    class="page-message error-message"
-    role="alert"
-  >
+  <div *ngIf="errorMessage()" class="page-message error-message" role="alert">
     {{ errorMessage() }}
   </div>
 
-  <!-- Resource submission form -->
   <section *ngIf="showSubmitForm()" class="submit-section">
-
     <app-resource-form
       (formSubmit)="submitResource($event)"
       (formCancel)="cancelResourceForm()"
@@ -63,18 +44,12 @@
     <p *ngIf="submitting()" class="submitting-message">
       Submitting your resource...
     </p>
-
   </section>
 
-  <!-- Personal submissions -->
-  <section
-    *ngIf="showMyResources()"
-    class="my-resources-section"
-  >
+  <section *ngIf="showMyResources()" class="my-resources-section">
     <app-my-resources></app-my-resources>
   </section>
 
-  <!-- Browse approved resources -->
   <section *ngIf="!showSubmitForm()" class="browse-section">
 
     <app-resource-filters
@@ -84,41 +59,26 @@
       (resourceTypeChange)="onResourceTypeChange($event)"
     ></app-resource-filters>
 
-    <!-- Loading state -->
     <div *ngIf="loading()" class="state-message">
       <span class="loader"></span>
       <p>Loading learning resources...</p>
     </div>
 
-    <!-- Error state -->
     <div
-      *ngIf="
-        !loading() &&
-        errorMessage() &&
-        resources().length === 0
-      "
+      *ngIf="!loading() && errorMessage() && resources().length === 0"
       class="state-message error-state"
     >
       <h3>Unable to load resources</h3>
-
       <p>Please check your connection and try again.</p>
-
-      <button
-        type="button"
-        (click)="loadResources()"
-      >
-        Try again
-      </button>
+      <button type="button" (click)="loadResources()">Try again</button>
     </div>
 
-    <!-- Resource list -->
     <div
       *ngIf="!loading() && !errorMessage()"
       class="resource-content"
     >
       <div class="results-heading">
         <h2>Available Resources</h2>
-
         <span class="results-count">
           {{ resources().length }} resources
         </span>
@@ -126,9 +86,16 @@
 
       <app-resource-list
         [resources]="resources()"
+        (resourceSelected)="openResource($event)"
       ></app-resource-list>
     </div>
 
   </section>
-
 </section>
+
+<!-- Dedicated resource details view -->
+<app-resource-details
+  *ngIf="selectedResource() as resource"
+  [resource]="resource"
+  (back)="selectedResource.set(null)"
+></app-resource-details>

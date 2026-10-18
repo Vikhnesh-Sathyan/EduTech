@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core';
+
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Resource } from '../../../../../../services/student/resource.service';
@@ -12,8 +13,11 @@ import { Resource } from '../../../../../../services/student/resource.service';
 })
 export class ResourceCardComponent {
 
-  // Signal input: receives the resource from the parent component.
+  // Receive the resource from the parent component.
   resource = input.required<Resource>();
+
+  // Emit the selected resource when the card is clicked.
+  resourceClicked = output<Resource>();
 
   // Return the readable label for the resource type.
   getResourceLabel(): string {

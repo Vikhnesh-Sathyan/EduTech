@@ -30,9 +30,14 @@ import { CodeAnimationComponent } from './components/code-animation/code-animati
   styleUrl: './coding.css'
 })
 export class CodingComponent implements OnInit {
-  subjects = signal<any[]>([]);
-  codePosts = signal<any[]>([]);
-  selectedQuestion = signal<any | null>(null);
+ subjects = signal<any[]>([]);
+ codePosts = signal<any[]>([]);
+ selectedQuestion = signal<any | null>(null);
+
+  // Bookmark state
+  bookmarkedPostIds = signal<number[]>([]);
+  loadingBookmarks = signal(false);
+  bookmarkingPostIds = signal<number[]>([]);
 
   loadingSubjects = signal(true);
   loadingPosts = signal(false);
@@ -55,10 +60,11 @@ activeLearningTab = signal<Record<number, string>>({});
     private codingService: CodingService
   ) {}
 
-  ngOnInit(): void {
-    this.loadSubjects();
-    this.searchCodingQuestions();
-  }
+ ngOnInit(): void {
+  this.loadSubjects();
+  this.searchCodingQuestions();
+  this.loadMyCodeBookmarks();
+}
 
   loadSubjects(): void {
     this.studyService.getSubjects().subscribe({
@@ -225,4 +231,73 @@ getLearningTab(solutionId: number | string): string {
   return this.activeLearningTab()[Number(solutionId)] || 'code';
 }
 
+// Load my bookmarked coding questions
+loadMyCodeBookmarks(): void {
+  this.loadingBookmarks.set(true);
+
+  this.codingService.getMyCodeBookmarks().subscribe({
+  next: (response: any) => {
+  console.log('Bookmarks API response:', response);
+
+  const bookmarks = response.bookmarks || [];
+
+  this.bookmarkedPostIds.set(
+    bookmarks.map((bookmark: any) => Number(bookmark.post_id))
+  );
+
+  console.log('Loaded bookmarked IDs:', this.bookmarkedPostIds());
+
+  this.loadingBookmarks.set(false);
+},
+    error: (error: any) => {
+      console.error('Failed to load bookmarks:', error);
+      this.loadingBookmarks.set(false);
+    }
+  });
+}
+
+// Check whether a question is bookmarked
+isBookmarked(postId: number | string): boolean {
+  return this.bookmarkedPostIds().includes(Number(postId));
+}
+
+// Add or remove a bookmark
+toggleBookmark(postId: number | string): void {
+  const id = Number(postId);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return;
+  }
+
+  if (this.bookmarkingPostIds().includes(id)) {
+    return;
+  }
+
+  this.bookmarkingPostIds.update(ids => [...ids, id]);
+
+  const request = this.isBookmarked(id)
+    ? this.codingService.removeCodeBookmark(id)
+    : this.codingService.bookmarkCodePost(id);
+
+  request.subscribe({
+    next: () => {
+      this.bookmarkedPostIds.update(ids =>
+        ids.includes(id)
+          ? ids.filter(bookmarkId => bookmarkId !== id)
+          : [...ids, id]
+      );
+
+      this.bookmarkingPostIds.update(ids =>
+        ids.filter(bookmarkId => bookmarkId !== id)
+      );
+    },
+    error: (error: any) => {
+      console.error('Failed to update bookmark:', error);
+
+      this.bookmarkingPostIds.update(ids =>
+        ids.filter(bookmarkId => bookmarkId !== id)
+      );
+    }
+  });
+}
 }

@@ -211,4 +211,19 @@ export class CodingService {
     );
   }
 
+    // Get my bookmarked coding questions
+  getMyCodeBookmarks() {
+    return this.http.get(`${this.apiUrl}/bookmarks`);
+  }
+
+  // Bookmark a coding question
+  bookmarkCodePost(postId: number) {
+    return this.http.post(`${this.apiUrl}/${postId}/bookmark`, {});
+  }
+
+  // Remove a bookmark from a coding question
+  removeCodeBookmark(postId: number) {
+    return this.http.delete(`${this.apiUrl}/${postId}/bookmark`);
+  }
+
 }

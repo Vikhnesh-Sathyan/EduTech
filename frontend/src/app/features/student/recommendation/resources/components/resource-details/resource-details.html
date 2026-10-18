@@ -1,0 +1,63 @@
+
+<section class="resource-details-page">
+
+  <header class="details-header">
+    <button
+      type="button"
+      class="back-button"
+      (click)="back.emit()"
+    >
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to Resources
+    </button>
+
+    <span class="details-label">LEARNING RESOURCE</span>
+  </header>
+
+  <article class="details-card">
+
+    <div class="details-subject">
+      <span class="material-symbols-outlined">school</span>
+      {{ resource().subject_name || 'Learning Resource' }}
+    </div>
+
+    <h1>{{ resource().title }}</h1>
+
+    <p class="details-description" *ngIf="resource().description">
+      {{ resource().description }}
+    </p>
+
+    <div
+      class="details-content"
+      *ngIf="resource().resource_content"
+    >
+      <h2>Resource Content</h2>
+      <div class="content-text">{{ resource().resource_content }}</div>
+    </div>
+
+    <div
+      class="details-empty"
+      *ngIf="!resource().resource_content && !resource().resource_url"
+    >
+      <span class="material-symbols-outlined">description</span>
+      <p>No additional content is available for this resource.</p>
+    </div>
+
+    <a
+      *ngIf="getResourceLink() as link"
+      [href]="link"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="open-resource-button"
+    >
+      <span class="material-symbols-outlined">open_in_new</span>
+      Open Resource
+    </a>
+
+    <footer class="details-footer" *ngIf="resource().contributor_name">
+      Shared by {{ resource().contributor_name }}
+    </footer>
+
+  </article>
+
+</section>

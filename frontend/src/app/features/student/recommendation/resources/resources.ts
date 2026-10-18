@@ -1,3 +1,4 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,6 +11,7 @@ import { ResourceListComponent } from './components/resource-list/resource-list'
 import { ResourceFiltersComponent } from './components/resource-filters/resource-filters';
 import { ResourceFormComponent } from './components/resource-form/resource-form';
 import { MyResourcesComponent } from './components/my-resources/my-resources';
+import { ResourceDetailsComponent } from './components/resource-details/resource-details';
 
 @Component({
   selector: 'app-resources',
@@ -19,7 +21,8 @@ import { MyResourcesComponent } from './components/my-resources/my-resources';
     ResourceListComponent,
     ResourceFiltersComponent,
     ResourceFormComponent,
-    MyResourcesComponent
+    MyResourcesComponent,
+    ResourceDetailsComponent
   ],
   templateUrl: './resources.html',
   styleUrl: './resources.css'
@@ -28,6 +31,9 @@ export class ResourcesComponent implements OnInit {
 
   // Resources returned by the API.
   resources = signal<Resource[]>([]);
+
+  // Currently selected resource.
+  selectedResource = signal<Resource | null>(null);
 
   // Loading and message states.
   loading = signal(false);
@@ -70,7 +76,6 @@ export class ResourcesComponent implements OnInit {
           this.resources.set(resources);
           this.loading.set(false);
         },
-
         error: (error) => {
           console.error('Failed to load resources:', error);
 
@@ -113,7 +118,6 @@ export class ResourcesComponent implements OnInit {
 
         this.showMyResources.set(true);
       },
-
       error: (error) => {
         console.error('Failed to submit resource:', error);
 
@@ -144,5 +148,10 @@ export class ResourcesComponent implements OnInit {
   toggleMyResources(): void {
     this.showMyResources.update((visible) => !visible);
     this.successMessage.set('');
+  }
+
+  // Open the dedicated resource details view.
+  openResource(resource: Resource): void {
+    this.selectedResource.set(resource);
   }
 }

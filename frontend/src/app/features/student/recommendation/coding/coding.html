@@ -44,14 +44,29 @@
         ← Back to Questions
       </button>
 
-      <div class="results-heading">
-        <div>
-          <h3>{{ question.title }}</h3>
-          <p>
-            {{ question.problem_statement || question.description }}
-          </p>
-        </div>
-      </div>
+      
+<div class="results-heading">
+  <div>
+    <h3>{{ question.title }}</h3>
+    <p>
+      {{ question.problem_statement || question.description }}
+    </p>
+  </div>
+
+  <button
+    type="button"
+    class="bookmark-button"
+    [class.bookmarked]="isBookmarked(question.id)"
+    [disabled]="bookmarkingPostIds().includes(+question.id)"
+    (click)="toggleBookmark(question.id)"
+  >
+    <span aria-hidden="true">
+      {{ isBookmarked(question.id) ? '★' : '☆' }}
+    </span>
+    {{ isBookmarked(question.id) ? 'Bookmarked' : 'Bookmark' }}
+  </button>
+</div>
+
 
       <div class="question-meta">
         <span *ngIf="question.subject_name">

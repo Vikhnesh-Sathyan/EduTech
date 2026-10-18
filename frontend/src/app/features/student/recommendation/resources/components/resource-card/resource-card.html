@@ -1,4 +1,11 @@
-<article class="resource-card">
+<article
+  class="resource-card"
+  (click)="resourceClicked.emit(resource())"
+  (keydown.enter)="resourceClicked.emit(resource())"
+  tabindex="0"
+  role="button"
+  [attr.aria-label]="'Open resource: ' + resource().title"
+>
 
   <div class="card-top">
     <div class="resource-icon">
@@ -38,13 +45,14 @@
       Shared by {{ resource().contributor_name }}
     </span>
 
-    <a
-      *ngIf="getResourceLink() as resourceLink"
-      class="open-resource"
-      [href]="resourceLink"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+   <a
+  *ngIf="getResourceLink() as resourceLink"
+  class="open-resource"
+  [href]="resourceLink"
+  target="_blank"
+  rel="noopener noreferrer"
+  (click)="$event.stopPropagation()"
+>
       Open resource
       <span class="material-symbols-outlined">
         arrow_outward

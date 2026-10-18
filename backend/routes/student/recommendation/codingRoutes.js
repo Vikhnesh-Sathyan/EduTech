@@ -280,12 +280,14 @@ router.get(
 // BOOKMARK ROUTES
 // ==========================================
 
+// Get my bookmarked coding questions.
+router.get("/bookmarks", authMiddleware, getMyCodeBookmarks);
+
 // Bookmark a coding question.
 router.post("/:postId/bookmark", authMiddleware, bookmarkCodePost);
 
 // Remove a bookmark from a coding question.
 router.delete("/:postId/bookmark", authMiddleware, removeCodeBookmark);
-
 
 // ==========================================
 // VOTE ROUTES

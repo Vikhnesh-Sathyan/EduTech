@@ -7,9 +7,10 @@
   >
 
     <app-resource-card
-      *ngFor="let resource of resources()"
-      [resource]="resource"
-    ></app-resource-card>
+  *ngFor="let resource of resources()"
+  [resource]="resource"
+  (resourceClicked)="resourceSelected.emit($event)"
+></app-resource-card>
 
   </div>
 
