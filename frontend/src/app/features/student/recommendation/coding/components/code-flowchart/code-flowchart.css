@@ -1,0 +1,183 @@
+
+.flowchart-section {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.flowchart-header {
+  margin-bottom: 22px;
+}
+
+.flowchart-header h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.flowchart-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.flowchart-message {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 14px;
+}
+
+.flowchart-message.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.flowchart-message.success {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.flowchart-canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 24px 12px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background-color: #f8fafc;
+}
+
+.flowchart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.flowchart-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 240px;
+  min-height: 80px;
+  padding: 14px;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: center;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+
+.flowchart-node strong {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.node-type {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.node-start,
+.node-end {
+  border-color: #86efac;
+  border-radius: 40px;
+  background: #f0fdf4;
+}
+
+.node-input_output {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  transform: skew(-5deg);
+}
+
+.node-input_output > * {
+  transform: skew(5deg);
+}
+
+.node-process {
+  border-color: #c4b5fd;
+  background: #f5f3ff;
+}
+
+.node-decision {
+  border-color: #fcd34d;
+  background: #fffbeb;
+  border-radius: 4px;
+  transform: rotate(0deg);
+}
+
+.flowchart-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 42px;
+  padding-top: 4px;
+  color: #94a3b8;
+}
+
+.flowchart-arrow span:first-child {
+  width: 2px;
+  height: 24px;
+  background: #94a3b8;
+}
+
+.arrow-head {
+  margin-top: -3px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* Save Flowchart Button */
+
+.flowchart-save-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 16px 0;
+}
+
+.save-flowchart-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  border: 1px solid #7c3aed;
+  border-radius: 9px;
+  background: #7c3aed;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.save-flowchart-button:hover:not(:disabled) {
+  background: #6d28d9;
+  transform: translateY(-1px);
+}
+
+.save-flowchart-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.save-flowchart-button:focus-visible {
+  outline: 3px solid #c4b5fd;
+  outline-offset: 3px;
+}
+
+.save-flowchart-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

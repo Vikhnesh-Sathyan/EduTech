@@ -135,4 +135,39 @@ export class CodingService {
       `${this.apiUrl}/solutions/${solutionId}/algorithm-steps`
     );
   }
+
+    // Get saved flowchart
+  getCodeFlowchart(solutionId: number) {
+    return this.http.get(
+      `${this.apiUrl}/solutions/${solutionId}/flowcharts`
+    );
+  }
+
+  // Save generated flowchart
+  createCodeFlowchart(
+    solutionId: number,
+    flowchart: {
+      title: string;
+      generation_method: 'manual' | 'automatic' | 'ai_assisted';
+      nodes: {
+        node_key: string;
+        label: string;
+        node_type: 'start' | 'end' | 'input_output' | 'process' | 'decision' | 'connector';
+        position_x: number;
+        position_y: number;
+        width: number;
+        height: number;
+      }[];
+      edges: {
+        source_node_key: string;
+        target_node_key: string;
+        edge_label?: string;
+      }[];
+    }
+  ) {
+    return this.http.post(
+      `${this.apiUrl}/solutions/${solutionId}/flowcharts`,
+      flowchart
+    );
+  }
 }

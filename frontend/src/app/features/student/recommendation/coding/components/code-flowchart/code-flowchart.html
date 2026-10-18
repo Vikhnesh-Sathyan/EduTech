@@ -1,0 +1,63 @@
+
+<section class="flowchart-section">
+  <div class="flowchart-header">
+    <div>
+      <h3>Algorithm Flowchart</h3>
+      <p>Visualize your saved algorithm step by step.</p>
+    </div>
+  </div>
+
+  <p *ngIf="loading()" class="flowchart-message">
+    Loading flowchart...
+  </p>
+
+  <p *ngIf="errorMessage()" class="flowchart-message error">
+    {{ errorMessage() }}
+  </p>
+
+  <p *ngIf="successMessage()" class="flowchart-message success">
+    {{ successMessage() }}
+  </p>
+
+  <!-- Flowchart nodes and arrows -->
+  <div
+    *ngIf="!loading() && flowchartNodes().length > 0"
+    class="flowchart-canvas"
+  >
+    <div
+      *ngFor="let node of flowchartNodes(); let last = last"
+      class="flowchart-item"
+    >
+      <div
+        class="flowchart-node"
+        [ngClass]="'node-' + node.node_type"
+      >
+        <span class="node-type">
+          {{ node.node_type.replace('_', ' ') }}
+        </span>
+
+        <strong>{{ node.label }}</strong>
+      </div>
+
+      <div *ngIf="!last" class="flowchart-arrow">
+        <span></span>
+        <span class="arrow-head">▼</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save button outside the canvas -->
+  <div
+    *ngIf="!loading() && flowchartNodes().length > 0"
+    class="flowchart-save-actions"
+  >
+    <button
+      type="button"
+      class="save-flowchart-button"
+      (click)="saveFlowchart()"
+      [disabled]="saving()"
+    >
+      {{ saving() ? 'Saving...' : 'Save Flowchart' }}
+    </button>
+  </div>
+</section>

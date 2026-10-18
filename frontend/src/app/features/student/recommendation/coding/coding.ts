@@ -10,6 +10,8 @@ import { CodingQuestionListComponent } from './components/coding-question-list/c
 import { CodingQuestionFormComponent } from './components/coding-question-form/coding-question-form';
 import { CodeHighlightComponent } from './components/code-highlight/code-highlight';
 import { CodeAlgorithmComponent } from './components/code-algorithm/code-algorithm';
+import { CodeFlowchart } from './components/code-flowchart/code-flowchart';
+
 @Component({
   selector: 'app-coding',
   standalone: true,
@@ -19,7 +21,8 @@ import { CodeAlgorithmComponent } from './components/code-algorithm/code-algorit
     CodingQuestionListComponent,
     CodingQuestionFormComponent,
     CodeHighlightComponent,
-    CodeAlgorithmComponent
+    CodeAlgorithmComponent,
+    CodeFlowchart
   ],
   templateUrl: './coding.html',
   styleUrl: './coding.css'
@@ -33,6 +36,8 @@ export class CodingComponent implements OnInit {
   loadingPosts = signal(false);
   loadingQuestion = signal(false);
   showQuestionForm = signal(false);
+
+  showFlowchartFor = signal<number | null>(null);
 
   subjectError = signal('');
   postsError = signal('');
@@ -101,87 +106,103 @@ export class CodingComponent implements OnInit {
 
   closeSelectedQuestion(): void {
     this.selectedQuestion.set(null);
+    this.showFlowchartFor.set(null);
     this.postsError.set('');
   }
 
- 
-createCodeQuestion(question: {
-  title: string;
-  subject_id: number;
-  problem_statement: string;
-  description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  search_keywords: string;
-  code: string;
-}): void {
-  const { code, ...questionData } = question;
+  toggleFlowchart(solutionId: number | string): void {
+    const id = Number(solutionId);
 
-  this.codingService.createCodePost(questionData).subscribe({
-    next: (response: any) => {
-      const postId = Number(
-        response.id ??
-        response.postId ??
-        response.post?.id ??
-        response.question?.id
-      );
+    this.showFlowchartFor.update(current =>
+      current === id ? null : id
+    );
+  }
 
-      if (!Number.isInteger(postId) || postId <= 0) {
-        this.postsError.set('Question created, but its ID was not returned.');
-        return;
-      }
+  isFlowchartOpen(solutionId: number | string): boolean {
+    return this.showFlowchartFor() === Number(solutionId);
+  }
 
-      const selectedSubject = this.subjects().find(
-        subject => Number(subject.id) === question.subject_id
-      );
+  createCodeQuestion(question: {
+    title: string;
+    subject_id: number;
+    problem_statement: string;
+    description: string;
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    search_keywords: string;
+    code: string;
+  }): void {
+    const { code, ...questionData } = question;
 
-      this.codingService.createCodeSolution(postId, {
-        solution_title: 'Original Code',
-        programming_language: selectedSubject?.name || 'Unknown',
-        code,
-        algorithm_explanation: '',
-        time_complexity: '',
-        space_complexity: ''
-      }).subscribe({
-        next: () => {
-          this.showQuestionForm.set(false);
-          this.postsError.set('');
-          this.searchCodingQuestions();
-        },
-        error: (error: any) => {
-          console.error('Failed to save original code:', error);
+    this.codingService.createCodePost(questionData).subscribe({
+      next: (response: any) => {
+        const postId = Number(
+          response.id ??
+          response.postId ??
+          response.post?.id ??
+          response.question?.id
+        );
+
+        if (!Number.isInteger(postId) || postId <= 0) {
           this.postsError.set(
-            'Question created, but saving its code failed.'
+            'Question created, but its ID was not returned.'
           );
+          return;
         }
-      });
+
+        const selectedSubject = this.subjects().find(
+          subject => Number(subject.id) === question.subject_id
+        );
+
+        this.codingService.createCodeSolution(postId, {
+          solution_title: 'Original Code',
+          programming_language: selectedSubject?.name || 'Unknown',
+          code,
+          algorithm_explanation: '',
+          time_complexity: '',
+          space_complexity: ''
+        }).subscribe({
+          next: () => {
+            this.showQuestionForm.set(false);
+            this.postsError.set('');
+            this.searchCodingQuestions();
+          },
+          error: (error: any) => {
+            console.error('Failed to save original code:', error);
+            this.postsError.set(
+              'Question created, but saving its code failed.'
+            );
+          }
+        });
+      },
+      error: (error: any) => {
+        console.error('Failed to create coding question:', error);
+        this.postsError.set(
+          error.error?.message || 'Failed to create coding question.'
+        );
+      }
+    });
+  }
+
+
+openQuestion(post: any): void {
+  this.selectedQuestion.set(null);
+  this.showFlowchartFor.set(null);
+  this.loadingQuestion.set(true);
+  this.postsError.set('');
+
+  this.codingService.getCodePostById(Number(post.id)).subscribe({
+    next: (response: any) => {
+      this.selectedQuestion.set(response);
+      this.loadingQuestion.set(false);
     },
     error: (error: any) => {
-      console.error('Failed to create coding question:', error);
+      console.error('Failed to load coding question details:', error);
       this.postsError.set(
-        error.error?.message || 'Failed to create coding question.'
+        error.error?.message || 'Failed to load question details.'
       );
+      this.loadingQuestion.set(false);
     }
   });
 }
 
-
-  openQuestion(post: any): void {
-    this.selectedQuestion.set(null);
-    this.loadingQuestion.set(true);
-    this.postsError.set('');
-
-    this.codingService.getCodePostById(Number(post.id)).subscribe({
-      next: (response: any) => {
-        this.selectedQuestion.set(response);
-        this.loadingQuestion.set(false);
-      },
-      error: (error: any) => {
-        console.error('Failed to load coding question details:', error);
-        this.postsError.set(
-          error.error?.message || 'Failed to load question details.'
-        );
-        this.loadingQuestion.set(false);
-      }
-    });
-  }
 }

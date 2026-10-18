@@ -20,7 +20,6 @@
     </button>
   </header>
 
-  <!-- Create Question Form -->
   <app-coding-question-form
     *ngIf="showQuestionForm()"
     [subjects]="subjects()"
@@ -31,7 +30,6 @@
 
   <ng-container *ngIf="!showQuestionForm()">
 
-    <!-- Selected Question Details -->
     <section
       *ngIf="selectedQuestion() as question"
       class="coding-results"
@@ -44,7 +42,6 @@
         ← Back to Questions
       </button>
 
-      <!-- Question Information -->
       <div class="results-heading">
         <div>
           <h3>{{ question.title }}</h3>
@@ -84,7 +81,6 @@
         Posted {{ question.created_at | date:'mediumDate' }}
       </p>
 
-      <!-- Submitted Code -->
       <section class="question-code-section">
         <h3>Submitted Code</h3>
 
@@ -95,7 +91,6 @@
             *ngFor="let solution of question.solutions"
             class="code-solution-card"
           >
-            <!-- Solution Header -->
             <div class="solution-header">
               <div>
                 <h4>
@@ -108,19 +103,35 @@
               </div>
             </div>
 
-            <!-- Code Highlighting -->
             <app-code-highlight
               [solutionId]="solution.id"
               [code]="solution.code || ''"
               [canEdit]="solution.is_owner == 1"
             ></app-code-highlight>
 
-            <!-- Algorithm Generation and Review -->
             <app-code-algorithm
               [solutionId]="solution.id"
             ></app-code-algorithm>
 
-            <!-- Existing Algorithm Explanation -->
+            <div class="flowchart-actions">
+              <button
+                type="button"
+                class="flowchart-toggle-button"
+                (click)="toggleFlowchart(solution.id)"
+              >
+                {{
+                  isFlowchartOpen(solution.id)
+                    ? 'Hide Flowchart'
+                    : 'Generate Flowchart'
+                }}
+              </button>
+            </div>
+
+            <app-code-flowchart
+              *ngIf="isFlowchartOpen(solution.id)"
+              [solutionId]="+solution.id"
+            ></app-code-flowchart>
+
             <div
               *ngIf="solution.algorithm_explanation"
               class="solution-explanation"
@@ -139,7 +150,6 @@
       </section>
     </section>
 
-    <!-- Loading Question Details -->
     <p
       *ngIf="loadingQuestion()"
       class="solutions-loading"
@@ -147,7 +157,6 @@
       Loading question and submitted code...
     </p>
 
-    <!-- Question Details Error -->
     <p
       *ngIf="postsError() && !selectedQuestion() && !loadingQuestion()"
       class="solution-error"
@@ -155,7 +164,6 @@
       {{ postsError() }}
     </p>
 
-    <!-- Search and Question List -->
     <ng-container
       *ngIf="!selectedQuestion() && !loadingQuestion()"
     >
