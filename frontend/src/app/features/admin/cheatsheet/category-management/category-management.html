@@ -1,0 +1,154 @@
+
+<section class="category-management">
+  <header class="section-header">
+    <div>
+      <h2>Category Management</h2>
+      <p>Organize cheat sheet categories under each technology.</p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="openAddForm()"
+      [disabled]="selectedTechnologyId() === null">
+      + Add Category
+    </button>
+  </header>
+
+  <!-- Technology Selection -->
+  <div class="technology-selector">
+    <label for="technology">Select Technology</label>
+
+    <select
+      id="technology"
+      [value]="selectedTechnologyId() ?? ''"
+      (change)="selectTechnology($any($event.target).value)"
+      [disabled]="loadingTechnologies()">
+
+      <option value="">Choose a technology</option>
+
+      <option
+        *ngFor="let technology of technologies()"
+        [value]="technology.id">
+        {{ technology.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Loading Technologies -->
+  <p class="loading-message" *ngIf="loadingTechnologies()">
+    Loading technologies...
+  </p>
+
+  <!-- Category Form -->
+  <div class="category-form-card" *ngIf="showForm()">
+    <h3>
+      {{ editingCategoryId() !== null ? 'Edit Category' : 'Add Category' }}
+    </h3>
+
+    <form (ngSubmit)="saveCategory()" #categoryForm="ngForm">
+      <div class="form-group">
+        <label for="categoryName">Category Name *</label>
+
+        <input
+          id="categoryName"
+          type="text"
+          name="categoryName"
+          [(ngModel)]="categoryName"
+          placeholder="e.g. Basics, Functions, Advanced"
+          maxlength="150"
+          required />
+      </div>
+
+      <div class="form-group">
+        <label for="displayOrder">Display Order *</label>
+
+        <input
+          id="displayOrder"
+          type="number"
+          name="displayOrder"
+          [(ngModel)]="displayOrder"
+          min="1"
+          step="1"
+          required />
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancelForm()"
+          [disabled]="saving()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving() || categoryForm.invalid">
+          {{ saving() ? 'Saving...' : editingCategoryId() !== null ? 'Update Category' : 'Save Category' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Category List -->
+  <div class="category-list-section">
+    <h3>Categories</h3>
+
+    <p class="empty-message" *ngIf="selectedTechnologyId() === null && !loadingTechnologies()">
+      Select a technology to view its categories.
+    </p>
+
+    <p class="loading-message" *ngIf="loadingCategories()">
+      Loading categories...
+    </p>
+
+    <p
+      class="empty-message"
+      *ngIf="selectedTechnologyId() !== null && !loadingCategories() && categories().length === 0">
+      No categories found for this technology. Add your first category!
+    </p>
+
+    <div class="category-list" *ngIf="categories().length > 0">
+      <article class="category-card" *ngFor="let category of categories()">
+        <div class="category-details">
+          <span class="order-badge">#{{ category.display_order }}</span>
+
+          <div>
+            <h4>{{ category.name }}</h4>
+            <p>Category ID: {{ category.id }}</p>
+          </div>
+        </div>
+
+        <div class="category-actions">
+          <button
+            type="button"
+            class="edit-button"
+            (click)="editCategory(category)">
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="delete-button"
+            (click)="openDeleteModal(category)">
+            Delete
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Delete Confirmation Modal -->
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Category"
+  [message]="'Are you sure you want to delete ' + (selectedCategory?.name || 'this category') + '?'"
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="deleteCategory()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>
