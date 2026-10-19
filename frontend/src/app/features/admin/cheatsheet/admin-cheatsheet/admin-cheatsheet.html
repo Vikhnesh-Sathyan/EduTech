@@ -52,7 +52,18 @@
       (click)="setActiveTab('categories')">
       Categories
     </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'topics'"
+      [attr.aria-selected]="activeTab() === 'topics'"
+      (click)="setActiveTab('topics')">
+      Topics
+    </button>
   </nav>
+
+
 
   <!-- Technologies Tab -->
   <section
@@ -67,5 +78,10 @@
     *ngIf="activeTab() === 'categories'">
     <app-category-management></app-category-management>
   </section>
-
+<!-- Topics Tab -->
+  <section
+  class="management-section"
+  *ngIf="activeTab() === 'topics'">
+  <app-topic-management></app-topic-management>
+</section>
 </section>

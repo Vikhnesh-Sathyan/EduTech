@@ -1,0 +1,219 @@
+<section class="topic-management">
+  <header class="section-header">
+    <div>
+      <h2>Topic Management</h2>
+      <p>Manage topics and their developer reference content.</p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="openAddForm()"
+      [disabled]="selectedCategoryId() === null || loadingTopics()">
+      + Add Topic
+    </button>
+  </header>
+
+  <div class="selection-panel">
+    <div class="form-group">
+      <label for="technology">Technology</label>
+      <select
+        id="technology"
+        [value]="selectedTechnologyId() ?? ''"
+        (change)="selectTechnology($any($event.target).value)"
+        [disabled]="loadingTechnologies()">
+        <option value="">Select technology</option>
+        <option
+          *ngFor="let technology of technologies()"
+          [value]="technology.id">
+          {{ technology.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select
+        id="category"
+        [value]="selectedCategoryId() ?? ''"
+        (change)="selectCategory($any($event.target).value)"
+        [disabled]="selectedTechnologyId() === null || loadingCategories()">
+        <option value="">Select category</option>
+        <option
+          *ngFor="let category of categories()"
+          [value]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <p class="info-message" *ngIf="selectedTechnologyId() === null">
+    Select a technology to view its categories and topics.
+  </p>
+
+  <p
+    class="info-message"
+    *ngIf="selectedTechnologyId() !== null && !loadingCategories() && categories().length === 0">
+    No categories found for this technology. Add categories in Category Management first.
+  </p>
+
+  <p
+    class="info-message"
+    *ngIf="selectedCategoryId() !== null && loadingTopics()">
+    Loading topics...
+  </p>
+
+  <div class="topic-form" *ngIf="showForm()">
+    <h3>{{ editingTopicId() !== null ? 'Edit Topic' : 'Add Topic' }}</h3>
+
+    <form (ngSubmit)="saveTopic()">
+      <div class="form-group">
+        <label for="topicName">Topic Name *</label>
+        <input
+          id="topicName"
+          type="text"
+          name="topicName"
+          [(ngModel)]="topicName"
+          placeholder="e.g. Variables"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="definition">Definition *</label>
+        <textarea
+          id="definition"
+          name="definition"
+          [(ngModel)]="definition"
+          rows="3"
+          placeholder="Explain this topic..."
+          required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="codeExample">Code Example (optional)</label>
+        <textarea
+          id="codeExample"
+          name="codeExample"
+          [(ngModel)]="codeExample"
+          rows="5"
+          placeholder="Write a code example..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="memoryTrick">Memory Trick (optional)</label>
+        <textarea
+          id="memoryTrick"
+          name="memoryTrick"
+          [(ngModel)]="memoryTrick"
+          rows="2"
+          placeholder="Add a simple way to remember this topic..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="expectedOutput">Expected Output (optional)</label>
+        <textarea
+          id="expectedOutput"
+          name="expectedOutput"
+          [(ngModel)]="expectedOutput"
+          rows="2"
+          placeholder="Show the expected program output..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="displayOrder">Display Order *</label>
+        <input
+          id="displayOrder"
+          type="number"
+          name="displayOrder"
+          [(ngModel)]="displayOrder"
+          min="1"
+          step="1"
+          required>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save Topic' }}
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancelForm()"
+          [disabled]="saving()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="topics-list" *ngIf="selectedCategoryId() !== null">
+    <div class="list-header">
+      <h3>Topics</h3>
+      <span>{{ topics().length }} total</span>
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="!loadingTopics() && topics().length === 0">
+      <h4>No topics yet</h4>
+      <p>Add the first topic to this category.</p>
+    </div>
+
+    <article class="topic-card" *ngFor="let topic of topics()">
+      <div class="topic-card-header">
+        <div>
+          <span class="order-label">Order {{ topic.display_order }}</span>
+          <h4>{{ topic.name }}</h4>
+        </div>
+
+        <div class="card-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="editTopic(topic)">
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="danger-button"
+            (click)="openDeleteModal(topic)">
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <p class="topic-definition">{{ topic.definition }}</p>
+
+      <div class="topic-detail" *ngIf="topic.code_example">
+        <strong>Code Example</strong>
+        <pre><code>{{ topic.code_example }}</code></pre>
+      </div>
+
+      <div class="optional-detail" *ngIf="topic.memory_trick">
+        <strong>Memory Trick:</strong>
+        <p>{{ topic.memory_trick }}</p>
+      </div>
+
+      <div class="optional-detail" *ngIf="topic.expected_output">
+        <strong>Expected Output:</strong>
+        <pre>{{ topic.expected_output }}</pre>
+      </div>
+    </article>
+  </div>
+</section>
+
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Topic"
+  [message]="'Are you sure you want to delete ' + (selectedTopic?.name || 'this topic') + '?'"
+  confirmText="Delete"
+  [danger]="true"
+  (confirmed)="deleteTopic()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>
