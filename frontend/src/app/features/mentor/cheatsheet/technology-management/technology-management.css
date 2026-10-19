@@ -1,0 +1,139 @@
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.technology-management {
+  padding: 8px 0;
+  color: #1e293b;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.section-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.refresh-button {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.refresh-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.technology-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+}
+
+.technology-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 110px;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1e293b;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.technology-card:hover {
+  border-color: #a5b4fc;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 6%);
+}
+
+.technology-card.selected {
+  border-color: #6366f1;
+  background: #eef2ff;
+  box-shadow: 0 0 0 1px #6366f1;
+}
+
+.technology-card:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+}
+
+.technology-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.technology-description {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.selected-label {
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-message {
+  grid-column: 1 / -1;
+  margin: 12px 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.error-message {
+  margin: 12px 0;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .technology-grid {
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 12px;
+  }
+
+  .technology-card {
+    padding: 14px;
+  }
+}

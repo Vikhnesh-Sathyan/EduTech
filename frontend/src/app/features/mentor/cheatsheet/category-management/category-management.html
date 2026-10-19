@@ -1,0 +1,161 @@
+
+<section class="category-management">
+
+  <header class="section-header">
+    <div>
+      <h2>Category Management</h2>
+      <p>
+        Select a technology and manage your cheat sheet categories.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadCategories()"
+      [disabled]="loadingCategories() || selectedTechnologyId() === null">
+      Refresh
+    </button>
+  </header>
+
+  <!-- Technology Selection -->
+  <div class="technology-selection">
+    <label for="technology">Select Technology</label>
+
+    <select
+      id="technology"
+      [ngModel]="selectedTechnologyId()"
+      (ngModelChange)="selectTechnology(+$event)"
+      [disabled]="loadingTechnologies()">
+
+      <option [ngValue]="null">Choose a technology</option>
+
+      <option
+        *ngFor="let technology of technologies()"
+        [ngValue]="technology.id">
+        {{ technology.name }}
+      </option>
+    </select>
+  </div>
+
+  <p class="status-message" *ngIf="loadingTechnologies()">
+    Loading technologies...
+  </p>
+
+  <p class="status-message" *ngIf="loadingCategories()">
+    Loading categories...
+  </p>
+
+  <p class="success-message" *ngIf="message()">
+    {{ message() }}
+  </p>
+
+  <p class="error-message" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <!-- Category Form -->
+  <form
+    class="category-form"
+    (ngSubmit)="saveCategory()"
+    *ngIf="selectedTechnologyId() !== null">
+
+    <h3>
+      {{ editingCategoryId() !== null ? 'Edit Category' : 'Add Category' }}
+    </h3>
+
+    <div class="form-group">
+      <label for="categoryName">Category Name</label>
+
+      <input
+        id="categoryName"
+        type="text"
+        name="categoryName"
+        [(ngModel)]="categoryName"
+        placeholder="Example: Basics"
+        maxlength="150"
+        required>
+    </div>
+
+    <div class="form-group">
+      <label for="displayOrder">Display Order</label>
+
+      <input
+        id="displayOrder"
+        type="number"
+        name="displayOrder"
+        [(ngModel)]="displayOrder"
+        min="1"
+        step="1"
+        required>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="saving()">
+        {{
+          saving()
+            ? 'Saving...'
+            : editingCategoryId() !== null
+              ? 'Update Category'
+              : 'Create Category'
+        }}
+      </button>
+
+      <button
+        type="button"
+        class="cancel-button"
+        *ngIf="editingCategoryId() !== null"
+        (click)="resetForm()">
+        Cancel
+      </button>
+    </div>
+  </form>
+
+  <!-- Category List -->
+  <div class="category-list"
+    *ngIf="selectedTechnologyId() !== null">
+
+    <h3>Existing Categories</h3>
+
+    <p class="status-message"
+      *ngIf="!loadingCategories() && categories().length === 0">
+      No categories found for this technology.
+    </p>
+
+    <article
+      class="category-card"
+      *ngFor="let category of categories()">
+
+      <div class="category-details">
+        <h4>{{ category.name }}</h4>
+        <p>Display order: {{ category.display_order }}</p>
+      </div>
+
+      <div class="category-actions">
+        <button
+          type="button"
+          class="edit-button"
+          (click)="editCategory(category)">
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deleteCategory(category)">
+          Delete
+        </button>
+      </div>
+
+    </article>
+  </div>
+
+  <p class="status-message"
+    *ngIf="!loadingTechnologies() && technologies().length === 0">
+    No active technologies are available.
+  </p>
+
+</section>

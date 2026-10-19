@@ -1,0 +1,86 @@
+
+<section class="cheatsheet-mentor-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1>Developer Cheat Sheet</h1>
+      <p>
+        Manage your developer reference content,
+        from categories to subtopics.
+      </p>
+    </div>
+  </header>
+
+  <!-- Management Tabs -->
+  <nav
+    class="management-tabs"
+    aria-label="Mentor cheat sheet management">
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'technologies'"
+      [attr.aria-selected]="activeTab() === 'technologies'"
+      (click)="setActiveTab('technologies')">
+      Technologies
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'categories'"
+      [attr.aria-selected]="activeTab() === 'categories'"
+      (click)="setActiveTab('categories')">
+      Categories
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'topics'"
+      [attr.aria-selected]="activeTab() === 'topics'"
+      (click)="setActiveTab('topics')">
+      Topics
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'subtopics'"
+      [attr.aria-selected]="activeTab() === 'subtopics'"
+      (click)="setActiveTab('subtopics')">
+      Subtopics
+    </button>
+
+  </nav>
+
+  <!-- Technologies Tab -->
+  <section
+    class="management-section"
+    *ngIf="activeTab() === 'technologies'">
+    <app-technology-management></app-technology-management>
+  </section>
+
+  <!-- Categories Tab -->
+  <section
+    class="management-section"
+    *ngIf="activeTab() === 'categories'">
+    <app-category-management></app-category-management>
+  </section>
+
+  <!-- Topics Tab -->
+  <section
+    class="management-section"
+    *ngIf="activeTab() === 'topics'">
+    <app-topic-management></app-topic-management>
+  </section>
+
+  <!-- Subtopics Tab -->
+  <section
+    class="management-section"
+    *ngIf="activeTab() === 'subtopics'">
+    <app-subtopic-management></app-subtopic-management>
+  </section>
+
+</section>

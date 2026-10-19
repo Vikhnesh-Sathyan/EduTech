@@ -4,7 +4,6 @@
 
 require("dotenv").config();
 
-
 // =====================================================
 // IMPORT REQUIRED PACKAGES
 // =====================================================
@@ -12,7 +11,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-
 
 // Import Node.js built-in HTTP module.
 // Used to create an HTTP server that supports both Express and Socket.IO.
@@ -27,13 +25,11 @@ const { Server } = require("socket.io");
 // sending messages, and receiving real-time messages.
 const registerChatSocket = require("./sockets/chatSocket");
 
-
 // =====================================================
 // IMPORT DATABASE CONNECTION
 // =====================================================
 
 const db = require("./config/db");
-
 
 // =====================================================
 // APPLICATION ROUTES
@@ -46,7 +42,6 @@ const authRoutes =
 // Student profile routes
 const profileRoutes =
     require("./routes/profileRoutes");
-
 
 // =====================================================
 // ADMIN ROUTES
@@ -103,14 +98,11 @@ const adminProjectRoutes =
 const adminBasicChallengeRoutes = require("./routes/admin/adminBasicChallengeRoutes");
 
 //cheat sheet
-
 const adminTechnologyRoutes =
     require("./routes/admin/cheatsheet/technologyRoutes");
 
-
 const adminCategoryRoutes =
     require("./routes/admin/cheatsheet/categoryRoutes");
-
 
 const adminTopicCheatSheetRoutes =
     require("./routes/admin/cheatsheet/topicRoutes");
@@ -148,7 +140,6 @@ const studentBasicChallengeRoutes =
 const studentAdvancedRoutes = 
     require("./routes/student/studentAdvancedRoutes");
 
-
 // =====================================================
 // STUDENT MENTOR CHAT ROUTES
 // =====================================================
@@ -166,7 +157,6 @@ const studyRoutes =
 // Student diagnostic routes
 const diagnosticRoutes =
     require("./routes/student/diagnosticRoutes");
-
 
 // =====================================================
 // MENTOR-STUDENT RELATIONSHIP ROUTES
@@ -190,22 +180,26 @@ const interviewPrepRoutes = require("./routes/student/recommendation/interviewPr
 
 const codingRoutes = require("./routes/student/recommendation/codingRoutes");
 
-
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
 
 // Mentor profile and dashboard routes
-const mentorRoutes =
-    require("./routes/mentor/mentorRoutes");
+const mentorRoutes = require("./routes/mentor/mentorRoutes");
 
+const mentorTechnologyRoutes = require("./routes/mentor/cheatsheet/technologyRoutes");
+
+const mentorCategoryRoutes = require("./routes/mentor/cheatsheet/categoryRoutes");
+
+const mentorTopicRoutes = require("./routes/mentor/cheatsheet/topicRoutes");
+
+const mentorSubtopicRoutes = require("./routes/mentor/cheatsheet/subtopicRoutes");
 
 // =====================================================
 // CREATE EXPRESS APPLICATION
 // =====================================================
 
 const app = express();
-
 
 // =====================================================
 // GLOBAL MIDDLEWARE
@@ -216,7 +210,6 @@ app.use(cors());
 
 // Parse incoming JSON request data
 app.use(express.json());
-
 
 // =====================================================
 // STATIC FILES
@@ -230,14 +223,12 @@ app.use(
     )
 );
 
-
 // =====================================================
 // PORT CONFIGURATION
 // =====================================================
 
 const PORT =
     process.env.PORT || 5000;
-
 
 // =====================================================
 // BASIC SERVER ROUTE
@@ -252,7 +243,6 @@ app.get("/", (req, res) => {
 
 });
 
-
 // =====================================================
 // AUTHENTICATION ROUTES
 // =====================================================
@@ -262,7 +252,6 @@ app.use(
     "/api/auth",
     authRoutes
 );
-
 
 // =====================================================
 // STUDENT PROFILE ROUTES
@@ -274,8 +263,6 @@ app.use(
     profileRoutes
 );
 
-
-
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -286,6 +273,25 @@ app.use(
     mentorRoutes
 );
 
+app.use(
+    "/api/mentor/cheatsheet/technologies",
+    mentorTechnologyRoutes
+);
+
+app.use(
+    "/api/mentor/cheatsheet/categories",
+    mentorCategoryRoutes
+);
+
+app.use(
+    "/api/mentor/cheatsheet/topics",
+    mentorTopicRoutes
+);
+
+app.use(
+    "/api/mentor/cheatsheet/subtopics",
+    mentorSubtopicRoutes
+);
 
 // =====================================================
 // MENTOR-STUDENT RELATIONSHIP ROUTES
@@ -302,7 +308,6 @@ app.use(
     "/api/mentor-student",
     mentorStudentRoutes
 );
-
 
 // =====================================================
 // ADMIN ROUTES
@@ -406,7 +411,6 @@ app.use(
     adminCheatsheetImportRoutes
 );
 
-
 // =====================================================
 // ADMIN PROJECT UNDERSTANDING ROUTES
 // =====================================================
@@ -417,7 +421,6 @@ app.use(
     adminProjectRoutes
 );
 
-
 // =====================================================
 // STUDENT EDUCATION ROUTES
 // =====================================================
@@ -427,7 +430,6 @@ app.use(
     "/api/education",
     educationRoutes
 );
-
 
 // =====================================================
 // STUDENT STUDY ROUTES
@@ -460,7 +462,6 @@ app.use(
     "/api/student/advanced", 
     studentAdvancedRoutes
 );
-
 
 // =====================================================
 // STUDENT PROJECT UNDERSTANDING ROUTES
@@ -497,7 +498,6 @@ app.use("/api/recommendation/doubts", doubtRoutes);
 app.use("/api/recommendation/interview-prep", interviewPrepRoutes);
 
 app.use("/api/recommendation/coding", codingRoutes);
-
 
 // =====================================================
 // START SERVER WITH SOCKET.IO

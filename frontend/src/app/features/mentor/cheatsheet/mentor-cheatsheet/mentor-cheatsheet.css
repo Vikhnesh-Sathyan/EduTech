@@ -1,0 +1,95 @@
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.cheatsheet-mentor-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px;
+  color: #1e293b;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.management-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tab-button {
+  padding: 11px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tab-button:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.tab-button.active {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #4338ca;
+}
+
+.tab-button:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+}
+
+.management-section {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .cheatsheet-mentor-page {
+    padding: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .management-tabs {
+    gap: 6px;
+  }
+
+  .tab-button {
+    padding: 9px 12px;
+  }
+}

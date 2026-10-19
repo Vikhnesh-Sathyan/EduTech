@@ -1,0 +1,71 @@
+
+<section class="technology-management">
+
+  <header class="section-header">
+    <div>
+      <h2>Select Technology</h2>
+      <p>
+        Choose an existing technology to manage your
+        categories, topics, and subtopics.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadTechnologies()"
+      [disabled]="loading()">
+      {{ loading() ? 'Loading...' : 'Refresh' }}
+    </button>
+  </header>
+
+  <!-- Loading -->
+  <p class="status-message" *ngIf="loading()">
+    Loading technologies...
+  </p>
+
+  <!-- Error -->
+  <p class="error-message" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <!-- Technology Cards -->
+  <div
+    class="technology-grid"
+    *ngIf="!loading() && !error()">
+
+    <button
+      type="button"
+      class="technology-card"
+      *ngFor="let technology of technologies()"
+      [class.selected]="selectedTechnologyId() === technology.id"
+      [attr.aria-pressed]="selectedTechnologyId() === technology.id"
+      (click)="selectTechnology(technology.id)">
+
+      <span class="technology-name">
+        {{ technology.name }}
+      </span>
+
+      <span
+        class="technology-description"
+        *ngIf="technology.description">
+        {{ technology.description }}
+      </span>
+
+      <span
+        class="selected-label"
+        *ngIf="selectedTechnologyId() === technology.id">
+        Selected
+      </span>
+
+    </button>
+
+    <p
+      class="status-message"
+      *ngIf="technologies().length === 0">
+      No active technologies are available.
+    </p>
+
+  </div>
+
+</section>
