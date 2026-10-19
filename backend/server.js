@@ -102,6 +102,24 @@ const adminProjectRoutes =
 
 const adminBasicChallengeRoutes = require("./routes/admin/adminBasicChallengeRoutes");
 
+//cheat sheet
+
+const adminTechnologyRoutes =
+    require("./routes/admin/cheatsheet/technologyRoutes");
+
+
+const adminCategoryRoutes =
+    require("./routes/admin/cheatsheet/categoryRoutes");
+
+
+const adminTopicCheatSheetRoutes =
+    require("./routes/admin/cheatsheet/topicRoutes");
+
+const adminSubtopicCheatSheetRoutes =
+    require("./routes/admin/cheatsheet/subtopicRoutes");
+
+const adminCheatsheetImportRoutes =
+    require("./routes/admin/cheatsheet/importRoutes");
 
 // =====================================================
 // STUDENT ROUTES
@@ -359,6 +377,33 @@ app.use(
 app.use(
   "/api/admin/basic-challenge",
   adminBasicChallengeRoutes
+);
+
+//cheat sheet
+app.use(
+    "/api/admin/cheatsheet/technologies",
+    adminTechnologyRoutes
+);
+
+app.use(
+    "/api/admin/cheatsheet/categories",
+    adminCategoryRoutes
+);
+
+app.use(
+    "/api/admin/cheatsheet/topics",
+    adminTopicCheatSheetRoutes
+);
+
+
+app.use(
+    "/api/admin/cheatsheet/subtopics",
+    adminSubtopicCheatSheetRoutes
+);
+
+app.use(
+    "/api/admin/cheatsheet/import",
+    adminCheatsheetImportRoutes
 );
 
 

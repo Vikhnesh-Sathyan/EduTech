@@ -1,0 +1,36 @@
+
+<section class="cheatsheet-admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Developer Cheat Sheet</h1>
+      <p>
+        Manage technologies and organize developer reference content.
+      </p>
+    </div>
+  </header>
+
+  <section class="import-section">
+    <div>
+      <h2>Import Technologies</h2>
+      <p>Import technology records from your CSV file.</p>
+    </div>
+
+    <button
+      type="button"
+      (click)="importTechnologies()"
+      [disabled]="importing()"
+    >
+      {{ importing() ? 'Importing...' : 'Import CSV' }}
+    </button>
+  </section>
+
+  <p class="success-message" *ngIf="message()">
+    {{ message() }}
+  </p>
+
+  <p class="error-message" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <app-technology-management></app-technology-management>
+</section>

@@ -1,0 +1,191 @@
+
+<section class="technology-management">
+
+  <header class="section-header">
+    <div>
+      <h2>Technology Management</h2>
+      <p>Manage the technologies available in your Developer Cheat Sheet.</p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="add-button"
+        *ngIf="!showForm()"
+        (click)="openAddForm()">
+        + Add Technology
+      </button>
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="loadTechnologies()"
+        [disabled]="loading()">
+        {{ loading() ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
+  </header>
+
+  <p class="message error-message" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <p class="message success-message" *ngIf="message()">
+    {{ message() }}
+  </p>
+
+  <!-- Add / Edit Form -->
+  <section class="technology-form-section" *ngIf="showForm()">
+    <h3>
+      {{ editingTechnologyId() !== null ? 'Edit Technology' : 'Add Technology' }}
+    </h3>
+
+    <p class="form-description">
+      Enter the technology details below.
+    </p>
+
+    <form (ngSubmit)="saveTechnology()">
+      <div class="form-group">
+        <label for="technologyName">Technology Name *</label>
+
+        <input
+          id="technologyName"
+          type="text"
+          name="technologyName"
+          [(ngModel)]="technologyName"
+          placeholder="e.g. React"
+          required
+          maxlength="150" />
+      </div>
+
+      <div class="form-group">
+        <label for="technologyDescription">Description</label>
+
+        <textarea
+          id="technologyDescription"
+          name="description"
+          [(ngModel)]="description"
+          placeholder="Briefly describe this technology"
+          rows="3">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="technologyStatus">Status</label>
+
+        <select
+          id="technologyStatus"
+          name="status"
+          [(ngModel)]="status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="saving()">
+          {{
+            saving()
+              ? 'Saving...'
+              : (editingTechnologyId() !== null
+                  ? 'Update Technology'
+                  : 'Save Technology')
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelForm()"
+          [disabled]="saving()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Technology Summary -->
+  <div class="technology-summary">
+    <span class="summary-label">Total technologies</span>
+    <strong>{{ technologies().length }}</strong>
+  </div>
+
+  <div class="loading-state" *ngIf="loading()">
+    Loading technologies...
+  </div>
+
+  <div
+    class="empty-state"
+    *ngIf="!loading() && technologies().length === 0 && !error()">
+
+    <h3>No technologies found</h3>
+    <p>Add a technology or import your technology CSV from the main page.</p>
+  </div>
+
+  <!-- Technology Cards -->
+  <div
+    class="technology-grid"
+    *ngIf="!loading() && technologies().length > 0">
+
+    <article
+      class="technology-card"
+      *ngFor="let technology of technologies()">
+
+      <div class="card-heading">
+        <h3>{{ technology.name }}</h3>
+
+        <span
+          class="status"
+          [class.active]="technology.status === 'active'"
+          [class.inactive]="technology.status === 'inactive'">
+          {{ technology.status }}
+        </span>
+      </div>
+
+      <p class="alphabet-group">
+        Alphabet group: {{ technology.sort_name.charAt(0) }}
+      </p>
+
+      <p class="description">
+        {{ technology.description || 'No description added yet.' }}
+      </p>
+
+      <div class="card-actions">
+        <button
+          type="button"
+          class="edit-button"
+          (click)="editTechnology(technology)"
+          title="Edit technology"
+          aria-label="Edit technology">
+          ✏
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="openDeleteModal(technology)"
+          title="Delete technology"
+          aria-label="Delete technology">
+          🗑
+        </button>
+      </div>
+
+    </article>
+  </div>
+
+</section>
+
+<!-- Common Delete Confirmation Modal -->
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Technology"
+  [message]="'Are you sure you want to delete ' + (selectedTechnology?.name || 'this technology') + '?'"
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="deleteTechnology()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>

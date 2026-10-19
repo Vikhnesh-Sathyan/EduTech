@@ -22,3 +22,7 @@ Thumbs.db
 *.xlsx
 *.xls
 *.csv
+
+# Developer Cheat Sheet data
+data/cheatsheet/technologies.csv
+

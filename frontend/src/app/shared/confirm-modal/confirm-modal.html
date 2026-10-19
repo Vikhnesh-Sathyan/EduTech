@@ -1,0 +1,50 @@
+
+<div
+  class="modal-overlay"
+  *ngIf="visible"
+  (click)="cancel()"
+>
+  <section
+    class="confirm-modal"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="modal-header">
+      <h2>{{ title }}</h2>
+
+      <button
+        type="button"
+        class="close-button"
+        aria-label="Close modal"
+        (click)="cancel()"
+      >
+        &times;
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p>{{ message }}</p>
+    </div>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="cancel()"
+      >
+        {{ cancelText }}
+      </button>
+
+      <button
+        type="button"
+        class="confirm-button"
+        [class.danger]="danger"
+        (click)="confirm()"
+      >
+        {{ confirmText }}
+      </button>
+    </div>
+  </section>
+</div>

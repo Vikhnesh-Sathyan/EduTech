@@ -1,5 +1,4 @@
 // Defines protected admin subject routes
-
 const express = require("express");
 
 const {

@@ -101,6 +101,9 @@ import { ProjectSectionContent } from './features/admin/projects/project-section
 // Admin mentor verification
 import { MentorVerification } from './features/admin/mentors/mentor-verification/mentor-verification';
 
+// Admin Cheat Sheet
+import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
+
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
 import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
@@ -356,6 +359,11 @@ export const routes: Routes = [
       {
         path: 'resources',
         component: AdminResourcesComponent
+      },
+      // Admin Cheat Sheet management
+      {
+        path: 'cheatsheet',
+      component: AdminCheatsheetComponent
       },
     ]
   },
