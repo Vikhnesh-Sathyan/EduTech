@@ -61,6 +61,17 @@
       (click)="setActiveTab('topics')">
       Topics
     </button>
+  
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'subtopics'"
+      [attr.aria-selected]="activeTab() === 'subtopics'"
+      (click)="setActiveTab('subtopics')">
+      Subtopics
+    </button>
+
+
   </nav>
 
 
@@ -78,10 +89,19 @@
     *ngIf="activeTab() === 'categories'">
     <app-category-management></app-category-management>
   </section>
-<!-- Topics Tab -->
+  <!-- Topics Tab -->
   <section
-  class="management-section"
-  *ngIf="activeTab() === 'topics'">
-  <app-topic-management></app-topic-management>
-</section>
+    class="management-section"
+    *ngIf="activeTab() === 'topics'">
+    <app-topic-management></app-topic-management>
+  </section>
+  <!-- SubTopics Tab -->
+  <section
+    class="management-section"
+    *ngIf="activeTab() === 'subtopics'">
+
+    <app-subtopic-management></app-subtopic-management>
+
+  </section>
+
 </section>

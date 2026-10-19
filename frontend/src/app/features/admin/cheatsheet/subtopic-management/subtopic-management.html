@@ -1,0 +1,240 @@
+
+<section class="subtopic-management">
+  <header class="section-header">
+    <div>
+      <h2>Subtopic Management</h2>
+      <p>Manage detailed concepts, examples, and learning notes.</p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="openAddForm()"
+      [disabled]="selectedTopicId() === null || loadingSubtopics()">
+      + Add Subtopic
+    </button>
+  </header>
+
+  <div class="selection-panel">
+    <div class="form-group">
+      <label for="technology">Technology</label>
+      <select
+        id="technology"
+        [value]="selectedTechnologyId() ?? ''"
+        (change)="selectTechnology($any($event.target).value)"
+        [disabled]="loadingTechnologies()">
+        <option value="">Select technology</option>
+        <option
+          *ngFor="let technology of technologies()"
+          [value]="technology.id">
+          {{ technology.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select
+        id="category"
+        [value]="selectedCategoryId() ?? ''"
+        (change)="selectCategory($any($event.target).value)"
+        [disabled]="selectedTechnologyId() === null || loadingCategories()">
+        <option value="">Select category</option>
+        <option
+          *ngFor="let category of categories()"
+          [value]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="topic">Topic</label>
+      <select
+        id="topic"
+        [value]="selectedTopicId() ?? ''"
+        (change)="selectTopic($any($event.target).value)"
+        [disabled]="selectedCategoryId() === null || loadingTopics()">
+        <option value="">Select topic</option>
+        <option
+          *ngFor="let topic of topics()"
+          [value]="topic.id">
+          {{ topic.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <p class="info-message" *ngIf="selectedTechnologyId() === null">
+    Select a technology to begin.
+  </p>
+
+  <p
+    class="info-message"
+    *ngIf="selectedTechnologyId() !== null && !loadingCategories() && categories().length === 0">
+    No categories found. Add categories in Category Management first.
+  </p>
+
+  <p
+    class="info-message"
+    *ngIf="selectedCategoryId() !== null && !loadingTopics() && topics().length === 0">
+    No topics found. Add topics in Topic Management first.
+  </p>
+
+  <p class="info-message" *ngIf="loadingSubtopics()">
+    Loading subtopics...
+  </p>
+
+  <div class="subtopic-form" *ngIf="showForm()">
+    <h3>{{ editingSubtopicId() !== null ? 'Edit Subtopic' : 'Add Subtopic' }}</h3>
+
+    <form (ngSubmit)="saveSubtopic()">
+      <div class="form-group">
+        <label for="subtopicName">Subtopic Name *</label>
+        <input
+          id="subtopicName"
+          type="text"
+          name="subtopicName"
+          [(ngModel)]="subtopicName"
+          placeholder="e.g. let, const, and var"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="definition">Definition *</label>
+        <textarea
+          id="definition"
+          name="definition"
+          [(ngModel)]="definition"
+          rows="3"
+          placeholder="Explain this concept..."
+          required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="codeExample">Code Example (optional)</label>
+        <textarea
+          id="codeExample"
+          name="codeExample"
+          [(ngModel)]="codeExample"
+          rows="5"
+          placeholder="Write a code example..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="memoryTrick">Memory Trick (optional)</label>
+        <textarea
+          id="memoryTrick"
+          name="memoryTrick"
+          [(ngModel)]="memoryTrick"
+          rows="2"
+          placeholder="Add a simple memory trick..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="expectedOutput">Expected Output (optional)</label>
+        <textarea
+          id="expectedOutput"
+          name="expectedOutput"
+          [(ngModel)]="expectedOutput"
+          rows="2"
+          placeholder="Show the expected output..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="displayOrder">Display Order *</label>
+        <input
+          id="displayOrder"
+          type="number"
+          name="displayOrder"
+          [(ngModel)]="displayOrder"
+          min="1"
+          step="1"
+          required>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save Subtopic' }}
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancelForm()"
+          [disabled]="saving()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="subtopics-list" *ngIf="selectedTopicId() !== null">
+    <div class="list-header">
+      <h3>Subtopics</h3>
+      <span>{{ subtopics().length }} total</span>
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="!loadingSubtopics() && subtopics().length === 0">
+      <h4>No subtopics yet</h4>
+      <p>Add the first subtopic to this topic.</p>
+    </div>
+
+    <article class="subtopic-card" *ngFor="let subtopic of subtopics()">
+      <div class="subtopic-card-header">
+        <div>
+          <span class="order-label">Order {{ subtopic.display_order }}</span>
+          <h4>{{ subtopic.name }}</h4>
+        </div>
+
+        <div class="card-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="editSubtopic(subtopic)">
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="danger-button"
+            (click)="openDeleteModal(subtopic)">
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <p class="subtopic-definition">{{ subtopic.definition }}</p>
+
+      <div class="subtopic-detail" *ngIf="subtopic.code_example">
+        <strong>Code Example</strong>
+        <pre><code>{{ subtopic.code_example }}</code></pre>
+      </div>
+
+      <div class="optional-detail" *ngIf="subtopic.memory_trick">
+        <strong>Memory Trick</strong>
+        <p>{{ subtopic.memory_trick }}</p>
+      </div>
+
+      <div class="optional-detail" *ngIf="subtopic.expected_output">
+        <strong>Expected Output</strong>
+        <pre>{{ subtopic.expected_output }}</pre>
+      </div>
+    </article>
+  </div>
+</section>
+
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Subtopic"
+  [message]="'Are you sure you want to delete ' + (selectedSubtopic?.name || 'this subtopic') + '?'"
+  confirmText="Delete"
+  [danger]="true"
+  (confirmed)="deleteSubtopic()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>

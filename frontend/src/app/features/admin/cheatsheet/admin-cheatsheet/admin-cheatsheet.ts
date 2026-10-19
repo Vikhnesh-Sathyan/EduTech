@@ -7,6 +7,8 @@ import { CheatsheetImportService } from '../../../../services/admin/cheatsheet/c
 import { TechnologyManagementComponent } from '../technology-management/technology-management';
 import { CategoryManagementComponent } from '../category-management/category-management';
 import { TopicManagementComponent } from '../topic-management/topic-management';
+import { SubtopicManagementComponent } from '../subtopic-management/subtopic-management';
+
 @Component({
   selector: 'app-admin-cheatsheet',
   standalone: true,
@@ -14,7 +16,8 @@ import { TopicManagementComponent } from '../topic-management/topic-management';
     CommonModule,
     TechnologyManagementComponent,
     CategoryManagementComponent,
-    TopicManagementComponent
+    TopicManagementComponent,
+    SubtopicManagementComponent
   ],
   templateUrl: './admin-cheatsheet.html',
   styleUrl: './admin-cheatsheet.css'
@@ -22,14 +25,14 @@ import { TopicManagementComponent } from '../topic-management/topic-management';
 export class AdminCheatsheetComponent {
   private cheatsheetImportService = inject(CheatsheetImportService);
 
-  activeTab = signal<'technologies' | 'categories' | 'topics'>('technologies');
+  activeTab = signal<'technologies' | 'categories' | 'topics' | 'subtopics'>('technologies');
 
   importing = signal(false);
   message = signal('');
   error = signal('');
 
-  setActiveTab(
-  tab: 'technologies' | 'categories' | 'topics'
+ setActiveTab(
+  tab: 'technologies' | 'categories' | 'topics' | 'subtopics'
 ): void {
   this.activeTab.set(tab);
 }
