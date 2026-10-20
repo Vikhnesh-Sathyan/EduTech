@@ -22,10 +22,13 @@ import {
   MentorCheatsheetTopicService
 } from '../../../../services/mentor/cheatsheet/mentor-cheatsheet-topic';
 
+import { ToastService } from '../../../../services/toast.service';
+import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal';
+
 @Component({
   selector: 'app-topic-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './topic-management.html',
   styleUrl: './topic-management.css'
 })
@@ -34,6 +37,7 @@ export class TopicManagementComponent {
   private selectionService = inject(MentorCheatsheetSelectionService);
   private categoryService = inject(MentorCheatsheetCategoryService);
   private topicService = inject(MentorCheatsheetTopicService);
+  private toast = inject(ToastService);
 
   technologies = signal<MentorCheatsheetTechnology[]>([]);
   categories = signal<MentorCheatsheetCategory[]>([]);
@@ -46,8 +50,11 @@ export class TopicManagementComponent {
   loadingCategories = signal(false);
   loadingTopics = signal(false);
   saving = signal(false);
+  deleting = signal(false);
 
-  message = signal('');
+  showDeleteModal = signal(false);
+  deletingTopic = signal<MentorCheatsheetTopic | null>(null);
+
   error = signal('');
   editingTopicId = signal<number | null>(null);
 
@@ -85,7 +92,7 @@ export class TopicManagementComponent {
         }
       },
       error: (err) => {
-        this.error.set(
+        this.toast.error(
           err.error?.message || 'Failed to load technologies.'
         );
         this.loadingTechnologies.set(false);
@@ -140,7 +147,7 @@ export class TopicManagementComponent {
         }
       },
       error: (err) => {
-        this.error.set(
+        this.toast.error(
           err.error?.message || 'Failed to load categories.'
         );
         this.loadingCategories.set(false);
@@ -152,7 +159,6 @@ export class TopicManagementComponent {
     this.selectedCategoryId.set(categoryId);
     this.topics.set([]);
     this.resetForm();
-    this.message.set('');
     this.error.set('');
 
     if (categoryId !== null) {
@@ -177,7 +183,7 @@ export class TopicManagementComponent {
         this.loadingTopics.set(false);
       },
       error: (err) => {
-        this.error.set(
+        this.toast.error(
           err.error?.message || 'Failed to load topics.'
         );
         this.loadingTopics.set(false);
@@ -191,23 +197,28 @@ export class TopicManagementComponent {
     const definition = this.definition.trim();
 
     if (categoryId === null) {
-      this.error.set('Please select a category.');
+      this.toast.error('Please select a category.');
       return;
     }
 
     if (!name || !definition) {
-      this.error.set('Topic name and definition are required.');
+      this.toast.error('Topic name and definition are required.');
       return;
     }
 
     if (!Number.isInteger(this.displayOrder) || this.displayOrder < 1) {
-      this.error.set('Display order must be a positive integer.');
+      this.toast.error('Display order must be a positive integer.');
+      return;
+    }
+
+    if (this.saving()) {
       return;
     }
 
     this.saving.set(true);
-    this.message.set('');
     this.error.set('');
+
+    const isEditing = this.editingTopicId() !== null;
 
     const data = {
       name,
@@ -218,19 +229,19 @@ export class TopicManagementComponent {
       display_order: this.displayOrder
     };
 
-    const request = this.editingTopicId() !== null
+    const request = isEditing
       ? this.topicService.updateTopic(this.editingTopicId()!, data)
       : this.topicService.createTopic(categoryId, data);
 
     request.subscribe({
       next: (response) => {
-        this.message.set(response.message);
+        this.toast.success(response.message);
         this.saving.set(false);
         this.resetForm();
         this.loadTopics();
       },
       error: (err) => {
-        this.error.set(
+        this.toast.error(
           err.error?.message || 'Failed to save topic.'
         );
         this.saving.set(false);
@@ -246,27 +257,56 @@ export class TopicManagementComponent {
     this.memoryTrick = topic.memory_trick || '';
     this.expectedOutput = topic.expected_output || '';
     this.displayOrder = topic.display_order;
-    this.message.set('');
     this.error.set('');
   }
 
   deleteTopic(topic: MentorCheatsheetTopic): void {
-    if (!confirm(`Delete the topic "${topic.name}"?`)) {
+    if (this.deleting()) {
       return;
     }
 
-    this.message.set('');
-    this.error.set('');
+    this.deletingTopic.set(topic);
+    this.showDeleteModal.set(true);
+  }
+
+  cancelDelete(): void {
+    if (this.deleting()) {
+      return;
+    }
+
+    this.showDeleteModal.set(false);
+    this.deletingTopic.set(null);
+  }
+
+  confirmDelete(): void {
+    const topic = this.deletingTopic();
+
+    if (!topic || this.deleting()) {
+      return;
+    }
+
+    this.deleting.set(true);
 
     this.topicService.deleteTopic(topic.id).subscribe({
       next: (response) => {
-        this.message.set(response.message);
+        this.toast.success(response.message);
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.deletingTopic.set(null);
+
+        if (this.editingTopicId() === topic.id) {
+          this.resetForm();
+        }
+
         this.loadTopics();
       },
       error: (err) => {
-        this.error.set(
+        this.toast.error(
           err.error?.message || 'Failed to delete topic.'
         );
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.deletingTopic.set(null);
       }
     });
   }

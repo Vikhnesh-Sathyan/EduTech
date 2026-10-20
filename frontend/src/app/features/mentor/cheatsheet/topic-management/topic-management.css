@@ -149,7 +149,10 @@
 }
 
 .primary-button:disabled,
-.refresh-button:disabled {
+.refresh-button:disabled,
+.cancel-button:disabled,
+.edit-button:disabled,
+.delete-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -214,7 +217,6 @@
 }
 
 .status-message,
-.success-message,
 .error-message {
   margin: 14px 0;
   font-size: 14px;
@@ -223,10 +225,6 @@
 
 .status-message {
   color: #64748b;
-}
-
-.success-message {
-  color: #15803d;
 }
 
 .error-message {

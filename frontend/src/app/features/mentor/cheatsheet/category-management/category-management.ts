@@ -15,12 +15,16 @@ import {
 
 import { MentorCheatsheetSelectionService } from '../../../../services/mentor/cheatsheet/mentor-cheatsheet-selection';
 
+import { ToastService } from '../../../../services/toast.service';
+import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal';
+
 @Component({
   selector: 'app-category-management',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ConfirmModalComponent
   ],
   templateUrl: './category-management.html',
   styleUrl: './category-management.css'
@@ -35,7 +39,11 @@ export class CategoryManagementComponent {
     MentorCheatsheetTechnologyService
   );
 
-  private selectionService = inject(MentorCheatsheetSelectionService);
+  private selectionService = inject(
+    MentorCheatsheetSelectionService
+  );
+
+  private toast = inject(ToastService);
 
   technologies = signal<MentorCheatsheetTechnology[]>([]);
   categories = signal<MentorCheatsheetCategory[]>([]);
@@ -45,9 +53,12 @@ export class CategoryManagementComponent {
   loadingTechnologies = signal(false);
   loadingCategories = signal(false);
   saving = signal(false);
+  deleting = signal(false);
 
-  message = signal('');
   error = signal('');
+
+  showDeleteModal = signal(false);
+  deletingCategory = signal<MentorCheatsheetCategory | null>(null);
 
   categoryName = '';
   displayOrder = 1;
@@ -58,98 +69,106 @@ export class CategoryManagementComponent {
     this.loadTechnologies();
   }
 
-  
-loadTechnologies(): void {
-  this.loadingTechnologies.set(true);
-  this.error.set('');
+  loadTechnologies(): void {
+    this.loadingTechnologies.set(true);
+    this.error.set('');
 
-  this.technologyService.getTechnologies().subscribe({
-    next: (response) => {
-      this.technologies.set(response.technologies);
-      this.loadingTechnologies.set(false);
+    this.technologyService.getTechnologies().subscribe({
+      next: (response) => {
+        this.technologies.set(response.technologies);
+        this.loadingTechnologies.set(false);
 
-      const selectedId = this.selectedTechnologyId();
+        const selectedId = this.selectedTechnologyId();
 
-      if (
-        selectedId !== null &&
-        response.technologies.some(
-          technology => technology.id === selectedId
-        )
-      ) {
-        this.loadCategories();
-      } else {
-        this.categories.set([]);
+        if (
+          selectedId !== null &&
+          response.technologies.some(
+            technology => technology.id === selectedId
+          )
+        ) {
+          this.loadCategories();
+        } else {
+          this.categories.set([]);
+          this.loadingCategories.set(false);
+        }
+      },
+      error: (err) => {
+        this.error.set(
+          err.error?.message || 'Failed to load technologies.'
+        );
+        this.toast.error(this.error());
+        this.loadingTechnologies.set(false);
       }
-    },
-    error: (err) => {
-      this.error.set(
-        err.error?.message || 'Failed to load technologies.'
-      );
-      this.loadingTechnologies.set(false);
-    }
-  });
-}
-
-
-  selectTechnology(technologyId: number): void {
-  this.selectionService.selectTechnology(technologyId);
-  this.categories.set([]);
-  this.message.set('');
-  this.error.set('');
-  this.resetForm();
-  this.loadCategories();
-}
-
- 
-loadCategories(): void {
-  const technologyId = this.selectedTechnologyId();
-
-  if (technologyId === null) {
-    this.categories.set([]);
-    this.loadingCategories.set(false);
-    return;
+    });
   }
 
-  this.loadingCategories.set(true);
-  this.error.set('');
+  selectTechnology(technologyId: number): void {
+    this.selectionService.selectTechnology(technologyId);
 
-  this.categoryService.getCategories(technologyId).subscribe({
-    next: (response) => {
-      this.categories.set(response.categories);
-      this.loadingCategories.set(false);
-    },
-    error: (err) => {
+    this.categories.set([]);
+    this.error.set('');
+    this.resetForm();
+
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    const technologyId = this.selectedTechnologyId();
+
+    if (technologyId === null) {
       this.categories.set([]);
-      this.error.set(
-        err.error?.message || 'Failed to load categories.'
-      );
       this.loadingCategories.set(false);
+      return;
     }
-  });
-}
 
+    this.loadingCategories.set(true);
+    this.error.set('');
+
+    this.categoryService.getCategories(technologyId).subscribe({
+      next: (response) => {
+        this.categories.set(response.categories);
+        this.loadingCategories.set(false);
+      },
+      error: (err) => {
+        this.categories.set([]);
+        this.error.set(
+          err.error?.message || 'Failed to load categories.'
+        );
+        this.toast.error(this.error());
+        this.loadingCategories.set(false);
+      }
+    });
+  }
 
   saveCategory(): void {
     const technologyId = this.selectedTechnologyId();
     const name = this.categoryName.trim();
 
     if (technologyId === null) {
-      this.error.set('Please select a technology.');
+      this.toast.error('Please select a technology.');
       return;
     }
 
     if (!name) {
-      this.error.set('Category name is required.');
+      this.toast.error('Category name is required.');
       return;
     }
 
-    if (!Number.isInteger(this.displayOrder) || this.displayOrder < 1) {
-      this.error.set('Display order must be a positive integer.');
+    if (
+      !Number.isInteger(this.displayOrder) ||
+      this.displayOrder < 1
+    ) {
+      this.toast.error(
+        'Display order must be a positive integer.'
+      );
+      return;
+    }
+
+    if (this.saving()) {
       return;
     }
 
     this.saving.set(true);
-    this.message.set('');
     this.error.set('');
 
     const data = {
@@ -157,25 +176,38 @@ loadCategories(): void {
       display_order: this.displayOrder
     };
 
-    const request = this.editingCategoryId() !== null
+    const isEditing = this.editingCategoryId() !== null;
+
+    const request = isEditing
       ? this.categoryService.updateCategory(
           this.editingCategoryId()!,
           data
         )
-      : this.categoryService.createCategory(technologyId, data);
+      : this.categoryService.createCategory(
+          technologyId,
+          data
+        );
 
     request.subscribe({
       next: (response) => {
-        this.message.set(response.message);
         this.saving.set(false);
+
+        this.toast.success(
+          response.message ||
+          (isEditing
+            ? 'Category updated successfully.'
+            : 'Category created successfully.')
+        );
+
         this.resetForm();
         this.loadCategories();
       },
       error: (err) => {
-        this.error.set(
+        this.saving.set(false);
+
+        this.toast.error(
           err.error?.message || 'Failed to save category.'
         );
-        this.saving.set(false);
       }
     });
   }
@@ -184,33 +216,63 @@ loadCategories(): void {
     this.editingCategoryId.set(category.id);
     this.categoryName = category.name;
     this.displayOrder = category.display_order;
-    this.message.set('');
     this.error.set('');
   }
 
   deleteCategory(category: MentorCheatsheetCategory): void {
-    const confirmed = confirm(
-      `Delete the category "${category.name}"?`
-    );
-
-    if (!confirmed) {
+    if (this.deleting()) {
       return;
     }
 
+    this.deletingCategory.set(category);
+    this.showDeleteModal.set(true);
+  }
+
+  confirmDelete(): void {
+    const category = this.deletingCategory();
+
+    if (!category || this.deleting()) {
+      return;
+    }
+
+    this.deleting.set(true);
     this.error.set('');
-    this.message.set('');
 
     this.categoryService.deleteCategory(category.id).subscribe({
       next: (response) => {
-        this.message.set(response.message);
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.deletingCategory.set(null);
+
+        this.toast.success(
+          response.message || 'Category deleted successfully.'
+        );
+
+        if (this.editingCategoryId() === category.id) {
+          this.resetForm();
+        }
+
         this.loadCategories();
       },
       error: (err) => {
-        this.error.set(
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.deletingCategory.set(null);
+
+        this.toast.error(
           err.error?.message || 'Failed to delete category.'
         );
       }
     });
+  }
+
+  cancelDelete(): void {
+    if (this.deleting()) {
+      return;
+    }
+
+    this.showDeleteModal.set(false);
+    this.deletingCategory.set(null);
   }
 
   resetForm(): void {

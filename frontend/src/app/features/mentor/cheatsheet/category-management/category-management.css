@@ -145,7 +145,10 @@
 }
 
 .primary-button:disabled,
-.refresh-button:disabled {
+.refresh-button:disabled,
+.cancel-button:disabled,
+.edit-button:disabled,
+.delete-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -171,6 +174,11 @@
   border-radius: 10px;
 }
 
+.category-details {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .category-details h4 {
   margin: 0 0 8px;
   font-size: 16px;
@@ -183,18 +191,14 @@
 }
 
 .status-message,
-.success-message,
 .error-message {
   margin: 14px 0;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .status-message {
   color: #64748b;
-}
-
-.success-message {
-  color: #15803d;
 }
 
 .error-message {
@@ -204,6 +208,11 @@
 @media (max-width: 640px) {
   .category-management {
     padding: 14px;
+  }
+
+  .technology-selection,
+  .category-form {
+    padding: 16px;
   }
 
   .section-header,
