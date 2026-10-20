@@ -140,6 +140,8 @@ const studentBasicChallengeRoutes =
 const studentAdvancedRoutes = 
     require("./routes/student/studentAdvancedRoutes");
 
+const studentCheatsheetRoutes = require("./routes/student/cheatsheet/student-cheatsheet-routes");
+
 // =====================================================
 // STUDENT MENTOR CHAT ROUTES
 // =====================================================
@@ -429,6 +431,11 @@ app.use(
 app.use(
     "/api/education",
     educationRoutes
+);
+
+app.use(
+    "/api/student/cheatsheet", 
+    studentCheatsheetRoutes
 );
 
 // =====================================================
