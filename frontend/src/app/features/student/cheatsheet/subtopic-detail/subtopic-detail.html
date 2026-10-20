@@ -1,0 +1,71 @@
+
+<div class="subtopic-detail-page">
+
+  <header class="subtopic-header">
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()">
+      ← Back to Topics
+    </button>
+
+    <h1>{{ topicName() }}</h1>
+    <p>Explore explanations, code examples, and expected outputs.</p>
+  </header>
+
+  <section class="subtopics-section">
+    <h2>Learning Content</h2>
+
+    <p *ngIf="loading()" class="status-message">
+      Loading learning content...
+    </p>
+
+    <div *ngIf="errorMessage()" class="error-message">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" (click)="loadSubtopics()">
+        Retry
+      </button>
+    </div>
+
+    <div
+      class="subtopics-list"
+      *ngIf="!loading() && !errorMessage()">
+
+      <article
+        class="subtopic-card"
+        *ngFor="let subtopic of subtopics()">
+
+        <h3>{{ subtopic.name }}</h3>
+
+        <div class="content-section" *ngIf="subtopic.definition">
+          <h4>Definition</h4>
+          <p>{{ subtopic.definition }}</p>
+        </div>
+
+        <div class="content-section" *ngIf="subtopic.code_example">
+          <h4>Code Example</h4>
+          <pre><code>{{ subtopic.code_example }}</code></pre>
+        </div>
+
+        <div class="content-section" *ngIf="subtopic.expected_output">
+          <h4>Expected Output</h4>
+          <pre><code>{{ subtopic.expected_output }}</code></pre>
+        </div>
+
+        <div class="content-section" *ngIf="subtopic.memory_trick">
+          <h4>Memory Trick</h4>
+          <p>{{ subtopic.memory_trick }}</p>
+        </div>
+
+      </article>
+
+      <p
+        *ngIf="subtopics().length === 0"
+        class="empty-message">
+        No learning content available for this topic yet.
+      </p>
+
+    </div>
+  </section>
+
+</div>

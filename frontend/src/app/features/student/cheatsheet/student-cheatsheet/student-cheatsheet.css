@@ -1,0 +1,327 @@
+
+:host {
+  display: block;
+  min-height: 100%;
+  color: #e5e7eb;
+}
+
+.cheatsheet-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #111827;
+  color: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.cheatsheet-header {
+  margin-bottom: 30px;
+}
+
+.header-content h1 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.header-content p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Popular technologies */
+.popular-section {
+  margin-bottom: 24px;
+}
+
+.technology-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.technology-logo-card {
+  display: flex;
+  min-height: 130px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 10px;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  background: #1f2937;
+  color: #f9fafb;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.technology-logo-card:hover {
+  transform: translateY(-4px);
+  border-color: #60a5fa;
+}
+
+.technology-logo {
+  display: flex;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #374151;
+  color: #93c5fd;
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.technology-name {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* Quick links */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 24px 0;
+  padding: 18px 0;
+  border-top: 1px solid #374151;
+  border-bottom: 1px solid #374151;
+}
+
+.quick-links a {
+  color: #60a5fa;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.quick-links a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+/* Alphabet navigation */
+.alphabet-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.alphabet-navigation button {
+  min-width: 34px;
+  height: 34px;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  background: #1f2937;
+  color: #e5e7eb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.alphabet-navigation button:hover {
+  border-color: #60a5fa;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* Alphabetical list */
+.technology-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scroll-margin-top: 20px;
+}
+
+.letter-section {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  background: #1f2937;
+  scroll-margin-top: 20px;
+}
+
+.letter-badge {
+  display: flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.letter-technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding-top: 10px;
+}
+
+.technology-link {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #93c5fd;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.technology-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.back-to-top {
+  padding: 8px 10px;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.back-to-top:hover {
+  background: #374151;
+  color: #ffffff;
+}
+
+/* Status messages */
+.status-message,
+.empty-message {
+  padding: 24px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.status-message.error {
+  color: #fca5a5;
+}
+
+.status-message button {
+  margin-left: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+
+
+/* Moving technology logos */
+.technology-marquee {
+  width: 100%;
+  margin: 10px 0 32px;
+  overflow: hidden;
+  padding: 20px 0;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  background: #1f2937;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+}
+
+.technology-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: technology-scroll 30s linear infinite;
+}
+
+.technology-marquee:hover .technology-marquee-track {
+  animation-play-state: paused;
+}
+
+.technology-marquee-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+}
+
+.marquee-item {
+  display: flex;
+  min-width: 100px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #d1d5db;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.marquee-item img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.marquee-item:hover img {
+  transform: scale(1.15);
+}
+
+@keyframes technology-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .technology-marquee-track {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .technology-marquee-group {
+    gap: 20px;
+    padding-right: 20px;
+  }
+
+  .marquee-item {
+    min-width: 80px;
+    font-size: 12px;
+  }
+
+  .marquee-item img {
+    width: 38px;
+    height: 38px;
+  }
+}

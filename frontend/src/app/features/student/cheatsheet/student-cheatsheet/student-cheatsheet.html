@@ -1,0 +1,163 @@
+
+<div class="cheatsheet-page">
+
+  <!-- Header -->
+  <header class="cheatsheet-header">
+    <div class="header-content">
+      <h1>Developer Cheatsheet</h1>
+      <p>Explore technologies, concepts, and programming references.</p>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div class="status-message" *ngIf="loading()">
+    Loading technologies...
+  </div>
+
+  <!-- Error -->
+  <div class="status-message error" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+    <button type="button" (click)="loadTechnologies()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!loading() && !errorMessage()">
+
+  <!-- Moving technology logos -->
+<section class="technology-marquee" aria-label="Popular technologies">
+  <div class="technology-marquee-track">
+
+    <div class="technology-marquee-group">
+      <div class="marquee-item">
+        <img src="assets/images/technologies/html5.png" alt="HTML5">
+        <span>HTML5</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/css3.png" alt="CSS3">
+        <span>CSS3</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/javascript.png" alt="JavaScript">
+        <span>JavaScript</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/angular.png" alt="Angular">
+        <span>Angular</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/react.png" alt="React">
+        <span>React</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/nodejs.png" alt="Node.js">
+        <span>Node.js</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/python.png" alt="Python">
+        <span>Python</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/mysql.png" alt="MySQL">
+        <span>MySQL</span>
+      </div>
+    </div>
+
+    <!-- Duplicate group for continuous movement -->
+    <div class="technology-marquee-group" aria-hidden="true">
+      <div class="marquee-item">
+        <img src="assets/images/technologies/HTML5.png" alt="">
+        <span>HTML5</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/css3.png" alt="">
+        <span>CSS3</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/javascript.png" alt="">
+        <span>JavaScript</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/angular.png" alt="">
+        <span>Angular</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/react.png" alt="">
+        <span>React</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/nodejs.png" alt="">
+        <span>Node.js</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/python.png" alt="">
+        <span>Python</span>
+      </div>
+
+      <div class="marquee-item">
+        <img src="assets/images/technologies/mysql.png" alt="">
+        <span>MySQL</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <!-- Alphabet navigation -->
+    <nav class="alphabet-navigation" aria-label="Browse technologies by letter">
+      <button
+        type="button"
+        *ngFor="let letter of alphabet"
+        (click)="scrollToLetter(letter)">
+        {{ letter }}
+      </button>
+    </nav>
+
+    <!-- Alphabetical technology list -->
+    <section id="technology-list" class="technology-list">
+
+      <div
+        class="letter-section"
+        *ngFor="let letter of alphabet"
+        [id]="'letter-' + letter"
+        [hidden]="getTechnologiesByLetter(letter).length === 0">
+
+        <div class="letter-badge">
+          {{ letter }}
+        </div>
+
+        <div class="letter-technologies">
+          <button
+            type="button"
+            class="technology-link"
+            *ngFor="let technology of getTechnologiesByLetter(letter)"
+            (click)="selectTechnology(technology)">
+
+            {{ technology.name }}
+          </button>
+        </div>
+
+
+
+      </div>
+
+      <p class="empty-message" *ngIf="technologies().length === 0">
+        No technologies are available yet.
+      </p>
+
+    </section>
+
+  </ng-container>
+
+</div>

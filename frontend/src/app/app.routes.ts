@@ -19,6 +19,12 @@ import { StudentDashboard } from './dashboards/student/student-dashboard/student
 // Student profile
 import { Profile } from './features/student/profile/profile/profile';
 
+// Student cheatsheet
+import { StudentCheatsheetComponent } from './features/student/cheatsheet/student-cheatsheet/student-cheatsheet';
+import { TechnologyDetailComponent } from './features/student/cheatsheet/technology-detail/technology-detail';
+import { TopicListComponent } from './features/student/cheatsheet/topic-list/topic-list';
+import { SubtopicDetailComponent } from './features/student/cheatsheet/subtopic-detail/subtopic-detail';
+
 // Student study
 import { Study } from './features/student/study/study/study';
 import { Subject } from './features/student/study/subject-learning/subject-learning';
@@ -258,6 +264,26 @@ export const routes: Routes = [
       {
         path: 'student-chat',
         component: StudentChatComponent
+      },
+        //STUDENT CHEATSHEET
+      {
+        path: 'student-cheatsheet',
+        component: StudentCheatsheetComponent
+      },
+
+      {
+        path: 'cheatsheet/technology/:id',
+        component: TechnologyDetailComponent
+      },
+
+      {
+        path: 'cheatsheet/technology/:technologyId/category/:categoryId',
+        component: TopicListComponent
+      },
+
+      {
+        path: 'cheatsheet/technology/:technologyId/category/:categoryId/topic/:topicId',
+        component: SubtopicDetailComponent
       },
 
     ]

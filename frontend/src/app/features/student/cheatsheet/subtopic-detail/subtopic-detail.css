@@ -1,0 +1,252 @@
+
+/* ==============================
+   SUBTOPIC DETAIL PAGE
+================================ */
+
+.subtopic-detail-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 32px 64px;
+  color: #172033;
+  box-sizing: border-box;
+}
+
+/* ==============================
+   PAGE HEADER
+================================ */
+
+.subtopic-header {
+  margin-bottom: 36px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 10px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  border-color: #c7d2fe;
+  background: #f5f7ff;
+  color: #4338ca;
+  transform: translateX(-2px);
+}
+
+.subtopic-header h1 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.2;
+  letter-spacing: -1px;
+  font-weight: 750;
+  color: #111827;
+}
+
+.subtopic-header p {
+  max-width: 680px;
+  margin: 0;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* ==============================
+   CONTENT SECTION
+================================ */
+
+.subtopics-section h2 {
+  margin: 0 0 24px;
+  font-size: 21px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ==============================
+   SUBTOPIC CARD
+================================ */
+
+.subtopics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.subtopic-card {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid #e5eaf2;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subtopic-card:hover {
+  border-color: #d6dcf5;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.055);
+}
+
+.subtopic-card h3 {
+  margin: 0 0 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #edf0f5;
+  color: #111827;
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* ==============================
+   LEARNING CONTENT
+================================ */
+
+.content-section {
+  margin-top: 24px;
+}
+
+.content-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.content-section p {
+  margin: 0;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ==============================
+   CODE AND OUTPUT
+================================ */
+
+.content-section pre {
+  width: 100%;
+  margin: 0;
+  padding: 20px 22px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  border: 1px solid #293548;
+  border-radius: 12px;
+  background: #111827;
+  color: #e5edf9;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.85;
+  tab-size: 2;
+}
+
+.content-section pre code {
+  color: inherit;
+  font: inherit;
+  white-space: pre;
+}
+
+/* ==============================
+   LOADING / EMPTY / ERROR
+================================ */
+
+.status-message,
+.empty-message {
+  padding: 28px;
+  border: 1px dashed #dbe2ec;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.error-message {
+  padding: 20px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fff7f7;
+  color: #b91c1c;
+}
+
+.error-message p {
+  margin: 0 0 14px;
+}
+
+.error-message button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #b91c1c;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.error-message button:hover {
+  background: #991b1b;
+}
+
+/* ==============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+  .subtopic-detail-page {
+    padding: 24px 18px 40px;
+  }
+
+  .subtopic-header {
+    margin-bottom: 28px;
+  }
+
+  .back-button {
+    margin-bottom: 24px;
+  }
+
+  .subtopic-header p {
+    font-size: 14px;
+  }
+
+  .subtopic-card {
+    padding: 20px;
+    border-radius: 13px;
+  }
+
+  .subtopic-card h3 {
+    font-size: 19px;
+  }
+
+  .content-section pre {
+    padding: 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 420px) {
+  .subtopic-detail-page {
+    padding: 20px 14px 32px;
+  }
+
+  .subtopic-card {
+    padding: 16px;
+  }
+
+  .content-section pre {
+    padding: 13px;
+    font-size: 12px;
+  }
+}

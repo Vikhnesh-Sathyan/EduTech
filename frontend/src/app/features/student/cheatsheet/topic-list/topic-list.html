@@ -1,0 +1,56 @@
+
+<div class="topic-list-page">
+
+  <header class="topic-list-header">
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()">
+      ← Back
+    </button>
+
+    <h1>{{ categoryName() }}</h1>
+    <p>Explore the topics available in this category.</p>
+  </header>
+
+  <section class="topics-section">
+    <h2>Topics</h2>
+
+    <!-- Loading -->
+    <p class="status-message" *ngIf="loading()">
+      Loading topics...
+    </p>
+
+    <!-- Error -->
+    <div class="error-message" *ngIf="errorMessage()">
+      <p>{{ errorMessage() }}</p>
+
+      <button type="button" (click)="loadTopics()">
+        Retry
+      </button>
+    </div>
+
+    <!-- Topic List -->
+    <div
+      class="topics-grid"
+      *ngIf="!loading() && !errorMessage()">
+
+      <button
+        type="button"
+        class="topic-card"
+        *ngFor="let topic of topics()"
+        (click)="selectTopic(topic)">
+
+        <h3>{{ topic.name }}</h3>
+        <span>Explore subtopics →</span>
+
+      </button>
+
+      <p *ngIf="topics().length === 0">
+        No topics available in this category yet.
+      </p>
+
+    </div>
+  </section>
+
+</div>

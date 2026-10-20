@@ -1,0 +1,67 @@
+
+<div class="technology-detail-page">
+
+  <header class="detail-header">
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()">
+      ← Back to Cheatsheet
+    </button>
+
+    <h1>{{ technologyName() }}</h1>
+    <p>Explore categories, topics, and programming concepts.</p>
+  </header>
+
+  <section class="category-section">
+    <h2>Categories</h2>
+
+    <!-- Loading -->
+    <div class="status-message" *ngIf="loading()">
+      Loading categories...
+    </div>
+
+    <!-- Error -->
+    <div class="error-message" *ngIf="errorMessage()">
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        (click)="loadCategories()">
+        Retry
+      </button>
+    </div>
+
+    <!-- Categories -->
+    <div
+      class="category-grid"
+      *ngIf="!loading() && !errorMessage()">
+
+      <button
+        type="button"
+        class="category-card"
+        *ngFor="let category of categories()"
+        (click)="selectCategory(category)">
+
+       
+
+        <h3>{{ category.name }}</h3>
+
+        <span class="view-link">
+          Explore topics →
+        </span>
+
+      </button>
+
+    </div>
+
+    <!-- Empty state -->
+    <p
+      class="empty-message"
+      *ngIf="!loading() && !errorMessage() && categories().length === 0">
+      No categories available for this technology yet.
+    </p>
+
+  </section>
+
+</div>

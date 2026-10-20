@@ -1,0 +1,109 @@
+
+.topic-list-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  color: #1e293b;
+}
+
+.topic-list-header {
+  margin-bottom: 32px;
+}
+
+.back-button {
+  margin-bottom: 20px;
+  padding: 9px 15px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+}
+
+.topic-list-header h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.topic-list-header p {
+  color: #64748b;
+}
+
+.topics-section h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.topic-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 6%);
+}
+
+.topic-card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.topic-card span {
+  color: #2563eb;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.status-message,
+.error-message {
+  padding: 14px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.error-message button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #b91c1c;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .topic-list-page {
+    padding: 24px 16px;
+  }
+
+  .topics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

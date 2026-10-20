@@ -1,0 +1,135 @@
+
+.technology-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  color: #1e293b;
+}
+
+.detail-header {
+  margin-bottom: 36px;
+}
+
+.back-button {
+  margin-bottom: 24px;
+  padding: 10px 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-button:hover {
+  background: #f1f5f9;
+}
+
+.detail-header h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.detail-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.category-section h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 160px;
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+}
+
+.category-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  padding: 0 8px;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.category-card h3 {
+  margin: 0 0 16px;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.view-link {
+  margin-top: auto;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-message,
+.error-message {
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.error-message button {
+  margin-left: 12px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #b91c1c;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .technology-detail-page {
+    padding: 24px 16px;
+  }
+
+  .detail-header h1 {
+    font-size: 26px;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+}
