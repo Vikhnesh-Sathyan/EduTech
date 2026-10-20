@@ -10,30 +10,55 @@
     </button>
 
     <h1>{{ topicName() }}</h1>
-    <p>Explore explanations, code examples, and expected outputs.</p>
+    <p>Search concepts and explore explanations with examples.</p>
   </header>
 
-  <section class="subtopics-section">
-    <h2>Learning Content</h2>
+  <!-- Search -->
+  <div class="search-box">
+    <span class="search-icon">⌕</span>
 
-    <p *ngIf="loading()" class="status-message">
-      Loading learning content...
-    </p>
+    <input
+      type="search"
+      placeholder="Search subtopics, definitions, code..."
+      [value]="searchText()"
+      (input)="searchText.set($any($event.target).value)"
+    />
 
-    <div *ngIf="errorMessage()" class="error-message">
-      <p>{{ errorMessage() }}</p>
-      <button type="button" (click)="loadSubtopics()">
-        Retry
-      </button>
+    <button
+      *ngIf="searchText()"
+      type="button"
+      class="clear-search"
+      (click)="searchText.set('')">
+      Clear
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <p *ngIf="loading()" class="status-message">
+    Loading learning content...
+  </p>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage()" class="error-message">
+    <p>{{ errorMessage() }}</p>
+    <button type="button" (click)="loadSubtopics()">Retry</button>
+  </div>
+
+  <!-- Subtopics -->
+  <section
+    class="subtopics-section"
+    *ngIf="!loading() && !errorMessage()">
+
+    <div class="results-header">
+      <h2>Concepts</h2>
+      <span>{{ filteredSubtopics().length }} results</span>
     </div>
 
-    <div
-      class="subtopics-list"
-      *ngIf="!loading() && !errorMessage()">
+    <div class="subtopics-list">
 
       <article
         class="subtopic-card"
-        *ngFor="let subtopic of subtopics()">
+        *ngFor="let subtopic of filteredSubtopics()">
 
         <h3>{{ subtopic.name }}</h3>
 
@@ -42,28 +67,49 @@
           <p>{{ subtopic.definition }}</p>
         </div>
 
-        <div class="content-section" *ngIf="subtopic.code_example">
-          <h4>Code Example</h4>
-          <pre><code>{{ subtopic.code_example }}</code></pre>
+        <!-- Expanded content -->
+        <div
+          class="expanded-content"
+          *ngIf="isExpanded(subtopic.id)">
+
+          <div class="content-section" *ngIf="subtopic.code_example">
+            <h4>Code Example</h4>
+            <pre><code>{{ subtopic.code_example }}</code></pre>
+          </div>
+
+          <div class="content-section" *ngIf="subtopic.expected_output">
+            <h4>Expected Output</h4>
+            <pre><code>{{ subtopic.expected_output }}</code></pre>
+          </div>
+
+          <div class="content-section" *ngIf="subtopic.memory_trick">
+            <h4>Memory Trick</h4>
+            <p>{{ subtopic.memory_trick }}</p>
+          </div>
+
         </div>
 
-        <div class="content-section" *ngIf="subtopic.expected_output">
-          <h4>Expected Output</h4>
-          <pre><code>{{ subtopic.expected_output }}</code></pre>
-        </div>
+        <button
+          type="button"
+          class="read-more-button"
+          *ngIf="
+            subtopic.code_example ||
+            subtopic.expected_output ||
+            subtopic.memory_trick
+          "
+          (click)="toggleSubtopic(subtopic.id)">
 
-        <div class="content-section" *ngIf="subtopic.memory_trick">
-          <h4>Memory Trick</h4>
-          <p>{{ subtopic.memory_trick }}</p>
-        </div>
+          {{ isExpanded(subtopic.id) ? 'Show less ↑' : 'Read more ↓' }}
+
+        </button>
 
       </article>
 
-      <p
-        *ngIf="subtopics().length === 0"
+      <div
+        *ngIf="filteredSubtopics().length === 0"
         class="empty-message">
-        No learning content available for this topic yet.
-      </p>
+        No matching concepts found. Try another search.
+      </div>
 
     </div>
   </section>

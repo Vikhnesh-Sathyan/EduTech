@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,6 +27,41 @@ export class SubtopicDetailComponent {
   subtopics = signal<StudentCheatsheetSubtopic[]>([]);
   loading = signal(false);
   errorMessage = signal('');
+
+  searchText = signal('');
+  expandedSubtopics = signal<number[]>([]);
+
+  filteredSubtopics = computed(() => {
+  const search = this.searchText().trim().toLowerCase();
+
+  if (!search) {
+    return this.subtopics();
+  }
+
+  return this.subtopics().filter((subtopic) =>
+    [
+      subtopic.name,
+      subtopic.definition,
+      subtopic.code_example,
+      subtopic.memory_trick,
+      subtopic.expected_output
+    ]
+      .filter(Boolean)
+      .some((value) => value!.toLowerCase().includes(search))
+  );
+});
+
+toggleSubtopic(id: number): void {
+  this.expandedSubtopics.update((ids) =>
+    ids.includes(id)
+      ? ids.filter((item) => item !== id)
+      : [...ids, id]
+  );
+}
+
+isExpanded(id: number): boolean {
+  return this.expandedSubtopics().includes(id);
+}
 
   constructor() {
     this.technologyId.set(
