@@ -26,3 +26,5 @@ Thumbs.db
 # Developer Cheat Sheet data
 data/cheatsheet/technologies.csv
 
+# Ignore technology images
+frontend/public/assets/images/technologies/
