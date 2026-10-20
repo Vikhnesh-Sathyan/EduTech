@@ -1,1 +1,244 @@
-<p>topic-management works!</p>
+
+<section class="topic-management">
+
+  <header class="section-header">
+    <div>
+      <h2>Topic Management</h2>
+      <p>Manage topics and their developer reference content.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadTechnologies()"
+      [disabled]="loadingTechnologies()">
+      Refresh
+    </button>
+  </header>
+
+  <!-- Technology Selection -->
+  <div class="selection-grid">
+    <div class="form-group">
+      <label for="technology">Technology</label>
+
+      <select
+        id="technology"
+        [ngModel]="selectedTechnologyId()"
+        (ngModelChange)="selectTechnology($event === null ? null : +$event)"
+        [disabled]="loadingTechnologies()">
+
+        <option [ngValue]="null">Choose a technology</option>
+
+        <option
+          *ngFor="let technology of technologies()"
+          [ngValue]="technology.id">
+          {{ technology.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Category Selection -->
+    <div class="form-group">
+      <label for="category">Category</label>
+
+      <select
+        id="category"
+        [ngModel]="selectedCategoryId()"
+        (ngModelChange)="selectCategory($event === null ? null : +$event)"
+        [disabled]="selectedTechnologyId() === null || loadingCategories()">
+
+        <option [ngValue]="null">Choose a category</option>
+
+        <option
+          *ngFor="let category of categories()"
+          [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <p class="status-message" *ngIf="loadingTechnologies()">
+    Loading technologies...
+  </p>
+
+  <p class="status-message" *ngIf="loadingCategories()">
+    Loading categories...
+  </p>
+
+  <p class="status-message" *ngIf="loadingTopics()">
+    Loading topics...
+  </p>
+
+  <p class="success-message" *ngIf="message()">
+    {{ message() }}
+  </p>
+
+  <p class="error-message" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <!-- Topic Form -->
+  <form
+    class="topic-form"
+    *ngIf="selectedCategoryId() !== null"
+    (ngSubmit)="saveTopic()">
+
+    <h3>
+      {{ editingTopicId() !== null ? 'Edit Topic' : 'Add Topic' }}
+    </h3>
+
+    <div class="form-group">
+      <label for="topicName">Topic Name *</label>
+
+      <input
+        id="topicName"
+        type="text"
+        name="topicName"
+        [(ngModel)]="topicName"
+        placeholder="Example: Variables"
+        maxlength="200"
+        required>
+    </div>
+
+    <div class="form-group">
+      <label for="definition">Definition *</label>
+
+      <textarea
+        id="definition"
+        name="definition"
+        [(ngModel)]="definition"
+        rows="4"
+        placeholder="Explain this topic in simple words..."
+        required>
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="codeExample">Code Example (Optional)</label>
+
+      <textarea
+        id="codeExample"
+        name="codeExample"
+        [(ngModel)]="codeExample"
+        rows="5"
+        placeholder="Write a simple code example...">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="expectedOutput">Expected Output (Optional)</label>
+
+      <textarea
+        id="expectedOutput"
+        name="expectedOutput"
+        [(ngModel)]="expectedOutput"
+        rows="2"
+        placeholder="Example: Hello World">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="memoryTrick">Trick to Remember (Optional)</label>
+
+      <textarea
+        id="memoryTrick"
+        name="memoryTrick"
+        [(ngModel)]="memoryTrick"
+        rows="2"
+        placeholder="Add an easy way to remember this topic...">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="displayOrder">Display Order</label>
+
+      <input
+        id="displayOrder"
+        type="number"
+        name="displayOrder"
+        [(ngModel)]="displayOrder"
+        min="1"
+        step="1"
+        required>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="saving()">
+
+        {{
+          saving()
+            ? 'Saving...'
+            : editingTopicId() !== null
+              ? 'Update Topic'
+              : 'Create Topic'
+        }}
+      </button>
+
+      <button
+        type="button"
+        class="cancel-button"
+        *ngIf="editingTopicId() !== null"
+        (click)="resetForm()">
+        Cancel
+      </button>
+    </div>
+  </form>
+
+  <!-- Existing Topics -->
+  <div class="topic-list" *ngIf="selectedCategoryId() !== null">
+
+    <h3>Existing Topics</h3>
+
+    <p
+      class="status-message"
+      *ngIf="!loadingTopics() && topics().length === 0">
+      No topics found for this category.
+    </p>
+
+    <article class="topic-card" *ngFor="let topic of topics()">
+
+      <div class="topic-details">
+        <h4>{{ topic.name }}</h4>
+        <p class="topic-definition">{{ topic.definition }}</p>
+
+        <pre *ngIf="topic.code_example"><code>{{ topic.code_example }}</code></pre>
+
+        <p *ngIf="topic.expected_output">
+          <strong>Expected output:</strong>
+          {{ topic.expected_output }}
+        </p>
+
+        <p *ngIf="topic.memory_trick">
+          <strong>Remember:</strong>
+          {{ topic.memory_trick }}
+        </p>
+
+        <p class="display-order">
+          Display order: {{ topic.display_order }}
+        </p>
+      </div>
+
+      <div class="topic-actions">
+        <button
+          type="button"
+          class="edit-button"
+          (click)="editTopic(topic)">
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deleteTopic(topic)">
+          Delete
+        </button>
+      </div>
+
+    </article>
+  </div>
+
+</section>

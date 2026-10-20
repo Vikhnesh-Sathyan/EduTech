@@ -1,0 +1,255 @@
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.subtopic-management {
+  padding: 24px;
+  color: #1e293b;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.section-header p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  font: inherit;
+}
+
+.form-group textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgb(79 70 229 / 12%);
+}
+
+.subtopic-form {
+  margin-bottom: 30px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.subtopic-form h3,
+.subtopic-list h3 {
+  margin: 0 0 20px;
+  font-size: 19px;
+}
+
+.form-actions,
+.subtopic-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary-button,
+.cancel-button,
+.refresh-button,
+.edit-button,
+.delete-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.primary-button {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #4338ca;
+}
+
+.cancel-button,
+.refresh-button {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.cancel-button:hover,
+.refresh-button:hover {
+  background: #cbd5e1;
+}
+
+.edit-button {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.edit-button:hover {
+  background: #bfdbfe;
+}
+
+.delete-button {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-button:hover {
+  background: #fecaca;
+}
+
+.primary-button:disabled,
+.refresh-button:disabled,
+.cancel-button:disabled,
+.edit-button:disabled,
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.subtopic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.subtopic-list h3 {
+  margin-bottom: 4px;
+}
+
+.subtopic-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.subtopic-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.subtopic-details h4 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.subtopic-definition {
+  margin: 0 0 14px;
+  color: #475569;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.subtopic-details pre {
+  overflow-x: auto;
+  margin: 14px 0;
+  padding: 16px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.subtopic-details p {
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.display-order {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.status-message,
+.success-message,
+.error-message {
+  margin: 14px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.status-message {
+  color: #64748b;
+}
+
+@media (max-width: 900px) {
+  .selection-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .subtopic-management {
+    padding: 14px;
+  }
+
+  .selection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header,
+  .subtopic-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .subtopic-actions button {
+    flex: 1;
+  }
+}

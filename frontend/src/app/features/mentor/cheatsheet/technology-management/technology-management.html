@@ -5,67 +5,173 @@
     <div>
       <h2>Select Technology</h2>
       <p>
-        Choose an existing technology to manage your
-        categories, topics, and subtopics.
+        Choose a technology to manage your categories, topics, and subtopics.
       </p>
     </div>
 
-    <button
-      type="button"
-      class="refresh-button"
-      (click)="loadTechnologies()"
-      [disabled]="loading()">
-      {{ loading() ? 'Loading...' : 'Refresh' }}
-    </button>
+    <div class="header-actions">
+      <button
+        type="button"
+        class="add-button"
+        (click)="openAddModal()">
+        + Add Technology
+      </button>
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="loadTechnologies()"
+        [disabled]="loading()">
+        {{ loading() ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
   </header>
 
-  <!-- Loading -->
   <p class="status-message" *ngIf="loading()">
     Loading technologies...
   </p>
 
-  <!-- Error -->
   <p class="error-message" *ngIf="error()">
     {{ error() }}
   </p>
 
-  <!-- Technology Cards -->
   <div
     class="technology-grid"
     *ngIf="!loading() && !error()">
 
-    <button
-      type="button"
+    <article
       class="technology-card"
       *ngFor="let technology of technologies()"
-      [class.selected]="selectedTechnologyId() === technology.id"
-      [attr.aria-pressed]="selectedTechnologyId() === technology.id"
-      (click)="selectTechnology(technology.id)">
+      [class.selected]="selectedTechnologyId() === technology.id">
 
-      <span class="technology-name">
-        {{ technology.name }}
+      <button
+        type="button"
+        class="technology-select"
+        [attr.aria-pressed]="selectedTechnologyId() === technology.id"
+        (click)="selectTechnology(technology.id)">
+
+        <span class="technology-name">
+          {{ technology.name }}
+        </span>
+
+        <span
+          class="technology-description"
+          *ngIf="technology.description">
+          {{ technology.description }}
+        </span>
+
+        <span
+          class="selected-label"
+          *ngIf="selectedTechnologyId() === technology.id">
+          Selected
+        </span>
+      </button>
+
+      <div class="technology-actions" *ngIf="technology.is_owner">
+        <button
+          type="button"
+          class="edit-button"
+          (click)="openEditModal(technology)">
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="openDeleteModal(technology)">
+          Delete
+        </button>
+      </div>
+
+      <span class="owner-label" *ngIf="!technology.is_owner">
+        Read only
       </span>
 
-      <span
-        class="technology-description"
-        *ngIf="technology.description">
-        {{ technology.description }}
-      </span>
-
-      <span
-        class="selected-label"
-        *ngIf="selectedTechnologyId() === technology.id">
-        Selected
-      </span>
-
-    </button>
+    </article>
 
     <p
       class="status-message"
       *ngIf="technologies().length === 0">
-      No active technologies are available.
+      No active technologies are available. Add your first technology!
     </p>
 
   </div>
 
 </section>
+
+<!-- Add / Edit Technology Modal -->
+<div
+  class="technology-modal-backdrop"
+  *ngIf="showTechnologyModal()"
+  (click)="closeTechnologyModal()">
+
+  <section
+    class="technology-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="technology-modal-title"
+    (click)="$event.stopPropagation()">
+
+    <h3 id="technology-modal-title">
+      {{ editingTechnologyId() === null
+        ? 'Add Technology'
+        : 'Edit Technology' }}
+    </h3>
+
+    <p>
+      Enter the technology name below.
+    </p>
+
+    <form (ngSubmit)="saveTechnology()">
+
+      <label for="technologyName">
+        Technology Name
+      </label>
+
+      <input
+        id="technologyName"
+        type="text"
+        name="technologyName"
+        [ngModel]="technologyName()"
+        (ngModelChange)="technologyName.set($event)"
+        placeholder="e.g. Angular"
+        maxlength="100"
+        required
+        autofocus />
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeTechnologyModal()"
+          [disabled]="saving()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="saving()">
+          {{ saving()
+            ? 'Saving...'
+            : editingTechnologyId() === null
+              ? 'Add Technology'
+              : 'Save Changes' }}
+        </button>
+      </div>
+
+    </form>
+  </section>
+</div>
+
+<!-- Shared Delete Confirmation Modal -->
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Technology"
+  message="Are you sure you want to delete this technology? Existing related content may prevent deletion."
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>

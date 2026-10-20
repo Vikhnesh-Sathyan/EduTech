@@ -13,6 +13,8 @@ import {
   MentorCheatsheetTechnologyService
 } from '../../../../services/mentor/cheatsheet/mentor-cheatsheet-technology';
 
+import { MentorCheatsheetSelectionService } from '../../../../services/mentor/cheatsheet/mentor-cheatsheet-selection';
+
 @Component({
   selector: 'app-category-management',
   standalone: true,
@@ -33,10 +35,12 @@ export class CategoryManagementComponent {
     MentorCheatsheetTechnologyService
   );
 
+  private selectionService = inject(MentorCheatsheetSelectionService);
+
   technologies = signal<MentorCheatsheetTechnology[]>([]);
   categories = signal<MentorCheatsheetCategory[]>([]);
 
-  selectedTechnologyId = signal<number | null>(null);
+  selectedTechnologyId = this.selectionService.selectedTechnologyId;
 
   loadingTechnologies = signal(false);
   loadingCategories = signal(false);
@@ -54,56 +58,76 @@ export class CategoryManagementComponent {
     this.loadTechnologies();
   }
 
-  loadTechnologies(): void {
-    this.loadingTechnologies.set(true);
-    this.error.set('');
+  
+loadTechnologies(): void {
+  this.loadingTechnologies.set(true);
+  this.error.set('');
 
-    this.technologyService.getTechnologies().subscribe({
-      next: (response) => {
-        this.technologies.set(response.technologies);
-        this.loadingTechnologies.set(false);
-      },
-      error: (err) => {
-        this.error.set(
-          err.error?.message || 'Failed to load technologies.'
-        );
-        this.loadingTechnologies.set(false);
+  this.technologyService.getTechnologies().subscribe({
+    next: (response) => {
+      this.technologies.set(response.technologies);
+      this.loadingTechnologies.set(false);
+
+      const selectedId = this.selectedTechnologyId();
+
+      if (
+        selectedId !== null &&
+        response.technologies.some(
+          technology => technology.id === selectedId
+        )
+      ) {
+        this.loadCategories();
+      } else {
+        this.categories.set([]);
       }
-    });
-  }
+    },
+    error: (err) => {
+      this.error.set(
+        err.error?.message || 'Failed to load technologies.'
+      );
+      this.loadingTechnologies.set(false);
+    }
+  });
+}
+
 
   selectTechnology(technologyId: number): void {
-    this.selectedTechnologyId.set(technologyId);
+  this.selectionService.selectTechnology(technologyId);
+  this.categories.set([]);
+  this.message.set('');
+  this.error.set('');
+  this.resetForm();
+  this.loadCategories();
+}
+
+ 
+loadCategories(): void {
+  const technologyId = this.selectedTechnologyId();
+
+  if (technologyId === null) {
     this.categories.set([]);
-    this.message.set('');
-    this.error.set('');
-    this.resetForm();
-    this.loadCategories();
+    this.loadingCategories.set(false);
+    return;
   }
 
-  loadCategories(): void {
-    const technologyId = this.selectedTechnologyId();
+  this.loadingCategories.set(true);
+  this.error.set('');
 
-    if (technologyId === null) {
-      return;
+  this.categoryService.getCategories(technologyId).subscribe({
+    next: (response) => {
+      this.categories.set(response.categories);
+      this.loadingCategories.set(false);
+    },
+    error: (err) => {
+      this.categories.set([]);
+      this.error.set(
+        err.error?.message || 'Failed to load categories.'
+      );
+      this.loadingCategories.set(false);
     }
+  });
+}
 
-    this.loadingCategories.set(true);
-    this.error.set('');
-
-    this.categoryService.getCategories(technologyId).subscribe({
-      next: (response) => {
-        this.categories.set(response.categories);
-        this.loadingCategories.set(false);
-      },
-      error: (err) => {
-        this.error.set(
-          err.error?.message || 'Failed to load categories.'
-        );
-        this.loadingCategories.set(false);
-      }
-    });
-  }
 
   saveCategory(): void {
     const technologyId = this.selectedTechnologyId();

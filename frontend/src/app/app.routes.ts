@@ -108,6 +108,9 @@ import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-chea
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
 import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
 
+// Mentor Cheatsheet
+import { MentorCheatsheetComponent } from './features/mentor/cheatsheet/mentor-cheatsheet/mentor-cheatsheet';
+
 // Mentor features
 import { MentorProfile } from './features/mentor/profile/mentor-profile/mentor-profile';
 import { MentorRequests } from './features/mentor/requests/mentor-requests/mentor-requests';
@@ -382,6 +385,10 @@ export const routes: Routes = [
       {
         path: 'mentor-profile',
         component: MentorProfile
+      },
+      {
+        path: 'mentor-cheatsheet',
+        component: MentorCheatsheetComponent
       },
       {
         path: 'mentor-requests',

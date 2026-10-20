@@ -21,7 +21,6 @@ import { SubtopicManagementComponent } from '../subtopic-management/subtopic-man
   styleUrl: './mentor-cheatsheet.css'
 })
 export class MentorCheatsheetComponent {
-
   activeTab = signal<
     'technologies' | 'categories' | 'topics' | 'subtopics'
   >('technologies');

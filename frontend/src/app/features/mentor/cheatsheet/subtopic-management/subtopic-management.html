@@ -1,1 +1,276 @@
-<p>subtopic-management works!</p>
+
+<section class="subtopic-management">
+
+  <header class="section-header">
+    <div>
+      <h2>Subtopic Management</h2>
+      <p>Manage detailed explanations and examples under each topic.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadTechnologies()"
+      [disabled]="loadingTechnologies()">
+      Refresh
+    </button>
+  </header>
+
+  <!-- Technology, Category and Topic Selection -->
+  <div class="selection-grid">
+
+    <div class="form-group">
+      <label for="technology">Technology</label>
+
+      <select
+        id="technology"
+        [ngModel]="selectedTechnologyId()"
+        (ngModelChange)="selectTechnology($event === null ? null : +$event)"
+        [disabled]="loadingTechnologies()">
+
+        <option [ngValue]="null">Choose a technology</option>
+
+        <option
+          *ngFor="let technology of technologies()"
+          [ngValue]="technology.id">
+          {{ technology.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+
+      <select
+        id="category"
+        [ngModel]="selectedCategoryId()"
+        (ngModelChange)="selectCategory($event === null ? null : +$event)"
+        [disabled]="selectedTechnologyId() === null || loadingCategories()">
+
+        <option [ngValue]="null">Choose a category</option>
+
+        <option
+          *ngFor="let category of categories()"
+          [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="topic">Topic</label>
+
+      <select
+        id="topic"
+        [ngModel]="selectedTopicId()"
+        (ngModelChange)="selectTopic($event === null ? null : +$event)"
+        [disabled]="selectedCategoryId() === null || loadingTopics()">
+
+        <option [ngValue]="null">Choose a topic</option>
+
+        <option
+          *ngFor="let topic of topics()"
+          [ngValue]="topic.id">
+          {{ topic.name }}
+        </option>
+      </select>
+    </div>
+
+  </div>
+
+  <p class="status-message" *ngIf="loadingTechnologies()">
+    Loading technologies...
+  </p>
+
+  <p class="status-message" *ngIf="loadingCategories()">
+    Loading categories...
+  </p>
+
+  <p class="status-message" *ngIf="loadingTopics()">
+    Loading topics...
+  </p>
+
+  <p class="status-message" *ngIf="loadingSubtopics()">
+    Loading subtopics...
+  </p>
+
+  <!-- Subtopic Form -->
+  <form
+    class="subtopic-form"
+    *ngIf="selectedTopicId() !== null"
+    (ngSubmit)="saveSubtopic()">
+
+    <h3>
+      {{ editingSubtopicId() !== null ? 'Edit Subtopic' : 'Add Subtopic' }}
+    </h3>
+
+    <div class="form-group">
+      <label for="subtopicName">Subtopic Name *</label>
+
+      <input
+        id="subtopicName"
+        type="text"
+        name="subtopicName"
+        [(ngModel)]="subtopicName"
+        placeholder="Example: Declaring Variables"
+        maxlength="200"
+        required>
+    </div>
+
+    <div class="form-group">
+      <label for="definition">Definition *</label>
+
+      <textarea
+        id="definition"
+        name="definition"
+        [(ngModel)]="definition"
+        rows="4"
+        placeholder="Explain this subtopic in simple words..."
+        required>
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="codeExample">Code Example (Optional)</label>
+
+      <textarea
+        id="codeExample"
+        name="codeExample"
+        [(ngModel)]="codeExample"
+        rows="5"
+        placeholder="Write a code example...">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="expectedOutput">Expected Output (Optional)</label>
+
+      <textarea
+        id="expectedOutput"
+        name="expectedOutput"
+        [(ngModel)]="expectedOutput"
+        rows="2"
+        placeholder="Example: 10">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="memoryTrick">Trick to Remember (Optional)</label>
+
+      <textarea
+        id="memoryTrick"
+        name="memoryTrick"
+        [(ngModel)]="memoryTrick"
+        rows="2"
+        placeholder="Add a simple memory trick...">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="displayOrder">Display Order</label>
+
+      <input
+        id="displayOrder"
+        type="number"
+        name="displayOrder"
+        [(ngModel)]="displayOrder"
+        min="1"
+        step="1"
+        required>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="saving()">
+
+        {{
+          saving()
+            ? 'Saving...'
+            : editingSubtopicId() !== null
+              ? 'Update Subtopic'
+              : 'Create Subtopic'
+        }}
+      </button>
+
+      <button
+        type="button"
+        class="cancel-button"
+        *ngIf="editingSubtopicId() !== null"
+        (click)="resetForm()">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Existing Subtopics -->
+  <div class="subtopic-list" *ngIf="selectedTopicId() !== null">
+
+    <h3>Existing Subtopics</h3>
+
+    <p
+      class="status-message"
+      *ngIf="!loadingSubtopics() && subtopics().length === 0">
+      No subtopics found for this topic.
+    </p>
+
+    <article
+      class="subtopic-card"
+      *ngFor="let subtopic of subtopics()">
+
+      <div class="subtopic-details">
+        <h4>{{ subtopic.name }}</h4>
+
+        <p class="subtopic-definition">
+          {{ subtopic.definition }}
+        </p>
+
+        <pre *ngIf="subtopic.code_example"><code>{{ subtopic.code_example }}</code></pre>
+
+        <p *ngIf="subtopic.expected_output">
+          <strong>Expected output:</strong>
+          {{ subtopic.expected_output }}
+        </p>
+
+        <p *ngIf="subtopic.memory_trick">
+          <strong>Remember:</strong>
+          {{ subtopic.memory_trick }}
+        </p>
+
+        <p class="display-order">
+          Display order: {{ subtopic.display_order }}
+        </p>
+      </div>
+
+      <div class="subtopic-actions">
+        <button
+          type="button"
+          class="edit-button"
+          (click)="editSubtopic(subtopic)">
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="delete-button"
+          (click)="deleteSubtopic(subtopic)">
+          Delete
+        </button>
+      </div>
+
+    </article>
+  </div>
+</section>
+
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Subtopic"
+  [message]="'Are you sure you want to delete ' + (deletingSubtopic()?.name || 'this subtopic') + '?'"
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>
