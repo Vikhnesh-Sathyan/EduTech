@@ -8,29 +8,57 @@
 
     <section class="dashboard-main">
 
+      <!-- Welcome -->
       <app-welcome-section
         [userName]="userName()">
       </app-welcome-section>
 
-<app-current-focus></app-current-focus>
+      <!-- Current Learning Focus -->
+      <app-current-focus></app-current-focus>
 
-<!-- Student Recommendation shortcut -->
-<section class="dashboard-shortcut">
-  <div class="shortcut-content">
-    <h2>Student Recommendation</h2>
-    <p>
-      Explore learning resources, ask community doubts, and discover
-      more learning opportunities in one place.
-    </p>
-  </div>
+      <!-- Student Recommendation -->
+      <section class="dashboard-shortcut recommendation-shortcut">
 
-  <button
-    type="button"
-    (click)="openStudentRecommendation()"
-  >
-    Explore Learning →
-  </button>
-</section>
+        <div class="shortcut-content">
+          <span class="shortcut-label">LEARNING</span>
+
+          <h2>Student Recommendation</h2>
+
+          <p>
+            Explore learning resources, ask community doubts, and discover
+            more learning opportunities in one place.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="openStudentRecommendation()">
+          Explore Learning <span>→</span>
+        </button>
+
+      </section>
+
+      <!-- Skill Swap -->
+      <section class="dashboard-shortcut skill-swap-shortcut">
+
+        <div class="shortcut-content">
+          <span class="shortcut-label">PEER LEARNING</span>
+
+          <h2>Skill Swap</h2>
+
+          <p>
+            Share the skills you know, learn something new from fellow
+            students, and connect with people who share your interests.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="openSkillSwap()">
+          Explore Skill Swap <span>→</span>
+        </button>
+
+      </section>
 
     </section>
 

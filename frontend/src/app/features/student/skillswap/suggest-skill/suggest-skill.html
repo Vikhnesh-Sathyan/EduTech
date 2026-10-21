@@ -1,0 +1,96 @@
+
+<div class="suggest-skill-page">
+
+  <a routerLink="/skill-swap" class="back-link">
+    ← Back to Skill Swap
+  </a>
+
+  <section class="suggest-hero">
+    <div class="hero-icon">✦</div>
+    <span class="eyebrow">GROW THE COMMUNITY</span>
+    <h1>Suggest a Skill</h1>
+    <p>
+      Can't find the skill you're looking for?
+      Suggest it to help fellow students learn something new.
+    </p>
+  </section>
+
+  <section class="suggest-card">
+
+    <div class="card-heading">
+      <div>
+        <h2>Skill details</h2>
+        <p>Tell us about the skill you want to add.</p>
+      </div>
+      <span class="review-badge">Admin review required</span>
+    </div>
+
+    <form (ngSubmit)="submitSuggestion()" #skillForm="ngForm">
+
+      <div class="form-field">
+        <label for="skillName">Skill name *</label>
+        <input
+          id="skillName"
+          name="name"
+          type="text"
+          [(ngModel)]="name"
+          placeholder="e.g. Machine Learning"
+          maxlength="100"
+          required />
+        <small>Choose a clear, recognizable skill name.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="skillCategory">Category</label>
+        <input
+          id="skillCategory"
+          name="category"
+          type="text"
+          [(ngModel)]="category"
+          placeholder="e.g. Artificial Intelligence" />
+      </div>
+
+      <div class="form-field">
+        <label for="skillDescription">Description</label>
+        <textarea
+          id="skillDescription"
+          name="description"
+          [(ngModel)]="description"
+          rows="4"
+          placeholder="Briefly describe this skill and what students could learn.">
+        </textarea>
+      </div>
+
+      <div *ngIf="errorMessage" class="feedback error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="feedback success">
+        <strong>✓ Suggestion submitted</strong>
+        <p>{{ successMessage }}</p>
+        <span>Your suggestion is pending admin review.</span>
+      </div>
+
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="loading || !name.trim()">
+        {{ loading ? 'Submitting...' : 'Submit for Review →' }}
+      </button>
+
+    </form>
+  </section>
+
+  <section class="review-note">
+    <span class="note-icon">🛡️</span>
+    <div>
+      <h3>What happens next?</h3>
+      <p>
+        An administrator will review your suggestion.
+        If approved and activated, the skill will become available
+        in My Skills for students to select.
+      </p>
+    </div>
+  </section>
+
+</div>

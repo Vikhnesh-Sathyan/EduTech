@@ -1,0 +1,210 @@
+
+.suggest-skill-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 24px 48px;
+  color: #172033;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 28px;
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.suggest-hero {
+  margin-bottom: 28px;
+}
+
+.hero-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 20px;
+  border-radius: 17px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 30px;
+}
+
+.eyebrow {
+  color: #6366f1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.suggest-hero h1 {
+  margin: 10px 0;
+  font-size: clamp(30px, 5vw, 42px);
+  letter-spacing: -1.5px;
+}
+
+.suggest-hero p,
+.card-heading p,
+.review-note p {
+  color: #64748b;
+  line-height: 1.7;
+}
+
+.suggest-hero p {
+  max-width: 580px;
+}
+
+.suggest-card {
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.05);
+}
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.card-heading h2 {
+  margin: 0 0 8px;
+  font-size: 21px;
+}
+
+.card-heading p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.review-badge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #dbe3ef;
+  border-radius: 12px;
+  background: #fafbff;
+  color: #172033;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.form-field textarea {
+  resize: vertical;
+}
+
+.form-field small {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.feedback {
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.feedback p {
+  margin: 6px 0;
+}
+
+.feedback.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.feedback.success {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.review-note {
+  display: flex;
+  gap: 15px;
+  margin-top: 22px;
+  padding: 22px;
+  border: 1px solid #e0e7ff;
+  border-radius: 18px;
+  background: #f8faff;
+}
+
+.note-icon {
+  font-size: 24px;
+}
+
+.review-note h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.review-note p {
+  margin: 0;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .suggest-skill-page {
+    padding: 22px 15px 36px;
+  }
+
+  .suggest-card {
+    padding: 21px;
+  }
+}

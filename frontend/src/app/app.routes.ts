@@ -16,6 +16,12 @@ import { mentorRoleGuard } from './core/guards/mentor-role.guard';
 import { StudentLayout } from './dashboards/student/student-layout/student-layout';
 import { StudentDashboard } from './dashboards/student/student-dashboard/student-dashboard';
 
+//Skillswap
+import { SkillSwapHome } from './features/student/skillswap/skill-swap-home/skill-swap-home';
+import { MySkills } from './features/student/skillswap/my-skills/my-skills';
+import { SuggestSkill } from './features/student/skillswap/suggest-skill/suggest-skill';
+import { MySuggestions } from'./features/student/skillswap/my-suggestions/my-suggestions';
+
 // Student profile
 import { Profile } from './features/student/profile/profile/profile';
 
@@ -160,6 +166,26 @@ export const routes: Routes = [
       {
         path: 'student-dashboard',
         component: StudentDashboard
+      },
+
+            //SKILLSWAP
+      {
+         path: 'skill-swap',
+        component: SkillSwapHome
+      },
+      {
+         path: 'my-skills',
+         component: MySkills
+      },
+
+      {
+         path: 'suggest-skill',
+         component: SuggestSkill
+      },
+
+      {
+        path: 'my-suggestions',
+        component: MySuggestions
       },
 
      // Student recommendations and learning resources

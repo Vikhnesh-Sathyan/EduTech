@@ -1,0 +1,206 @@
+
+<div class="suggestions-page">
+
+  <header class="page-header">
+    <a routerLink="/skill-swap" class="back-link">
+      ← Back to Skill Swap
+    </a>
+
+    <div class="header-content">
+      <div>
+        <span class="eyebrow">SKILL SWAP • TRACKING</span>
+        <h1>My Suggestions</h1>
+        <p>
+          Track your suggested skills and see the latest decisions
+          from the admin team.
+        </p>
+      </div>
+
+      <button
+        class="refresh-btn"
+        type="button"
+        (click)="loadSuggestions()"
+        [disabled]="loading()">
+        {{ loading() ? 'Refreshing...' : '↻ Refresh' }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Summary cards -->
+  <section class="summary-grid">
+
+    <article class="summary-card">
+      <span class="summary-label">Total Suggestions</span>
+      <strong>{{ totalCount() }}</strong>
+      <span class="summary-icon">📋</span>
+    </article>
+
+    <article class="summary-card pending-card">
+      <span class="summary-label">Pending Review</span>
+      <strong>{{ pendingCount() }}</strong>
+      <span class="summary-icon">⏳</span>
+    </article>
+
+    <article class="summary-card approved-card">
+      <span class="summary-label">Approved</span>
+      <strong>{{ approvedCount() }}</strong>
+      <span class="summary-icon">✓</span>
+    </article>
+
+    <article class="summary-card rejected-card">
+      <span class="summary-label">Rejected</span>
+      <strong>{{ rejectedCount() }}</strong>
+      <span class="summary-icon">✕</span>
+    </article>
+
+  </section>
+
+  <!-- Error message -->
+  <div class="error-message" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+
+    <button type="button" (click)="loadSuggestions()">
+      Try again
+    </button>
+  </div>
+
+  <section class="suggestions-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Your submissions</h2>
+        <p>View each suggestion and its review status.</p>
+      </div>
+
+      <span class="result-count">
+        {{ totalCount() }} total
+      </span>
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading-state" *ngIf="loading()">
+      <div class="spinner"></div>
+      <p>Loading your suggestions...</p>
+    </div>
+
+    <!-- Empty state -->
+    <div
+      class="empty-state"
+      *ngIf="!loading() && !errorMessage() && suggestions().length === 0">
+
+      <div class="empty-icon">💡</div>
+      <h3>No suggestions yet</h3>
+
+      <p>
+        Have a skill in mind? Suggest it and track the admin's
+        decision here.
+      </p>
+
+      <a routerLink="/suggest-skill" class="primary-btn">
+        + Suggest a Skill
+      </a>
+    </div>
+
+    <!-- Suggestions list -->
+    <div
+      class="suggestions-list"
+      *ngIf="!loading() && suggestions().length > 0">
+
+      <article
+        class="suggestion-card"
+        *ngFor="let suggestion of suggestions()">
+
+        <div class="suggestion-top">
+
+          <div class="skill-avatar">
+            {{ suggestion.name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="skill-info">
+            <h3>{{ suggestion.name }}</h3>
+
+            <span class="category" *ngIf="suggestion.category">
+              {{ suggestion.category }}
+            </span>
+
+            <span class="submitted-date">
+              Submitted:
+              {{
+                suggestion.created_at
+                  ? (suggestion.created_at | date:'mediumDate')
+                  : '—'
+              }}
+            </span>
+          </div>
+
+          <span
+            class="status-badge"
+            [ngClass]="getStatusClass(suggestion.status)">
+
+            <span class="status-dot"></span>
+            {{ getStatusLabel(suggestion.status) }}
+
+          </span>
+        </div>
+
+        <!-- Skill description -->
+        <p class="description" *ngIf="suggestion.description">
+          {{ suggestion.description }}
+        </p>
+
+        <!-- Admin feedback -->
+        <div
+          class="review-feedback"
+          *ngIf="suggestion.admin_comment">
+
+          <strong>Admin feedback</strong>
+          <p>{{ suggestion.admin_comment }}</p>
+        </div>
+
+        <!-- Review date -->
+        <div class="review-date" *ngIf="suggestion.reviewed_at">
+          Reviewed:
+          {{ suggestion.reviewed_at | date:'mediumDate' }}
+        </div>
+
+        <!-- Pending status -->
+        <div
+          class="pending-note"
+          *ngIf="suggestion.status === 'pending'">
+
+          <span>⏳</span>
+          Your suggestion is waiting for admin review.
+        </div>
+
+        <!-- Approved status -->
+        <div
+          class="approved-note"
+          *ngIf="suggestion.status === 'approved'">
+
+          <span>✓</span>
+          Your suggestion has been approved.
+        </div>
+
+        <!-- Rejected status -->
+        <div
+          class="rejected-note"
+          *ngIf="suggestion.status === 'rejected'">
+
+          <span>ⓘ</span>
+          Your suggestion was not approved.
+        </div>
+
+        <!-- Deleted status -->
+        <div
+          class="deleted-note"
+          *ngIf="suggestion.status === 'deleted'">
+
+          <span>ⓘ</span>
+          This suggestion was marked as deleted.
+        </div>
+
+      </article>
+    </div>
+
+  </section>
+</div>

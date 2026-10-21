@@ -5,7 +5,7 @@ import { Sidebar } from '../components/sidebar/sidebar';
 import { Topbar } from '../components/topbar/topbar';
 import { WelcomeSection } from '../components/welcome-section/welcome-section';
 import { CurrentFocus } from '../components/current-focus/current-focus';
-
+import { SkillSwapCard } from '../components/skill-swap-card/skill-swap-card';
 import { Auth } from '../../../services/auth';
 
 @Component({
@@ -47,4 +47,7 @@ openStudentRecommendation(): void {
   this.router.navigate(['/student-recommendation']);
 }
 
+openSkillSwap(): void {
+  this.router.navigate(['/skill-swap']);
+}
 }

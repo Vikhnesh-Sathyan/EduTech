@@ -1,0 +1,153 @@
+
+<div class="my-skills-page">
+
+  <header class="page-header">
+    <a routerLink="/skill-swap" class="back-link">← Skill Swap Home</a>
+    <h1>My Skills</h1>
+    <p>Choose the skills you can teach and the skills you want to learn.</p>
+  </header>
+
+  <div *ngIf="loading" class="status-message">
+    Loading your skills...
+  </div>
+
+  <div *ngIf="errorMessage" class="message error-message" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="message success-message" role="status">
+    {{ successMessage }}
+  </div>
+
+  <section class="skill-section">
+    <div class="section-heading">
+      <div>
+        <h2>Skills I Can Teach</h2>
+        <p>Share your knowledge with other students.</p>
+      </div>
+      <span class="section-icon">🎓</span>
+    </div>
+
+    <div class="skill-form">
+      <label for="teachSkill">Choose a skill</label>
+      <select
+        id="teachSkill"
+        name="teachSkill"
+        [(ngModel)]="teachSkillId">
+        <option [ngValue]="null">Select a skill</option>
+        <option
+          *ngFor="let skill of availableSkills"
+          [ngValue]="skill.id">
+          {{ skill.name }}
+        </option>
+      </select>
+
+      <label for="teachLevel">Your proficiency</label>
+      <select
+        id="teachLevel"
+        name="teachLevel"
+        [(ngModel)]="teachLevel">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="saving || loading"
+        (click)="addTeachingSkill()">
+        {{ saving ? 'Saving...' : '+ Add Teaching Skill' }}
+      </button>
+    </div>
+
+    <div class="saved-skills">
+      <h3>My Teaching Skills</h3>
+
+      <div *ngIf="!loading && teachingSkills.length === 0"
+           class="empty-state">
+        <p>You haven't added any teaching skills yet.</p>
+      </div>
+
+      <div class="skill-list">
+        <div class="saved-skill"
+             *ngFor="let skill of teachingSkills">
+          <div>
+            <strong>{{ skill.name || getSkillName(skill.skill_id) }}</strong>
+            <span class="proficiency">
+              {{ skill.proficiency_level || 'Not specified' }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="remove-button"
+            [disabled]="saving"
+            (click)="removeSkill(skill)">
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="skill-section">
+    <div class="section-heading">
+      <div>
+        <h2>Skills I Want to Learn</h2>
+        <p>Discover students who can help you improve.</p>
+      </div>
+      <span class="section-icon">📚</span>
+    </div>
+
+    <div class="skill-form">
+      <label for="learnSkill">Choose a skill</label>
+      <select
+        id="learnSkill"
+        name="learnSkill"
+        [(ngModel)]="learnSkillId">
+        <option [ngValue]="null">Select a skill</option>
+        <option
+          *ngFor="let skill of availableSkills"
+          [ngValue]="skill.id">
+          {{ skill.name }}
+        </option>
+      </select>
+
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="saving || loading"
+        (click)="addLearningSkill()">
+        {{ saving ? 'Saving...' : '+ Add Learning Skill' }}
+      </button>
+    </div>
+
+    <div class="saved-skills">
+      <h3>My Learning Skills</h3>
+
+      <div *ngIf="!loading && learningSkills.length === 0"
+           class="empty-state">
+        <p>You haven't added any learning skills yet.</p>
+      </div>
+
+      <div class="skill-list">
+        <div class="saved-skill"
+             *ngFor="let skill of learningSkills">
+          <div>
+            <strong>{{ skill.name || getSkillName(skill.skill_id) }}</strong>
+          </div>
+
+          <button
+            type="button"
+            class="remove-button"
+            [disabled]="saving"
+            (click)="removeSkill(skill)">
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
