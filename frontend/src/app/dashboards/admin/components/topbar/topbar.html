@@ -1,24 +1,62 @@
-<!-- → Admin Dashboard header -->
-
 
 <header class="topbar">
-
   <div class="page-info">
     <p class="eyebrow">ADMIN</p>
     <h2>EduTech Administration</h2>
   </div>
 
-  <div class="admin-profile">
+  <div class="topbar-actions">
+    <!-- Skill Swap dropdown -->
+    <div class="dropdown">
+      <button
+        class="dropdown-trigger"
+        type="button"
+        [class.active]="isSkillSwapOpen"
+        [attr.aria-expanded]="isSkillSwapOpen"
+        (click)="toggleSkillSwap()"
+      >
+        <span class="swap-icon">⇄</span>
+        <span>Skill Swap</span>
+        <span class="chevron">{{ isSkillSwapOpen ? '▲' : '▼' }}</span>
+      </button>
 
-    <div class="avatar">
-      A
+      @if (isSkillSwapOpen) {
+        <div class="dropdown-menu">
+          <a
+            routerLink="/admin/skillswap/manage-skills"
+            routerLinkActive="selected"
+            (click)="closeSkillSwap()"
+          >
+            <span class="menu-icon">✦</span>
+            <span>
+              <strong>Manage Skills</strong>
+              <small>Add, edit and manage skills</small>
+            </span>
+          </a>
+
+          <a
+            routerLink="/admin/skillswap/skill-suggestions"
+            routerLinkActive="selected"
+            (click)="closeSkillSwap()"
+          >
+            <span class="menu-icon">✓</span>
+            <span>
+              <strong>Student Skill Suggestions</strong>
+              <small>Review student submissions</small>
+            </span>
+          </a>
+        </div>
+      }
     </div>
 
-    <div class="admin-details">
-      <strong>Administrator</strong>
-      <span>Platform Admin</span>
-    </div>
+    <!-- Admin profile -->
+    <div class="admin-profile">
+      <div class="avatar">A</div>
 
+      <div class="admin-details">
+        <strong>Administrator</strong>
+        <span>Platform Admin</span>
+      </div>
+    </div>
   </div>
-
 </header>

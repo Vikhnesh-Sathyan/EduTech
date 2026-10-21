@@ -21,6 +21,7 @@ import { SkillSwapHome } from './features/student/skillswap/skill-swap-home/skil
 import { MySkills } from './features/student/skillswap/my-skills/my-skills';
 import { SuggestSkill } from './features/student/skillswap/suggest-skill/suggest-skill';
 import { MySuggestions } from'./features/student/skillswap/my-suggestions/my-suggestions';
+import { DiscoverStudents } from './features/student/skillswap/discover-students/discover-students';
 
 // Student profile
 import { Profile } from './features/student/profile/profile/profile';
@@ -81,11 +82,14 @@ import {
 
 
 
-
-
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
+
+//Admin SKILLSWAP
+import { ManageSkills } from './features/admin/skillswap/manage-skills/manage-skills';
+import { SkillSuggestions } from './features/admin/skillswap/skill-suggestions/skill-suggestions';
+
 
 // Admin education management
 import { EducationPrograms } from './features/admin/education/education-programs/education-programs';
@@ -186,6 +190,11 @@ export const routes: Routes = [
       {
         path: 'my-suggestions',
         component: MySuggestions
+      },
+
+      {
+        path: 'discover-students',
+        component: DiscoverStudents
       },
 
      // Student recommendations and learning resources
@@ -427,6 +436,20 @@ export const routes: Routes = [
         path: 'cheatsheet',
       component: AdminCheatsheetComponent
       },
+
+      
+      // Admin Skill Swap
+      {
+        path: 'skillswap/manage-skills',
+        component: ManageSkills
+      },
+     
+      {
+        path: 'skillswap/skill-suggestions',
+        component: SkillSuggestions 
+      },
+
+
     ]
   },
 

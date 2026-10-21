@@ -1,0 +1,298 @@
+
+<div class="skills-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <span class="eyebrow">SKILL SWAP · ADMINISTRATION</span>
+      <h1>Manage Skills</h1>
+      <p>Manage the skills students can teach and learn across your platform.</p>
+    </div>
+
+    <div class="header-icon">✦</div>
+  </header>
+
+  <!-- Feedback Messages -->
+  <div class="feedback success-feedback" *ngIf="successMessage()">
+    <span class="feedback-icon">✓</span>
+    <p>{{ successMessage() }}</p>
+    <button type="button" aria-label="Dismiss success message"
+      (click)="successMessage.set('')">×</button>
+  </div>
+
+  <div class="feedback error-feedback" *ngIf="errorMessage()">
+    <span class="feedback-icon">!</span>
+    <p>{{ errorMessage() }}</p>
+    <button type="button" aria-label="Dismiss error message"
+      (click)="errorMessage.set('')">×</button>
+  </div>
+
+  <!-- Statistics -->
+  <section class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon purple">◇</div>
+      <div class="stat-details">
+        <span>Total Skills</span>
+        <h2>{{ totalSkills() }}</h2>
+        <p>All registered skills</p>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon green">✓</div>
+      <div class="stat-details">
+        <span>Active Skills</span>
+        <h2>{{ activeSkills() }}</h2>
+        <p>Available to students</p>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon amber">Ⅱ</div>
+      <div class="stat-details">
+        <span>Inactive Skills</span>
+        <h2>{{ inactiveSkills() }}</h2>
+        <p>Currently unavailable</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- Add / Edit Skill Form -->
+  <section class="form-card">
+    <div class="section-header">
+      <div class="section-icon">＋</div>
+      <div>
+        <h2>{{ isEditing() ? 'Edit Skill' : 'Add a New Skill' }}</h2>
+        <p>
+          {{
+            isEditing()
+              ? 'Update the details of this skill.'
+              : 'Introduce a skill that students can teach or learn.'
+          }}
+        </p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="saveSkill()" #skillForm="ngForm">
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="skillName">Skill Name <span>*</span></label>
+          <input
+            id="skillName"
+            name="name"
+            type="text"
+            [(ngModel)]="form.name"
+            placeholder="e.g. Angular"
+            maxlength="100"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="skillCategory">Category</label>
+          <input
+            id="skillCategory"
+            name="category"
+            type="text"
+            [(ngModel)]="form.category"
+            placeholder="e.g. Web Development"
+            maxlength="100"
+          />
+        </div>
+
+        <div class="form-field full-width">
+          <label for="skillDescription">Description</label>
+          <textarea
+            id="skillDescription"
+            name="description"
+            [(ngModel)]="form.description"
+            placeholder="Briefly describe this skill..."
+            rows="3"
+            maxlength="1000"
+          ></textarea>
+          <span class="field-hint">
+            Help students understand what this skill covers.
+          </span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          *ngIf="isEditing()"
+          type="button"
+          class="btn-secondary"
+          (click)="resetForm()"
+          [disabled]="saving()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="saving() || !form.name.trim()"
+        >
+          <span *ngIf="!saving()">{{ isEditing() ? 'Save Changes' : '+ Add Skill' }}</span>
+          <span *ngIf="saving()">Saving...</span>
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- Skills Table -->
+  <section class="table-card">
+
+    <div class="table-header">
+      <div>
+        <h2>All Skills</h2>
+        <p>View and manage the skills available on the platform.</p>
+      </div>
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="loadSkills()"
+        [disabled]="loading()"
+      >
+        <span>↻</span> Refresh
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="table-toolbar">
+      <div class="table-search">
+        <span>⌕</span>
+        <input
+          type="search"
+          placeholder="Search skills, categories, or status..."
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+        />
+      </div>
+
+      <span class="result-count">
+        {{ filteredSkills().length }} skill(s)
+      </span>
+    </div>
+
+    <!-- Loading -->
+    <div class="table-state" *ngIf="loading()">
+      <div class="spinner"></div>
+      <p>Loading skills...</p>
+    </div>
+
+    <!-- Skills List -->
+    <div
+      class="table-scroll"
+      *ngIf="!loading() && filteredSkills().length > 0"
+    >
+      <table>
+        <thead>
+          <tr>
+            <th>Skill</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th class="actions-heading">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let skill of filteredSkills()">
+            <td>
+              <div class="skill-name-cell">
+                <div class="skill-avatar">
+                  {{ skill.name.charAt(0).toUpperCase() }}
+                </div>
+                <div class="skill-name-details">
+                  <strong>{{ skill.name }}</strong>
+                  <span>ID: {{ skill.id }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span class="category-label">
+                {{ skill.category || 'Uncategorized' }}
+              </span>
+            </td>
+
+            <td>
+              <span class="description-text">
+                {{ skill.description || 'No description provided' }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="status-badge"
+                [class.active-status]="skill.status === 'active'"
+                [class.inactive-status]="skill.status === 'inactive'"
+              >
+                <span class="status-dot"></span>
+                {{ skill.status }}
+              </span>
+            </td>
+
+            <td>
+              <div class="action-buttons">
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="editSkill(skill)"
+                  title="Edit skill"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="status-button"
+                  [class.deactivate-button]="skill.status === 'active'"
+                  [class.activate-button]="skill.status === 'inactive'"
+                  (click)="toggleSkillStatus(skill)"
+                  [title]="skill.status === 'active' ? 'Deactivate skill' : 'Activate skill'"
+                >
+                  {{ skill.status === 'active' ? 'Deactivate' : 'Activate' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      class="empty-state"
+      *ngIf="!loading() && filteredSkills().length === 0"
+    >
+      <div class="empty-icon">◇</div>
+
+      <h3>
+        {{ searchTerm() ? 'No matching skills' : 'No skills added yet' }}
+      </h3>
+
+      <p>
+        {{
+          searchTerm()
+            ? 'Try a different search term.'
+            : 'Add your first skill using the form above.'
+        }}
+      </p>
+
+      <button
+        *ngIf="searchTerm()"
+        type="button"
+        class="btn-secondary"
+        (click)="searchTerm.set('')"
+      >
+        Clear Search
+      </button>
+    </div>
+
+  </section>
+
+</div>

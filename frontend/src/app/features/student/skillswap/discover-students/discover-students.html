@@ -1,0 +1,250 @@
+
+<div class="discover-page">
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div>
+      <span class="eyebrow">SKILL SWAP NETWORK</span>
+      <h1>Discover Students</h1>
+      <p>Find students who can teach you new skills and exchange knowledge.</p>
+    </div>
+
+    <div class="header-icon">
+      <span>✦</span>
+    </div>
+  </section>
+
+  <!-- Statistics -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon purple">◎</div>
+      <div>
+        <p>Available Skills</p>
+        <h2>{{ skills().length }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">↔</div>
+      <div>
+        <p>Reciprocal Matches</p>
+        <h2>{{ reciprocalMatchCount() }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon blue">♧</div>
+      <div>
+        <p>Students Found</p>
+        <h2>{{ students().length }}</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discover Controls -->
+  <section class="discover-controls">
+    <div class="section-heading">
+      <div>
+        <h2>Find your learning partner</h2>
+        <p>Select a skill to discover students who can teach it.</p>
+      </div>
+    </div>
+
+    <div class="filters-row">
+
+      <div class="filter-field">
+        <label for="skillSelect">Skill you want to learn</label>
+
+        <select
+          id="skillSelect"
+          [value]="selectedSkillId() ?? ''"
+          (change)="handleSkillSelection($event)"
+          [disabled]="loadingSkills() || skills().length === 0"
+        >
+          <option value="" disabled>Select a skill</option>
+
+          <option *ngFor="let skill of skills()" [value]="skill.id">
+            {{ skill.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-field search-field">
+        <label for="studentSearch">Search matches</label>
+
+        <div class="search-input">
+          <span>⌕</span>
+          <input
+            id="studentSearch"
+            type="text"
+            placeholder="Search skills or proficiency..."
+            [value]="searchTerm()"
+            (input)="handleSearch($event)"
+          />
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Error Message -->
+  <div class="message error-message" *ngIf="errorMessage()">
+    <span>!</span>
+    <p>{{ errorMessage() }}</p>
+  </div>
+
+  <!-- Loading Skills -->
+  <div class="loading-state" *ngIf="loadingSkills()">
+    <div class="spinner"></div>
+    <p>Loading available skills...</p>
+  </div>
+
+  <!-- Loading Students -->
+  <div class="loading-state" *ngIf="!loadingSkills() && loadingStudents()">
+    <div class="spinner"></div>
+    <p>Finding your learning partners...</p>
+  </div>
+
+  <!-- No Skills -->
+  <div
+    class="empty-state"
+    *ngIf="!loadingSkills() && skills().length === 0 && !errorMessage()"
+  >
+    <div class="empty-icon">◇</div>
+    <h3>No skills available yet</h3>
+    <p>Available skills will appear here once they have been added to the platform.</p>
+  </div>
+
+  <!-- Student Results -->
+  <section
+    class="results-section"
+    *ngIf="!loadingSkills() && !loadingStudents() && selectedSkillId() !== null"
+  >
+    <div class="results-heading">
+      <div>
+        <h2>Potential learning partners</h2>
+        <p>{{ filteredStudents().length }} student(s) found</p>
+      </div>
+
+      <span class="results-label">SORTED BY MATCH</span>
+    </div>
+
+    <div class="students-grid" *ngIf="filteredStudents().length > 0">
+
+      <article
+        class="student-card"
+        *ngFor="let student of filteredStudents()"
+      >
+
+        <div class="student-card-top">
+          <div class="student-avatar">
+            {{ student.student_id }}
+          </div>
+
+          <span
+            class="match-badge"
+            *ngIf="student.is_reciprocal_match"
+          >
+            <span>✦</span> Reciprocal match
+          </span>
+
+          <span
+            class="potential-badge"
+            *ngIf="!student.is_reciprocal_match"
+          >
+            Potential match
+          </span>
+        </div>
+
+        <div class="student-info">
+          <h3>Student #{{ student.student_id }}</h3>
+
+          <p class="student-subtitle">
+            Wants to learn
+            <strong>{{ student.skill_name }}</strong>
+          </p>
+        </div>
+
+        <div class="proficiency-row">
+          <span>Teaching proficiency</span>
+          <strong>{{ formatProficiency(student.proficiency_level) }}</strong>
+        </div>
+
+        <div class="skills-block">
+          <h4>
+            <span class="skill-dot teaching-dot"></span>
+            Can teach
+          </h4>
+
+          <div class="skill-tags">
+            <span
+              class="skill-tag teaching-tag"
+              *ngFor="let skill of parseSkills(student.teaching_skills)"
+            >
+              {{ skill }}
+            </span>
+
+            <span class="muted-text" *ngIf="!student.teaching_skills">
+              No additional skills listed
+            </span>
+          </div>
+        </div>
+
+        <div class="skills-block">
+          <h4>
+            <span class="skill-dot learning-dot"></span>
+            Wants to learn
+          </h4>
+
+          <div class="skill-tags">
+            <span
+              class="skill-tag learning-tag"
+              *ngFor="let skill of parseSkills(student.learning_skills)"
+            >
+              {{ skill }}
+            </span>
+
+            <span class="muted-text" *ngIf="!student.learning_skills">
+              No learning preferences listed
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="match-note"
+          *ngIf="student.is_reciprocal_match"
+        >
+          <span>✓</span>
+          <p>
+            Great fit! This student wants to learn a skill that you teach.
+          </p>
+        </div>
+
+        <div class="student-card-footer">
+          <span class="student-status">
+            <span class="status-dot"></span>
+            Skill match found
+          </span>
+        </div>
+
+      </article>
+
+    </div>
+
+    <!-- No Matching Students -->
+    <div class="empty-state" *ngIf="filteredStudents().length === 0">
+      <div class="empty-icon">⌕</div>
+      <h3>No students found</h3>
+
+      <p *ngIf="searchTerm()">
+        Try a different search term to find more matches.
+      </p>
+
+      <p *ngIf="!searchTerm()">
+        No students are currently teaching this skill. Try selecting another skill.
+      </p>
+    </div>
+
+  </section>
+
+</div>

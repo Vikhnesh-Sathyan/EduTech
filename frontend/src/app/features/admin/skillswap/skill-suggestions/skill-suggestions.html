@@ -1,0 +1,218 @@
+
+<div class="suggestions-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="eyebrow">SKILL SWAP MANAGEMENT</div>
+      <h1>Student Skill Suggestions</h1>
+      <p>Review student-submitted skills and decide which ones become available in Skill Swap.</p>
+    </div>
+
+    <button class="refresh-button" type="button"
+      (click)="loadSuggestions()" [disabled]="loading()">
+      <span>↻</span> Refresh
+    </button>
+  </header>
+
+  <!-- Feedback -->
+  @if (successMessage()) {
+    <div class="feedback success-feedback">
+      <span>✓</span>
+      <span>{{ successMessage() }}</span>
+      <button type="button" aria-label="Dismiss success message"
+        (click)="successMessage.set('')">×</button>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="feedback error-feedback">
+      <span>!</span>
+      <span>{{ errorMessage() }}</span>
+      <button type="button" aria-label="Dismiss error message"
+        (click)="errorMessage.set('')">×</button>
+    </div>
+  }
+
+  <!-- Statistics -->
+  <section class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon pending-icon">◷</div>
+      <div class="stat-details">
+        <span>Pending Review</span>
+        <strong>{{ pendingCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon approved-icon">✓</div>
+      <div class="stat-details">
+        <span>Approved</span>
+        <strong>{{ approvedCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon rejected-icon">×</div>
+      <div class="stat-details">
+        <span>Rejected</span>
+        <strong>{{ rejectedCount() }}</strong>
+      </div>
+    </article>
+  </section>
+
+  <!-- Suggestions List -->
+  <section class="suggestions-card">
+
+    <div class="section-header">
+      <div>
+        <h2>Submitted Skills</h2>
+        <p>Review each submission and take action on pending requests.</p>
+      </div>
+
+      <span class="total-count">
+        {{ filteredSuggestions().length }} suggestions
+      </span>
+    </div>
+
+    <!-- Status Filters -->
+    <div class="filter-bar">
+      <button type="button"
+        [class.active-filter]="selectedStatus() === 'pending'"
+        (click)="selectedStatus.set('pending')">
+        Pending <span>{{ pendingCount() }}</span>
+      </button>
+
+      <button type="button"
+        [class.active-filter]="selectedStatus() === 'approved'"
+        (click)="selectedStatus.set('approved')">
+        Approved <span>{{ approvedCount() }}</span>
+      </button>
+
+      <button type="button"
+        [class.active-filter]="selectedStatus() === 'rejected'"
+        (click)="selectedStatus.set('rejected')">
+        Rejected <span>{{ rejectedCount() }}</span>
+      </button>
+
+      <button type="button"
+        [class.active-filter]="selectedStatus() === 'all'"
+        (click)="selectedStatus.set('all')">
+        All
+      </button>
+    </div>
+
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="table-state">
+        <div class="spinner"></div>
+        <p>Loading student skill suggestions...</p>
+      </div>
+    } @else {
+
+      <!-- Suggestions Table -->
+      @if (filteredSuggestions().length > 0) {
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>SKILL DETAILS</th>
+                <th>SUBMITTED BY</th>
+                <th>DATE SUBMITTED</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (suggestion of filteredSuggestions(); track suggestion.id) {
+                <tr>
+                  <td>
+                    <div class="skill-details">
+                      <div class="skill-avatar">
+                        {{ suggestion.name.charAt(0).toUpperCase() }}
+                      </div>
+                      <div>
+                        <strong>{{ suggestion.name }}</strong>
+                        <span class="category-text">
+                          {{ suggestion.category || 'Uncategorized' }}
+                        </span>
+                        @if (suggestion.description) {
+                          <p class="description-text">
+                            {{ suggestion.description }}
+                          </p>
+                        }
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="student-details">
+                      <strong>
+                        {{ suggestion.student_name || 'Student' }}
+                      </strong>
+                      @if (suggestion.student_id) {
+                        <span>ID: {{ suggestion.student_id }}</span>
+                      }
+                    </div>
+                  </td>
+
+                  <td>
+                    {{ suggestion.created_at
+                      ? (suggestion.created_at | date:'dd MMM yyyy')
+                      : '—' }}
+                  </td>
+
+                  <td>
+                    <span class="status-badge"
+                      [class.pending-status]="suggestion.status === 'pending'"
+                      [class.approved-status]="suggestion.status === 'approved'"
+                      [class.rejected-status]="suggestion.status === 'rejected'">
+                      <span class="status-dot"></span>
+                      {{ suggestion.status | titlecase }}
+                    </span>
+                  </td>
+
+                  <td>
+                    @if (suggestion.status === 'pending') {
+                      <div class="action-buttons">
+                        <button type="button"
+                          class="approve-button"
+                          [disabled]="processingId() === suggestion.id"
+                          (click)="reviewSuggestion(suggestion, 'approved')">
+                          @if (processingId() === suggestion.id) {
+                            Processing...
+                          } @else {
+                            ✓ Approve
+                          }
+                        </button>
+
+                        <button type="button"
+                          class="reject-button"
+                          [disabled]="processingId() === suggestion.id"
+                          (click)="reviewSuggestion(suggestion, 'rejected')">
+                          ✕ Reject
+                        </button>
+                      </div>
+                    } @else {
+                      <span class="reviewed-label">Reviewed</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">✦</div>
+          <h3>No {{ selectedStatus() === 'all' ? '' : selectedStatus() }} suggestions found</h3>
+          <p>
+            Student skill submissions matching this filter will appear here.
+          </p>
+        </div>
+      }
+    }
+  </section>
+
+</div>
