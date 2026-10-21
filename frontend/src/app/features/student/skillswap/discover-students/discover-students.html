@@ -1,4 +1,3 @@
-
 <div class="discover-page">
 
   <!-- Page Header -->
@@ -19,7 +18,7 @@
     <div class="stat-card">
       <div class="stat-icon purple">◎</div>
       <div>
-        <p>Available Skills</p>
+        <p>My Learning Skills</p>
         <h2>{{ skills().length }}</h2>
       </div>
     </div>
@@ -46,7 +45,7 @@
     <div class="section-heading">
       <div>
         <h2>Find your learning partner</h2>
-        <p>Select a skill to discover students who can teach it.</p>
+        <p>Select one of your saved learning skills to find students who can teach it.</p>
       </div>
     </div>
 
@@ -61,7 +60,7 @@
           (change)="handleSkillSelection($event)"
           [disabled]="loadingSkills() || skills().length === 0"
         >
-          <option value="" disabled>Select a skill</option>
+          <option value="" disabled>Select a learning skill</option>
 
           <option *ngFor="let skill of skills()" [value]="skill.id">
             {{ skill.name }}
@@ -77,9 +76,10 @@
           <input
             id="studentSearch"
             type="text"
-            placeholder="Search skills or proficiency..."
+            placeholder="Search name, skills or proficiency..."
             [value]="searchTerm()"
             (input)="handleSearch($event)"
+            [disabled]="loadingSkills() || loadingStudents() || selectedSkillId() === null"
           />
         </div>
       </div>
@@ -93,26 +93,32 @@
     <p>{{ errorMessage() }}</p>
   </div>
 
-  <!-- Loading Skills -->
+  <!-- Loading Learning Skills -->
   <div class="loading-state" *ngIf="loadingSkills()">
     <div class="spinner"></div>
-    <p>Loading available skills...</p>
+    <p>Loading your learning skills...</p>
   </div>
 
   <!-- Loading Students -->
   <div class="loading-state" *ngIf="!loadingSkills() && loadingStudents()">
     <div class="spinner"></div>
-    <p>Finding your learning partners...</p>
+    <p>Finding students who can teach you...</p>
   </div>
 
-  <!-- No Skills -->
+  <!-- No Learning Skills -->
   <div
     class="empty-state"
     *ngIf="!loadingSkills() && skills().length === 0 && !errorMessage()"
   >
-    <div class="empty-icon">◇</div>
-    <h3>No skills available yet</h3>
-    <p>Available skills will appear here once they have been added to the platform.</p>
+    <div class="empty-icon">📚</div>
+    <h3>No learning skills added yet</h3>
+    <p>
+      Add a skill under "Skills I Want to Learn" in My Skills
+      to discover students who can teach you.
+    </p>
+    <a routerLink="/skill-swap/my-skills" class="back-link">
+      + Add Learning Skill
+    </a>
   </div>
 
   <!-- Student Results -->
@@ -129,6 +135,7 @@
       <span class="results-label">SORTED BY MATCH</span>
     </div>
 
+    <!-- Student Cards -->
     <div class="students-grid" *ngIf="filteredStudents().length > 0">
 
       <article
@@ -137,8 +144,9 @@
       >
 
         <div class="student-card-top">
+
           <div class="student-avatar">
-            {{ student.student_id }}
+            {{ getStudentInitials(student.student_name) }}
           </div>
 
           <span
@@ -154,22 +162,28 @@
           >
             Potential match
           </span>
+
         </div>
 
+        <!-- Student Information -->
         <div class="student-info">
-          <h3>Student #{{ student.student_id }}</h3>
+          <h3>{{ student.student_name || 'Student' }}</h3>
 
           <p class="student-subtitle">
-            Wants to learn
+            Can teach you
             <strong>{{ student.skill_name }}</strong>
           </p>
         </div>
 
+        <!-- Teaching Proficiency -->
         <div class="proficiency-row">
           <span>Teaching proficiency</span>
-          <strong>{{ formatProficiency(student.proficiency_level) }}</strong>
+          <strong>
+            {{ formatProficiency(student.proficiency_level) }}
+          </strong>
         </div>
 
+        <!-- Teaching Skills -->
         <div class="skills-block">
           <h4>
             <span class="skill-dot teaching-dot"></span>
@@ -184,12 +198,16 @@
               {{ skill }}
             </span>
 
-            <span class="muted-text" *ngIf="!student.teaching_skills">
-              No additional skills listed
+            <span
+              class="muted-text"
+              *ngIf="parseSkills(student.teaching_skills).length === 0"
+            >
+              No teaching skills listed
             </span>
           </div>
         </div>
 
+        <!-- Candidate's Learning Skills -->
         <div class="skills-block">
           <h4>
             <span class="skill-dot learning-dot"></span>
@@ -204,12 +222,16 @@
               {{ skill }}
             </span>
 
-            <span class="muted-text" *ngIf="!student.learning_skills">
+            <span
+              class="muted-text"
+              *ngIf="parseSkills(student.learning_skills).length === 0"
+            >
               No learning preferences listed
             </span>
           </div>
         </div>
 
+        <!-- Reciprocal Match Note -->
         <div
           class="match-note"
           *ngIf="student.is_reciprocal_match"
@@ -220,6 +242,7 @@
           </p>
         </div>
 
+        <!-- Card Footer -->
         <div class="student-card-footer">
           <span class="student-status">
             <span class="status-dot"></span>
@@ -241,7 +264,8 @@
       </p>
 
       <p *ngIf="!searchTerm()">
-        No students are currently teaching this skill. Try selecting another skill.
+        No students are currently teaching this skill.
+        Try adding another learning skill in My Skills.
       </p>
     </div>
 

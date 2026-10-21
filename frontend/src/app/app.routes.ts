@@ -18,7 +18,7 @@ import { StudentDashboard } from './dashboards/student/student-dashboard/student
 
 //Skillswap
 import { SkillSwapHome } from './features/student/skillswap/skill-swap-home/skill-swap-home';
-import { MySkills } from './features/student/skillswap/my-skills/my-skills';
+import { MySkills } from './features/student/skillswap/skills/my-skills/my-skills';
 import { SuggestSkill } from './features/student/skillswap/suggest-skill/suggest-skill';
 import { MySuggestions } from'./features/student/skillswap/my-suggestions/my-suggestions';
 import { DiscoverStudents } from './features/student/skillswap/discover-students/discover-students';

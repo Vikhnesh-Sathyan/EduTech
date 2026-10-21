@@ -42,6 +42,7 @@ const discoverStudents = async (req, res) => {
         const [students] = await db.execute(
             `SELECT
                 u.id AS student_id,
+                u.name AS student_name,
                 ss.skill_id,
                 selected_skill.name AS skill_name,
                 ss.proficiency_level,

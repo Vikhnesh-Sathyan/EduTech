@@ -1,0 +1,84 @@
+
+<div class="learning-skills-page">
+
+  <div *ngIf="loading" class="status-message">
+    Loading your learning skills...
+  </div>
+
+  <section class="skill-section">
+    <div class="section-heading">
+      <div>
+        <h2>Skills I Want to Learn</h2>
+        <p>Discover students who can help you improve.</p>
+      </div>
+      <span class="section-icon">📚</span>
+    </div>
+
+    <div class="skill-form">
+      <label for="learnSkill">Choose a skill</label>
+
+      <select
+        id="learnSkill"
+        name="learnSkill"
+        [(ngModel)]="learnSkillId"
+        [disabled]="loading || saving">
+        <option [ngValue]="null">Select a skill</option>
+        <option
+          *ngFor="let skill of availableSkills"
+          [ngValue]="skill.id">
+          {{ skill.name }}
+        </option>
+      </select>
+
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="saving || loading"
+        (click)="addLearningSkill()">
+        {{ saving ? 'Saving...' : '+ Add Learning Skill' }}
+      </button>
+    </div>
+
+    <div class="saved-skills">
+      <h3>My Learning Skills</h3>
+
+      <div
+        *ngIf="!loading && learningSkills.length === 0"
+        class="empty-state">
+        <p>You haven't added any learning skills yet.</p>
+      </div>
+
+      <div class="skill-list">
+        <div
+          class="saved-skill"
+          *ngFor="let skill of learningSkills">
+
+          <div>
+            <strong>{{ skill.name }}</strong>
+          </div>
+
+          <button
+            type="button"
+            class="remove-button"
+            [disabled]="saving"
+            (click)="removeLearningSkill(skill)">
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-confirm-modal
+  [visible]="showRemoveModal"
+  title="Remove Learning Skill"
+  [message]="'Are you sure you want to remove ' +
+    (selectedSkillToRemove?.name || 'this skill') + '?'"
+  confirmText="Remove"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmRemoveSkill()"
+  (cancelled)="cancelRemoveSkill()">
+</app-confirm-modal>
+
+</div>

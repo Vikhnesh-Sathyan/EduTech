@@ -1,0 +1,97 @@
+
+<div class="teaching-skills-page">
+
+  <div *ngIf="loading" class="status-message">
+    Loading your teaching skills...
+  </div>
+
+  <section class="skill-section">
+    <div class="section-heading">
+      <div>
+        <h2>Skills I Can Teach</h2>
+        <p>Share your knowledge and help other students.</p>
+      </div>
+      <span class="section-icon">🎓</span>
+    </div>
+
+    <div class="skill-form">
+      <label for="teachSkill">Choose a skill</label>
+
+      <select
+        id="teachSkill"
+        name="teachSkill"
+        [(ngModel)]="teachSkillId"
+        [disabled]="loading || saving">
+        <option [ngValue]="null">Select a skill</option>
+        <option
+          *ngFor="let skill of availableSkills"
+          [ngValue]="skill.id">
+          {{ skill.name }}
+        </option>
+      </select>
+
+      <label for="teachLevel">Your proficiency</label>
+
+      <select
+        id="teachLevel"
+        name="teachLevel"
+        [(ngModel)]="teachLevel"
+        [disabled]="saving">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="saving || loading"
+        (click)="addTeachingSkill()">
+        {{ saving ? 'Saving...' : '+ Add Teaching Skill' }}
+      </button>
+    </div>
+
+    <div class="saved-skills">
+      <h3>My Teaching Skills</h3>
+
+      <div
+        *ngIf="!loading && teachingSkills.length === 0"
+        class="empty-state">
+        <p>You haven't added any teaching skills yet.</p>
+      </div>
+
+      <div class="skill-list">
+        <div
+          class="saved-skill"
+          *ngFor="let skill of teachingSkills">
+
+          <div>
+            <strong>{{ skill.name }}</strong>
+            <span class="proficiency">
+              {{ skill.proficiency_level || 'Not specified' }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="remove-button"
+            [disabled]="saving"
+            (click)="removeTeachingSkill(skill)">
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+<app-confirm-modal
+  [visible]="showRemoveModal"
+  title="Remove Teaching Skill"
+  [message]="'Are you sure you want to remove ' +
+    (selectedSkillToRemove?.name || 'this skill') + '?'"
+  confirmText="Remove"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmRemoveSkill()"
+  (cancelled)="cancelRemoveSkill()">
+</app-confirm-modal>
+</div>
