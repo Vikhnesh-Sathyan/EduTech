@@ -113,6 +113,14 @@ const adminSubtopicCheatSheetRoutes =
 const adminCheatsheetImportRoutes =
     require("./routes/admin/cheatsheet/importRoutes");
 
+// Admin Skill Swap routes
+const adminSwapSkillsRoutes =
+    require("./routes/admin/skillswap/swapskillsroutes");
+
+const adminSwapSkillSuggestionRoutes =
+    require("./routes/admin/skillswap/swapskillsuggestionroutes");
+
+
 // =====================================================
 // STUDENT ROUTES
 // =====================================================
@@ -181,6 +189,27 @@ const doubtRoutes = require("./routes/student/recommendation/doubtRoutes");
 const interviewPrepRoutes = require("./routes/student/recommendation/interviewPrepRoutes");
 
 const codingRoutes = require("./routes/student/recommendation/codingRoutes");
+
+// =====================================================
+// STUDENT SKILL SWAPS
+// =====================================================
+const studentSwapSkillsRoutes =
+    require("./routes/student/skillswap/swapskillsroutes");
+
+const studentSwapSkillProfileRoutes =
+    require("./routes/student/skillswap/swapskillstudentroutes");
+
+const studentSwapSkillDiscoveryRoutes =
+    require("./routes/student/skillswap/swapskilldiscoveryroutes");
+
+const studentSwapRequestRoutes =
+    require("./routes/student/skillswap/swapskillrequestroutes");
+
+const studentSwapSkillSessionRoutes =
+    require("./routes/student/skillswap/swapskillsessionroutes");
+
+const studentSwapSkillSuggestionRoutes =
+    require("./routes/student/skillswap/swapskillsuggestionroutes");
 
 // =====================================================
 // MENTOR ROUTES
@@ -423,6 +452,18 @@ app.use(
     adminProjectRoutes
 );
 
+// Admin Skill Swap
+app.use(
+    "/api/admin/skillswap/skills",
+    adminSwapSkillsRoutes
+);
+
+app.use(
+    "/api/admin/skillswap/suggestions",
+    adminSwapSkillSuggestionRoutes
+);
+
+
 // =====================================================
 // STUDENT EDUCATION ROUTES
 // =====================================================
@@ -505,6 +546,39 @@ app.use("/api/recommendation/doubts", doubtRoutes);
 app.use("/api/recommendation/interview-prep", interviewPrepRoutes);
 
 app.use("/api/recommendation/coding", codingRoutes);
+
+// =====================================================
+// STUDENT SKILL SWAP
+// =====================================================
+app.use(
+    "/api/student/skillswap/skills",
+    studentSwapSkillsRoutes
+);
+
+app.use(
+    "/api/student/skillswap/my-skills",
+    studentSwapSkillProfileRoutes
+);
+
+app.use(
+    "/api/student/skillswap/discover",
+    studentSwapSkillDiscoveryRoutes
+);
+
+app.use(
+    "/api/student/skillswap/requests",
+    studentSwapRequestRoutes
+);
+
+app.use(
+    "/api/student/skillswap/sessions",
+    studentSwapSkillSessionRoutes
+);
+
+app.use(
+    "/api/student/skillswap/suggestions",
+    studentSwapSkillSuggestionRoutes
+);
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
