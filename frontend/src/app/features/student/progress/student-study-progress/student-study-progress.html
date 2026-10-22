@@ -1,224 +1,179 @@
 <div class="study-progress-page">
 
-  <!-- =====================================================
-       HEADER
-  ===================================================== -->
-
+  <!-- HEADER -->
   <header class="study-progress-header">
+    <p class="page-label">STUDY PROGRESS</p>
 
-    <p class="page-label">
-      STUDY PROGRESS
-    </p>
-
-    <h1>
-      Your Learning Progress
-    </h1>
+    <h1>Your Learning Progress</h1>
 
     <p class="page-description">
       Track your progress across all your subjects and learning sections.
     </p>
-
   </header>
 
-
-  <!-- =====================================================
-       LOADING
-  ===================================================== -->
-
+  <!-- LOADING -->
   @if (loading()) {
-
     <div class="study-progress-state">
       Loading your study progress...
     </div>
-
   }
 
-
-  <!-- =====================================================
-       ERROR
-  ===================================================== -->
-
+  <!-- ERROR -->
   @else if (errorMessage()) {
-
     <div class="study-progress-state error-state">
       {{ errorMessage() }}
     </div>
-
   }
 
-
-  <!-- =====================================================
-       CONTENT
-  ===================================================== -->
-
+  <!-- CONTENT -->
   @else {
 
-    <!-- =====================================================
-         OVERALL PROGRESS
-    ===================================================== -->
-
+    <!-- OVERALL PROGRESS -->
     @if (overall(); as progress) {
-
       <section class="overall-progress-panel">
 
         <div class="overall-progress-top">
-
           <div class="overall-progress-title">
-
-            <p class="section-label">
-              OVERALL PROGRESS
-            </p>
-
-            <h2>
-              Your learning, at a glance
-            </h2>
-
-            <p>
-              Keep building momentum across your subjects.
-            </p>
-
+            <p class="section-label">OVERALL PROGRESS</p>
+            <h2>Your learning, at a glance</h2>
+            <p>Keep building momentum across your subjects.</p>
           </div>
-
 
           <div class="overall-progress-value">
-
-            <span>
-              {{ progress.progress_percentage }}%
-            </span>
-
-            <small>
-              overall
-            </small>
-
+            <span>{{ progress.progress_percentage }}%</span>
+            <small>overall</small>
           </div>
-
         </div>
-
 
         <div class="overall-progress-bar">
-
           <div
             class="overall-progress-bar-fill"
-            [style.width.%]="progress.progress_percentage"
-          ></div>
-
+            [style.width.%]="progress.progress_percentage">
+          </div>
         </div>
 
-
         <div class="overall-progress-footer">
-
           <span>
-            {{ progress.completed_sections }}
-            of
-            {{ progress.total_sections }}
-            sections completed
+            {{ progress.completed_sections }} of
+            {{ progress.total_sections }} sections completed
           </span>
 
-          <span>
-            {{ progress.progress_percentage }}% complete
-          </span>
-
+          <span>{{ progress.progress_percentage }}% complete</span>
         </div>
 
       </section>
-
     }
 
-
-    <!-- =====================================================
-         SUBJECTS
-    ===================================================== -->
-
+    <!-- SUBJECT ANALYTICS -->
     <section class="subjects-section">
 
       <div class="subjects-header">
-
         <div>
-
-          <p class="section-label">
-            SUBJECTS
-          </p>
-
-          <h2>
-            Your Subjects
-          </h2>
-
+          <p class="section-label">LEARNING ANALYTICS</p>
+          <h2>Your Subjects</h2>
         </div>
 
         <span>
           {{ subjects().length }}
           {{ subjects().length === 1 ? 'subject' : 'subjects' }}
         </span>
+      </div>
+
+      <!-- REAL CHART.JS GRAPH -->
+      <div class="subject-chart-panel">
+
+        <div class="subject-chart-heading">
+          <div>
+            <h3>Progress by subject</h3>
+            <p>Compare your completion across subjects.</p>
+          </div>
+
+          <span class="chart-legend">
+            <span class="legend-dot"></span>
+            Completed
+          </span>
+        </div>
+
+        @if (subjects().length > 0) {
+
+          <div class="real-chart-container">
+            <canvas
+              baseChart
+              type="bar"
+              [data]="subjectChartData"
+              [options]="subjectChartOptions">
+            </canvas>
+          </div>
+
+        } @else {
+
+          <div class="subject-chart-empty">
+            <p>No subject progress available yet.</p>
+            <span>
+              Your subject progress will appear here as you learn.
+            </span>
+          </div>
+
+        }
 
       </div>
 
+      <!-- SUBJECT DETAILS -->
+      <div class="subject-list-heading">
+        <h3>All subjects</h3>
+        <span>Select a subject to explore its topics</span>
+      </div>
 
       <div class="subject-list">
 
         @for (subject of subjects(); track subject.subject_id) {
 
           <article
-  class="subject-progress-card"
-  (click)="openSubjectProgress(subject.subject_id)"
->
+            class="subject-progress-card"
+            role="button"
+            tabindex="0"
+            (click)="openSubjectProgress(subject.subject_id)"
+            (keydown.enter)="openSubjectProgress(subject.subject_id)"
+            (keydown.space)="openSubjectProgress(subject.subject_id); $event.preventDefault()">
 
             <div class="subject-card-top">
 
               <div class="subject-card-title">
-
-                <h3>
-                  {{ subject.subject_name }}
-                </h3>
+                <h3>{{ subject.subject_name }}</h3>
 
                 <p>
-                  {{ subject.completed_sections }}
-                  of
-                  {{ subject.total_sections }}
-                  sections completed
+                  {{ subject.completed_sections }} of
+                  {{ subject.total_sections }} sections completed
                 </p>
-
               </div>
-
 
               <div class="subject-card-percentage">
-
                 {{ subject.progress_percentage }}%
-
               </div>
 
             </div>
 
-
             <div class="subject-progress-bar">
-
               <div
                 class="subject-progress-bar-fill"
-                [style.width.%]="subject.progress_percentage"
-              ></div>
-
+                [style.width.%]="
+                  subject.progress_percentage > 100
+                    ? 100
+                    : subject.progress_percentage < 0
+                      ? 0
+                      : subject.progress_percentage
+                ">
+              </div>
             </div>
 
-
             <div class="subject-card-footer">
-
-              <span>
-                Learning progress
-              </span>
+              <span>Learning progress</span>
 
               @if (subject.progress_percentage === 100) {
-
-                <span class="subject-completed">
-                  Completed
-                </span>
-
+                <span class="subject-completed">✓ Completed</span>
               } @else {
-
-                <span class="subject-status">
-                  In progress
-                </span>
-
+                <span class="subject-status">In progress ↗</span>
               }
-
             </div>
 
           </article>

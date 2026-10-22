@@ -1,369 +1,583 @@
+
 /* =====================================================
-   PAGE
+   STUDY PROGRESS — PREMIUM SAAS DESIGN
 ===================================================== */
+
+:host {
+  display: block;
+  --progress-accent: #6366f1;
+  --progress-accent-dark: #4f46e5;
+  --progress-text: #171a2b;
+  --progress-muted: #777f92;
+  --progress-border: #e9eaf2;
+  --progress-surface: #ffffff;
+}
 
 .study-progress-page {
   min-height: 100vh;
-  padding: 42px 48px;
-
-  background: #f8fafc;
-  color: #0f172a;
+  padding: 38px 44px 56px;
+  background: #f7f8fc;
+  color: var(--progress-text);
 }
 
-
-/* =====================================================
-   HEADER
-===================================================== */
+/* HEADER */
 
 .study-progress-header {
-  margin-bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 30px;
 }
 
-.page-label {
-  margin: 0 0 8px;
-
+.page-label,
+.section-label {
+  margin: 0 0 9px;
+  color: var(--progress-accent);
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-
-  color: #64748b;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .study-progress-header h1 {
   margin: 0;
-
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-
-  color: #0f172a;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 750;
+  letter-spacing: -1.2px;
+  line-height: 1.2;
+  color: var(--progress-text);
 }
 
 .page-description {
-  max-width: 620px;
+  max-width: 600px;
   margin: 10px 0 0;
-
-  font-size: 14px;
-  line-height: 1.6;
-
-  color: #64748b;
+  color: var(--progress-muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
-
-/* =====================================================
-   STATES
-===================================================== */
+/* LOADING AND ERROR */
 
 .study-progress-state {
-  padding: 32px;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-
-  background: #ffffff;
-
-  font-size: 14px;
-  color: #64748b;
+  padding: 28px;
+  border: 1px solid var(--progress-border);
+  border-radius: 16px;
+  background: var(--progress-surface);
+  color: var(--progress-muted);
+  font-size: 13px;
 }
 
 .error-state {
+  border-color: #fecaca;
+  background: #fffafa;
   color: #b91c1c;
 }
 
-
-/* =====================================================
-   OVERALL PROGRESS PANEL
-===================================================== */
+/* OVERALL PROGRESS */
 
 .overall-progress-panel {
-  margin-bottom: 46px;
-  padding: 32px;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 8px 30px rgba(15, 23, 42, 0.04);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 38px;
+  padding: 30px 32px 25px;
+  border: 1px solid var(--progress-border);
+  border-radius: 20px;
+  background: var(--progress-surface);
+  box-shadow: 0 8px 30px rgba(26, 32, 64, 0.025);
 }
-
-
-/* =====================================================
-   OVERALL TOP
-===================================================== */
 
 .overall-progress-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-
-  gap: 40px;
+  gap: 28px;
 }
 
 .overall-progress-title h2 {
   margin: 0;
-
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-
-  color: #0f172a;
+  color: var(--progress-text);
+  font-size: 21px;
+  font-weight: 750;
+  letter-spacing: -0.6px;
 }
 
 .overall-progress-title > p:last-child {
   margin: 8px 0 0;
-
-  font-size: 13px;
-  color: #64748b;
+  color: var(--progress-muted);
+  font-size: 12px;
+  line-height: 1.7;
 }
-
-
-/* =====================================================
-   OVERALL VALUE
-===================================================== */
 
 .overall-progress-value {
   display: flex;
-  align-items: flex-end;
-
-  gap: 8px;
-
+  align-items: baseline;
+  gap: 5px;
   white-space: nowrap;
 }
 
 .overall-progress-value span {
-  font-size: 34px;
+  color: var(--progress-accent-dark);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1.8px;
   line-height: 1;
-
-  font-weight: 700;
-  letter-spacing: -0.03em;
-
-  color: #2563eb;
 }
 
 .overall-progress-value small {
-  padding-bottom: 3px;
-
+  color: var(--progress-muted);
   font-size: 11px;
-
-  color: #94a3b8;
 }
-
-
-/* =====================================================
-   OVERALL PROGRESS BAR
-===================================================== */
 
 .overall-progress-bar {
   width: 100%;
-  height: 8px;
-
-  margin-top: 28px;
-
+  height: 7px;
+  margin-top: 26px;
   overflow: hidden;
-
-  border-radius: 999px;
-
-  background: #e2e8f0;
+  border-radius: 100px;
+  background: #eeeff7;
 }
 
 .overall-progress-bar-fill {
   height: 100%;
-
   border-radius: inherit;
-
-  background: #2563eb;
-
-  transition: width 0.4s ease;
+  background: linear-gradient(90deg, #818cf8, #5b5ce2);
+  transition: width 0.6s ease;
 }
-
-
-/* =====================================================
-   OVERALL FOOTER
-===================================================== */
 
 .overall-progress-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-top: 10px;
-
+  gap: 12px;
+  margin-top: 12px;
+  color: var(--progress-muted);
   font-size: 11px;
-
-  color: #64748b;
 }
 
-
-/* =====================================================
-   SUBJECTS
-===================================================== */
+/* SUBJECT SECTION */
 
 .subjects-section {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .subjects-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
-  margin-bottom: 18px;
+  gap: 16px;
+  margin-bottom: 17px;
 }
 
 .subjects-header h2 {
   margin: 0;
-
-  font-size: 20px;
-  font-weight: 700;
-
-  color: #0f172a;
+  color: var(--progress-text);
+  font-size: 21px;
+  font-weight: 750;
+  letter-spacing: -0.6px;
 }
 
 .subjects-header > span {
-  font-size: 12px;
-
-  color: #64748b;
+  padding: 6px 11px;
+  border: 1px solid var(--progress-border);
+  border-radius: 100px;
+  background: #fff;
+  color: var(--progress-muted);
+  font-size: 11px;
 }
 
-
-/* =====================================================
-   SUBJECT LIST
-===================================================== */
+/* SUBJECT LIST */
 
 .subject-list {
   display: flex;
   flex-direction: column;
-
-  gap: 12px;
+  gap: 10px;
 }
 
-
-/* =====================================================
-   SUBJECT CARD
-===================================================== */
+/* SUBJECT ROW */
 
 .subject-progress-card {
-  padding: 24px;
+  position: relative;
+  padding: 21px 23px;
+  overflow: hidden;
   cursor: pointer;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-
-  background: #ffffff;
-
-   transition:
+  border: 1px solid var(--progress-border);
+  border-radius: 15px;
+  background: var(--progress-surface);
+  transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     transform 0.2s ease;
 }
 
 .subject-progress-card:hover {
-  border-color: #cbd5e1;
-
-  box-shadow:
-    0 8px 24px rgba(15, 23, 42, 0.05);
-
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: #c7c9fb;
+  box-shadow: 0 9px 24px rgba(72, 70, 170, 0.06);
 }
 
-
-/* =====================================================
-   SUBJECT TOP
-===================================================== */
+.subject-progress-card:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.25);
+  outline-offset: 3px;
+}
 
 .subject-card-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-
-  gap: 24px;
+  gap: 20px;
 }
 
 .subject-card-title h3 {
-  margin: 0 0 6px;
-
-  font-size: 16px;
-  font-weight: 700;
-
-  color: #0f172a;
+  margin: 0;
+  color: var(--progress-text);
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: -0.15px;
 }
 
 .subject-card-title p {
-  margin: 0;
-
-  font-size: 12px;
-
-  color: #64748b;
+  margin: 6px 0 0;
+  color: var(--progress-muted);
+  font-size: 11px;
+  line-height: 1.6;
 }
-
-
-/* =====================================================
-   SUBJECT PERCENTAGE
-===================================================== */
 
 .subject-card-percentage {
-  font-size: 20px;
-  font-weight: 700;
-
-  color: #2563eb;
+  flex-shrink: 0;
+  color: var(--progress-accent-dark);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
-
-
-/* =====================================================
-   SUBJECT PROGRESS BAR
-===================================================== */
 
 .subject-progress-bar {
   width: 100%;
-  height: 7px;
-
-  margin-top: 22px;
-
+  height: 5px;
+  margin-top: 17px;
   overflow: hidden;
-
-  border-radius: 999px;
-
-  background: #e2e8f0;
+  border-radius: 100px;
+  background: #eff0f7;
 }
 
 .subject-progress-bar-fill {
   height: 100%;
-
   border-radius: inherit;
-
-  background: #2563eb;
-
-  transition: width 0.4s ease;
+  background: linear-gradient(90deg, #a5b4fc, #6366f1);
+  transition: width 0.5s ease;
 }
-
-
-/* =====================================================
-   SUBJECT FOOTER
-===================================================== */
 
 .subject-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-top: 12px;
-
-  font-size: 11px;
+  gap: 12px;
+  margin-top: 11px;
+  font-size: 10px;
 }
 
 .subject-card-footer > span:first-child {
-  color: #94a3b8;
+  color: #9399aa;
 }
 
 .subject-status {
-  color: #64748b;
+  color: #777f92;
 }
 
 .subject-completed {
-  font-weight: 600;
-
-  color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #16845b;
+  font-weight: 700;
 }
 
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .subject-progress-card,
+  .overall-progress-bar-fill,
+  .subject-progress-bar-fill {
+    transition: none;
+  }
+
+  .subject-progress-card:hover {
+    transform: none;
+  }
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .study-progress-page {
+    padding: 30px 26px 44px;
+  }
+
+  .overall-progress-panel {
+    padding: 25px;
+  }
+
+  .subjects-section {
+    max-width: 100%;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .study-progress-page {
+    padding: 24px 15px 36px;
+  }
+
+  .study-progress-header {
+    margin-bottom: 24px;
+  }
+
+  .study-progress-header h1 {
+    font-size: 27px;
+  }
+
+  .overall-progress-panel {
+    margin-bottom: 30px;
+    padding: 22px 18px;
+    border-radius: 17px;
+  }
+
+  .overall-progress-top {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .overall-progress-title h2 {
+    font-size: 17px;
+  }
+
+  .overall-progress-title > p:last-child {
+    font-size: 11px;
+  }
+
+  .overall-progress-value {
+    gap: 3px;
+  }
+
+  .overall-progress-value span {
+    font-size: 29px;
+  }
+
+  .overall-progress-value small {
+    font-size: 10px;
+  }
+
+  .overall-progress-footer {
+    align-items: flex-start;
+    font-size: 10px;
+  }
+
+  .subjects-header h2 {
+    font-size: 19px;
+  }
+
+  .subject-progress-card {
+    padding: 18px 16px;
+    border-radius: 13px;
+  }
+
+  .subject-card-title h3 {
+    font-size: 13px;
+  }
+
+  .subject-card-percentage {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 360px) {
+  .overall-progress-top {
+    flex-direction: column;
+  }
+
+  .overall-progress-value span {
+    font-size: 31px;
+  }
+}
+
+
+/* =====================================================
+   SUBJECT PROGRESS CHART
+===================================================== */
+
+.subject-chart-panel {
+  margin-bottom: 32px;
+  padding: 25px;
+  border: 1px solid var(--progress-border);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(26, 32, 64, 0.025);
+}
+
+.subject-chart-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+.subject-chart-heading h3,
+.subject-list-heading h3 {
+  margin: 0;
+  color: var(--progress-text);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.subject-chart-heading p {
+  margin: 7px 0 0;
+  color: var(--progress-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.chart-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--progress-muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6366f1;
+}
+
+.subject-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+}
+
+.chart-subject {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chart-subject-info,
+.chart-subject-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chart-subject-name {
+  color: #35394d;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.chart-subject-value {
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-track {
+  width: 100%;
+  height: 9px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 100px;
+  background: #f0f0f8;
+}
+
+.chart-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a5b4fc, #6366f1);
+  transition: width 0.55s ease;
+}
+
+.chart-subject:hover .chart-fill {
+  background: linear-gradient(90deg, #818cf8, #4338ca);
+}
+
+.chart-subject:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+
+.chart-subject-footer {
+  margin-top: 7px;
+  color: #9399aa;
+  font-size: 10px;
+}
+
+.subject-chart-empty {
+  padding: 30px 12px;
+  text-align: center;
+}
+
+.subject-chart-empty p {
+  margin: 0 0 7px;
+  color: var(--progress-text);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.subject-chart-empty span {
+  color: var(--progress-muted);
+  font-size: 12px;
+}
+
+.subject-list-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.subject-list-heading > span {
+  color: var(--progress-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 600px) {
+  .subject-chart-panel {
+    padding: 20px 16px;
+  }
+
+  .subject-chart-heading {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .subject-list-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+.real-chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+@media (max-width: 600px) {
+  .real-chart-container {
+    height: 260px;
+  }
+}
