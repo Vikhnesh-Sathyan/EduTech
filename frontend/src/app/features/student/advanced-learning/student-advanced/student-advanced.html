@@ -12,9 +12,7 @@
 
     <div class="header-content">
       <span class="eyebrow">ADVANCED LEARNING</span>
-
       <h1>Go beyond the basics.</h1>
-
       <p>
         Explore deeper concepts, practical scenarios, debugging exercises,
         and interview preparation.
@@ -24,12 +22,9 @@
 
   <!-- Loading State -->
   @if (loading()) {
-
     <section class="state-card">
       <div class="loader"></div>
-
       <h2>Preparing your learning space</h2>
-
       <p>Loading your advanced learning content...</p>
     </section>
 
@@ -38,9 +33,7 @@
     <!-- Error State -->
     <section class="state-card error-state">
       <div class="state-icon">!</div>
-
       <h2>Advanced Learning unavailable</h2>
-
       <p>{{ errorMessage() }}</p>
 
       <button
@@ -57,9 +50,7 @@
     <section class="learning-summary">
       <div>
         <span class="summary-label">YOUR LEARNING PATH</span>
-
         <h2>{{ setup.title || 'Advanced Concepts' }}</h2>
-
         <p>
           Build a stronger understanding through focused learning modules.
         </p>
@@ -67,7 +58,6 @@
 
       <div class="module-count">
         <strong>{{ modules().length }}</strong>
-
         <span>
           {{ modules().length === 1 ? 'Module' : 'Modules' }}
         </span>
@@ -76,13 +66,10 @@
 
     <!-- Advanced Module Progress -->
     <section class="progress-card">
-
       <div class="progress-header">
         <div>
           <span class="summary-label">YOUR PROGRESS</span>
-
           <h2>Advanced Learning Progress</h2>
-
           <p>
             {{ completedModules() }} of {{ totalModules() }}
             modules completed
@@ -106,13 +93,10 @@
           class="progress-fill"
           [style.width.%]="progressPercentage()">
         </div>
-
       </div>
 
       @if (progressLoading()) {
-        <p class="progress-note">
-          Refreshing your progress...
-        </p>
+        <p class="progress-note">Refreshing your progress...</p>
       } @else if (totalModules() > 0 && progressPercentage() === 100) {
         <p class="progress-note progress-success">
           ✓ Congratulations! You completed every Advanced module.
@@ -122,382 +106,43 @@
           Keep going! Every completed module moves you forward.
         </p>
       }
-
     </section>
 
-    <!-- Empty Modules State -->
+    <!-- Learning Modules -->
     @if (modules().length === 0) {
-
       <section class="state-card">
         <h2>Content is being prepared</h2>
-
-        <p>
-          No learning modules are available for this topic yet.
-        </p>
+        <p>No learning modules are available for this topic yet.</p>
       </section>
-
     } @else {
-
-      <!-- Learning Modules -->
       <div class="module-list">
-
         @for (module of modules(); track module.id; let i = $index) {
-
-          <article class="module-card">
-
-            <!-- Module Heading -->
-            <div class="module-heading">
-
-              <div class="module-number">
-                {{ (i + 1).toString().padStart(2, '0') }}
-              </div>
-
-              <div class="module-heading-text">
-                <span class="module-label">
-                  MODULE {{ i + 1 }}
-                </span>
-
-                <h2>{{ moduleTitle(module.moduleType) }}</h2>
-              </div>
-
-              <!-- Module Status -->
-              @if (module.completed) {
-                <span class="module-status completed-status">
-                  ✓ Completed
-                </span>
-              } @else {
-                <span class="module-status pending-status">
-                  In progress
-                </span>
-              }
-
-            </div>
-
-            <!-- Module Content -->
-            @if (module.content; as content) {
-
-              <div class="module-content">
-
-                @switch (module.moduleType) {
-
-                  @case ('deep_dive') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <p class="content-text">
-                      {{ content.detailedExplanation }}
-                    </p>
-
-                  }
-
-                  @case ('behind_the_scenes') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <p class="content-text">
-                      {{ content.whatHappensInternally }}
-                    </p>
-
-                  }
-
-                  @case ('concept_comparison') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <div class="comparison-grid">
-
-                      <section class="comparison-panel">
-                        <span class="panel-label">CONCEPT A</span>
-
-                        <p>{{ content.conceptA }}</p>
-                      </section>
-
-                      <section class="comparison-panel">
-                        <span class="panel-label">CONCEPT B</span>
-
-                        <p>{{ content.conceptB }}</p>
-                      </section>
-
-                    </div>
-
-                  }
-
-                  @case ('debugging') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <p class="content-text">
-                      {{ content.problemDescription }}
-                    </p>
-
-                    <div class="code-section">
-                      <span class="code-label">BUGGY CODE</span>
-
-                      <pre><code>{{ content.buggyCode }}</code></pre>
-                    </div>
-
-                    <div class="code-section">
-                      <span class="code-label">CORRECTED CODE</span>
-
-                      <pre><code>{{ content.correctCode }}</code></pre>
-                    </div>
-
-                  }
-
-                  @case ('real_world_scenario') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <div class="info-panel">
-                      <span class="panel-label">SCENARIO</span>
-
-                      <p>{{ content.scenario }}</p>
-                    </div>
-
-                    <div class="info-panel">
-                      <span class="panel-label">THE PROBLEM</span>
-
-                      <p>{{ content.problem }}</p>
-                    </div>
-
-                    <div class="info-panel solution-panel">
-                      <span class="panel-label">
-                        HOW THE CONCEPT HELPS
-                      </span>
-
-                      <p>{{ content.howConceptSolvesIt }}</p>
-                    </div>
-
-                  }
-
-                  @case ('code_challenge') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <div class="info-panel">
-                      <span class="panel-label">PROBLEM STATEMENT</span>
-
-                      <p>{{ content.problemStatement }}</p>
-                    </div>
-
-                    <div class="code-section">
-                      <span class="code-label">STARTER CODE</span>
-
-                      <pre><code>{{ content.starterCode }}</code></pre>
-                    </div>
-
-                  }
-
-                  @case ('mini_hands_on_coding') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <div class="info-panel">
-                      <span class="panel-label">YOUR TASK</span>
-
-                      <p>{{ content.task }}</p>
-                    </div>
-
-                    <div class="info-panel">
-                      <span class="panel-label">INSTRUCTIONS</span>
-
-                      <p>{{ content.instructions }}</p>
-                    </div>
-
-                    <div class="code-section">
-                      <span class="code-label">STARTER CODE</span>
-
-                      <pre><code>{{ content.starterCode }}</code></pre>
-                    </div>
-
-                  }
-
-                  @case ('advanced_practice') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    @if (content.question) {
-
-                      <div class="info-panel">
-                        <span class="panel-label">QUESTION</span>
-
-                        <p>{{ content.question }}</p>
-                      </div>
-
-                    }
-
-                    @if (content.options?.length) {
-
-                      <div class="practice-options">
-
-                        @for (option of content.options; track $index) {
-
-                          <div class="practice-option">
-                            <strong>
-                              {{ ['A', 'B', 'C', 'D'][$index] }}
-                            </strong>
-
-                            <span>{{ option }}</span>
-                          </div>
-
-                        }
-
-                      </div>
-
-                    }
-
-                  }
-
-                  @case ('architecture_design') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <div class="info-panel">
-                      <span class="panel-label">DESIGN PROBLEM</span>
-
-                      <p>{{ content.problem }}</p>
-                    </div>
-
-                    <div class="info-panel solution-panel">
-                      <span class="panel-label">DESIGN APPROACH</span>
-
-                      <p>{{ content.designApproach }}</p>
-                    </div>
-
-                  }
-
-                  @case ('interview_challenge') {
-
-                    <h3>{{ content.title }}</h3>
-
-                    <div class="info-panel">
-                      <span class="panel-label">INTERVIEW QUESTION</span>
-
-                      <p>{{ content.interviewQuestion }}</p>
-                    </div>
-
-                    <div class="info-panel solution-panel">
-                      <span class="panel-label">STRONG ANSWER</span>
-
-                      <p>{{ content.strongAnswer }}</p>
-                    </div>
-
-                  }
-
-                  @default {
-
-                    <p class="content-text">
-                      This module type does not have a display template yet.
-                    </p>
-
-                  }
-
-                }
-
-              </div>
-
-            } @else {
-
-              <div class="empty-module">
-                <p>
-                  Content for this module has not been added yet.
-                </p>
-              </div>
-
-            }
-    
-<!-- Module Actions -->
-<div class="module-actions">
-
-  <!-- Ask Mentor About This Module -->
-  <button
-    class="module-mentor-button"
-    type="button"
-    (click)="askAboutModule(moduleTitle(module.moduleType))">
-
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      aria-hidden="true">
-
-      <path
-        d="M21 11.5a8.4 8.4 0 0 1-.9 3.8
-        8.5 8.5 0 0 1-7.6 4.7
-        8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7
-        a8.4 8.4 0 0 1-.9-3.8
-        8.5 8.5 0 0 1 4.7-7.6
-        8.4 8.4 0 0 1 3.8-.9h.5
-        a8.5 8.5 0 0 1 8 8v.5z">
-      </path>
-
-      <path d="M8 11h.01"></path>
-      <path d="M12 11h.01"></path>
-      <path d="M16 11h.01"></path>
-    </svg>
-
-    <span>Ask Mentor</span>
-  </button>
-
-  <!-- Module Completion -->
-  @if (module.completed) {
-
-    <div class="completion-message">
-      <span class="completion-check">✓</span>
-
-      <div>
-        <strong>Module completed</strong>
-        <p>You've marked this module as completed.</p>
-      </div>
-    </div>
-
-  } @else {
-
-    <button
-      class="complete-button"
-      type="button"
-      [disabled]="completingModuleId() !== null"
-      (click)="completeModule(module.id)">
-
-      @if (completingModuleId() === module.id) {
-        <span class="button-loader"></span>
-        Saving...
-      } @else {
-        <span class="complete-icon">✓</span>
-        <span>Mark as Completed</span>
-        <span aria-hidden="true">→</span>
-      }
-
-    </button>
-
-  }
-
-</div>
-
-
-          </article>
-
+          <app-advanced-module-card
+            [module]="module"
+            [index]="i">
+
+            <app-advanced-module-actions
+              [moduleId]="module.id"
+              [moduleName]="moduleTitle(module.moduleType)"
+              [completed]="module.completed ?? false"
+              [completing]="completingModuleId() === module.id"
+              (completeModule)="completeModule($event)"
+              (askMentor)="askAboutModule(module.id)">
+            </app-advanced-module-actions>
+
+          </app-advanced-module-card>
         }
-
       </div>
-
     }
 
     <!-- Learning Footer -->
     <footer class="learning-footer">
-
       <div class="footer-indicator"></div>
-
       <p>
         Keep exploring. Every concept you understand brings you one step
         closer to becoming a confident developer.
       </p>
-
     </footer>
 
   }
-
 </div>

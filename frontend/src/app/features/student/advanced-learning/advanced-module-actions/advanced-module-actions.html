@@ -1,0 +1,39 @@
+
+<div class="module-actions">
+
+  <!-- Ask Mentor -->
+  <button
+    type="button"
+    class="module-mentor-button"
+    (click)="onAskMentor()">
+
+    <span>✦</span>
+    Ask Mentor
+  </button>
+
+  <!-- Mark Module as Completed -->
+  <button
+    type="button"
+    class="complete-button"
+    [disabled]="completed() || completing()"
+    (click)="onComplete()">
+
+    @if (completing()) {
+      <span class="button-loader"></span>
+      Completing...
+    } @else if (completed()) {
+      ✓ Completed
+    } @else {
+      Mark as Completed
+    }
+
+  </button>
+
+</div>
+
+<!-- Completion Message -->
+@if (completed()) {
+  <p class="completion-message">
+    ✓ Great work! You've completed this module.
+  </p>
+}

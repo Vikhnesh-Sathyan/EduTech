@@ -10,10 +10,17 @@ import {
 
 import { ToastService } from '../../../../services/toast.service';
 
+import { AdvancedModuleCard } from '../advanced-module-card/advanced-module-card';
+import { AdvancedModuleActions } from '../advanced-module-actions/advanced-module-actions';
+
 @Component({
   selector: 'app-student-advanced',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    AdvancedModuleCard,
+    AdvancedModuleActions,
+  ],
   templateUrl: './student-advanced.html',
   styleUrl: './student-advanced.css'
 })
@@ -34,8 +41,6 @@ export class StudentAdvanced implements OnInit {
   completedModules = signal(0);
   progressPercentage = signal(0);
 
-  readonly mentorMessage = signal('');
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -48,7 +53,9 @@ export class StudentAdvanced implements OnInit {
 
     if (!id || !Number.isInteger(Number(id)) || Number(id) <= 0) {
       this.loading.set(false);
-      this.errorMessage.set('Valid subtopic information is required.');
+      this.errorMessage.set(
+        'Valid subtopic information is required.'
+      );
       return;
     }
 
@@ -56,6 +63,7 @@ export class StudentAdvanced implements OnInit {
     this.loadAdvancedLearning();
   }
 
+  // Load Advanced Learning content.
   loadAdvancedLearning(): void {
     this.loading.set(true);
     this.errorMessage.set('');
@@ -66,7 +74,6 @@ export class StudentAdvanced implements OnInit {
         this.modules.set(response.modules || []);
         this.loading.set(false);
 
-        // Load completion status after content is available.
         this.loadModuleProgress();
       },
 
@@ -94,6 +101,7 @@ export class StudentAdvanced implements OnInit {
     });
   }
 
+  // Load saved module completion progress.
   loadModuleProgress(): void {
     this.progressLoading.set(true);
 
@@ -105,16 +113,20 @@ export class StudentAdvanced implements OnInit {
           this.completedModules.set(response.completedModules);
           this.progressPercentage.set(response.progressPercentage);
 
-          // Merge completion status with the existing content.
           const progressById = new Map<number, AdvancedModuleProgress>(
-            response.modules.map(module => [module.module_id, module])
+            response.modules.map(module => [
+              module.module_id,
+              module
+            ])
           );
 
           this.modules.update(modules =>
             modules.map(module => ({
               ...module,
-              completed: progressById.get(module.id)?.completed ?? false,
-              completedAt: progressById.get(module.id)?.completed_at ?? null
+              completed:
+                progressById.get(module.id)?.completed ?? false,
+              completedAt:
+                progressById.get(module.id)?.completed_at ?? null
             }))
           );
 
@@ -132,12 +144,15 @@ export class StudentAdvanced implements OnInit {
       });
   }
 
+  // Complete a module selected in the child component.
   completeModule(moduleId: number): void {
     if (this.completingModuleId() !== null) {
       return;
     }
 
-    const module = this.modules().find(item => item.id === moduleId);
+    const module = this.modules().find(
+      item => item.id === moduleId
+    );
 
     if (!module || module.completed) {
       return;
@@ -158,7 +173,6 @@ export class StudentAdvanced implements OnInit {
           );
 
           this.completedModules.update(count => count + 1);
-
           this.totalModules.set(this.modules().length);
 
           this.progressPercentage.set(
@@ -187,10 +201,12 @@ export class StudentAdvanced implements OnInit {
       });
   }
 
+  // Navigate back to the Study page.
   backToStudy(): void {
     this.router.navigate(['/study']);
   }
 
+  // Convert module type keys into readable titles.
   moduleTitle(moduleType: string): string {
     const titles: Record<string, string> = {
       deep_dive: 'Deep Dive',
@@ -205,44 +221,55 @@ export class StudentAdvanced implements OnInit {
       interview_challenge: 'Interview Challenge'
     };
 
-    return titles[moduleType] || moduleType.replace(/_/g, ' ');
+    return titles[moduleType] ||
+      moduleType.replace(/_/g, ' ');
   }
 
+  // Keep available for templates or future tracking.
   trackByModuleId(index: number, module: any): number {
     return module.id;
   }
 
+  // Build a mentor message for a specific module.
 
-askMyMentor(): void {
-  const topic = this.advanced()?.title || 'Advanced Learning';
-
-  this.mentorMessage.set(
-    `Hi, I need help understanding "${topic}". ` +
-    'Could you please explain it to me?'
+askAboutModule(moduleId: number): void {
+  const selectedModule = this.modules().find(
+    module => module.id === moduleId
   );
 
+  if (!selectedModule) {
+    this.toastService.error('Unable to identify this learning module.');
+    return;
+  }
+
+  const advancedData = this.advanced();
+
+  const subject = advancedData?.subject_title || 'Unknown Subject';
+  const topic = advancedData?.topic_title || 'Unknown Topic';
+  const subtopic = advancedData?.subtopic_title || 'Unknown Subtopic';
+
+  const moduleType = this.moduleTitle(
+    selectedModule.moduleType ??
+    selectedModule.module_type ??
+    ''
+  );
+
+  const moduleName =
+    selectedModule.content?.title ||
+    selectedModule.title ||
+    moduleType;
+
+  const suggestedMessage =
+    `Hi, I need help with the subject "${subject}", ` +
+    `topic "${topic}", and subtopic "${subtopic}". ` +
+    `Please explain the "${moduleName}" module ` +
+    `(${moduleType}) using a simple example.`;
+
   this.router.navigate(['/student-chat'], {
-    state: {
-      suggestedMessage: this.mentorMessage()
-    }
+    state: { suggestedMessage }
   });
 }
 
-
-askAboutModule(moduleName: string): void {
-  const topic = this.advanced()?.title || 'Advanced Learning';
-
-  this.mentorMessage.set(
-    `Hi, I need help understanding the "${moduleName}" module ` +
-    `in "${topic}". Could you please explain it with a simple example?`
-  );
-
-  this.router.navigate(['/student-chat'], {
-    state: {
-      suggestedMessage: this.mentorMessage()
-    }
-  });
-}
 
 
 }

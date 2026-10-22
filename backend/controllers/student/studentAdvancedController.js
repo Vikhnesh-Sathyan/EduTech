@@ -50,14 +50,25 @@ const getStudentAdvancedLearning = async (req, res) => {
 
         const [advancedRows] = await db.query(
             `
-            SELECT
-                id,
-                subtopic_id,
-                status
-            FROM learning_subtopic_advanced
-            WHERE subtopic_id = ?
-              AND status = 'active'
-            LIMIT 1
+          
+SELECT
+    a.id,
+    a.subtopic_id,
+    a.status,
+    s.name AS subject_title,
+    t.name AS topic_title,
+    st.title AS subtopic_title
+FROM learning_subtopic_advanced AS a
+INNER JOIN learning_subtopics AS st
+    ON st.id = a.subtopic_id
+INNER JOIN subject_topics AS t
+    ON t.id = st.topic_id
+INNER JOIN subjects AS s
+    ON s.id = t.subject_id
+WHERE a.subtopic_id = ?
+  AND a.status = 'active'
+LIMIT 1
+
             `,
             [Number(subtopicId)]
         );
