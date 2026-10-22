@@ -1,6 +1,5 @@
-// Handles the student's profile page
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 import {
   ReactiveFormsModule,
@@ -9,13 +8,9 @@ import {
 } from '@angular/forms';
 
 import { Profile as ProfileService } from '../../../../services/student/profile';
-
 import { Education } from '../../../../services/education';
-
 import { StudentSubjects } from '../../../student/subjects/student-subjects/student-subjects';
-
 import { ToastService } from '../../../../services/toast.service';
-
 
 @Component({
   selector: 'app-profile',
@@ -29,523 +24,295 @@ import { ToastService } from '../../../../services/toast.service';
 })
 export class Profile implements OnInit {
 
-  message = '';
-  errorMessage = '';
+  // UI messages
+  message = signal('');
+  errorMessage = signal('');
 
-  // Education options loaded from the backend
-  programs: any[] = [];
-  departments: any[] = [];
-  years: any[] = [];
+  // Education dropdown data
+  programs = signal<any[]>([]);
+  departments = signal<any[]>([]);
+  years = signal<any[]>([]);
 
-  // Controls whether the profile can be edited
-  editMode = false;
+  // Profile editing state
+  editMode = signal(false);
 
-  // Stores the last saved profile values
-  savedProfile: any = null;
+  // Last saved profile
+  savedProfile = signal<any>(null);
 
   profileForm;
 
   constructor(
-
-    // Tool to help build and manage the form fields easily
     private fb: FormBuilder,
-
-    // Service used to talk to the server
     private profileService: ProfileService,
-
-    // Service used to load education data
     private educationService: Education,
-
-    // Service used for application-wide notifications
     private toastService: ToastService
-
   ) {
-
     this.profileForm = this.fb.group({
-
-      // Account information - read-only
       name: [{ value: '', disabled: true }],
       email: [{ value: '', disabled: true }],
 
-      // Profile information - editable
-      education_program_id: [
-        null,
-        Validators.required
-      ],
+      education_program_id: [null, Validators.required],
+      department_id: [null, Validators.required],
+      education_year_id: [null, Validators.required],
 
-      department_id: [
-        null,
-        Validators.required
-      ],
-
-      education_year_id: [
-        null,
-        Validators.required
-      ],
-
-      career_goal: [
-        '',
-        Validators.required
-      ],
-
-      learning_goals: [
-        '',
-        Validators.required
-      ]
-
+      career_goal: ['', Validators.required],
+      learning_goals: ['', Validators.required]
     });
-
   }
 
-
-  // Load the student's profile when the page opens
   ngOnInit() {
-
     this.loadEducationPrograms();
-
     this.loadProfile();
-
   }
 
-
-  // Load active education programs
+  // Load education programs
   loadEducationPrograms() {
+    this.educationService.getPrograms().subscribe({
+      next: (response: any) => {
+        this.programs.set(response.programs ?? []);
+      },
+      error: (error) => {
+        const message =
+          error.error?.message ||
+          'Failed to load education programs.';
 
-    this.educationService
-      .getPrograms()
-      .subscribe({
-
-        next: (response: any) => {
-
-          this.programs =
-            response.programs;
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage =
-            error.error?.message ||
-            'Failed to load education programs.';
-
-          this.toastService.error(
-            this.errorMessage
-          );
-
-        }
-
-      });
-
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+      }
+    });
   }
 
-
-  // Load departments when the student selects an education program
+  // Load departments when program changes
   onProgramChange() {
-
     const programId =
-      this.profileForm
-        .controls
-        .education_program_id
-        .value;
+      this.profileForm.controls.education_program_id.value;
 
-    // Clear previous department and year selections
-    this.profileForm.controls.department_id
-      .setValue(null);
+    this.profileForm.controls.department_id.setValue(null);
+    this.profileForm.controls.education_year_id.setValue(null);
 
-    this.profileForm.controls.education_year_id
-      .setValue(null);
+    this.departments.set([]);
+    this.years.set([]);
 
-    this.departments = [];
+    if (!programId) return;
 
-    this.years = [];
+    this.educationService.getDepartments(programId).subscribe({
+      next: (response: any) => {
+        this.departments.set(response.departments ?? []);
+      },
+      error: (error) => {
+        const message =
+          error.error?.message ||
+          'Failed to load departments.';
 
-    // Do nothing if no program is selected
-    if (!programId) {
-      return;
-    }
-
-    this.educationService
-      .getDepartments(programId)
-      .subscribe({
-
-        next: (response: any) => {
-
-          this.departments =
-            response.departments;
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage =
-            error.error?.message ||
-            'Failed to load departments.';
-
-          this.toastService.error(
-            this.errorMessage
-          );
-
-        }
-
-      });
-
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+      }
+    });
   }
 
-
-  // Load education years when the student selects a department
+  // Load years when department changes
   onDepartmentChange() {
-
     const departmentId =
-      this.profileForm
-        .controls
-        .department_id
-        .value;
+      this.profileForm.controls.department_id.value;
 
-    // Clear the previous year selection
-    this.profileForm.controls.education_year_id
-      .setValue(null);
+    this.profileForm.controls.education_year_id.setValue(null);
+    this.years.set([]);
 
-    this.years = [];
+    if (!departmentId) return;
 
-    // Do nothing if no department is selected
-    if (!departmentId) {
-      return;
-    }
+    this.educationService.getYears(departmentId).subscribe({
+      next: (response: any) => {
+        this.years.set(response.years ?? []);
+      },
+      error: (error) => {
+        const message =
+          error.error?.message ||
+          'Failed to load education years.';
 
-    this.educationService
-      .getYears(departmentId)
-      .subscribe({
-
-        next: (response: any) => {
-
-          this.years =
-            response.years;
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage =
-            error.error?.message ||
-            'Failed to load education years.';
-
-          this.toastService.error(
-            this.errorMessage
-          );
-
-        }
-
-      });
-
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+      }
+    });
   }
 
-
-  // Load the authenticated student's existing profile
+  // Load profile information
   loadProfile() {
+    this.profileService.getProfile().subscribe({
+      next: (response: any) => {
+        const profile = response.profile;
 
-    this.profileService
-      .getProfile()
-      .subscribe({
+        const saved = {
+          name: profile.name || '',
+          email: profile.email || '',
+          education_program_id: profile.education_program_id ?? null,
+          department_id: profile.department_id ?? null,
+          education_year_id: profile.education_year_id ?? null,
+          career_goal: profile.career_goal || '',
+          learning_goals: profile.learning_goals || ''
+        };
 
-        next: (response: any) => {
+        this.savedProfile.set(saved);
 
-          const profile =
-            response.profile;
+        // Display name and email immediately
+        this.profileForm.patchValue({
+          name: saved.name,
+          email: saved.email
+        });
 
-          this.savedProfile = {
+        this.loadProfileEducation();
+      },
+      error: (error) => {
+        const message =
+          error.error?.message ||
+          'Failed to load profile.';
 
-            // Read-only account information
-            name: profile.name || '',
-
-            email: profile.email || '',
-
-            // Education information
-            education_program_id:
-              profile.education_program_id || null,
-
-            department_id:
-              profile.department_id || null,
-
-            education_year_id:
-              profile.education_year_id || null,
-
-            // Career information
-            career_goal:
-              profile.career_goal || '',
-
-            learning_goals:
-              profile.learning_goals || ''
-
-          };
-
-          // Load dependent education data
-          this.loadProfileEducation();
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage =
-            error.error?.message ||
-            'Failed to load profile.';
-
-          this.toastService.error(
-            this.errorMessage
-          );
-
-        }
-
-      });
-
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+      }
+    });
   }
 
-
-  // Load the education dropdowns using the saved profile IDs
+  // Load dropdown options before restoring saved selections
   loadProfileEducation() {
+    const saved = this.savedProfile();
 
-    const programId =
-      this.savedProfile.education_program_id;
+    if (!saved) return;
 
-    const departmentId =
-      this.savedProfile.department_id;
+    const programId = saved.education_program_id;
+    const departmentId = saved.department_id;
 
-    // No program has been selected yet
     if (!programId) {
-
-      this.profileForm.patchValue(
-        this.savedProfile
-      );
-
+      this.profileForm.patchValue(saved);
       this.profileForm.disable();
-
       return;
-
     }
 
-    // Load departments for the saved program
-    this.educationService
-      .getDepartments(programId)
-      .subscribe({
+    this.educationService.getDepartments(programId).subscribe({
+      next: (response: any) => {
+        this.departments.set(response.departments ?? []);
 
-        next: (response: any) => {
+        if (!departmentId) {
+          this.profileForm.patchValue(saved);
+          this.profileForm.disable();
+          return;
+        }
 
-          this.departments =
-            response.departments;
+        this.educationService.getYears(departmentId).subscribe({
+          next: (response: any) => {
+            this.years.set(response.years ?? []);
 
-          // Load years only after departments are available
-          if (!departmentId) {
-
-            this.profileForm.patchValue(
-              this.savedProfile
-            );
-
+            this.profileForm.patchValue(saved);
+            this.profileForm.disable();
+          },
+          error: (error) => {
+            // Keep profile fields usable even if years fail to load
+            this.profileForm.patchValue(saved);
             this.profileForm.disable();
 
-            return;
+            const message =
+              error.error?.message ||
+              'Failed to load education years.';
 
+            this.errorMessage.set(message);
+            this.toastService.error(message);
           }
+        });
+      },
+      error: (error) => {
+        // Keep profile fields usable even if departments fail to load
+        this.profileForm.patchValue(saved);
+        this.profileForm.disable();
 
-          this.educationService
-            .getYears(departmentId)
-            .subscribe({
+        const message =
+          error.error?.message ||
+          'Failed to load departments.';
 
-              next: (response: any) => {
-
-                this.years =
-                  response.years;
-
-                // Now all dropdown options exist
-                this.profileForm.patchValue(
-                  this.savedProfile
-                );
-
-                // Profile starts in view mode
-                this.profileForm.disable();
-
-              },
-
-              error: (error) => {
-
-                this.errorMessage =
-                  error.error?.message ||
-                  'Failed to load education years.';
-
-                this.toastService.error(
-                  this.errorMessage
-                );
-
-              }
-
-            });
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage =
-            error.error?.message ||
-            'Failed to load departments.';
-
-          this.toastService.error(
-            this.errorMessage
-          );
-
-        }
-
-      });
-
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+      }
+    });
   }
 
-
-  // Enable only the editable profile fields
+  // Enable editable fields
   editProfile() {
+    this.message.set('');
+    this.errorMessage.set('');
+    this.editMode.set(true);
 
-    this.message = '';
-
-    this.errorMessage = '';
-
-    this.editMode = true;
-
-    this.profileForm.controls.education_program_id
-      .enable();
-
-    this.profileForm.controls.department_id
-      .enable();
-
-    this.profileForm.controls.education_year_id
-      .enable();
-
-    this.profileForm.controls.career_goal
-      .enable();
-
-    this.profileForm.controls.learning_goals
-      .enable();
-
+    this.profileForm.controls.education_program_id.enable();
+    this.profileForm.controls.department_id.enable();
+    this.profileForm.controls.education_year_id.enable();
+    this.profileForm.controls.career_goal.enable();
+    this.profileForm.controls.learning_goals.enable();
   }
 
-
-  // Cancel editing and restore the last saved values
+  // Restore saved values and exit edit mode
   cancelEdit() {
+    this.message.set('');
+    this.errorMessage.set('');
 
-    this.message = '';
+    const saved = this.savedProfile();
 
-    this.errorMessage = '';
-
-    this.profileForm.patchValue(
-      this.savedProfile
-    );
-
-    // Return to view mode
-    this.profileForm.disable();
-
-    this.editMode = false;
-
-  }
-
-
-  // Save the student's editable profile information
-  onSubmit() {
-
-    this.message = '';
-
-    this.errorMessage = '';
-
-
-    // Stop if required fields are missing
-    if (this.profileForm.invalid) {
-
-      this.errorMessage =
-        'Please complete all required profile details.';
-
-      this.toastService.error(
-        'Please complete all required profile details.'
-      );
-
-      return;
-
+    if (saved) {
+      this.profileForm.patchValue(saved);
     }
 
-
-    // Send the selected education IDs and career information
-    const profileData = {
-
-      education_program_id:
-        this.profileForm
-          .controls
-          .education_program_id
-          .value!,
-
-      department_id:
-        this.profileForm
-          .controls
-          .department_id
-          .value!,
-
-      education_year_id:
-        this.profileForm
-          .controls
-          .education_year_id
-          .value!,
-
-      career_goal:
-        this.profileForm
-          .controls
-          .career_goal
-          .value || '',
-
-      learning_goals:
-        this.profileForm
-          .controls
-          .learning_goals
-          .value || ''
-
-    };
-
-
-    this.profileService
-      .saveProfile(profileData)
-      .subscribe({
-
-        next: (response: any) => {
-
-          // Keep the newly saved profile values
-          this.savedProfile = {
-            ...this.savedProfile,
-            ...profileData
-          };
-
-          this.message =
-            response.message ||
-            'Profile saved successfully.';
-
-          // Return to view mode
-          this.profileForm.disable();
-
-          this.editMode = false;
-
-          // Show success notification
-          this.toastService.success(
-            response.message ||
-            'Profile saved successfully.'
-          );
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage =
-            error.error?.message ||
-            'Failed to save profile.';
-
-          // Show error notification
-          this.toastService.error(
-            this.errorMessage
-          );
-
-        }
-
-      });
-
+    this.profileForm.disable();
+    this.editMode.set(false);
   }
 
+  // Save profile changes
+  onSubmit() {
+    this.message.set('');
+    this.errorMessage.set('');
+
+    if (this.profileForm.invalid) {
+      const message =
+        'Please complete all required profile details.';
+
+      this.errorMessage.set(message);
+      this.toastService.error(message);
+      return;
+    }
+
+    const profileData = {
+      education_program_id:
+        this.profileForm.controls.education_program_id.value!,
+      department_id:
+        this.profileForm.controls.department_id.value!,
+      education_year_id:
+        this.profileForm.controls.education_year_id.value!,
+      career_goal:
+        this.profileForm.controls.career_goal.value || '',
+      learning_goals:
+        this.profileForm.controls.learning_goals.value || ''
+    };
+
+    this.profileService.saveProfile(profileData).subscribe({
+      next: (response: any) => {
+        this.savedProfile.set({
+          ...this.savedProfile(),
+          ...profileData
+        });
+
+        const message =
+          response.message || 'Profile saved successfully.';
+
+        this.message.set(message);
+
+        this.profileForm.disable();
+        this.editMode.set(false);
+
+        this.toastService.success(message);
+      },
+      error: (error) => {
+        const message =
+          error.error?.message ||
+          'Failed to save profile.';
+
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+      }
+    });
+  }
 }

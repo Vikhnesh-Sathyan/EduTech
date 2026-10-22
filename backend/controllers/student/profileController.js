@@ -7,10 +7,11 @@ const db = require("../../config/db");
 // GET STUDENT PROFILE
 // ==========================================
 
-const getProfile = async (req, res) => {
 
+const getProfile = async (req, res) => {
     const sql = `
         SELECT
+            u.id AS user_id,
             sp.id,
             u.name,
             u.email,
@@ -19,18 +20,14 @@ const getProfile = async (req, res) => {
             sp.education_year_id,
             sp.career_goal,
             sp.learning_goals
-        FROM student_profiles sp
-        INNER JOIN users u
-            ON u.id = sp.user_id
-        WHERE sp.user_id = ?
+        FROM users u
+        LEFT JOIN student_profiles sp
+            ON sp.user_id = u.id
+        WHERE u.id = ?
     `;
 
     try {
-
-        const [result] = await db.query(
-            sql,
-            [req.user.id]
-        );
+        const [result] = await db.query(sql, [req.user.id]);
 
         if (result.length === 0) {
             return res.status(404).json({
@@ -43,13 +40,9 @@ const getProfile = async (req, res) => {
         });
 
     } catch (err) {
+        console.error("Profile fetch failed:", err.message);
 
-        console.error(
-            "Profile fetch failed:",
-            err.message
-        );
-
-        return res.status(500).json({
+        res.status(500).json({
             message: "Database error"
         });
     }

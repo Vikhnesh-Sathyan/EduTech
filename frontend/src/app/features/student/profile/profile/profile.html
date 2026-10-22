@@ -1,20 +1,18 @@
+
 <section class="profile-page">
 
   <!-- Profile Header -->
   <div class="profile-header">
-
     <div>
       <p class="eyebrow">Student Profile</p>
-
       <h1>Your Profile</h1>
 
       <p class="description">
         Manage your academic background, career direction, and learning goals.
       </p>
     </div>
-  <!-- Only show this button IF the form is NOT in edit mode -->
-   
-    @if (!editMode) {
+
+    @if (!editMode()) {
       <button
         type="button"
         class="edit-button"
@@ -23,23 +21,20 @@
         Edit Profile
       </button>
     }
-
   </div>
 
-
   <!-- Profile Messages -->
-  @if (message) {
+  @if (message()) {
     <p class="success-message">
-      {{ message }}
+      {{ message() }}
     </p>
   }
 
-  @if (errorMessage) {
+  @if (errorMessage()) {
     <p class="error-message">
-      {{ errorMessage }}
+      {{ errorMessage() }}
     </p>
   }
-
 
   <!-- Profile Form -->
   <form
@@ -50,178 +45,138 @@
 
     <!-- Personal Information -->
     <div class="form-section">
-
       <div class="section-header">
-
         <div>
           <p class="section-label">01</p>
-
           <h2>Personal Information</h2>
-
-          <p>
-            Your account information.
-          </p>
+          <p>Your account information.</p>
         </div>
-
       </div>
-
 
       <div class="form-grid">
 
-        <!-- Name -->
         <div class="form-group">
-
-          <label for="name">
-            Name
-          </label>
+          <label for="name">Name</label>
 
           <input
             id="name"
             type="text"
-            formControlName="name"          >
-
+            formControlName="name"
+          >
         </div>
 
-
-        <!-- Email -->
         <div class="form-group">
-
-          <label for="email">
-            Email
-          </label>
+          <label for="email">Email</label>
 
           <input
             id="email"
             type="email"
             formControlName="email"
           >
-
         </div>
 
       </div>
-
     </div>
-
 
     <!-- Academic Information -->
     <div class="form-section">
-
       <div class="section-header">
-
         <div>
           <p class="section-label">02</p>
-
           <h2>Academic Information</h2>
-
-          <p>
-            Your current educational background.
-          </p>
+          <p>Your current educational background.</p>
         </div>
-
       </div>
-
 
       <div class="form-grid">
 
-        <!-- Highest Qualification -->
+        <!-- Education Program -->
         <div class="form-group">
           <label for="educationProgram">
-              Education Program
+            Education Program
           </label>
 
-        <select
-          id="educationProgram"
-          formControlName="education_program_id"
-          (change)="onProgramChange()"
-      >
-    <option [ngValue]="null">
-      Select education program
-    </option>
+          <select
+            id="educationProgram"
+            formControlName="education_program_id"
+            (change)="onProgramChange()"
+          >
+            <option [ngValue]="null">
+              Select education program
+            </option>
 
-    @for (program of programs; track program.id) {
-      <option [ngValue]="program.id">
-        {{ program.name }}
-      </option>
-    }
-  </select>
-</div>
-
+            @for (program of programs(); track program.id) {
+              <option [ngValue]="program.id">
+                {{ program.name }}
+              </option>
+            }
+          </select>
+        </div>
 
         <!-- Department -->
-     <div class="form-group">
-  <label for="department">
-    Department
-  </label>
+        <div class="form-group">
+          <label for="department">Department</label>
 
-  <select
-    id="department"
-    formControlName="department_id"
-    (change)="onDepartmentChange()"
-  >
-    <option [ngValue]="null">
-      Select department
-    </option>
+          <select
+            id="department"
+            formControlName="department_id"
+            (change)="onDepartmentChange()"
+          >
+            <option [ngValue]="null">
+              Select department
+            </option>
 
-    @for (department of departments; track department.id) {
-      <option [ngValue]="department.id">
-        {{ department.name }}
-      </option>
-    }
-  </select>
-</div>
+            @for (department of departments(); track department.id) {
+              <option [ngValue]="department.id">
+                {{ department.name }}
+              </option>
+            }
+          </select>
+        </div>
 
+        <!-- Education Year -->
+        <div class="form-group">
+          <label for="educationYear">
+            Education Year
+          </label>
 
-        <!-- Study Year -->
-  <div class="form-group">
-  <label for="educationYear">
-    Education Year
-  </label>
+          <select
+            id="educationYear"
+            formControlName="education_year_id"
+          >
+            <option [ngValue]="null">
+              Select education year
+            </option>
 
-  <select
-    id="educationYear"
-    formControlName="education_year_id"
-  >
-    <option [ngValue]="null">
-      Select education year
-    </option>
-
-    @for (year of years; track year.id) {
-      <option [ngValue]="year.id">
-        {{ year.name }}
-      </option>
-    }
-  </select>
-</div>
+            @for (year of years(); track year.id) {
+              <option [ngValue]="year.id">
+                {{ year.name }}
+              </option>
+            }
+          </select>
+        </div>
 
       </div>
-
     </div>
 
+    <!-- Student Subjects -->
     <app-student-subjects></app-student-subjects>
 
     <!-- Career Information -->
     <div class="form-section">
-
       <div class="section-header">
-
         <div>
           <p class="section-label">04</p>
-
           <h2>Career Direction</h2>
 
           <p>
             The career direction you currently want to work toward.
           </p>
         </div>
-
       </div>
 
-
       <div class="form-group">
-
-        <label for="careerGoal">
-          Career Goal
-        </label>
+        <label for="careerGoal">Career Goal</label>
 
         <input
           id="careerGoal"
@@ -229,35 +184,24 @@
           formControlName="career_goal"
           placeholder="e.g. Full Stack Developer"
         >
-
       </div>
-
     </div>
-
 
     <!-- Learning Goals -->
     <div class="form-section">
-
       <div class="section-header">
-
         <div>
           <p class="section-label">05</p>
-
           <h2>Learning Goals</h2>
 
           <p>
             The skills and areas you want to improve.
           </p>
         </div>
-
       </div>
 
-
       <div class="form-group">
-
-        <label for="learningGoals">
-          Your Learning Goals
-        </label>
+        <label for="learningGoals">Your Learning Goals</label>
 
         <textarea
           id="learningGoals"
@@ -265,15 +209,11 @@
           formControlName="learning_goals"
           placeholder="Describe the skills or areas you want to improve..."
         ></textarea>
-
       </div>
-
     </div>
 
-
     <!-- Edit Actions -->
-    @if (editMode) {
-
+    @if (editMode()) {
       <div class="form-actions">
 
         <button
@@ -293,7 +233,6 @@
         </button>
 
       </div>
-
     }
 
   </form>
