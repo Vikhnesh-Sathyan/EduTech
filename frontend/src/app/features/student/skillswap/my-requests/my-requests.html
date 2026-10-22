@@ -1,0 +1,271 @@
+<div class="my-requests-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">SKILL SWAP NETWORK</span>
+      <h1>My Swap Requests</h1>
+      <p>Manage your learning requests and knowledge exchanges.</p>
+    </div>
+
+    <div class="header-icon">
+      <span>⇄</span>
+    </div>
+  </header>
+
+  <!-- Request Tabs -->
+  <section class="request-tabs">
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'incoming'"
+      (click)="setActiveTab('incoming')">
+
+      <span>Incoming Requests</span>
+      <span class="tab-count">{{ pendingIncomingCount() }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'sent'"
+      (click)="setActiveTab('sent')">
+
+      <span>Sent Requests</span>
+      <span class="tab-count">{{ pendingSentCount() }}</span>
+    </button>
+  </section>
+
+  <!-- Loading State -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loading-spinner"></div>
+    <h3>Loading your requests...</h3>
+    <p>Please wait while we fetch your swap requests.</p>
+  </div>
+
+  <!-- Error State -->
+  <div
+    class="state-card error-state"
+    *ngIf="!loading() && errorMessage()">
+
+    <div class="state-icon">!</div>
+    <h3>Unable to load requests</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadRequests()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    class="state-card"
+    *ngIf="!loading() && !errorMessage() && visibleRequests().length === 0">
+
+    <div class="state-icon">
+      {{ activeTab() === 'incoming' ? '↓' : '↑' }}
+    </div>
+
+    <h3>
+      {{ activeTab() === 'incoming'
+        ? 'No incoming requests yet'
+        : 'No sent requests yet' }}
+    </h3>
+
+    <p>
+      {{ activeTab() === 'incoming'
+        ? 'When another student sends you a swap request, it will appear here.'
+        : 'Explore students and send a request to start learning together.' }}
+    </p>
+
+    <a
+      *ngIf="activeTab() === 'sent'"
+      routerLink="/discover-students"
+      class="discover-link">
+      Discover Students →
+    </a>
+  </div>
+
+  <!-- Request Cards -->
+  <section
+    class="requests-list"
+    *ngIf="!loading() && !errorMessage() && visibleRequests().length > 0">
+
+    <article
+      class="request-card"
+      *ngFor="let request of visibleRequests(); trackBy: trackByRequestId">
+
+      <!-- Card Header -->
+      <div class="request-card-header">
+
+        <div class="student-info">
+          <div class="student-avatar">
+            {{ getInitials(
+              request.direction === 'incoming'
+                ? request.sender_name
+                : request.receiver_name
+            ) }}
+          </div>
+
+          <div class="student-details">
+            <h3>
+              {{ request.direction === 'incoming'
+                ? request.sender_name
+                : request.receiver_name }}
+            </h3>
+
+            <p>
+              {{ request.direction === 'incoming'
+                ? 'wants to learn from you'
+                : 'Request sent to this student' }}
+            </p>
+          </div>
+        </div>
+
+        <span
+          class="status-badge"
+          [ngClass]="'status-' + request.status">
+          {{ getStatusLabel(request.status) }}
+        </span>
+
+      </div>
+
+      <!-- Skills -->
+      <div class="skills-section">
+
+        <div class="skill-item">
+          <span class="skill-label">Wants to learn</span>
+
+          <div class="skill-value">
+            <span class="skill-icon">✦</span>
+            {{ request.learn_skill_name }}
+          </div>
+        </div>
+
+        <div
+          class="exchange-arrow"
+          *ngIf="request.request_type === 'mutual_exchange'">
+          ⇄
+        </div>
+
+        <div
+          class="skill-item"
+          *ngIf="request.request_type === 'mutual_exchange'">
+
+          <span class="skill-label">Can teach</span>
+
+          <div class="skill-value">
+            <span class="skill-icon">✧</span>
+            {{ request.teach_skill_name || 'Skill not available' }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Request Type -->
+      <div class="request-type">
+        <span class="type-dot"></span>
+
+        {{ request.request_type === 'learning'
+          ? 'Learning Request'
+          : 'Mutual Skill Exchange' }}
+      </div>
+
+      <!-- Message -->
+      <div class="request-message" *ngIf="request.message">
+        <span class="message-label">Message</span>
+        <p>{{ request.message }}</p>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="request-card-footer">
+
+        <span class="request-date">
+          Sent {{ request.created_at | date:'mediumDate' }}
+        </span>
+
+        <!-- Incoming Pending Request Actions -->
+        <div
+          class="request-actions"
+          *ngIf="
+            request.direction === 'incoming' &&
+            request.status === 'pending'
+          ">
+
+          <button
+            type="button"
+            class="reject-button"
+            [disabled]="processingRequestId() === request.id"
+            (click)="respondToRequest(request, 'rejected')">
+
+            Reject
+          </button>
+
+          <button
+            type="button"
+            class="accept-button"
+            [disabled]="processingRequestId() === request.id"
+            (click)="respondToRequest(request, 'accepted')">
+
+            {{
+              processingRequestId() === request.id
+                ? 'Processing...'
+                : 'Accept Request'
+            }}
+          </button>
+        </div>
+
+        <!-- Sent Pending Request Action -->
+        <div
+          class="request-actions"
+          *ngIf="
+            request.direction === 'sent' &&
+            request.status === 'pending'
+          ">
+
+          <button
+            type="button"
+            class="cancel-button"
+            [disabled]="processingRequestId() === request.id"
+            (click)="cancelRequest(request)">
+
+            {{
+              processingRequestId() === request.id
+                ? 'Cancelling...'
+                : 'Cancel Request'
+            }}
+          </button>
+        </div>
+
+        <!-- Schedule Session for Accepted Requests -->
+        <div
+          class="request-actions"
+          *ngIf="request.status === 'accepted'">
+
+          <button
+            type="button"
+            class="schedule-button"
+            (click)="openScheduleForm(request)">
+
+            📅 Schedule Session
+          </button>
+        </div>
+
+      </div>
+
+    </article>
+
+  </section>
+
+  <!-- Schedule Session Modal -->
+  <app-schedule-session
+    *ngIf="showScheduleForm() && selectedRequestId() !== null"
+    [requestId]="selectedRequestId()!"
+    (closed)="closeScheduleForm()"
+    (scheduled)="onSessionScheduled()">
+  </app-schedule-session>
+
+</div>

@@ -1,3 +1,4 @@
+
 <div class="discover-page">
 
   <!-- Page Header -->
@@ -116,6 +117,7 @@
       Add a skill under "Skills I Want to Learn" in My Skills
       to discover students who can teach you.
     </p>
+
     <a routerLink="/skill-swap/my-skills" class="back-link">
       + Add Learning Skill
     </a>
@@ -248,6 +250,15 @@
             <span class="status-dot"></span>
             Skill match found
           </span>
+
+          <button
+            type="button"
+            class="send-request-btn"
+            (click)="openRequestModal(student)"
+          >
+            <span>✉</span>
+            Send Request
+          </button>
         </div>
 
       </article>
@@ -271,4 +282,151 @@
 
   </section>
 
+</div>
+
+<!-- ====================================== -->
+<!-- SEND SKILL SWAP REQUEST MODAL -->
+<!-- ====================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showRequestModal()"
+  (click)="closeRequestModal()"
+>
+  <section
+    class="request-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="requestModalTitle"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- Modal Header -->
+    <header class="modal-header">
+      <div>
+        <span class="modal-eyebrow">SKILL SWAP NETWORK</span>
+        <h2 id="requestModalTitle">Send Swap Request</h2>
+        <p>
+          Send a request to
+          <strong>{{ selectedStudent()?.student_name }}</strong>.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="modal-close-btn"
+        aria-label="Close modal"
+        [disabled]="submittingRequest()"
+        (click)="closeRequestModal()"
+      >
+        &times;
+      </button>
+    </header>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+
+      <!-- Requested Learning Skill -->
+      <div class="request-skill-summary">
+        <span class="summary-label">Skill you want to learn</span>
+        <strong>{{ selectedStudent()?.skill_name }}</strong>
+      </div>
+
+      <!-- Request Type -->
+      <div class="form-field">
+        <label for="requestType">Request type</label>
+
+        <select
+          id="requestType"
+          name="requestType"
+          [(ngModel)]="requestType"
+          [disabled]="submittingRequest()"
+        >
+          <option value="learning">Learning request</option>
+          <option value="mutual_exchange">Mutual skill exchange</option>
+        </select>
+
+        <small>
+          A learning request asks them to teach you.
+          A mutual exchange also offers to teach them a skill.
+        </small>
+      </div>
+
+      <!-- Teaching Skill for Mutual Exchange -->
+      <div
+        class="form-field"
+        *ngIf="requestType === 'mutual_exchange'"
+      >
+        <label for="teachSkill">Skill you can teach in return</label>
+
+        <select
+          id="teachSkill"
+          name="teachSkill"
+          [(ngModel)]="teachSkillId"
+          [disabled]="submittingRequest()"
+        >
+          <option [ngValue]="null">Select a teaching skill</option>
+
+          <option
+            *ngFor="let skill of myTeachingSkills()"
+            [ngValue]="skill.id"
+            [disabled]="skill.id === selectedSkillId()"
+          >
+            {{ skill.name }}
+          </option>
+        </select>
+
+        <small *ngIf="myTeachingSkills().length === 0">
+          You haven't added any teaching skills yet.
+          Add a skill in My Skills before choosing a mutual exchange.
+        </small>
+      </div>
+
+      <!-- Optional Message -->
+      <div class="form-field">
+        <label for="requestMessage">
+          Message
+          <span class="optional-label">(optional)</span>
+        </label>
+
+        <textarea
+          id="requestMessage"
+          name="requestMessage"
+          [(ngModel)]="requestMessage"
+          rows="4"
+          maxlength="500"
+          placeholder="Hi! I'd like to learn this skill from you..."
+          [disabled]="submittingRequest()"
+        ></textarea>
+
+        <div class="character-count">
+          {{ requestMessage.length }}/500 characters
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <footer class="modal-footer">
+      <button
+        type="button"
+        class="cancel-modal-btn"
+        [disabled]="submittingRequest()"
+        (click)="closeRequestModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="confirm-request-btn"
+        [disabled]="submittingRequest()"
+        (click)="submitSwapRequest()"
+      >
+        <span *ngIf="!submittingRequest()">✉ Send Request</span>
+        <span *ngIf="submittingRequest()">Sending...</span>
+      </button>
+    </footer>
+
+  </section>
 </div>

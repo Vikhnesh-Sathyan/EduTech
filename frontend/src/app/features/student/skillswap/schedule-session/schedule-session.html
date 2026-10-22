@@ -1,0 +1,157 @@
+
+<div class="modal-overlay" (click)="close()">
+
+  <section
+    class="schedule-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="schedule-title"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <header class="modal-header">
+      <div>
+        <span class="eyebrow">SKILL SWAP NETWORK</span>
+        <h2 id="schedule-title">Schedule a Session</h2>
+        <p>Plan a focused learning session with another student.</p>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        aria-label="Close scheduling form"
+        [disabled]="scheduling()"
+        (click)="close()">
+        &times;
+      </button>
+    </header>
+
+    <!-- Form -->
+    <form #sessionForm="ngForm" (ngSubmit)="scheduleSession()">
+
+      <div class="form-grid">
+
+        <!-- Date and time -->
+        <div class="form-group full-width">
+          <label for="scheduledAt">Date and time</label>
+
+          <input
+            id="scheduledAt"
+            type="datetime-local"
+            name="scheduled_at"
+            [(ngModel)]="scheduleData.scheduled_at"
+            [min]="minScheduleDateTime"
+            required />
+        </div>
+
+        <!-- Duration -->
+        <div class="form-group">
+          <label for="duration">Session duration</label>
+
+          <select
+            id="duration"
+            name="duration_minutes"
+            [(ngModel)]="scheduleData.duration_minutes"
+            required>
+
+            <option [ngValue]="30">30 minutes</option>
+            <option [ngValue]="45">45 minutes</option>
+            <option [ngValue]="60">1 hour</option>
+            <option [ngValue]="90">1 hour 30 minutes</option>
+            <option [ngValue]="120">2 hours</option>
+          </select>
+        </div>
+
+        <!-- Meeting type -->
+        <div class="form-group">
+          <label for="meetingType">Meeting type</label>
+
+          <select
+            id="meetingType"
+            name="meeting_type"
+            [(ngModel)]="scheduleData.meeting_type"
+            (ngModelChange)="onMeetingTypeChange()"
+            required>
+
+            <option value="online">Online</option>
+            <option value="in_person">In person</option>
+          </select>
+        </div>
+
+        <!-- Online meeting link -->
+        <div
+          class="form-group full-width"
+          *ngIf="scheduleData.meeting_type === 'online'">
+
+          <label for="meetingLink">Meeting link</label>
+
+          <input
+            id="meetingLink"
+            type="url"
+            name="meeting_link"
+            [(ngModel)]="scheduleData.meeting_link"
+            placeholder="https://meet.google.com/..."
+            required />
+
+          <small>Add your Google Meet, Zoom, or other meeting link.</small>
+        </div>
+
+        <!-- In-person location -->
+        <div
+          class="form-group full-width"
+          *ngIf="scheduleData.meeting_type === 'in_person'">
+
+          <label for="location">Meeting location</label>
+
+          <input
+            id="location"
+            type="text"
+            name="location"
+            [(ngModel)]="scheduleData.location"
+            placeholder="Enter the meeting location"
+            maxlength="255"
+            required />
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group full-width">
+          <label for="notes">
+            Session notes <span class="optional">(Optional)</span>
+          </label>
+
+          <textarea
+            id="notes"
+            name="notes"
+            [(ngModel)]="scheduleData.notes"
+            rows="3"
+            maxlength="1000"
+            placeholder="What would you like to learn or prepare?">
+          </textarea>
+        </div>
+
+      </div>
+
+      <!-- Footer actions -->
+      <footer class="modal-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="scheduling()"
+          (click)="close()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="sessionForm.invalid || scheduling()">
+
+          <span *ngIf="!scheduling()">Schedule Session →</span>
+          <span *ngIf="scheduling()">Scheduling...</span>
+        </button>
+      </footer>
+
+    </form>
+
+  </section>
+</div>

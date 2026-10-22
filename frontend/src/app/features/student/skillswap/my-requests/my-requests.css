@@ -1,0 +1,625 @@
+
+/* ================================
+   MY SWAP REQUESTS
+================================ */
+
+.my-requests-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 30px 48px;
+  color: #172033;
+  box-sizing: border-box;
+}
+
+/* Page Header */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #6366f1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #172033;
+  font-size: clamp(27px, 3vw, 34px);
+  font-weight: 750;
+  letter-spacing: -1px;
+}
+
+.page-header p {
+  margin: 10px 0 0;
+  color: #7a8498;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.header-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
+  border: 1px solid #e0e7ff;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  color: #6366f1;
+  font-size: 32px;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+}
+
+/* Request Tabs */
+
+.request-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 26px;
+  padding: 6px;
+  border: 1px solid #e9edf5;
+  border-radius: 14px;
+  background: #f8f9fc;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #737e92;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #4f46e5;
+  background: #fff;
+}
+
+.tab-button.active {
+  border-color: #e5e7ff;
+  background: #fff;
+  color: #4f46e5;
+  box-shadow: 0 2px 8px rgba(31, 41, 55, 0.05);
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 23px;
+  height: 23px;
+  padding: 0 6px;
+  border-radius: 7px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tab-button:not(.active) .tab-count {
+  background: #e9edf4;
+  color: #657087;
+}
+
+/* Request List */
+
+.requests-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Request Card */
+
+.request-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e8ecf4;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(25, 35, 60, 0.035);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.request-card:hover {
+  transform: translateY(-3px);
+  border-color: #d9defc;
+  box-shadow: 0 12px 30px rgba(25, 35, 60, 0.07);
+}
+
+/* Student Header */
+
+.request-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.student-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #dddfff;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  color: #5b50d6;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.student-details {
+  min-width: 0;
+}
+
+.student-details h3 {
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: #202a3d;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.student-details p {
+  margin: 5px 0 0;
+  color: #8791a4;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Status Badges */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.status-pending {
+  background: #fff7e6;
+  color: #b7791f;
+}
+
+.status-accepted {
+  background: #e8f8ef;
+  color: #16804a;
+}
+
+.status-rejected {
+  background: #fff0f0;
+  color: #c24141;
+}
+
+.status-cancelled {
+  background: #eef1f5;
+  color: #667085;
+}
+
+/* Skills */
+
+.skills-section {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.skill-item {
+  flex: 1;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #e8eaff;
+  border-radius: 13px;
+  background: #f8f9ff;
+}
+
+.skill-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #8a92a5;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.skill-value {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #343b65;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.skill-icon {
+  flex-shrink: 0;
+  color: #7167ed;
+}
+
+.exchange-arrow {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e2e4ff;
+  border-radius: 50%;
+  background: #f0f1ff;
+  color: #635bdb;
+  font-size: 17px;
+}
+
+/* Request Type */
+
+.request-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 17px;
+  color: #737e92;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.type-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #818cf8;
+}
+
+/* Message */
+
+.request-message {
+  margin-bottom: 18px;
+  padding: 13px 15px;
+  border-left: 3px solid #c7d2fe;
+  border-radius: 0 10px 10px 0;
+  background: #f8faff;
+}
+
+.message-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #7c83a0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.request-message p {
+  margin: 0;
+  color: #566078;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+/* Card Footer */
+
+.request-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 17px;
+  border-top: 1px solid #edf0f5;
+}
+
+.request-date {
+  color: #939bad;
+  font-size: 11px;
+}
+
+.request-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.request-actions button {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.request-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.accept-button {
+  background: #5b55df;
+  color: #fff;
+}
+
+.accept-button:hover:not(:disabled) {
+  background: #4942c7;
+  box-shadow: 0 4px 12px rgba(91, 85, 223, 0.2);
+}
+
+.reject-button {
+  border-color: #f0dada !important;
+  background: #fff;
+  color: #bd4545;
+}
+
+.reject-button:hover:not(:disabled) {
+  background: #fff1f1;
+}
+
+.cancel-button {
+  border-color: #e1e5ee !important;
+  background: #fff;
+  color: #657087;
+}
+
+.cancel-button:hover:not(:disabled) {
+  border-color: #f1c9c9 !important;
+  background: #fff4f4;
+  color: #bd4545;
+}
+
+/* Loading, Empty & Error States */
+
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 35px 24px;
+  border: 1px dashed #dfe4ef;
+  border-radius: 20px;
+  background: #fbfcff;
+  text-align: center;
+}
+
+.state-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 17px;
+  border-radius: 17px;
+  background: #eef2ff;
+  color: #6258dc;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.state-card h3 {
+  margin: 0;
+  color: #253047;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.state-card p {
+  max-width: 400px;
+  margin: 9px 0 0;
+  color: #818ba0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.loading-spinner {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  border: 3px solid #e3e7ff;
+  border-top-color: #6258dc;
+  border-radius: 50%;
+  animation: request-spin 0.75s linear infinite;
+}
+
+@keyframes request-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-state .state-icon {
+  background: #fff0f0;
+  color: #c24141;
+}
+
+.retry-button,
+.discover-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  margin-top: 20px;
+  padding: 0 16px;
+  border: 1px solid #dfe3ff;
+  border-radius: 10px;
+  background: #f0f1ff;
+  color: #5148c8;
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover,
+.discover-link:hover {
+  border-color: #c7ccff;
+  background: #e6e8ff;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .requests-list {
+    grid-template-columns: 1fr;
+  }
+
+  .request-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .my-requests-page {
+    padding: 22px 15px 35px;
+  }
+
+  .page-header {
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+
+  .page-header h1 {
+    font-size: 25px;
+  }
+
+  .page-header p {
+    font-size: 12px;
+  }
+
+  .header-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    font-size: 24px;
+  }
+
+  .request-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .tab-button {
+    gap: 6px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .request-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .request-card-header {
+    gap: 8px;
+  }
+
+  .student-info {
+    gap: 9px;
+  }
+
+  .student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .student-details h3 {
+    font-size: 13px;
+  }
+
+  .status-badge {
+    padding: 5px 7px;
+    font-size: 9px;
+  }
+
+  .skills-section {
+    gap: 8px;
+  }
+
+  .skill-item {
+    padding: 11px;
+  }
+
+  .skill-value {
+    font-size: 12px;
+  }
+
+  .exchange-arrow {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+
+  .request-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .request-actions {
+    width: 100%;
+  }
+
+  .request-actions button {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-card,
+  .tab-button,
+  .request-actions button {
+    transition: none;
+  }
+
+  .loading-spinner {
+    animation-duration: 1.5s;
+  }
+}

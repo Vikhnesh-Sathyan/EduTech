@@ -246,6 +246,7 @@ const getMySwapRequests = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Skill Swap requests fetched successfully",
+            current_user_id: studentId,
             data: requests
         });
     } catch (error) {

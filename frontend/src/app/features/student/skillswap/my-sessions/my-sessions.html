@@ -1,0 +1,232 @@
+<div class="my-sessions-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">SKILL SWAP NETWORK</span>
+      <h1>My Sessions</h1>
+      <p>Manage your learning sessions and knowledge exchanges.</p>
+    </div>
+
+    <div class="header-icon">📅</div>
+  </header>
+
+  <!-- Session Tabs -->
+  <section class="session-tabs">
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'upcoming'"
+      (click)="setActiveTab('upcoming')">
+
+      Upcoming
+      <span class="tab-count">{{ upcomingSessions().length }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab() === 'past'"
+      (click)="setActiveTab('past')">
+
+      Past Sessions
+      <span class="tab-count">{{ pastSessions().length }}</span>
+    </button>
+  </section>
+
+  <!-- Loading State -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loading-spinner"></div>
+    <h3>Loading your sessions...</h3>
+    <p>Please wait while we fetch your scheduled sessions.</p>
+  </div>
+
+  <!-- Error State -->
+  <div
+    class="state-card error-state"
+    *ngIf="!loading() && errorMessage()">
+
+    <div class="state-icon">!</div>
+    <h3>Unable to load sessions</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="retry-button"
+      (click)="loadSessions()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    class="state-card"
+    *ngIf="!loading() && !errorMessage() && visibleSessions().length === 0">
+
+    <div class="state-icon">📅</div>
+
+    <h3>
+      {{ activeTab() === 'upcoming'
+        ? 'No upcoming sessions'
+        : 'No past sessions yet' }}
+    </h3>
+
+    <p>
+      {{ activeTab() === 'upcoming'
+        ? 'Once you schedule a session with another student, it will appear here.'
+        : 'Your completed or cancelled sessions will appear here.' }}
+    </p>
+
+    <a routerLink="/my-requests" class="requests-link">
+      View Swap Requests →
+    </a>
+  </div>
+
+  <!-- Session Cards -->
+  <section
+    class="sessions-list"
+    *ngIf="!loading() && !errorMessage() && visibleSessions().length > 0">
+
+    <article
+      class="session-card"
+      *ngFor="let session of visibleSessions()">
+
+      <!-- Card Header -->
+      <div class="session-card-header">
+        <div class="session-heading">
+          <div class="session-icon">⇄</div>
+
+          <div>
+            <span class="session-label">SKILL SWAP SESSION</span>
+            <h3>{{ session.learn_skill_name }}</h3>
+          </div>
+        </div>
+
+        <span
+          class="status-badge"
+          [ngClass]="'status-' + session.status">
+          {{ getStatusLabel(session.status) }}
+        </span>
+      </div>
+
+      <!-- Session Details -->
+      <div class="session-details">
+
+        <div class="detail-item">
+          <span class="detail-label">Date & Time</span>
+          <strong>{{ session.scheduled_at | date:'medium' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Duration</span>
+          <strong>{{ formatDuration(session.duration_minutes) }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Meeting Type</span>
+          <strong>{{ formatMeetingType(session.meeting_type) }}</strong>
+        </div>
+
+        <div
+          class="detail-item"
+          *ngIf="session.teach_skill_name">
+
+          <span class="detail-label">Can Teach</span>
+          <strong>{{ session.teach_skill_name }}</strong>
+        </div>
+
+      </div>
+
+      <!-- Online Meeting -->
+      <div
+        class="meeting-info"
+        *ngIf="session.meeting_type === 'online' && session.meeting_link">
+
+        <span class="meeting-icon">↗</span>
+
+        <div class="meeting-content">
+          <span class="detail-label">Meeting Link</span>
+
+          <a
+            [href]="session.meeting_link"
+            target="_blank"
+            rel="noopener noreferrer">
+            Join Online Meeting
+          </a>
+        </div>
+      </div>
+
+      <!-- In-Person Meeting -->
+      <div
+        class="meeting-info"
+        *ngIf="session.meeting_type === 'in_person' && session.location">
+
+        <span class="meeting-icon">⌖</span>
+
+        <div class="meeting-content">
+          <span class="detail-label">Location</span>
+          <strong>{{ session.location }}</strong>
+        </div>
+      </div>
+
+      <!-- Session Notes -->
+      <div class="session-notes" *ngIf="session.notes">
+        <span class="detail-label">Session Notes</span>
+        <p>{{ session.notes }}</p>
+      </div>
+
+      <!-- Session Actions -->
+
+
+<!-- Session Actions -->
+<div class="session-actions" *ngIf="session.status === 'scheduled'">
+
+  <button
+    type="button"
+    class="complete-button"
+    [disabled]="
+      processingSessionId() === session.session_id ||
+      !canMarkAsCompleted(session)
+    "
+    (click)="completeSession(session.session_id)">
+    {{
+      processingSessionId() === session.session_id
+        ? 'Updating...'
+        : canMarkAsCompleted(session)
+          ? '✓ Mark as Completed'
+          : 'Available after session ends'
+    }}
+  </button>
+
+  <button
+    type="button"
+    class="cancel-button"
+    [disabled]="processingSessionId() === session.session_id"
+    (click)="cancelSession(session.session_id)">
+    {{
+      processingSessionId() === session.session_id
+        ? 'Updating...'
+        : 'Cancel Session'
+    }}
+  </button>
+
+</div>
+
+
+
+      <!-- Card Footer -->
+      <footer class="session-footer">
+        <span class="request-reference">
+          Request #{{ session.request_id }}
+        </span>
+
+        <span class="session-status-text">
+          {{ getStatusLabel(session.status) }}
+        </span>
+      </footer>
+
+    </article>
+
+  </section>
+
+</div>

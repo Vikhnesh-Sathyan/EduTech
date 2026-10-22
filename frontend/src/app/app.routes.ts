@@ -22,6 +22,8 @@ import { MySkills } from './features/student/skillswap/skills/my-skills/my-skill
 import { SuggestSkill } from './features/student/skillswap/suggest-skill/suggest-skill';
 import { MySuggestions } from'./features/student/skillswap/my-suggestions/my-suggestions';
 import { DiscoverStudents } from './features/student/skillswap/discover-students/discover-students';
+import { MyRequests } from './features/student/skillswap/my-requests/my-requests';
+import { MySessions } from './features/student/skillswap/my-sessions/my-sessions';
 
 // Student profile
 import { Profile } from './features/student/profile/profile/profile';
@@ -195,6 +197,16 @@ export const routes: Routes = [
       {
         path: 'discover-students',
         component: DiscoverStudents
+      },
+
+      {
+         path: 'my-requests',
+        component: MyRequests
+      },
+
+      {
+        path: 'swap-sessions',
+        component: MySessions
       },
 
      // Student recommendations and learning resources

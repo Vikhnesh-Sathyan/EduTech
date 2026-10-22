@@ -90,12 +90,38 @@
   line-height: 1.7;
 }
 
+
 .card-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  gap: 10px;
   margin-top: auto;
+  padding: 10px 15px;
+  border: 1px solid #dcdfff;
+  border-radius: 10px;
+  background: #f0f1ff;
   color: #4f46e5;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
+  transition: background 0.2s ease, color 0.2s ease;
 }
+
+.card-link .arrow {
+  transition: transform 0.2s ease;
+}
+
+.feature-card:hover .card-link {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+.feature-card:hover .card-link .arrow {
+  transform: translateX(4px);
+}
+
 
 @media (max-width: 900px) {
   .feature-grid {

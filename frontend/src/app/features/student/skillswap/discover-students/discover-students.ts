@@ -1,7 +1,10 @@
+
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SkillSwapService } from '../../../../services/student/skillswap/skill-swap.service';
+import { ToastService } from '../../../../services/toast.service';
 
 interface AvailableSkill {
   id: number;
@@ -24,13 +27,12 @@ interface DiscoveredStudent {
 @Component({
   selector: 'app-discover-students',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './discover-students.html',
   styleUrl: './discover-students.css'
 })
 export class DiscoverStudents implements OnInit {
 
-  // Only the logged-in student's saved learning skills
   skills = signal<AvailableSkill[]>([]);
   selectedSkillId = signal<number | null>(null);
   students = signal<DiscoveredStudent[]>([]);
@@ -39,6 +41,18 @@ export class DiscoverStudents implements OnInit {
   loadingStudents = signal(false);
   errorMessage = signal('');
   searchTerm = signal('');
+
+  // Swap request modal state
+  showRequestModal = signal(false);
+  submittingRequest = signal(false);
+  selectedStudent = signal<DiscoveredStudent | null>(null);
+
+  requestType: 'learning' | 'mutual_exchange' = 'learning';
+  teachSkillId: number | null = null;
+  requestMessage = '';
+
+  // Skills this student has saved as skills they can teach
+  myTeachingSkills = signal<AvailableSkill[]>([]);
 
   filteredStudents = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -69,13 +83,16 @@ export class DiscoverStudents implements OnInit {
     ).length
   );
 
-  constructor(private skillSwapService: SkillSwapService) {}
+  constructor(
+    private skillSwapService: SkillSwapService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadMyLearningSkills();
+    this.loadMyTeachingSkills();
   }
 
-  // Load only the skills this student actually wants to learn
   loadMyLearningSkills(): void {
     this.loadingSkills.set(true);
     this.errorMessage.set('');
@@ -86,8 +103,6 @@ export class DiscoverStudents implements OnInit {
     this.skillSwapService.getMySkills().subscribe({
       next: (response: any) => {
         const data = response?.data;
-
-        // Support either an array response or grouped skill arrays.
         let learningSkills: any[] = [];
 
         if (Array.isArray(data)) {
@@ -107,21 +122,20 @@ export class DiscoverStudents implements OnInit {
         }
 
         const mappedSkills: AvailableSkill[] = learningSkills
-  .map((skill: any) => ({
-    id: Number(skill.skill_id),
-    name: skill.skill_name ?? skill.name
-  }))
-  .filter((skill: AvailableSkill) =>
-    Number.isInteger(skill.id) &&
-    skill.id > 0 &&
-    Boolean(skill.name)
-  );
+          .map((skill: any) => ({
+            id: Number(skill.skill_id ?? skill.id),
+            name: skill.skill_name ?? skill.name
+          }))
+          .filter((skill: AvailableSkill) =>
+            Number.isInteger(skill.id) &&
+            skill.id > 0 &&
+            Boolean(skill.name)
+          );
 
         this.skills.set(mappedSkills);
         this.loadingSkills.set(false);
 
         if (mappedSkills.length > 0) {
-          // Select the first skill from YOUR saved learning skills.
           this.onSkillChange(mappedSkills[0].id);
         }
       },
@@ -134,7 +148,47 @@ export class DiscoverStudents implements OnInit {
     });
   }
 
-  // Find students who can teach the selected learning skill
+  loadMyTeachingSkills(): void {
+    this.skillSwapService.getMySkills().subscribe({
+      next: (response: any) => {
+        const data = response?.data;
+        let teachingSkills: any[] = [];
+
+        if (Array.isArray(data)) {
+          teachingSkills = data.filter(
+            (skill: any) => skill.skill_type === 'teach'
+          );
+        } else if (Array.isArray(data?.teaching_skills)) {
+          teachingSkills = data.teaching_skills;
+        } else if (Array.isArray(data?.skills)) {
+          teachingSkills = data.skills.filter(
+            (skill: any) => skill.skill_type === 'teach'
+          );
+        } else if (Array.isArray(data?.my_skills)) {
+          teachingSkills = data.my_skills.filter(
+            (skill: any) => skill.skill_type === 'teach'
+          );
+        }
+
+        this.myTeachingSkills.set(
+          teachingSkills
+            .map((skill: any) => ({
+              id: Number(skill.skill_id ?? skill.id),
+              name: skill.skill_name ?? skill.name
+            }))
+            .filter((skill: AvailableSkill) =>
+              Number.isInteger(skill.id) &&
+              skill.id > 0 &&
+              Boolean(skill.name)
+            )
+        );
+      },
+      error: () => {
+        this.toastService.error('Unable to load your teaching skills.');
+      }
+    });
+  }
+
   onSkillChange(skillId: number): void {
     if (!this.skills().some(skill => skill.id === skillId)) {
       return;
@@ -161,8 +215,7 @@ export class DiscoverStudents implements OnInit {
   }
 
   handleSkillSelection(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const skillId = Number(target.value);
+    const skillId = Number((event.target as HTMLSelectElement).value);
 
     if (skillId > 0) {
       this.onSkillChange(skillId);
@@ -170,8 +223,7 @@ export class DiscoverStudents implements OnInit {
   }
 
   handleSearch(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchTerm.set(target.value);
+    this.searchTerm.set((event.target as HTMLInputElement).value);
   }
 
   parseSkills(skills: string | null): string[] {
@@ -179,10 +231,7 @@ export class DiscoverStudents implements OnInit {
       return [];
     }
 
-    return skills
-      .split(',')
-      .map(skill => skill.trim())
-      .filter(Boolean);
+    return skills.split(',').map(skill => skill.trim()).filter(Boolean);
   }
 
   formatProficiency(level: string | null | undefined): string {
@@ -198,11 +247,92 @@ export class DiscoverStudents implements OnInit {
       return 'S';
     }
 
-    return name
-      .trim()
+    return name.trim()
       .split(/\s+/)
       .slice(0, 2)
       .map(part => part.charAt(0).toUpperCase())
       .join('');
+  }
+
+  openRequestModal(student: DiscoveredStudent): void {
+    this.selectedStudent.set(student);
+    this.requestType = 'learning';
+    this.teachSkillId = null;
+    this.requestMessage = '';
+    this.showRequestModal.set(true);
+  }
+
+  closeRequestModal(): void {
+    if (this.submittingRequest()) {
+      return;
+    }
+
+    this.showRequestModal.set(false);
+    this.selectedStudent.set(null);
+  }
+
+  submitSwapRequest(): void {
+    const student = this.selectedStudent();
+    const learnSkillId = this.selectedSkillId();
+
+    if (!student || !learnSkillId) {
+      this.toastService.error('Please select a student and learning skill.');
+      return;
+    }
+
+    if (this.requestType === 'mutual_exchange') {
+      if (
+        !this.teachSkillId ||
+        !this.myTeachingSkills().some(
+          skill => skill.id === this.teachSkillId
+        )
+      ) {
+        this.toastService.error(
+          'Please select a skill you can teach in return.'
+        );
+        return;
+      }
+
+      if (this.teachSkillId === learnSkillId) {
+        this.toastService.error(
+          'Choose different teaching and learning skills.'
+        );
+        return;
+      }
+    }
+
+    const message = this.requestMessage.trim();
+
+    if (message.length > 500) {
+      this.toastService.error('Message cannot exceed 500 characters.');
+      return;
+    }
+
+    this.submittingRequest.set(true);
+
+    this.skillSwapService.sendSwapRequest({
+      receiver_id: student.student_id,
+      request_type: this.requestType,
+      learn_skill_id: learnSkillId,
+      ...(this.requestType === 'mutual_exchange'
+        ? { teach_skill_id: this.teachSkillId }
+        : {}),
+      message: message || null
+    }).subscribe({
+      next: (response: any) => {
+        this.submittingRequest.set(false);
+        this.showRequestModal.set(false);
+        this.selectedStudent.set(null);
+        this.toastService.success(
+          response?.message || 'Skill Swap request sent successfully!'
+        );
+      },
+      error: (error) => {
+        this.submittingRequest.set(false);
+        this.toastService.error(
+          error.error?.message || 'Unable to send the Skill Swap request.'
+        );
+      }
+    });
   }
 }
