@@ -1,10 +1,14 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { StudentAdvancedService } from '../../../../services/student/student-advanced.service';
-import { ToastService } from '../../../../services/toast.service';
-
 import { CommonModule } from '@angular/common';
+
+import {
+  StudentAdvancedService,
+  AdvancedModuleProgress
+} from '../../../../services/student/student-advanced.service';
+
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-student-advanced',
@@ -19,8 +23,18 @@ export class StudentAdvanced implements OnInit {
 
   loading = signal(true);
   errorMessage = signal('');
+
   advanced = signal<any | null>(null);
   modules = signal<any[]>([]);
+
+  progressLoading = signal(false);
+  completingModuleId = signal<number | null>(null);
+
+  totalModules = signal(0);
+  completedModules = signal(0);
+  progressPercentage = signal(0);
+
+  readonly mentorMessage = signal('');
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +65,9 @@ export class StudentAdvanced implements OnInit {
         this.advanced.set(response.advanced || null);
         this.modules.set(response.modules || []);
         this.loading.set(false);
+
+        // Load completion status after content is available.
+        this.loadModuleProgress();
       },
 
       error: (error) => {
@@ -77,10 +94,101 @@ export class StudentAdvanced implements OnInit {
     });
   }
 
+  loadModuleProgress(): void {
+    this.progressLoading.set(true);
+
+    this.advancedService
+      .getAdvancedModuleProgress(this.subtopicId)
+      .subscribe({
+        next: (response) => {
+          this.totalModules.set(response.totalModules);
+          this.completedModules.set(response.completedModules);
+          this.progressPercentage.set(response.progressPercentage);
+
+          // Merge completion status with the existing content.
+          const progressById = new Map<number, AdvancedModuleProgress>(
+            response.modules.map(module => [module.module_id, module])
+          );
+
+          this.modules.update(modules =>
+            modules.map(module => ({
+              ...module,
+              completed: progressById.get(module.id)?.completed ?? false,
+              completedAt: progressById.get(module.id)?.completed_at ?? null
+            }))
+          );
+
+          this.progressLoading.set(false);
+        },
+
+        error: (error) => {
+          this.progressLoading.set(false);
+
+          this.toastService.error(
+            error.error?.message ||
+            'Unable to load module completion progress.'
+          );
+        }
+      });
+  }
+
+  completeModule(moduleId: number): void {
+    if (this.completingModuleId() !== null) {
+      return;
+    }
+
+    const module = this.modules().find(item => item.id === moduleId);
+
+    if (!module || module.completed) {
+      return;
+    }
+
+    this.completingModuleId.set(moduleId);
+
+    this.advancedService
+      .completeAdvancedModule(this.subtopicId, moduleId)
+      .subscribe({
+        next: () => {
+          this.modules.update(modules =>
+            modules.map(item =>
+              item.id === moduleId
+                ? { ...item, completed: true }
+                : item
+            )
+          );
+
+          this.completedModules.update(count => count + 1);
+
+          this.totalModules.set(this.modules().length);
+
+          this.progressPercentage.set(
+            this.totalModules() > 0
+              ? Math.round(
+                  (this.completedModules() / this.totalModules()) * 100
+                )
+              : 0
+          );
+
+          this.completingModuleId.set(null);
+
+          this.toastService.success(
+            'Advanced module marked as completed!'
+          );
+        },
+
+        error: (error) => {
+          this.completingModuleId.set(null);
+
+          this.toastService.error(
+            error.error?.message ||
+            'Unable to mark this module as completed.'
+          );
+        }
+      });
+  }
+
   backToStudy(): void {
-    this.router.navigate([
-      '/study'
-    ]);
+    this.router.navigate(['/study']);
   }
 
   moduleTitle(moduleType: string): string {
@@ -104,9 +212,37 @@ export class StudentAdvanced implements OnInit {
     return module.id;
   }
 
-  askMyMentor(): void {
-  this.toastService.info(
-    'Mentor questions will be available soon.'
+
+askMyMentor(): void {
+  const topic = this.advanced()?.title || 'Advanced Learning';
+
+  this.mentorMessage.set(
+    `Hi, I need help understanding "${topic}". ` +
+    'Could you please explain it to me?'
   );
+
+  this.router.navigate(['/student-chat'], {
+    state: {
+      suggestedMessage: this.mentorMessage()
+    }
+  });
 }
+
+
+askAboutModule(moduleName: string): void {
+  const topic = this.advanced()?.title || 'Advanced Learning';
+
+  this.mentorMessage.set(
+    `Hi, I need help understanding the "${moduleName}" module ` +
+    `in "${topic}". Could you please explain it with a simple example?`
+  );
+
+  this.router.navigate(['/student-chat'], {
+    state: {
+      suggestedMessage: this.mentorMessage()
+    }
+  });
+}
+
+
 }

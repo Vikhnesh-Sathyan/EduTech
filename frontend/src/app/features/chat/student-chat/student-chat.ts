@@ -87,10 +87,22 @@ export class StudentChatComponent implements OnInit, OnDestroy {
     private chatSocketService: ChatSocketService
   ) {}
 
-  ngOnInit(): void {
-    this.currentUserId.set(this.getCurrentUserId());
-    this.loadConversation();
+
+ngOnInit(): void {
+  this.currentUserId.set(this.getCurrentUserId());
+
+  const suggestedMessage = history.state?.suggestedMessage;
+
+  if (
+    typeof suggestedMessage === 'string' &&
+    suggestedMessage.trim()
+  ) {
+    this.newMessage.set(suggestedMessage);
   }
+
+  this.loadConversation();
+}
+
 
   // Load the student's conversation.
   loadConversation(): void {

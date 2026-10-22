@@ -1,3 +1,4 @@
+
 <div class="advanced-page">
 
   <!-- Page Header -->
@@ -73,6 +74,57 @@
       </div>
     </section>
 
+    <!-- Advanced Module Progress -->
+    <section class="progress-card">
+
+      <div class="progress-header">
+        <div>
+          <span class="summary-label">YOUR PROGRESS</span>
+
+          <h2>Advanced Learning Progress</h2>
+
+          <p>
+            {{ completedModules() }} of {{ totalModules() }}
+            modules completed
+          </p>
+        </div>
+
+        <div class="progress-percentage">
+          {{ progressPercentage() }}%
+        </div>
+      </div>
+
+      <div
+        class="progress-track"
+        role="progressbar"
+        [attr.aria-valuenow]="progressPercentage()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-label="Advanced module completion">
+
+        <div
+          class="progress-fill"
+          [style.width.%]="progressPercentage()">
+        </div>
+
+      </div>
+
+      @if (progressLoading()) {
+        <p class="progress-note">
+          Refreshing your progress...
+        </p>
+      } @else if (totalModules() > 0 && progressPercentage() === 100) {
+        <p class="progress-note progress-success">
+          ✓ Congratulations! You completed every Advanced module.
+        </p>
+      } @else {
+        <p class="progress-note">
+          Keep going! Every completed module moves you forward.
+        </p>
+      }
+
+    </section>
+
     <!-- Empty Modules State -->
     @if (modules().length === 0) {
 
@@ -95,6 +147,7 @@
 
             <!-- Module Heading -->
             <div class="module-heading">
+
               <div class="module-number">
                 {{ (i + 1).toString().padStart(2, '0') }}
               </div>
@@ -106,6 +159,18 @@
 
                 <h2>{{ moduleTitle(module.moduleType) }}</h2>
               </div>
+
+              <!-- Module Status -->
+              @if (module.completed) {
+                <span class="module-status completed-status">
+                  ✓ Completed
+                </span>
+              } @else {
+                <span class="module-status pending-status">
+                  In progress
+                </span>
+              }
+
             </div>
 
             <!-- Module Content -->
@@ -340,6 +405,78 @@
               </div>
 
             }
+    
+<!-- Module Actions -->
+<div class="module-actions">
+
+  <!-- Ask Mentor About This Module -->
+  <button
+    class="module-mentor-button"
+    type="button"
+    (click)="askAboutModule(moduleTitle(module.moduleType))">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true">
+
+      <path
+        d="M21 11.5a8.4 8.4 0 0 1-.9 3.8
+        8.5 8.5 0 0 1-7.6 4.7
+        8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7
+        a8.4 8.4 0 0 1-.9-3.8
+        8.5 8.5 0 0 1 4.7-7.6
+        8.4 8.4 0 0 1 3.8-.9h.5
+        a8.5 8.5 0 0 1 8 8v.5z">
+      </path>
+
+      <path d="M8 11h.01"></path>
+      <path d="M12 11h.01"></path>
+      <path d="M16 11h.01"></path>
+    </svg>
+
+    <span>Ask Mentor</span>
+  </button>
+
+  <!-- Module Completion -->
+  @if (module.completed) {
+
+    <div class="completion-message">
+      <span class="completion-check">✓</span>
+
+      <div>
+        <strong>Module completed</strong>
+        <p>You've marked this module as completed.</p>
+      </div>
+    </div>
+
+  } @else {
+
+    <button
+      class="complete-button"
+      type="button"
+      [disabled]="completingModuleId() !== null"
+      (click)="completeModule(module.id)">
+
+      @if (completingModuleId() === module.id) {
+        <span class="button-loader"></span>
+        Saving...
+      } @else {
+        <span class="complete-icon">✓</span>
+        <span>Mark as Completed</span>
+        <span aria-hidden="true">→</span>
+      }
+
+    </button>
+
+  }
+
+</div>
+
 
           </article>
 
@@ -348,45 +485,6 @@
       </div>
 
     }
-
-    <!-- Mentor Support -->
-    <section class="mentor-help-card">
-
-      <div class="mentor-help-top">
-
-        <div class="mentor-help-icon">
-          <span>?</span>
-        </div>
-
-        <span class="mentor-status">
-          PERSONALIZED GUIDANCE
-        </span>
-
-      </div>
-
-      <div class="mentor-help-content">
-
-        <h2>Need help with a concept?</h2>
-
-        <p>
-          Advanced topics can be challenging. Reach out to your assigned
-          mentor for guidance, explanations, and practical advice.
-        </p>
-
-        <button
-          class="mentor-help-button"
-          type="button"
-          (click)="askMyMentor()">
-
-          <span>Ask My Mentor</span>
-
-          <span class="mentor-button-arrow">→</span>
-
-        </button>
-
-      </div>
-
-    </section>
 
     <!-- Learning Footer -->
     <footer class="learning-footer">

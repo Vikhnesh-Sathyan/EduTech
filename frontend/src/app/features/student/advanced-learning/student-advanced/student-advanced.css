@@ -5,6 +5,10 @@
   color: #172033;
 }
 
+/* ==========================================
+   PAGE LAYOUT
+========================================== */
+
 .advanced-page {
   width: 100%;
   max-width: 1100px;
@@ -17,18 +21,28 @@
 }
 
 .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  margin-bottom: 26px;
   border: 0;
   background: transparent;
   color: #58657a;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  padding: 8px 0;
-  margin-bottom: 26px;
+  transition: color 0.2s ease;
 }
 
 .back-button:hover {
   color: #4f46e5;
+}
+
+.back-button:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .header-content {
@@ -41,32 +55,36 @@
 .panel-label,
 .code-label {
   display: block;
+  color: #68758b;
   font-size: 11px;
   font-weight: 750;
   letter-spacing: 1.3px;
-  color: #68758b;
 }
 
 .eyebrow {
-  color: #4f46e5;
   margin-bottom: 12px;
+  color: #4f46e5;
 }
 
 .header-content h1 {
+  margin: 0 0 12px;
   font-size: clamp(28px, 4vw, 42px);
+  font-weight: 750;
   line-height: 1.2;
   letter-spacing: -1.3px;
-  margin: 0 0 12px;
-  font-weight: 750;
 }
 
 .header-content > p,
 .learning-summary p {
+  margin: 0;
   color: #68758b;
   font-size: 15px;
   line-height: 1.8;
-  margin: 0;
 }
+
+/* ==========================================
+   LEARNING SUMMARY
+========================================== */
 
 .learning-summary {
   display: flex;
@@ -74,10 +92,10 @@
   justify-content: space-between;
   gap: 24px;
   padding: 25px 28px;
+  margin-bottom: 26px;
   border: 1px solid #e4e8f0;
   border-radius: 18px;
   background: #ffffff;
-  margin-bottom: 26px;
 }
 
 .summary-label {
@@ -91,8 +109,8 @@
 }
 
 .module-count {
-  flex-shrink: 0;
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -109,9 +127,77 @@
 }
 
 .module-count span {
-  font-size: 12px;
   margin-top: 4px;
+  font-size: 12px;
 }
+
+/* ==========================================
+   ADVANCED LEARNING PROGRESS
+========================================== */
+
+.progress-card {
+  padding: 26px;
+  margin: 24px 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.progress-header h2 {
+  margin: 8px 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.4px;
+}
+
+.progress-header p,
+.progress-note {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.progress-percentage {
+  color: #3978e5;
+  font-size: 2rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.progress-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e9edf4;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6366f1, #43b99b);
+  transition: width 0.35s ease;
+}
+
+.progress-note {
+  margin-top: 12px;
+}
+
+.progress-success {
+  color: #168252;
+  font-weight: 600;
+}
+
+/* ==========================================
+   MODULE LIST AND CARDS
+========================================== */
 
 .module-list {
   display: flex;
@@ -120,10 +206,19 @@
 }
 
 .module-card {
-  background: #ffffff;
+  overflow: hidden;
   border: 1px solid #e4e8f0;
   border-radius: 18px;
-  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(23, 32, 51, 0.02);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+  border-color: #d8def0;
+  box-shadow: 0 6px 20px rgba(23, 32, 51, 0.045);
 }
 
 .module-heading {
@@ -136,16 +231,21 @@
 }
 
 .module-number {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
   width: 44px;
   height: 44px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
   border-radius: 12px;
   background: #eeedff;
   color: #4f46e5;
   font-size: 14px;
   font-weight: 750;
+}
+
+.module-heading-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .module-label {
@@ -158,7 +258,33 @@
   font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
 }
+
+.module-status {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.completed-status {
+  background: #e8f7ef;
+  color: #197347;
+}
+
+.pending-status {
+  background: #eff4ff;
+  color: #3568bf;
+}
+
+/* ==========================================
+   MODULE CONTENT
+========================================== */
 
 .module-content {
   padding: 26px;
@@ -168,6 +294,8 @@
   margin: 0 0 18px;
   font-size: 20px;
   line-height: 1.5;
+  letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
 }
 
 .content-text,
@@ -192,11 +320,11 @@
 
 .comparison-panel,
 .info-panel {
+  padding: 18px;
+  margin-bottom: 14px;
   border: 1px solid #e5e9f1;
   border-radius: 12px;
-  padding: 18px;
   background: #fafbfe;
-  margin-bottom: 14px;
 }
 
 .comparison-panel p,
@@ -209,9 +337,13 @@
 }
 
 .solution-panel {
-  background: #f4f5ff;
   border-color: #dedfff;
+  background: #f4f5ff;
 }
+
+/* ==========================================
+   CODE BLOCKS
+========================================== */
 
 .code-section {
   margin-top: 20px;
@@ -222,13 +354,13 @@
 }
 
 .code-section pre {
-  margin: 0;
   padding: 20px;
+  margin: 0;
+  overflow-x: auto;
   border: 1px solid #252e40;
   border-radius: 12px;
   background: #151c2b;
   color: #e6edf8;
-  overflow-x: auto;
   white-space: pre;
   tab-size: 2;
 }
@@ -238,6 +370,10 @@
   font-size: 13px;
   line-height: 1.8;
 }
+
+/* ==========================================
+   PRACTICE OPTIONS
+========================================== */
 
 .practice-options {
   display: flex;
@@ -258,10 +394,10 @@
 
 .practice-option strong {
   display: grid;
+  flex-shrink: 0;
   place-items: center;
   width: 28px;
   height: 28px;
-  flex-shrink: 0;
   border-radius: 8px;
   background: #f1f0ff;
   color: #4f46e5;
@@ -276,6 +412,10 @@
   overflow-wrap: anywhere;
 }
 
+/* ==========================================
+   EMPTY MODULE STATE
+========================================== */
+
 .empty-module {
   padding: 24px 26px;
   color: #7a8598;
@@ -284,14 +424,19 @@
 
 .empty-module p {
   margin: 0;
+  line-height: 1.8;
 }
 
+/* ==========================================
+   LOADING AND ERROR STATES
+========================================== */
+
 .state-card {
-  text-align: center;
   padding: 52px 24px;
   border: 1px solid #e4e8f0;
   border-radius: 18px;
   background: #ffffff;
+  text-align: center;
 }
 
 .state-card h2 {
@@ -314,13 +459,7 @@
   border: 3px solid #e5e7eb;
   border-top-color: #4f46e5;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  animation: advanced-spin 0.8s linear infinite;
 }
 
 .state-icon {
@@ -338,13 +477,15 @@
 
 .primary-button,
 .secondary-button {
+  padding: 12px 18px;
   margin-top: 22px;
   border-radius: 10px;
-  padding: 12px 18px;
   font-size: 13px;
   font-weight: 650;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .primary-button {
@@ -368,162 +509,154 @@
   background: #f8f8ff;
 }
 
-.learning-footer {
+/* ==========================================
+   MODULE ACTIONS
+========================================== */
+
+.module-actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid #e4e8f0;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 26px;
+  border-top: 1px solid #edf0f5;
+  background: #fcfcfe;
 }
 
-.learning-footer p {
-  margin: 0;
-  color: #68758b;
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.learning-footer .secondary-button {
-  margin-top: 0;
-  flex-shrink: 0;
-}
-
-
-/* =========================================
-   MENTOR SUPPORT CARD
-========================================= */
-
-.mentor-help-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 22px;
-  margin-top: 32px;
-  padding: 30px;
-  overflow: hidden;
-  border: 1px solid #dedfff;
-  border-radius: 20px;
-  background: linear-gradient(
-    135deg,
-    #f7f7ff 0%,
-    #ffffff 60%,
-    #f4f6ff 100%
-  );
-}
-
-.mentor-help-card::after {
-  content: "";
-  position: absolute;
-  top: -65px;
-  right: -45px;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  background: rgba(99, 102, 241, 0.07);
-  pointer-events: none;
-}
-
-.mentor-help-top {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.mentor-help-icon {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  border: 1px solid #dedfff;
-  border-radius: 15px;
-  background: #ffffff;
-  color: #4f46e5;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
-}
-
-.mentor-help-icon span {
-  font-size: 23px;
-  font-weight: 750;
-}
-
-.mentor-status {
-  color: #4f46e5;
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: 1.4px;
-}
-
-.mentor-help-content {
-  position: relative;
-  z-index: 1;
-}
-
-.mentor-help-content h2 {
-  margin: 0 0 10px;
-  color: #172033;
-  font-size: 23px;
-  line-height: 1.4;
-  letter-spacing: -0.5px;
-}
-
-.mentor-help-content p {
-  max-width: 650px;
-  margin: 0;
-  color: #68758b;
-  font-size: 14px;
-  line-height: 1.9;
-}
-
-.mentor-help-button {
+.complete-button,
+.module-mentor-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-top: 22px;
-  padding: 13px 19px;
-  border: 1px solid #4f46e5;
+  gap: 9px;
+  min-height: 42px;
+  padding: 10px 15px;
   border-radius: 11px;
-  background: #4f46e5;
-  color: #ffffff;
+  font: inherit;
   font-size: 13px;
   font-weight: 650;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.mentor-help-button:hover {
-  background: #4338ca;
+.complete-button {
+  border: 1px solid #d8def0;
+  background: #ffffff;
+  color: #4655a8;
+}
+
+.complete-button:hover:not(:disabled) {
   transform: translateY(-1px);
+  border-color: #a5b4fc;
+  background: #f3f4ff;
+  color: #4338ca;
 }
 
-.mentor-help-button:focus-visible {
+.complete-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.complete-icon {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.module-mentor-button {
+  border: 1px solid #ddd6fe;
+  background: #f5f3ff;
+  color: #6d4aff;
+}
+
+.module-mentor-button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.module-mentor-button:hover {
+  transform: translateY(-1px);
+  border-color: #a78bfa;
+  background: #ede9fe;
+  box-shadow: 0 4px 12px rgba(109, 74, 255, 0.1);
+}
+
+.complete-button:focus-visible,
+.module-mentor-button:focus-visible {
   outline: 3px solid #c7d2fe;
   outline-offset: 3px;
 }
 
-.mentor-button-arrow {
-  font-size: 17px;
-  line-height: 1;
-  transition: transform 0.2s ease;
+/* Saving indicator */
+
+.button-loader {
+  width: 15px;
+  height: 15px;
+  border: 2px solid #c7d2fe;
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: advanced-spin 0.7s linear infinite;
 }
 
-.mentor-help-button:hover .mentor-button-arrow {
-  transform: translateX(3px);
+/* Completed state */
+
+.completion-message {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 11px;
+  min-width: 180px;
+  padding: 10px 12px;
+  border: 1px solid #c9ead8;
+  border-radius: 11px;
+  background: #f0faf4;
+  color: #197347;
 }
 
-/* =========================================
+.completion-check {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #d6f3e2;
+  font-weight: 800;
+}
+
+.completion-message strong {
+  display: block;
+  font-size: 13px;
+}
+
+.completion-message p {
+  margin: 3px 0 0;
+  color: #367557;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ==========================================
    LEARNING FOOTER
-========================================= */
+========================================== */
 
 .learning-footer {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin-top: 26px;
-  padding: 20px 2px 0;
+  padding: 24px 2px 0;
+  margin-top: 28px;
   border-top: 1px solid #e4e8f0;
 }
 
@@ -544,48 +677,24 @@
   line-height: 1.8;
 }
 
-/* =========================================
+.learning-footer .secondary-button {
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+@keyframes advanced-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
    RESPONSIVE DESIGN
-========================================= */
-
-@media (max-width: 650px) {
-  .mentor-help-card {
-    gap: 18px;
-    margin-top: 24px;
-    padding: 22px;
-    border-radius: 16px;
-  }
-
-  .mentor-help-content h2 {
-    font-size: 20px;
-  }
-
-  .mentor-help-content p {
-    font-size: 13px;
-  }
-
-  .mentor-help-button {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .learning-footer {
-    margin-top: 22px;
-    padding-top: 18px;
-  }
-}
-
-
-@media (max-width: 640px) {
-  .mentor-help-card {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .mentor-help-card button {
-    width: 100%;
-  }
-}
+========================================== */
 
 @media (max-width: 650px) {
   .advanced-page {
@@ -607,7 +716,17 @@
   }
 
   .module-heading {
+    flex-wrap: wrap;
+    gap: 12px;
     padding: 18px;
+  }
+
+  .module-heading-text {
+    flex: 1 1 calc(100% - 60px);
+  }
+
+  .module-status {
+    margin-left: auto;
   }
 
   .module-content {
@@ -618,8 +737,84 @@
     grid-template-columns: 1fr;
   }
 
+  .mentor-help-card {
+    gap: 18px;
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .mentor-help-content h2 {
+    font-size: 22px;
+  }
+
+  .mentor-help-content p {
+    font-size: 13px;
+  }
+
+  .mentor-help-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .learning-footer {
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-card {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .progress-header {
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .progress-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .progress-percentage {
+    font-size: 1.5rem;
+  }
+
+  .module-actions {
+    justify-content: stretch;
+    padding: 14px 18px;
+  }
+
+  .complete-button,
+  .module-mentor-button {
+    flex: 1 1 auto;
+  }
+
+  .completion-message {
+    flex-basis: 100%;
+  }
+
+  .learning-footer {
     flex-direction: column;
+  }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  .module-card,
+  .complete-button,
+  .module-mentor-button,
+  .mentor-help-card,
+  .mentor-help-button,
+  .mentor-button-arrow,
+  .progress-fill {
+    transition: none;
+  }
+
+  .loader,
+  .button-loader {
+    animation: none;
   }
 }
