@@ -50,7 +50,7 @@ import { InterviewChallenge } from '../components/interview-challenge/interview-
 })
 export class AdminAdvanced implements OnInit {
 
-  subtopicId = signal<number | null>(null);
+  sectionId = signal<number | null>(null);
 
   advancedExists = signal(false);
 
@@ -157,92 +157,65 @@ export class AdminAdvanced implements OnInit {
   
 ngOnInit(): void {
   this.route.paramMap.subscribe(params => {
-    const id = Number(params.get('subtopicId'));
+    const id = Number(params.get('sectionId'));
 
     if (!Number.isInteger(id) || id <= 0) {
-      this.subtopicId.set(null);
-      this.advancedExists.set(false);
-      this.advancedModules.set([]);
-      this.selectedModules.set([]);
-      this.selectedModuleForEditing.set(null);
-      this.moduleContent.set({});
+      this.sectionId.set(null);
+      this.resetAdvancedState();
       return;
     }
 
-    // Set the newly selected subtopic
-    this.subtopicId.set(id);
-
-    // Clear the previous subtopic's data
-    this.advancedExists.set(false);
-    this.advancedModules.set([]);
-    this.selectedModules.set([]);
-    this.selectedModuleForEditing.set(null);
-    this.moduleContent.set({});
-
-    // Load Advanced setup for this subtopic only
+    this.sectionId.set(id);
+    this.resetAdvancedState();
     this.loadAdvanced();
   });
 }
 
+private resetAdvancedState(): void {
+  this.advancedExists.set(false);
+  this.advancedModules.set([]);
+  this.selectedModules.set([]);
+  this.selectedModuleForEditing.set(null);
+  this.moduleContent.set({});
+}
 
 
-  loadAdvanced(): void {
 
-    const id = this.subtopicId();
+loadAdvanced(): void {
+  const id = this.sectionId();
 
-    if (!id) {
-      return;
-    }
-
-    this.loading.set(true);
-
-    this.adminSubtopic
-      .getAdvancedSetup(id)
-      .subscribe({
-
-        next: (response: any) => {
-
-          this.advancedExists.set(
-            response.exists
-          );
-
-          const modules =
-            response.modules || [];
-
-          this.advancedModules.set(
-            modules
-          );
-
-          this.selectedModules.set(
-            modules.map(
-              (module: any) =>
-                module.module_type
-            )
-          );
-
-          this.loading.set(false);
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Failed to load Advanced setup:',
-            error
-          );
-
-          this.loading.set(false);
-
-          this.toastService.error(
-            error?.error?.message ||
-            'Failed to load Advanced setup.'
-          );
-
-        }
-
-      });
-
+  if (!id) {
+    return;
   }
+
+  this.loading.set(true);
+
+  this.adminSubtopic.getAdvancedSetup(id).subscribe({
+    next: (response: any) => {
+      this.advancedExists.set(response.exists);
+
+      const modules = response.modules || [];
+
+      this.advancedModules.set(modules);
+
+      this.selectedModules.set(
+        modules.map((module: any) => module.module_type)
+      );
+
+      this.loading.set(false);
+    },
+
+    error: (error) => {
+      console.error('Failed to load Advanced setup:', error);
+      this.loading.set(false);
+
+      this.toastService.error(
+        error?.error?.message ||
+        'Failed to load Advanced setup.'
+      );
+    }
+  });
+}
 
 
   isSelected(
@@ -279,83 +252,52 @@ ngOnInit(): void {
 
   }
 
+saveAdvanced(): void {
+  const id = this.sectionId();
 
-  saveAdvanced(): void {
+  if (!id) {
+    this.toastService.error('Section ID is missing.');
+    return;
+  }
 
-    const id = this.subtopicId();
+  const modules = this.selectedModules();
 
-    if (!id) {
-      return;
-    }
+  if (modules.length === 0) {
+    this.toastService.error(
+      'Select at least one Advanced module.'
+    );
+    return;
+  }
 
-    const modules =
-      this.selectedModules();
+  this.saving.set(true);
 
-    if (modules.length === 0) {
+  const request$ = this.advancedExists()
+    ? this.adminSubtopic.updateAdvancedSetup(id, modules)
+    : this.adminSubtopic.createAdvancedSetup(id, modules);
 
-      this.toastService.error(
-        'Select at least one Advanced module.'
+  request$.subscribe({
+    next: () => {
+      this.advancedExists.set(true);
+      this.saving.set(false);
+
+      this.toastService.success(
+        'Advanced setup saved successfully.'
       );
 
-      return;
+      this.loadAdvanced();
+    },
 
+    error: (error) => {
+      console.error('Failed to save Advanced setup:', error);
+      this.saving.set(false);
+
+      this.toastService.error(
+        error?.error?.message ||
+        'Failed to save Advanced setup.'
+      );
     }
-
-    this.saving.set(true);
-
-
-    const request$ =
-      this.advancedExists()
-
-        ? this.adminSubtopic
-            .updateAdvancedSetup(
-              id,
-              modules
-            )
-
-        : this.adminSubtopic
-            .createAdvancedSetup(
-              id,
-              modules
-            );
-
-
-    request$.subscribe({
-
-      next: () => {
-
-        this.advancedExists.set(true);
-
-        this.saving.set(false);
-
-        this.toastService.success(
-          'Advanced setup saved successfully.'
-        );
-
-        // Refresh module IDs after create/update.
-        this.loadAdvanced();
-
-      },
-
-      error: (error) => {
-
-        console.error(
-          'Failed to save Advanced setup:',
-          error
-        );
-
-        this.saving.set(false);
-
-        this.toastService.error(
-          error?.error?.message ||
-          'Failed to save Advanced setup.'
-        );
-
-      }
-
-    });
-
-  }
+  });
+}
 
 
   openModuleContent(

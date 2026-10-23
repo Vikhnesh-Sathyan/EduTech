@@ -1,0 +1,10 @@
+<div class="subject-grid">
+  @for (subject of subjects; track subject.subjectId) {
+    <app-advanced-subject-card
+      [subject]="subject"
+      [expanded]="expandedSubjectId === subject.subjectId"
+      (toggle)="onToggleSubject($event)"
+      (exploreSection)="onExploreSection($event)"
+    />
+  }
+</div>

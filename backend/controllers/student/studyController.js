@@ -244,31 +244,43 @@ const getSubjectLearningStructure = async (req, res) => {
         // Get sections
         // ------------------------------------------
 
-        const sectionSql = `
-            SELECT
-                id,
-                subtopic_id,
-                title,
-                description,
-                display_order
-            FROM learning_sections
-            WHERE subtopic_id IN (
-                SELECT ls.id
-                FROM learning_subtopics ls
-                INNER JOIN subject_topics st
-                    ON st.id = ls.topic_id
-                WHERE st.subject_id = ?
-                  AND st.status = 'active'
-                  AND ls.status = 'active'
-            )
-            AND status = 'active'
-            ORDER BY display_order ASC
-        `;
+        
+const sectionSql = `
+    SELECT
+        ls.id,
+        ls.subtopic_id,
+        ls.title,
+        ls.description,
+        ls.display_order,
 
-        const [sections] = await db.query(
-            sectionSql,
-            [subjectId]
-        );
+        -- Get the Advanced Learning setup for this section
+        lsa.id AS advanced_id
+
+    FROM learning_sections ls
+
+    LEFT JOIN learning_subtopic_advanced lsa
+        ON lsa.section_id = ls.id
+        AND lsa.status = 'active'
+
+    WHERE ls.subtopic_id IN (
+        SELECT sub.id
+        FROM learning_subtopics sub
+        INNER JOIN subject_topics st
+            ON st.id = sub.topic_id
+        WHERE st.subject_id = ?
+          AND st.status = 'active'
+          AND sub.status = 'active'
+    )
+    AND ls.status = 'active'
+
+    ORDER BY ls.display_order ASC
+`;
+
+const [sections] = await db.query(
+    sectionSql,
+    [subjectId]
+);
+
 
 
         // ------------------------------------------

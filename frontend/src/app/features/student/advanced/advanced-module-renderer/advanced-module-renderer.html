@@ -1,0 +1,174 @@
+<article class="learning-module">
+
+  @if (hasContent) {
+
+    @switch (module.moduleType) {
+
+      <!-- DEEP DIVE -->
+      @case ('deep_dive') {
+        <header class="module-header">
+          <span class="module-type">DEEP DIVE</span>
+          <h2>{{ content['title'] || 'Detailed Explanation' }}</h2>
+        </header>
+
+        @if (content['detailedExplanation']) {
+          <section class="content-section">
+            <h3>Understanding the Concept</h3>
+            <div class="readable-text">{{ content['detailedExplanation'] }}</div>
+          </section>
+        }
+
+        @if (insights.length) {
+          <section class="content-section">
+            <h3>Key Insights</h3>
+            <ul class="insight-list">
+              @for (insight of insights; track $index) {
+                <li>{{ insight }}</li>
+              }
+            </ul>
+          </section>
+        }
+
+        @if (content['realWorldExample']) {
+          <section class="content-section">
+            <h3>Real-World Example</h3>
+            <pre class="code-content">{{ content['realWorldExample'] }}</pre>
+          </section>
+        }
+      }
+
+      <!-- DEBUGGING -->
+      @case ('debugging') {
+        <header class="module-header">
+          <span class="module-type">DEBUGGING CHALLENGE</span>
+          <h2>{{ content['title'] || 'Fix the Code' }}</h2>
+          <p>{{ content['problemDescription'] }}</p>
+        </header>
+
+        @if (content['whyItIsWrong']) {
+          <section class="explanation-panel">
+            <h3>What is the problem?</h3>
+            <div class="readable-text">{{ content['whyItIsWrong'] }}</div>
+          </section>
+        }
+
+        @if (content['buggyCode']) {
+          <section class="content-section">
+            <h3 class="error-heading">Original Code</h3>
+            <pre class="code-content"><code>{{ content['buggyCode'] }}</code></pre>
+          </section>
+        }
+
+        @if (content['correctCode']) {
+          <section class="content-section">
+            <h3 class="success-heading">Corrected Code</h3>
+            <pre class="code-content"><code>{{ content['correctCode'] }}</code></pre>
+          </section>
+        }
+
+        @if (content['explanation']) {
+          <section class="explanation-panel">
+            <h3>Why this works</h3>
+            <div class="readable-text">{{ content['explanation'] }}</div>
+          </section>
+        }
+      }
+
+      <!-- CONCEPT COMPARISON -->
+      @case ('concept_comparison') {
+        <header class="module-header">
+          <span class="module-type">CONCEPT COMPARISON</span>
+          <h2>{{ content['title'] || 'Compare the Concepts' }}</h2>
+        </header>
+
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Content-box</th>
+                <th>Border-box</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <th>Definition</th>
+                <td>{{ content['conceptA'] }}</td>
+                <td>{{ content['conceptB'] }}</td>
+              </tr>
+
+              <tr>
+                <th>When to use</th>
+                <td>{{ content['whenToUseA'] }}</td>
+                <td>{{ content['whenToUseB'] }}</td>
+              </tr>
+
+              <tr>
+                <th>Key differences</th>
+                <td colspan="2" class="difference-cell">
+                  {{ content['keyDifferences'] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- REAL-WORLD SCENARIO -->
+      @case ('real_world_scenario') {
+        <header class="module-header">
+          <span class="module-type">REAL-WORLD SCENARIO</span>
+          <h2>{{ content['title'] || 'Apply Your Knowledge' }}</h2>
+        </header>
+
+        @if (content['scenario'] || content['problemDescription']) {
+          <section class="content-section">
+            <h3>Scenario</h3>
+            <div class="readable-text">
+              {{ content['scenario'] || content['problemDescription'] }}
+            </div>
+          </section>
+        }
+
+        @if (content['requirements']) {
+          <section class="content-section">
+            <h3>Requirements</h3>
+            <div class="readable-text">{{ content['requirements'] }}</div>
+          </section>
+        }
+
+        @if (content['solution'] || content['explanation']) {
+          <section class="content-section">
+            <h3>Suggested Solution</h3>
+            <pre class="code-content">{{ content['solution'] || content['explanation'] }}</pre>
+          </section>
+        }
+      }
+
+      <!-- OTHER MODULE TYPES -->
+      @default {
+        <header class="module-header">
+          <span class="module-type">{{ module.moduleType | titlecase }}</span>
+          <h2>{{ content['title'] || 'Learning Material' }}</h2>
+        </header>
+
+        @for (entry of content | keyvalue; track entry.key) {
+          @if (entry.key !== 'title' && entry.value !== null && entry.value !== '') {
+            <section class="content-section">
+              <h3>{{ entry.key | titlecase }}</h3>
+              <div class="readable-text">{{ entry.value }}</div>
+            </section>
+          }
+        }
+      }
+    }
+
+  } @else {
+    <div class="empty-module">
+      <h3>Content is being prepared</h3>
+      <p>This learning module doesn't have content yet.</p>
+    </div>
+  }
+
+</article>

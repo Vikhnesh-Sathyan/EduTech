@@ -1,0 +1,17 @@
+<div class="section-row">
+  <div class="section-info">
+    <span class="subtopic-title">{{ subtopicTitle }}</span>
+    <h3>{{ sectionTitle }}</h3>
+  </div>
+
+  <button
+    type="button"
+    class="explore-button"
+    [disabled]="!available"
+    (click)="onExplore()"
+    [attr.aria-label]="'Explore ' + sectionTitle"
+  >
+    <span>Explore</span>
+    <span class="arrow">→</span>
+  </button>
+</div>

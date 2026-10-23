@@ -1,0 +1,56 @@
+
+<div class="advanced-content-page">
+
+  <a routerLink="/advanced-learning" class="back-link">
+    <span>←</span> Back to Advanced Learning
+  </a>
+
+  @if (loading()) {
+    <section class="state-card">
+      <div class="loading-spinner"></div>
+      <h2>Preparing your lesson</h2>
+      <p>Loading your advanced learning content...</p>
+    </section>
+  }
+  @else if (errorMessage()) {
+    <section class="state-card error-state">
+      <div class="state-icon">!</div>
+      <h2>Content unavailable</h2>
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="primary-button" (click)="goBack()">
+        Back to Subjects
+      </button>
+    </section>
+  }
+  @else if (lesson(); as data) {
+    <header class="lesson-header">
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>{{ data.sectionTitle }}</h1>
+      <p>{{ data.subtopicTitle }}</p>
+    </header>
+
+    @if (data.modules.length === 0) {
+      <section class="state-card">
+        <h2>Content is being prepared</h2>
+        <p>There are no learning modules available for this section yet.</p>
+      </section>
+    }
+    @else {
+      <div class="module-list">
+        @for (module of data.modules; track module.id) {
+          <article class="module-card">
+            <div class="module-heading">
+              <span class="module-number">
+                {{ $index + 1 | number: '2.0' }}
+              </span>
+              <h2>{{ module.moduleType }}</h2>
+            </div>
+
+            <app-advanced-module-renderer [module]="module" />
+          </article>
+        }
+      </div>
+    }
+  }
+
+</div>

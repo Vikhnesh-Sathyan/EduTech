@@ -79,6 +79,10 @@ const adminDiagnosticRoutes =
 const adminLearningSectionRoutes =
     require("./routes/admin/adminLearningSectionRoutes");
 
+const adminLearningAdvancedRoutes = require(
+    "./routes/admin/advancedLearningRoutes"
+);
+
 // Admin section learning content routes
 const adminSectionLearningRoutes =
     require("./routes/admin/adminSectionLearningRoutes");
@@ -145,8 +149,9 @@ const studentProjectRoutes =
 const studentBasicChallengeRoutes =
     require("./routes/student/studentBasicChallengeRoutes");
     
-const studentAdvancedRoutes = 
-    require("./routes/student/studentAdvancedRoutes");
+const studentAdvancedRoutes = require(
+    "./routes/student/advanced/studentAdvancedRoutes"
+);
 
 const studentCheatsheetRoutes = require("./routes/student/cheatsheet/student-cheatsheet-routes");
 
@@ -392,6 +397,11 @@ app.use(
     adminLearningSectionRoutes
 );
 
+app.use(
+    "/api/admin/advanced",
+    adminLearningAdvancedRoutes
+);;
+
 // Learning content inside a section
 app.use(
     "/api/admin/section-learning",
@@ -506,10 +516,7 @@ app.use(
     "/api/diagnostic",
     diagnosticRoutes
 );
-app.use(
-    "/api/student/advanced", 
-    studentAdvancedRoutes
-);
+
 
 // =====================================================
 // STUDENT PROJECT UNDERSTANDING ROUTES
@@ -525,6 +532,11 @@ app.use(
 app.use(
     "/api/student/basic-challenge",
     studentBasicChallengeRoutes
+);
+
+app.use(
+    "/api/student/advanced",
+    studentAdvancedRoutes
 );
 
 // =====================================================

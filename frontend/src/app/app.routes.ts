@@ -20,7 +20,7 @@ import { StudentDashboard } from './dashboards/student/student-dashboard/student
 import { SkillSwapHome } from './features/student/skillswap/skill-swap-home/skill-swap-home';
 import { MySkills } from './features/student/skillswap/skills/my-skills/my-skills';
 import { SuggestSkill } from './features/student/skillswap/suggest-skill/suggest-skill';
-import { MySuggestions } from'./features/student/skillswap/my-suggestions/my-suggestions';
+import { MySuggestions } from './features/student/skillswap/my-suggestions/my-suggestions';
 import { DiscoverStudents } from './features/student/skillswap/discover-students/discover-students';
 import { MyRequests } from './features/student/skillswap/my-requests/my-requests';
 import { MySessions } from './features/student/skillswap/my-sessions/my-sessions';
@@ -45,9 +45,18 @@ import { StudentLearningSection } from './features/student/study/student-learnin
 
 // Student challenges and progress
 import { BasicChallenge } from './features/student/challenges/basic-challenge/basic-challenge';
-import { StudentAdvanced } from './features/student/advanced-learning/student-advanced/student-advanced';
 import { StudentStudyProgress } from './features/student/progress/student-study-progress/student-study-progress';
 import { StudentSubjectProgress } from './features/student/progress/student-subject-progress/student-subject-progress';
+
+// STUDENTS ADVANCED STUDY MATERIALS
+import { AdvancedDashboard } from './features/student/advanced/advanced-dashboard/advanced-dashboard';
+import { AdvancedLearningContent } from './features/student/advanced/advanced-learning-content/advanced-learning-content';
+
+
+
+
+
+
 
 // Student mentors
 import { StudentMentors } from './features/student/mentors/student-mentors/student-mentors';
@@ -260,9 +269,17 @@ export const routes: Routes = [
         path: 'basic-challenge/:subtopicId',
         component: BasicChallenge
       },
+      
+      // ADVANCED STUDY MATERIALS 
+      
+      // ADVANCED STUDY MATERIALS
       {
-        path: 'advanced-learning/:subtopicId',
-        component: StudentAdvanced
+        path: 'advanced-learning',
+        component: AdvancedDashboard
+      },
+      {
+        path: 'advanced-learning/:sectionId',
+        component: AdvancedLearningContent
       },
 
       // Study progress
@@ -407,7 +424,7 @@ export const routes: Routes = [
 
       // Advanced learning and question bank
       {
-        path: 'advanced/:subtopicId',
+        path: 'advanced/:sectionId',
         component: AdminAdvanced
       },
       {

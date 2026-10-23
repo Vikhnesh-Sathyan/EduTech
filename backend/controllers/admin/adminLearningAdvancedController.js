@@ -4,23 +4,27 @@ const db = require("../../config/db");
 // CREATE / GET ADVANCED SETUP FOR A SUBTOPIC
 // ======================================================
 
+// ======================================================
+// GET ADVANCED SETUP FOR A SECTION
+// ======================================================
+
 const getAdvancedSetup = async (req, res) => {
     try {
-        const { subtopicId } = req.params;
+        const { sectionId } = req.params;
 
-        // Get advanced setup
         const [advancedRows] = await db.query(
             `
             SELECT
                 id,
                 subtopic_id,
+                section_id,
                 status,
                 created_at,
                 updated_at
             FROM learning_subtopic_advanced
-            WHERE subtopic_id = ?
+            WHERE section_id = ?
             `,
-            [subtopicId]
+            [sectionId]
         );
 
         if (advancedRows.length === 0) {
@@ -33,7 +37,6 @@ const getAdvancedSetup = async (req, res) => {
 
         const advanced = advancedRows[0];
 
-        // Get selected modules
         const [modules] = await db.query(
             `
             SELECT
@@ -48,9 +51,7 @@ const getAdvancedSetup = async (req, res) => {
             [advanced.id]
         );
 
-        // Get content for each module
         for (const module of modules) {
-
             const [contentRows] = await db.query(
                 `
                 SELECT
@@ -68,6 +69,16 @@ const getAdvancedSetup = async (req, res) => {
             module.content = contentRows.length > 0
                 ? contentRows[0]
                 : null;
+
+            // Parse JSON content when returned as a string
+            if (
+                module.content &&
+                typeof module.content.content_data === "string"
+            ) {
+                module.content.content_data = JSON.parse(
+                    module.content.content_data
+                );
+            }
         }
 
         return res.status(200).json({
@@ -77,11 +88,7 @@ const getAdvancedSetup = async (req, res) => {
         });
 
     } catch (error) {
-
-        console.error(
-            "Get Advanced Setup Error:",
-            error
-        );
+        console.error("Get Advanced Setup Error:", error);
 
         return res.status(500).json({
             message: "Failed to load advanced setup"
@@ -91,85 +98,90 @@ const getAdvancedSetup = async (req, res) => {
 
 
 // ======================================================
-// CREATE ADVANCED SETUP
+// CREATE ADVANCED SETUP FOR A SECTION
 // ======================================================
 
 const createAdvancedSetup = async (req, res) => {
-    const connection = await db.getConnection();
+    let connection;
 
     try {
+        const { sectionId, modules } = req.body;
 
-        const { subtopicId, modules } = req.body;
-
-        if (!subtopicId) {
+        if (!Number.isInteger(Number(sectionId)) || Number(sectionId) <= 0) {
             return res.status(400).json({
-                message: "Subtopic ID is required"
+                message: "Valid section ID is required"
             });
         }
 
-        if (!Array.isArray(modules) || modules.length === 0) {
+        if (
+            !Array.isArray(modules) ||
+            modules.length === 0 ||
+            modules.some(module => typeof module !== "string")
+        ) {
             return res.status(400).json({
-                message: "At least one advanced module is required"
+                message: "At least one valid advanced module is required"
             });
         }
 
+        connection = await db.getConnection();
         await connection.beginTransaction();
 
-        // Check subtopic exists
-        const [subtopicRows] = await connection.query(
+        // Find the section and its parent subtopic
+        const [sectionRows] = await connection.query(
             `
-            SELECT id
-            FROM learning_subtopics
+            SELECT id, subtopic_id
+            FROM learning_sections
             WHERE id = ?
             `,
-            [subtopicId]
+            [Number(sectionId)]
         );
 
-        if (subtopicRows.length === 0) {
+        if (sectionRows.length === 0) {
             await connection.rollback();
 
             return res.status(404).json({
-                message: "Subtopic not found"
+                message: "Learning section not found"
             });
         }
 
-        // Prevent duplicate Advanced setup
+        const section = sectionRows[0];
+
+        // Prevent duplicate setup for the same section
         const [existingRows] = await connection.query(
             `
             SELECT id
             FROM learning_subtopic_advanced
-            WHERE subtopic_id = ?
+            WHERE section_id = ?
             `,
-            [subtopicId]
+            [section.id]
         );
 
         if (existingRows.length > 0) {
             await connection.rollback();
 
             return res.status(409).json({
-                message: "Advanced setup already exists for this subtopic"
+                message: "Advanced setup already exists for this section"
             });
         }
 
-        // Create Advanced setup
+        // Keep subtopic_id for compatibility
         const [advancedResult] = await connection.query(
             `
             INSERT INTO learning_subtopic_advanced
-            (subtopic_id, status)
-            VALUES (?, 'active')
+                (subtopic_id, section_id, status)
+            VALUES (?, ?, 'active')
             `,
-            [subtopicId]
+            [section.subtopic_id, section.id]
         );
 
         const advancedId = advancedResult.insertId;
 
         // Create selected modules
         for (let index = 0; index < modules.length; index++) {
-
             await connection.query(
                 `
                 INSERT INTO learning_subtopic_advanced_modules
-                (advanced_id, module_type, display_order)
+                    (advanced_id, module_type, display_order)
                 VALUES (?, ?, ?)
                 `,
                 [
@@ -184,34 +196,39 @@ const createAdvancedSetup = async (req, res) => {
 
         return res.status(201).json({
             message: "Advanced setup created successfully",
-            advancedId
+            advancedId,
+            sectionId: section.id
         });
 
-    } catch (error) {
+    }  catch (error) {
+    if (connection) {
+        try {
+            await connection.rollback();
+        } catch (rollbackError) {
+            console.error("Rollback Error:", rollbackError);
+        }
+    }
 
-        await connection.rollback();
+    console.error("Create Advanced Setup Error:", {
+        code: error.code,
+        message: error.message,
+        sqlMessage: error.sqlMessage,
+        sql: error.sql
+    });
 
-        console.error(
-            "Create Advanced Setup Error:",
-            error
-        );
-
-        return res.status(500).json({
-            message: "Failed to create advanced setup"
-        });
-
-    } finally {
-        connection.release();
+    return res.status(500).json({
+        message: "Failed to create advanced setup",
+        error: error.message
+    });
+} finally {
+        if (connection) {
+            connection.release();
+        }
     }
 };
 
-const validateAdvancedModuleContent = (
-    moduleType,
-    contentData
-) => {
-
+const validateAdvancedModuleContent = (moduleType, contentData) => {
     const requiredFields = {
-
         deep_dive: [
             "title",
             "detailedExplanation"
@@ -265,109 +282,78 @@ const validateAdvancedModuleContent = (
             "title",
             "interviewQuestion",
             "strongAnswer"
+        ],
+
+        // Advanced Practice
+        advanced_practice: [
+            "title"
         ]
     };
 
+    const fields = requiredFields[moduleType];
 
-    const fields =
-        requiredFields[moduleType];
-
-
-    // Unknown module type
     if (!fields) {
-
         return {
             valid: false,
             message: "Invalid advanced module type"
         };
-
     }
 
-
-    // Check required fields
+    // Validate required text fields
     for (const field of fields) {
-
-        const value =
-            contentData[field];
+        const value = contentData[field];
 
         if (
             typeof value !== "string" ||
             !value.trim()
         ) {
-
             return {
                 valid: false,
                 message: `${field} is required`
             };
-
         }
-
     }
 
-
-    // Advanced Practice has special validation
+    // Advanced Practice validation
     if (moduleType === "advanced_practice") {
-
         if (
             !Array.isArray(contentData.options) ||
             contentData.options.length !== 4
         ) {
-
             return {
                 valid: false,
                 message: "Exactly 4 options are required"
             };
-
         }
 
-
-        const hasEmptyOption =
-            contentData.options.some(
-                option =>
-                    typeof option !== "string" ||
-                    !option.trim()
-            );
-
+        const hasEmptyOption = contentData.options.some(
+            option =>
+                typeof option !== "string" ||
+                !option.trim()
+        );
 
         if (hasEmptyOption) {
-
             return {
                 valid: false,
                 message: "All 4 options are required"
             };
-
         }
 
+        const validAnswers = ["A", "B", "C", "D"];
 
-        const validAnswers = [
-            "A",
-            "B",
-            "C",
-            "D"
-        ];
-
-
-        if (
-            !validAnswers.includes(
-                contentData.correctAnswer
-            )
-        ) {
-
+        if (!validAnswers.includes(contentData.correctAnswer)) {
             return {
                 valid: false,
                 message: "A valid correct answer is required"
             };
-
         }
-
     }
-
 
     return {
         valid: true
     };
-
 };
+
 // ======================================================
 // SAVE / UPDATE ADVANCED MODULE CONTENT
 // ======================================================
@@ -561,42 +547,55 @@ const getAdvancedModuleContent = async (req, res) => {
 // UPDATE ADVANCED MODULES
 // ======================================================
 
+// ======================================================
+// UPDATE ADVANCED SETUP FOR A SECTION
+// ======================================================
+
 const updateAdvancedSetup = async (req, res) => {
-    const connection = await db.getConnection();
+    let connection;
 
     try {
-        const { subtopicId } = req.params;
+        const { sectionId } = req.params;
         const { modules } = req.body;
 
-        if (!Array.isArray(modules) || modules.length === 0) {
+        if (!Number.isInteger(Number(sectionId)) || Number(sectionId) <= 0) {
             return res.status(400).json({
-                message: "At least one advanced module is required"
+                message: "Valid section ID is required"
             });
         }
 
+        if (
+            !Array.isArray(modules) ||
+            modules.length === 0 ||
+            modules.some(module => typeof module !== "string")
+        ) {
+            return res.status(400).json({
+                message: "At least one valid advanced module is required"
+            });
+        }
+
+        connection = await db.getConnection();
         await connection.beginTransaction();
 
-        // Find Advanced setup
         const [advancedRows] = await connection.query(
             `
             SELECT id
             FROM learning_subtopic_advanced
-            WHERE subtopic_id = ?
+            WHERE section_id = ?
             `,
-            [subtopicId]
+            [Number(sectionId)]
         );
 
         if (advancedRows.length === 0) {
             await connection.rollback();
 
             return res.status(404).json({
-                message: "Advanced setup not found"
+                message: "Advanced setup not found for this section"
             });
         }
 
         const advancedId = advancedRows[0].id;
 
-        // Get existing modules
         const [existingModules] = await connection.query(
             `
             SELECT id, module_type
@@ -613,11 +612,9 @@ const updateAdvancedSetup = async (req, res) => {
             ])
         );
 
-        // Remove modules that are no longer selected
+        // Remove unselected modules
         for (const existingModule of existingModules) {
-
             if (!modules.includes(existingModule.module_type)) {
-
                 await connection.query(
                     `
                     DELETE FROM learning_subtopic_advanced_modules
@@ -628,14 +625,11 @@ const updateAdvancedSetup = async (req, res) => {
             }
         }
 
-        // Keep existing modules and create new ones
+        // Update order or add newly selected modules
         for (let index = 0; index < modules.length; index++) {
-
             const moduleType = modules[index];
 
             if (existingMap.has(moduleType)) {
-
-                // Keep the existing module ID and content
                 await connection.query(
                     `
                     UPDATE learning_subtopic_advanced_modules
@@ -647,18 +641,11 @@ const updateAdvancedSetup = async (req, res) => {
                         existingMap.get(moduleType)
                     ]
                 );
-
             } else {
-
-                // Create newly selected module
                 await connection.query(
                     `
                     INSERT INTO learning_subtopic_advanced_modules
-                    (
-                        advanced_id,
-                        module_type,
-                        display_order
-                    )
+                        (advanced_id, module_type, display_order)
                     VALUES (?, ?, ?)
                     `,
                     [
@@ -673,24 +660,25 @@ const updateAdvancedSetup = async (req, res) => {
         await connection.commit();
 
         return res.status(200).json({
-            message: "Advanced setup updated successfully"
+            message: "Advanced setup updated successfully",
+            sectionId: Number(sectionId)
         });
 
     } catch (error) {
+        if (connection) {
+            await connection.rollback();
+        }
 
-        await connection.rollback();
-
-        console.error(
-            "Update Advanced Setup Error:",
-            error
-        );
+        console.error("Update Advanced Setup Error:", error);
 
         return res.status(500).json({
             message: "Failed to update advanced setup"
         });
 
     } finally {
-        connection.release();
+        if (connection) {
+            connection.release();
+        }
     }
 };
 

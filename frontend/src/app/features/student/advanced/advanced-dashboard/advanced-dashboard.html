@@ -1,0 +1,66 @@
+<div class="advanced-page">
+
+  <app-advanced-page-header />
+
+  @if (loading()) {
+    <section class="state-card">
+      <div class="loading-spinner"></div>
+      <h2>Preparing your learning space</h2>
+      <p>Loading your subjects...</p>
+    </section>
+  }
+
+  @else if (errorMessage()) {
+    <section class="state-card error-state">
+      <div class="state-icon">!</div>
+      <h2>Unable to load Advanced Learning</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadSubjects()"
+      >
+        Try Again
+      </button>
+    </section>
+  }
+
+  @else if (subjects().length === 0) {
+    <section class="state-card">
+      <div class="empty-icon">▤</div>
+      <h2>No Advanced Subjects Yet</h2>
+      <p>
+        Advanced subjects will appear here when the admin
+        configures their learning sections.
+      </p>
+    </section>
+  }
+
+  @else {
+    <section class="subject-overview">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">EXPLORE AND GROW</span>
+          <h2>Explore by Subject</h2>
+          <p>
+            Choose a subject to see its advanced learning sections.
+          </p>
+        </div>
+
+        <div class="subject-total">
+          <strong>{{ subjects().length }}</strong>
+          <span>Subjects</span>
+        </div>
+      </div>
+
+      <app-advanced-subject-grid
+        [subjects]="subjects()"
+        [expandedSubjectId]="expandedSubjectId()"
+        (toggleSubject)="toggleSubject($event)"
+        (exploreSection)="openSection($event)"
+      />
+    </section>
+  }
+
+</div>

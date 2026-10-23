@@ -85,21 +85,7 @@
             (selectTopic)="toggleTopic($event)"
             (selectSubtopic)="selectSubtopic($event)"
             (startBasicChallenge)="startBasicChallenge()"
-            (openAdvancedLearning)="openAdvancedLearning()"
           />
-
-          <!-- BASIC CHALLENGE -->
-          @if (selectedSubtopicId()) {
-
-            <app-basic-challenge-panel
-              [selectedSubtopicId]="selectedSubtopicId()"
-              [challengeStatus]="challengeStatus()"
-              [challengeStatusLoading]="challengeStatusLoading()"
-              (startBasicChallenge)="startBasicChallenge()"
-              (openAdvancedLearning)="openAdvancedLearning()"
-            />
-
-          }
 
         } @else {
 

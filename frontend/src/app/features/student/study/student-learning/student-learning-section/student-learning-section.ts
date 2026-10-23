@@ -20,7 +20,6 @@ import { ToastService } from '../../../../../services/toast.service';
 import { LearningHome } from '../components/learning-home/learning-home';
 import { LearningSidebar } from '../components/learning-sidebar/learning-sidebar';
 import { SectionContent } from '../components/section-content/section-content';
-import { BasicChallengePanel } from '../components/basic-challenge-panel/basic-challenge-panel';
 
 @Component({
   selector: 'app-student-learning-section',
@@ -29,7 +28,6 @@ import { BasicChallengePanel } from '../components/basic-challenge-panel/basic-c
     LearningHome,
     LearningSidebar,
     SectionContent,
-    BasicChallengePanel
   ],
   templateUrl: './student-learning-section.html',
   styleUrl: './student-learning-section.css'
@@ -375,19 +373,6 @@ export class StudentLearningSection implements OnInit, OnDestroy {
     ]);
   }
 
-  // OPEN ADVANCED LEARNING
-  openAdvancedLearning(): void {
-    const subtopicId = this.selectedSubtopicId();
-
-    if (!subtopicId) {
-      return;
-    }
-
-    this.router.navigate([
-      '/advanced-learning',
-      subtopicId
-    ]);
-  }
 
   // CLEANUP
   ngOnDestroy(): void {

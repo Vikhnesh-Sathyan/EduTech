@@ -123,13 +123,10 @@ No learning topics are available for this subject yet. </p>
 <div class="challenge-action">
   @if (!challengeStatusLoading() && challengeStatus(); as status) {
     @if (status.challengePassed) {
-      <button
-        type="button"
-        class="start-button"
-        (click)="openAdvancedLearning.emit()"
-      >
-        Advanced Learning <span>→</span>
-      </button>
+      <div class="challenge-status-passed">
+        <span>✓</span>
+        <p>Basic Challenge completed successfully.</p>
+      </div>
     } @else if (status.allSectionsCompleted) {
       <button
         type="button"
@@ -139,12 +136,17 @@ No learning topics are available for this subject yet. </p>
         Start Challenge <span>→</span>
       </button>
     } @else {
-      <button type="button" class="start-button" disabled>
+      <button
+        type="button"
+        class="start-button"
+        disabled
+      >
         Challenge Locked
       </button>
     }
   }
 </div>
+
 
   </section>
 }

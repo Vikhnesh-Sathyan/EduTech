@@ -1,0 +1,39 @@
+<article
+  class="subject-card"
+  [class.subject-expanded]="expanded"
+>
+  <button
+    type="button"
+    class="subject-card-button"
+    [attr.aria-expanded]="expanded"
+    (click)="onToggle()"
+  >
+    <span class="subject-icon" aria-hidden="true">✦</span>
+
+    <span class="subject-card-copy">
+      <span class="eyebrow">SUBJECT</span>
+      <strong>{{ subject.subjectName }}</strong>
+      <span class="subject-count">
+        {{ subject.sections.length }}
+        advanced sections
+      </span>
+    </span>
+
+    <span class="subject-arrow" aria-hidden="true">
+      {{ expanded ? '−' : '+' }}
+    </span>
+  </button>
+
+  @if (expanded) {
+    <div class="subject-sections">
+      @for (section of subject.sections; track section.sectionId) {
+        <app-advanced-section-row
+          [sectionTitle]="section.sectionTitle"
+          [subtopicTitle]="section.subtopicTitle"
+          [available]="section.advancedUnlocked"
+          (explore)="openSection(section)"
+        />
+      }
+    </div>
+  }
+</article>

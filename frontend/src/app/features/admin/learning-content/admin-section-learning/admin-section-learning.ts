@@ -300,21 +300,18 @@ export class AdminSectionLearningPage implements OnInit {
 
  
 openAdvanced(): void {
-  const subtopicId = this.subtopicId();
+  const sectionId = this.sectionId();
 
-  console.log('Current section ID:', this.sectionId());
-  console.log('Advanced subtopic ID:', subtopicId);
-
-  if (!subtopicId) {
+  if (!sectionId) {
     this.errorMessage.set(
-      'Subtopic information is not available.'
+      'Section information is not available.'
     );
     return;
   }
 
   this.router.navigate([
     '/admin/advanced',
-    subtopicId
+    sectionId
   ]);
 }
 
