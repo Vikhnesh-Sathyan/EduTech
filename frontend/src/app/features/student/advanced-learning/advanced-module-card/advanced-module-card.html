@@ -62,23 +62,48 @@
         }
 
         @case ('real_world_scenario') {
-          <h3>{{ content.title }}</h3>
+  <h3>{{ content.title }}</h3>
 
-          <div class="info-panel">
-            <span class="panel-label">SCENARIO</span>
-            <p>{{ content.scenario }}</p>
-          </div>
+  <!-- Scenario -->
+  @if (content.scenario) {
+    <div class="info-panel">
+      <span class="panel-label">SCENARIO</span>
+      <p>{{ content.scenario }}</p>
+    </div>
+  }
 
-          <div class="info-panel">
-            <span class="panel-label">THE PROBLEM</span>
-            <p>{{ content.problem }}</p>
-          </div>
+  <!-- Problem -->
+  @if (content.problem) {
+    <div class="info-panel">
+      <span class="panel-label">THE PROBLEM</span>
+      <p>{{ content.problem }}</p>
+    </div>
+  }
 
-          <div class="info-panel solution-panel">
-            <span class="panel-label">HOW THE CONCEPT HELPS</span>
-            <p>{{ content.howConceptSolvesIt }}</p>
-          </div>
-        }
+  <!-- How the Concept Solves It -->
+  @if (content.howConceptSolvesIt) {
+    <div class="info-panel solution-panel">
+      <span class="panel-label">HOW THE CONCEPT SOLVES IT</span>
+      <p>{{ content.howConceptSolvesIt }}</p>
+    </div>
+  }
+
+  <!-- Expected Approach -->
+  @if (content.expectedApproach) {
+    <div class="info-panel">
+      <span class="panel-label">EXPECTED APPROACH</span>
+      <p>{{ content.expectedApproach }}</p>
+    </div>
+  }
+
+  <!-- JavaScript Example -->
+  @if (content.codeExample || content.exampleCode || content.code) {
+    <div class="code-section">
+      <span class="code-label">JAVASCRIPT EXAMPLE</span>
+      <pre><code>{{ content.codeExample || content.exampleCode || content.code }}</code></pre>
+    </div>
+  }
+}
 
         @case ('code_challenge') {
           <h3>{{ content.title }}</h3>

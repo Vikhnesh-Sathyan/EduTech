@@ -285,3 +285,153 @@
     transition: none;
   }
 }
+
+
+/* Real-World Scenario */
+
+/* Content heading */
+.module-content h3 {
+  margin: 0 0 22px;
+  color: #172033;
+  font-size: 1.35rem;
+  font-weight: 750;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Information panels */
+.info-panel {
+  margin-bottom: 16px;
+  padding: 18px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.info-panel p {
+  margin: 10px 0 0;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Panel labels */
+.panel-label,
+.code-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1.5;
+}
+
+/* Solution panel */
+.solution-panel {
+  background: #f0fdf9;
+  border-color: #a7f3d0;
+}
+
+.solution-panel .panel-label {
+  color: #047857;
+}
+
+.solution-panel p {
+  color: #134e4a;
+}
+
+/* Expected approach */
+.info-panel:last-child {
+  overflow-wrap: anywhere;
+}
+
+/* Code section */
+.code-section {
+  margin: 20px 0;
+  min-width: 0;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1px solid #273449;
+  border-radius: 14px;
+}
+
+/* Code header */
+.code-section .code-label {
+  margin: 0;
+  padding: 14px 18px;
+  color: #cbd5e1;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+/* Code container */
+.code-section pre {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: "Fira Code", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.85;
+  tab-size: 2;
+  white-space: pre;
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #0f172a;
+}
+
+.code-section code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  color: inherit;
+  font: inherit;
+  white-space: pre;
+}
+
+/* Code scrollbar */
+.code-section pre::-webkit-scrollbar {
+  height: 7px;
+}
+
+.code-section pre::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.code-section pre::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 10px;
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+  .module-content h3 {
+    font-size: 1.15rem;
+  }
+
+  .info-panel {
+    padding: 15px;
+    margin-bottom: 12px;
+  }
+
+  .info-panel p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .code-section pre {
+    padding: 15px;
+    font-size: 0.82rem;
+  }
+
+  .code-section .code-label {
+    padding: 12px 15px;
+  }
+}

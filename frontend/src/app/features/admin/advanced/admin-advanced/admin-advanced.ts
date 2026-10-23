@@ -154,24 +154,36 @@ export class AdminAdvanced implements OnInit {
   ) {}
 
 
-  ngOnInit(): void {
+  
+ngOnInit(): void {
+  this.route.paramMap.subscribe(params => {
+    const id = Number(params.get('subtopicId'));
 
-    const id =
-      Number(
-        this.route.snapshot.paramMap.get(
-          'subtopicId'
-        )
-      );
-
-    if (!id) {
+    if (!Number.isInteger(id) || id <= 0) {
+      this.subtopicId.set(null);
+      this.advancedExists.set(false);
+      this.advancedModules.set([]);
+      this.selectedModules.set([]);
+      this.selectedModuleForEditing.set(null);
+      this.moduleContent.set({});
       return;
     }
 
+    // Set the newly selected subtopic
     this.subtopicId.set(id);
 
-    this.loadAdvanced();
+    // Clear the previous subtopic's data
+    this.advancedExists.set(false);
+    this.advancedModules.set([]);
+    this.selectedModules.set([]);
+    this.selectedModuleForEditing.set(null);
+    this.moduleContent.set({});
 
-  }
+    // Load Advanced setup for this subtopic only
+    this.loadAdvanced();
+  });
+}
+
 
 
   loadAdvanced(): void {

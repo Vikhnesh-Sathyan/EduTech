@@ -148,6 +148,10 @@ export class AdminSectionLearningPage implements OnInit {
 
         next: (response: any) => {
 
+
+          console.log('Full section learning response:', response);
+          console.log('Section object:', response.section);
+
           const content = response.content;
           const section = response.section;
 
@@ -294,25 +298,26 @@ export class AdminSectionLearningPage implements OnInit {
   // OPEN ADVANCED
   // =====================================================
 
-  openAdvanced(): void {
+ 
+openAdvanced(): void {
+  const subtopicId = this.subtopicId();
 
-    const subtopicId =
-      this.subtopicId();
+  console.log('Current section ID:', this.sectionId());
+  console.log('Advanced subtopic ID:', subtopicId);
 
-    if (!subtopicId) {
-
-      this.errorMessage.set(
-        'Subtopic information is not available.'
-      );
-
-      return;
-    }
-
-    this.router.navigate([
-      '/admin/advanced',
-      subtopicId
-    ]);
+  if (!subtopicId) {
+    this.errorMessage.set(
+      'Subtopic information is not available.'
+    );
+    return;
   }
+
+  this.router.navigate([
+    '/admin/advanced',
+    subtopicId
+  ]);
+}
+
 
 
   // =====================================================

@@ -459,19 +459,28 @@ const submitChallenge = async (req, res) => {
     // --------------------------------------------------
 
     const [cycleRows] = await connection.query(
-      `
-      SELECT
-        COALESCE(MAX(cycle_number), 1) AS cycle_number
-      FROM basic_challenge_attempts
-      WHERE student_id = ?
-        AND subtopic_id = ?
-      `,
-      [studentId, subtopicId]
-    );
+  `
+  SELECT MAX(cycle_number) AS cycle_number
+  FROM (
+    SELECT cycle_number
+    FROM basic_challenge_attempts
+    WHERE student_id = ?
+      AND subtopic_id = ?
 
-    const cycleNumber = Number(
-      cycleRows[0].cycle_number
-    );
+    UNION ALL
+
+    SELECT cycle_number
+    FROM student_basic_challenge_cycles
+    WHERE student_id = ?
+      AND subtopic_id = ?
+  ) AS cycles
+  `,
+  [studentId, subtopicId, studentId, subtopicId]
+);
+
+const cycleNumber = Number(
+  cycleRows[0].cycle_number || 1
+);
 
     const [attemptRows] = await connection.query(
       `
@@ -671,12 +680,252 @@ const submitChallenge = async (req, res) => {
 };
 
 // ======================================================
+// START A NEW BASIC CHALLENGE CYCLE
+// ======================================================
+
+const startNewChallengeCycle = async (req, res) => {
+  try {
+    const { subtopicId } = req.params;
+    const studentId = req.user.id;
+
+    if (
+      !subtopicId ||
+      !Number.isInteger(Number(subtopicId)) ||
+      Number(subtopicId) <= 0
+    ) {
+      return res.status(400).json({
+        message: "A valid subtopic ID is required."
+      });
+    }
+
+    // Check whether the subtopic exists
+    const [subtopics] = await db.query(
+      `
+      SELECT id
+      FROM learning_subtopics
+      WHERE id = ?
+      `,
+      [subtopicId]
+    );
+
+    if (subtopics.length === 0) {
+      return res.status(404).json({
+        message: "Subtopic not found."
+      });
+    }
+
+    // Do not allow a new cycle after passing
+    const [passedAttempts] = await db.query(
+      `
+      SELECT id
+      FROM basic_challenge_attempts
+      WHERE student_id = ?
+        AND subtopic_id = ?
+        AND passed = TRUE
+      LIMIT 1
+      `,
+      [studentId, subtopicId]
+    );
+
+    if (passedAttempts.length > 0) {
+      return res.status(409).json({
+        message: "You have already passed this challenge.",
+        challengePassed: true,
+        advancedUnlocked: true
+      });
+    }
+
+    // Get the current cycle
+    const [cycleRows] = await db.query(
+      `
+      SELECT MAX(cycle_number) AS cycle_number
+      FROM basic_challenge_attempts
+      WHERE student_id = ?
+        AND subtopic_id = ?
+      `,
+      [studentId, subtopicId]
+    );
+
+    const currentCycle = Number(
+      cycleRows[0].cycle_number || 0
+    );
+
+    // Check attempts in the current cycle
+    const [attemptRows] = await db.query(
+      `
+      SELECT COUNT(*) AS attempts_used
+      FROM basic_challenge_attempts
+      WHERE student_id = ?
+        AND subtopic_id = ?
+        AND cycle_number = ?
+      `,
+      [studentId, subtopicId, currentCycle]
+    );
+
+    const attemptsUsed = Number(
+      attemptRows[0].attempts_used
+    );
+
+    // A new cycle is allowed only after 5 attempts
+    if (attemptsUsed < 5) {
+      return res.status(403).json({
+        message:
+          "You must use all 5 attempts before starting a new cycle.",
+        attemptsUsed,
+        cycleNumber: currentCycle
+      });
+    }
+
+    // Create the next cycle only after eligibility is verified
+const nextCycle = currentCycle + 1;
+
+try {
+  await db.query(
+    `
+    INSERT INTO student_basic_challenge_cycles (
+      student_id,
+      subtopic_id,
+      cycle_number
+    )
+    VALUES (?, ?, ?)
+    `,
+    [studentId, subtopicId, nextCycle]
+  );
+} catch (error) {
+  // Prevent duplicate cycle creation
+  if (error.code === "ER_DUP_ENTRY") {
+    return res.status(409).json({
+      message: "This challenge cycle has already been started."
+    });
+  }
+
+  throw error;
+}
+
+return res.status(201).json({
+  message: "New challenge cycle started successfully.",
+  currentCycle: nextCycle,
+  attemptsUsed: 0
+});
+
+  } catch (error) {
+    console.error(
+      "Start new challenge cycle error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to start a new challenge cycle."
+    });
+  }
+};
+
+// ======================================================
+// GET BASIC CHALLENGE ATTEMPT HISTORY
+// ======================================================
+
+const getChallengeHistory = async (req, res) => {
+  try {
+    const { subtopicId } = req.params;
+    const studentId = req.user.id;
+
+    if (
+      !subtopicId ||
+      !Number.isInteger(Number(subtopicId)) ||
+      Number(subtopicId) <= 0
+    ) {
+      return res.status(400).json({
+        message: "A valid subtopic ID is required."
+      });
+    }
+
+    const [subtopics] = await db.query(
+      `SELECT id FROM learning_subtopics WHERE id = ?`,
+      [subtopicId]
+    );
+
+    if (subtopics.length === 0) {
+      return res.status(404).json({
+        message: "Subtopic not found."
+      });
+    }
+
+    const [attempts] = await db.query(
+      `
+      SELECT
+        id,
+        cycle_number AS cycleNumber,
+        attempt_number AS attemptNumber,
+        total_questions AS totalQuestions,
+        correct_answers AS correctAnswers,
+        wrong_answers AS wrongAnswers,
+        score,
+        passed,
+        created_at AS createdAt
+      FROM basic_challenge_attempts
+      WHERE student_id = ?
+        AND subtopic_id = ?
+      ORDER BY cycle_number DESC, attempt_number DESC
+      `,
+      [studentId, subtopicId]
+    );
+
+    const [cycleRows] = await db.query(
+      `
+      SELECT MAX(cycle_number) AS cycleNumber
+      FROM (
+        SELECT cycle_number
+        FROM basic_challenge_attempts
+        WHERE student_id = ? AND subtopic_id = ?
+
+        UNION ALL
+
+        SELECT cycle_number
+        FROM student_basic_challenge_cycles
+        WHERE student_id = ? AND subtopic_id = ?
+      ) AS cycles
+      `,
+      [studentId, subtopicId, studentId, subtopicId]
+    );
+
+    const [passedRows] = await db.query(
+      `
+      SELECT id
+      FROM basic_challenge_attempts
+      WHERE student_id = ?
+        AND subtopic_id = ?
+        AND passed = TRUE
+      LIMIT 1
+      `,
+      [studentId, subtopicId]
+    );
+
+    return res.status(200).json({
+      currentCycle: Number(cycleRows[0].cycleNumber || 1),
+      totalAttempts: attempts.length,
+      challengePassed: passedRows.length > 0,
+      advancedUnlocked: passedRows.length > 0,
+      attempts
+    });
+
+  } catch (error) {
+    console.error("Get challenge history error:", error);
+
+    return res.status(500).json({
+      message: "Failed to load challenge history."
+    });
+  }
+};
+
+// ======================================================
 // EXPORT CONTROLLERS
 // ======================================================
 
 module.exports = {
   getChallengeQuestions,
   getChallengeStatus,
-  submitChallenge
+  submitChallenge,
+  startNewChallengeCycle,
+  getChallengeHistory
 };
 

@@ -39,4 +39,19 @@ export class StudentBasicChallengeService {
       { answers }
     );
   }
+
+  // Start a new challenge cycle
+  startNewCycle(subtopicId: number) {
+    return this.http.post(
+      `${this.apiUrl}/${subtopicId}/new-cycle`,
+      {}
+    );
+  }
+
+  // Get challenge attempt history
+  getAttemptHistory(subtopicId: number) {
+    return this.http.get(
+      `${this.apiUrl}/${subtopicId}/history`
+    );
+  }
 }

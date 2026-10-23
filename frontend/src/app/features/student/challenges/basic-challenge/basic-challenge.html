@@ -1,4 +1,30 @@
+
 <div class="challenge-page">
+
+  <!-- Attempt Overview -->
+  <section class="history-summary">
+    <div>
+      <p class="page-label">YOUR PROGRESS</p>
+      <h2>Basic Challenge History</h2>
+    </div>
+
+    <div class="history-stats">
+      <div class="history-stat">
+        <span>Current Cycle</span>
+        <strong>{{ currentCycle() }}</strong>
+      </div>
+
+      <div class="history-stat">
+        <span>Attempts This Cycle</span>
+        <strong>{{ attemptsUsed() }} / 5</strong>
+      </div>
+
+      <div class="history-stat">
+        <span>Total Attempts</span>
+        <strong>{{ totalAttempts() }}</strong>
+      </div>
+    </div>
+  </section>
 
   @if (loading()) {
 
@@ -9,7 +35,6 @@
   } @else if (result(); as challengeResult) {
 
     <!-- Challenge Result -->
-
     <section class="question-card challenge-result">
 
       <p class="page-label">CHALLENGE RESULT</p>
@@ -22,7 +47,7 @@
 
       <p class="result-score">
         {{ challengeResult.score }} /
-        {{ challengeResult.totalMarks }}
+        {{ challengeResult.totalMarks ?? 20 }}
       </p>
 
       <p>
@@ -45,10 +70,17 @@
         <div class="result-success">
           <h2>Advanced Learning Unlocked</h2>
           <p>
-            You passed the Basic Challenge and can continue
-            to Advanced Learning.
+            Congratulations! You passed the Basic Challenge.
+            You can now continue to Advanced Learning.
           </p>
         </div>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openAdvancedLearning()">
+          Continue to Advanced Learning
+        </button>
 
       } @else {
 
@@ -60,6 +92,39 @@
           </p>
         </div>
 
+        @if (attemptsUsed() < 5) {
+
+          <p class="attempts-remaining">
+            {{ 5 - attemptsUsed() }} attempt(s) remaining
+            in this cycle.
+          </p>
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="loadQuestions()">
+            Try Again
+          </button>
+
+        } @else {
+
+          <p class="attempts-remaining">
+            You have used all five attempts in this cycle.
+            Review your weak areas before starting a new cycle.
+          </p>
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="startingCycle()"
+            (click)="startNewCycle()">
+            {{ startingCycle()
+              ? 'Starting New Cycle...'
+              : 'Start New Cycle' }}
+          </button>
+
+        }
+
       }
 
     </section>
@@ -68,24 +133,17 @@
 
     @let question = questions()[currentIndex()];
 
-    <!-- Header -->
-
+    <!-- Challenge Header -->
     <div class="challenge-header">
-
       <p class="page-label">BASIC CHALLENGE</p>
-
       <h1>Test Your Understanding</h1>
-
       <p>
         Apply what you learned in the Basic Learning section.
       </p>
-
     </div>
 
     <!-- Progress -->
-
     <div class="progress-row">
-
       <span>
         Question {{ currentIndex() + 1 }}
         of {{ questions().length }}
@@ -94,34 +152,27 @@
       <span>
         {{ currentIndex() + 1 }} / {{ questions().length }}
       </span>
-
     </div>
 
     <div class="progress-bar">
-
       <div
         class="progress-fill"
         [style.width.%]="
           ((currentIndex() + 1) / questions().length) * 100
         ">
       </div>
-
     </div>
 
     <!-- Question Card -->
-
     <div class="question-card">
 
       <div class="question-number">
         QUESTION {{ currentIndex() + 1 }}
       </div>
 
-      <h2>
-        {{ question.question }}
-      </h2>
+      <h2>{{ question.question }}</h2>
 
-      <!-- Options -->
-
+      <!-- Answer Options -->
       <div class="options">
 
         <button
@@ -129,10 +180,8 @@
           class="option"
           [class.selected]="selectedAnswer() === 'A'"
           (click)="selectAnswer('A')">
-
           <span>A</span>
           {{ question.option_a }}
-
         </button>
 
         <button
@@ -140,10 +189,8 @@
           class="option"
           [class.selected]="selectedAnswer() === 'B'"
           (click)="selectAnswer('B')">
-
           <span>B</span>
           {{ question.option_b }}
-
         </button>
 
         <button
@@ -151,10 +198,8 @@
           class="option"
           [class.selected]="selectedAnswer() === 'C'"
           (click)="selectAnswer('C')">
-
           <span>C</span>
           {{ question.option_c }}
-
         </button>
 
         <button
@@ -162,18 +207,14 @@
           class="option"
           [class.selected]="selectedAnswer() === 'D'"
           (click)="selectAnswer('D')">
-
           <span>D</span>
           {{ question.option_d }}
-
         </button>
 
       </div>
 
-      <!-- Confidence -->
-
+      <!-- Confidence Selection -->
       <div class="confidence-section">
-
         <h3>How confident are you?</h3>
 
         <div class="confidence-options">
@@ -200,11 +241,9 @@
           </button>
 
         </div>
-
       </div>
 
-      <!-- Navigation -->
-
+      <!-- Question Navigation -->
       <div class="navigation">
 
         <button
@@ -212,9 +251,7 @@
           class="secondary-button"
           [disabled]="currentIndex() === 0 || submitting()"
           (click)="previousQuestion()">
-
           Previous
-
         </button>
 
         @if (currentIndex() < questions().length - 1) {
@@ -224,9 +261,7 @@
             class="primary-button"
             [disabled]="submitting()"
             (click)="nextQuestion()">
-
             Next
-
           </button>
 
         } @else {
@@ -236,44 +271,94 @@
             class="primary-button"
             [disabled]="submitting()"
             (click)="submitChallenge()">
-
             {{ submitting()
               ? 'Submitting...'
               : 'Submit Challenge' }}
-
           </button>
 
         }
 
       </div>
-
     </div>
 
   } @else {
-    
-<div class="question-card">
 
-  <h2>Challenge Unavailable</h2>
+    <!-- Challenge Unavailable -->
+    <div class="question-card">
+      <h2>Challenge Unavailable</h2>
 
-  <p>
-    Five questions could not be loaded.
-    Please try again.
-  </p>
+      <p>
+        Five questions could not be loaded.
+        Please try again.
+      </p>
 
-  <button
-    type="button"
-    class="primary-button"
-    [disabled]="loading()"
-    (click)="loadQuestions()">
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="loading()"
+        (click)="loadQuestions()">
+        {{ loading() ? 'Loading...' : 'Try Again' }}
+      </button>
+    </div>
 
-    {{ loading() ? 'Loading...' : 'Try Again' }}
+  }
 
-  </button>
+  <!-- Previous Attempt History -->
+  <section class="attempt-history">
 
-</div>
+    <div class="history-heading">
+      <p class="page-label">PAST RESULTS</p>
+      <h2>Your Attempts</h2>
+      <p>Track your scores across challenge cycles.</p>
+    </div>
 
+    @if (attemptHistory().length === 0) {
 
-}
+      <div class="history-empty">
+        No attempts recorded yet. Complete your first challenge
+        to see your results here.
+      </div>
 
+    } @else {
+
+      <div class="history-list">
+
+        @for (attempt of attemptHistory(); track attempt.id) {
+
+          <article class="history-item">
+
+            <div class="history-item-main">
+              <div>
+                <h3>
+                  Cycle {{ attempt.cycleNumber }} ·
+                  Attempt {{ attempt.attemptNumber }}
+                </h3>
+
+                <p>
+                  {{ attempt.correctAnswers }} correct out of
+                  {{ attempt.totalQuestions }}
+                </p>
+              </div>
+
+              <div class="history-result">
+                <strong>{{ attempt.score }} / 20</strong>
+
+                <span
+                  class="history-status"
+                  [class.passed]="attempt.passed">
+                  {{ attempt.passed ? 'Passed' : 'Not passed' }}
+                </span>
+              </div>
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
 
 </div>

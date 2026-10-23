@@ -3,7 +3,9 @@ const express = require("express");
 const {
   getChallengeQuestions,
   getChallengeStatus,
-  submitChallenge
+  submitChallenge,
+  startNewChallengeCycle,
+  getChallengeHistory
 } = require("../../controllers/student/studentBasicChallengeController");
 
 const authMiddleware = require("../../middleware/authMiddleware");
@@ -44,6 +46,21 @@ router.post(
   submitChallenge
 );
 
+// START A NEW BASIC CHALLENGE CYCLE
+
+router.post(
+  "/:subtopicId/new-cycle",
+  authMiddleware,
+  roleMiddleware("student"),
+  startNewChallengeCycle
+);
+
+router.get(
+  "/:subtopicId/history",
+  authMiddleware,
+  roleMiddleware("student"),
+  getChallengeHistory
+); 
 module.exports = router;
 
 

@@ -199,3 +199,249 @@
   }
 
 }
+
+
+/* ==============================
+   CHALLENGE HISTORY SUMMARY
+============================== */
+
+.history-summary {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.history-summary h2,
+.history-heading h2 {
+  margin: 6px 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary, #172033);
+}
+
+.history-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.history-stat {
+  padding: 17px;
+  border-radius: 12px;
+  background: var(--surface-bg, #f8fafc);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.history-stat span {
+  display: block;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}
+
+.history-stat strong {
+  font-size: 1.45rem;
+  color: var(--text-primary, #172033);
+}
+
+/* ==============================
+   ATTEMPT HISTORY
+============================== */
+
+.attempt-history {
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 18px;
+}
+
+.history-heading {
+  margin-bottom: 20px;
+}
+
+.history-heading > p:last-child {
+  color: var(--text-secondary, #64748b);
+  font-size: 0.92rem;
+  margin-top: 8px;
+}
+
+.history-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary, #64748b);
+  background: var(--surface-bg, #f8fafc);
+  border: 1px dashed var(--border-color, #cbd5e1);
+  border-radius: 12px;
+  line-height: 1.6;
+}
+
+.history-list {
+  display: grid;
+  gap: 12px;
+}
+
+.history-item {
+  padding: 18px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 13px;
+  background: var(--card-bg, #ffffff);
+  transition: border-color 0.2s ease,
+              transform 0.2s ease;
+}
+
+.history-item:hover {
+  border-color: var(--accent-color, #6366f1);
+  transform: translateY(-2px);
+}
+
+.history-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.history-item h3 {
+  margin: 0 0 7px;
+  color: var(--text-primary, #172033);
+  font-size: 0.98rem;
+}
+
+.history-item p {
+  margin: 0;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.86rem;
+}
+
+.history-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.history-result strong {
+  color: var(--text-primary, #172033);
+  font-size: 1.15rem;
+}
+
+.history-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #fff1f2;
+  color: #be123c;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.history-status.passed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* ==============================
+   RESULT ACTIONS
+============================== */
+
+.challenge-result {
+  text-align: center;
+}
+
+.challenge-result .result-score {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 20px 0;
+  color: var(--accent-color, #4f46e5);
+}
+
+.result-success,
+.result-review {
+  padding: 20px;
+  border-radius: 14px;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.result-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.result-review {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+}
+
+.result-success h2,
+.result-review h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.attempts-remaining {
+  margin: 20px 0;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.6;
+}
+
+.challenge-result .primary-button {
+  margin-top: 12px;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 640px) {
+  .history-summary,
+  .attempt-history {
+    padding: 18px;
+  }
+
+  .history-stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .history-stat {
+    padding: 14px;
+  }
+
+  .history-stat strong {
+    font-size: 1.2rem;
+  }
+
+  .history-item {
+    padding: 14px;
+  }
+
+  .history-item-main {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .history-item h3 {
+    font-size: 0.9rem;
+  }
+
+  .history-result strong {
+    font-size: 1rem;
+  }
+
+  .history-status {
+    font-size: 0.7rem;
+  }
+
+  .challenge-result .result-score {
+    font-size: 2rem;
+  }
+}

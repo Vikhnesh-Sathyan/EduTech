@@ -19,6 +19,14 @@ export class BasicChallenge implements OnInit {
   questions = signal<any[]>([]);
   currentIndex = signal(0);
 
+  // Attempt history and cycle status
+  attemptHistory = signal<any[]>([]);
+  currentCycle = signal(1);
+  totalAttempts = signal(0);
+  attemptsUsed = signal(0);
+  advancedUnlocked = signal(false);
+  startingCycle = signal(false);
+
   // Preserve each question's answer and confidence.
   answers = signal<Record<number, string>>({});
   confidenceLevels = signal<Record<number, string>>({});
@@ -47,6 +55,7 @@ export class BasicChallenge implements OnInit {
     }
 
     this.subtopicId = Number(id);
+    this.loadAttemptHistory();
     this.loadQuestions();
   }
 
@@ -84,6 +93,39 @@ export class BasicChallenge implements OnInit {
       }
     });
   }
+
+    // ======================================================
+// LOAD ATTEMPT HISTORY
+// ======================================================
+
+loadAttemptHistory(): void {
+  this.challengeService
+    .getAttemptHistory(this.subtopicId)
+    .subscribe({
+      next: (response: any) => {
+        this.attemptHistory.set(response.attempts || []);
+        this.currentCycle.set(response.currentCycle || 1);
+        this.totalAttempts.set(response.totalAttempts || 0);
+        this.advancedUnlocked.set(
+          response.advancedUnlocked || false
+        );
+
+        this.attemptsUsed.set(
+          (response.attempts || []).filter(
+            (attempt: any) =>
+              Number(attempt.cycleNumber) ===
+              Number(response.currentCycle || 1)
+          ).length
+        );
+      },
+      error: (error) => {
+        this.toastService.error(
+          error.error?.message ||
+          'Failed to load challenge history.'
+        );
+      }
+    });
+}
 
   // ======================================================
   // SELECT ANSWER
@@ -185,69 +227,73 @@ export class BasicChallenge implements OnInit {
   // SUBMIT CHALLENGE
   // ======================================================
 
-  submitChallenge(): void {
-    if (this.submitting() || this.result()) {
-      return;
-    }
+  
+submitChallenge(): void {
+  if (this.submitting() || this.result()) {
+    return;
+  }
 
-    if (this.questions().length !== 5) {
-      this.toastService.error(
-        'The five challenge questions are not ready.'
-      );
-      return;
-    }
-
-    const missingIndex = this.questions().findIndex(question =>
-      !this.answers()[question.id] ||
-      !this.confidenceLevels()[question.id]
+  if (this.questions().length !== 5) {
+    this.toastService.error(
+      'The five challenge questions are not ready.'
     );
+    return;
+  }
 
-    if (missingIndex !== -1) {
-      this.currentIndex.set(missingIndex);
+  const missingIndex = this.questions().findIndex(question =>
+    !this.answers()[question.id] ||
+    !this.confidenceLevels()[question.id]
+  );
 
-      this.toastService.error(
-        'Answer all five questions and select your confidence level.'
-      );
+  if (missingIndex !== -1) {
+    this.currentIndex.set(missingIndex);
 
-      return;
-    }
+    this.toastService.error(
+      'Answer all five questions and select your confidence level.'
+    );
+    return;
+  }
 
-    const submissionAnswers = this.questions().map(question => ({
-      questionId: Number(question.id),
-      selectedAnswer: this.answers()[question.id],
-      confidence: this.confidenceLevels()[question.id]
-    }));
+  const submissionAnswers = this.questions().map(question => ({
+    questionId: Number(question.id),
+    selectedAnswer: this.answers()[question.id],
+    confidence: this.confidenceLevels()[question.id]
+  }));
 
-    this.submitting.set(true);
+  this.submitting.set(true);
 
-    this.challengeService
-      .submitChallenge(this.subtopicId, submissionAnswers)
-      .subscribe({
-        next: (response: any) => {
-          console.log('CHALLENGE RESULT:', response);
-          this.result.set(response);
-          this.submitting.set(false);
+  this.challengeService
+    .submitChallenge(this.subtopicId, submissionAnswers)
+    .subscribe({
+      next: (response: any) => {
+        this.result.set(response);
+        this.submitting.set(false);
 
-          if (response.passed) {
-            this.toastService.success(
-              'Congratulations! You passed the Basic Challenge.'
-            );
-          } else {
-            this.toastService.info(
-              `You scored ${response.score}/20. Review your weak areas before trying again.`
-            );
-          }
-        },
-        error: (error) => {
-          this.submitting.set(false);
+        // Refresh attempt history and current cycle information.
+        this.loadAttemptHistory();
 
-          this.toastService.error(
-            error.error?.message ||
-            'Failed to submit the challenge. Please try again.'
+        if (response.passed) {
+          this.toastService.success(
+            'Congratulations! You passed the Basic Challenge.'
+          );
+        } else {
+          this.toastService.info(
+            `You scored ${response.score}/20. Review your weak areas before trying again.`
           );
         }
-      });
-  }
+      },
+
+      error: (error) => {
+        this.submitting.set(false);
+
+        this.toastService.error(
+          error.error?.message ||
+          'Failed to submit the challenge. Please try again.'
+        );
+      }
+    });
+}
+
 
   // ======================================================
   // OPEN ADVANCED LEARNING
@@ -259,4 +305,82 @@ export class BasicChallenge implements OnInit {
       this.subtopicId
     ]);
   }
+
+  // ======================================================
+// START NEW CYCLE
+// ======================================================
+
+
+startNewCycle(): void {
+  if (this.startingCycle() || this.advancedUnlocked()) {
+    return;
+  }
+
+  // A new cycle is available only after five attempts.
+  if (this.attemptsUsed() < 5) {
+    this.toastService.info(
+      'Complete all five attempts before starting a new cycle.'
+    );
+    return;
+  }
+
+  this.startingCycle.set(true);
+
+  this.challengeService
+    .startNewCycle(this.subtopicId)
+    .subscribe({
+      next: (response: any) => {
+        this.toastService.success(
+          response.message || 'New cycle started!'
+        );
+
+        // Load history first, then load questions for the new cycle.
+        this.challengeService
+          .getAttemptHistory(this.subtopicId)
+          .subscribe({
+            next: (history: any) => {
+              this.attemptHistory.set(history.attempts || []);
+              this.currentCycle.set(history.currentCycle || 1);
+              this.totalAttempts.set(history.totalAttempts || 0);
+              this.advancedUnlocked.set(
+                history.advancedUnlocked || false
+              );
+
+              this.attemptsUsed.set(
+                (history.attempts || []).filter(
+                  (attempt: any) =>
+                    Number(attempt.cycleNumber) ===
+                    Number(history.currentCycle || 1)
+                ).length
+              );
+
+              if (!this.advancedUnlocked()) {
+                this.loadQuestions();
+              }
+
+              this.startingCycle.set(false);
+            },
+
+            error: (error) => {
+              this.startingCycle.set(false);
+
+              this.toastService.error(
+                error.error?.message ||
+                'New cycle started, but history could not be refreshed.'
+              );
+            }
+          });
+      },
+
+      error: (error) => {
+        this.startingCycle.set(false);
+
+        this.toastService.error(
+          error.error?.message ||
+          'Unable to start a new cycle.'
+        );
+      }
+    });
+}
+
 }
