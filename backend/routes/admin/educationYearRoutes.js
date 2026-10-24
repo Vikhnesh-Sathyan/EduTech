@@ -39,7 +39,13 @@ router.get(
     getEducationYearsByDepartment
 );
 
-
+// Get education years for a department (mentor - read-only)
+router.get(
+    "/mentor/department/:departmentId",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getEducationYearsByDepartment
+);
 
 // Update an education year
 router.put(

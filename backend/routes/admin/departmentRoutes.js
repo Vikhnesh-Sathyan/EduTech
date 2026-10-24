@@ -40,6 +40,14 @@ router.get(
     getDepartmentsByProgram
 );
 
+// Get departments for a program (mentor - read-only)
+router.get(
+    "/mentor/program/:programId",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getDepartmentsByProgram
+);
+
 
 // Update a department
 router.put(

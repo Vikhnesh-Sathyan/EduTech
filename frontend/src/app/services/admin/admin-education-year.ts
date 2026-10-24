@@ -65,4 +65,10 @@ export class AdminEducationYear {
       { status }
     );
   }
+
+  getEducationYearsByDepartmentForMentor(departmentId: number) {
+  return this.http.get<{ years: any[] }>(
+    `http://localhost:5000/api/admin/education-years/mentor/department/${departmentId}`
+  );
+}
 }

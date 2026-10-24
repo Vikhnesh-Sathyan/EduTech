@@ -1,0 +1,140 @@
+<div class="quiz-page">
+
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>My Theory Quizzes</h1>
+      <p>Manage your theory quizzes and review their current status.</p>
+    </div>
+
+    <button class="refresh-btn" (click)="loadQuizzes()">
+      ↻ Refresh
+    </button>
+  </header>
+
+  <section class="stats-grid">
+    <article class="stat-card">
+      <span class="stat-icon total-icon">▤</span>
+      <div>
+        <p>Total Quizzes</p>
+        <h2>{{ quizzes().length }}</h2>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <span class="stat-icon draft-icon">◷</span>
+      <div>
+        <p>Drafts</p>
+        <h2>{{ draftCount }}</h2>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <span class="stat-icon published-icon">✓</span>
+      <div>
+        <p>Published</p>
+        <h2>{{ publishedCount }}</h2>
+      </div>
+    </article>
+  </section>
+
+  <section class="quiz-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Your quizzes</h2>
+        <p>Quizzes created or imported by you.</p>
+      </div>
+    </div>
+
+    <div *ngIf="loading()" class="state-card">
+      <div class="loader"></div>
+      <h3>Loading your quizzes...</h3>
+      <p>Please wait while we retrieve your quizzes.</p>
+    </div>
+
+    <div *ngIf="!loading() && errorMessage()" class="state-card error-state">
+      <h3>Unable to load quizzes</h3>
+      <p>{{ errorMessage() }}</p>
+      <button class="primary-btn" (click)="loadQuizzes()">
+        Try again
+      </button>
+    </div>
+
+    <div
+      *ngIf="!loading() && !errorMessage() && quizzes().length === 0"
+      class="state-card"
+    >
+      <div class="empty-icon">▤</div>
+      <h3>No quizzes yet</h3>
+      <p>Your created or imported quizzes will appear here.</p>
+    </div>
+
+    <div
+      class="quiz-grid"
+      *ngIf="!loading() && !errorMessage() && quizzes().length > 0"
+    >
+      <article
+        class="quiz-card"
+        *ngFor="let quiz of quizzes(); trackBy: trackByQuizId"
+      >
+        <div class="quiz-card-top">
+          <span class="quiz-icon">▤</span>
+
+          <span
+            class="status-badge"
+            [ngClass]="quiz.status.toLowerCase()"
+          >
+            {{ quiz.status }}
+          </span>
+        </div>
+
+        <div class="quiz-content">
+          <span class="quiz-id">QUIZ #{{ quiz.id }}</span>
+
+          <h3>{{ quiz.title }}</h3>
+
+          <p class="quiz-description">
+            {{ quiz.description || 'No description added.' }}
+          </p>
+        </div>
+
+        <div class="quiz-meta">
+          <div>
+            <span>Difficulty</span>
+            <strong>{{ quiz.difficulty | titlecase }}</strong>
+          </div>
+
+          <div>
+            <span>Pass percentage</span>
+            <strong>{{ quiz.pass_percentage }}%</strong>
+          </div>
+        </div>
+
+        
+<div class="quiz-footer">
+  <span>
+    Updated
+    {{
+      quiz.updated_at
+        ? (quiz.updated_at | date:'mediumDate')
+        : '—'
+    }}
+  </span>
+
+  <a
+    class="btn-view"
+    [routerLink]="[
+      '/mentor/advanced/theory-quizzes',
+      quiz.id,
+      'view'
+    ]">
+    View Quiz →
+  </a>
+</div>
+
+      </article>
+    </div>
+
+  </section>
+</div>

@@ -4,15 +4,9 @@
 -->
 
 <aside class="sidebar">
-
-
-  <!-- Navigation -->
-
   <nav class="sidebar-navigation">
 
-
     <!-- Dashboard -->
-
     <a
       routerLink="/mentor-dashboard"
       routerLinkActive="active"
@@ -22,82 +16,87 @@
       <span>Dashboard</span>
     </a>
 
-
     <!-- Mentorship Requests -->
-
-    <a
-      routerLink="/mentor-requests"
-      routerLinkActive="active"
-    >
+    <a routerLink="/mentor-requests" routerLinkActive="active">
       <span class="nav-icon">✉</span>
       <span>Requests</span>
     </a>
 
-
     <!-- Students -->
-
-    <a
-      routerLink="/mentor-students"
-      routerLinkActive="active"
-    >
+    <a routerLink="/mentor-students" routerLinkActive="active">
       <span class="nav-icon">◉</span>
       <span>Students</span>
     </a>
 
-      
-<!-- Chat Inbox -->
-<a
-  routerLink="/mentor-chat"
-  routerLinkActive="active"
->
-  <span class="nav-icon">💬</span>
-  <span>Chat Inbox</span>
-</a>
-
+    <!-- Chat Inbox -->
+    <a routerLink="/mentor-chat" routerLinkActive="active">
+      <span class="nav-icon">💬</span>
+      <span>Chat Inbox</span>
+    </a>
 
     <!-- Sessions -->
-
-    <a
-      routerLink="/mentor-sessions"
-      routerLinkActive="active"
-    >
+    <a routerLink="/mentor-sessions" routerLinkActive="active">
       <span class="nav-icon">◷</span>
       <span>Sessions</span>
     </a>
 
-
     <!-- Resources -->
-
-    <a
-      routerLink="/mentor-resources"
-      routerLinkActive="active"
-    >
+    <a routerLink="/mentor-resources" routerLinkActive="active">
       <span class="nav-icon">▣</span>
       <span>Resources</span>
     </a>
 
+    <!-- Cheat Sheet -->
+    <a routerLink="/mentor-cheatsheet" routerLinkActive="active">
+      <span class="nav-icon">📚</span>
+      <span>Cheat Sheet</span>
+    </a>
 
-<!-- Cheat Sheet -->
+    <!-- Advanced Theory Quiz -->
+  
+<!-- Advanced Theory Dropdown -->
+<div class="sidebar-dropdown">
+  <button
+    type="button"
+    class="sidebar-dropdown-toggle"
+    (click)="advancedTheoryOpen = !advancedTheoryOpen"
+    [class.expanded]="advancedTheoryOpen"
+    [attr.aria-expanded]="advancedTheoryOpen"
+  >
+    <span class="sidebar-menu-icon">✦</span>
+    <span class="sidebar-menu-label">Advanced Theory Quiz</span>
+    <span class="dropdown-chevron" [class.rotated]="advancedTheoryOpen">
+      ▾
+    </span>
+  </button>
 
-<a
-  routerLink="/mentor-cheatsheet"
-  routerLinkActive="active"
->
-  <span class="nav-icon">📚</span>
-  <span>Cheat Sheet</span>
-</a>
-
-    <!-- Profile -->
+  <div class="sidebar-submenu" *ngIf="advancedTheoryOpen">
+    <a
+      routerLink="/mentor/advanced/theory-quizzes"
+      routerLinkActive="active"
+      class="sidebar-submenu-link"
+    >
+      <span class="submenu-dot"></span>
+      My Theory Quizzes
+    </a>
 
     <a
-      routerLink="/mentor-profile"
+      routerLink="/mentor/advanced/theory-quizzes/csv-upload"
       routerLinkActive="active"
+      class="sidebar-submenu-link"
     >
+      <span class="submenu-dot"></span>
+      Import Quiz CSV
+    </a>
+  </div>
+</div>
+
+
+    <!-- Profile -->
+    <a routerLink="/mentor-profile" routerLinkActive="active">
       <span class="nav-icon">○</span>
       <span>Profile</span>
     </a>
 
-
   </nav>
-
 </aside>

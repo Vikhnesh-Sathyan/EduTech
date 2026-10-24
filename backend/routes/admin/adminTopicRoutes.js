@@ -24,6 +24,12 @@ router.get(
     getTopicsBySubject
 );
 
+router.get(
+  "/mentor/subject/:subjectId",
+  authMiddleware,
+  roleMiddleware("mentor"),
+  getTopicsBySubject
+);
 
 // ==========================================
 // CREATE TOPIC

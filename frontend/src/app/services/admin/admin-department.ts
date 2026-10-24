@@ -39,4 +39,10 @@ getDepartmentsByProgram(programId: number) {
     );
   }
 
+  getDepartmentsByProgramForMentor(programId: number) {
+  return this.http.get<{ departments: any[] }>(
+    `http://localhost:5000/api/admin/departments/mentor/program/${programId}`
+  );
+}
+
 }

@@ -29,6 +29,13 @@ router.get(
     getSubtopics
 );
 
+router.get(
+  "/mentor/topic/:topicId",
+  authMiddleware,
+  roleMiddleware("mentor"),
+  getSubtopics
+);
+
 
 // Create a subtopic
 router.post(

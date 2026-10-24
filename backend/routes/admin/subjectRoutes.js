@@ -32,6 +32,14 @@ router.get(
     getSubjectsByYear
 );
 
+// Get subjects for an education year (mentor - read-only)
+router.get(
+    "/mentor/year/:yearId",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getSubjectsByYear
+);
+
 // Get all subjects for admin management
 
 router.get(

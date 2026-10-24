@@ -32,6 +32,13 @@ router.get(
     getEducationPrograms
 );
 
+// Get education programs for mentors (read-only)
+router.get(
+    "/mentor",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getEducationPrograms
+);
 
 // Update an education program
 router.put(

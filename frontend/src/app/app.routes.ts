@@ -56,8 +56,6 @@ import { AdvancedLearningContent } from './features/student/advanced/advanced-le
 
 
 
-
-
 // Student mentors
 import { StudentMentors } from './features/student/mentors/student-mentors/student-mentors';
 import { StudentMentorProfile } from './features/student/mentors/student-mentor-profile/student-mentor-profile';
@@ -151,6 +149,11 @@ import { MentorRequests } from './features/mentor/requests/mentor-requests/mento
 import { MentorStudentProfile } from './features/mentor/students/mentor-student-profile/mentor-student-profile';
 import { MentorInboxComponent } from './features/chat/mentor-inbox/mentor-inbox';
 import { MentorChatComponent } from './features/chat/mentor-chat/mentor-chat';
+
+//ADVANCED QUIZ
+import { CsvUpload } from './features/mentor/advanced/csv-upload/csv-upload';
+import { QuizList } from './features/mentor/advanced/quiz-list/quiz-list';
+import { TheoryQuizView } from './features/mentor/advanced/theory-quiz-view/theory-quiz-view';
 
 export const routes: Routes = [
 
@@ -519,6 +522,20 @@ export const routes: Routes = [
         path: 'mentor/chat/:conversationId',
         component: MentorChatComponent
       },
+            
+      // ADVANCED QUIZ
+      {
+        path: 'mentor/advanced/theory-quizzes/csv-upload',
+        component: CsvUpload
+      },
+      {
+        path: 'mentor/advanced/theory-quizzes',
+        component: QuizList
+      },
+      {
+        path: 'mentor/advanced/theory-quizzes/:quizId/view',
+        component: TheoryQuizView
+      }
 
     ]
   },

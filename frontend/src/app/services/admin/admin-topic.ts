@@ -41,4 +41,10 @@ updateTopicStatus(topicId: number, status: string) {
   );
 }
 
+getTopicsBySubjectForMentor(subjectId: number) {
+  return this.http.get<{ topics: any[] }>(
+    `http://localhost:5000/api/admin/topics/mentor/subject/${subjectId}`
+  );
+}
+
 }

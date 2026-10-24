@@ -63,4 +63,10 @@ export class AdminSubject {
       { status }
     );
   }
+
+  getSubjectsByYearForMentor(yearId: number) {
+  return this.http.get<{ subjects: any[] }>(
+    `http://localhost:5000/api/admin/subjects/mentor/year/${yearId}`
+  );
+}
 }

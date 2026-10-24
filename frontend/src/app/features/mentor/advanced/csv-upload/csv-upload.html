@@ -1,0 +1,443 @@
+
+<div class="csv-upload-page">
+
+  <!-- ==================================================
+       PAGE HEADER
+  =================================================== -->
+  <header class="page-header">
+    <a routerLink="/mentor" class="back-link">
+      ← Mentor Dashboard
+    </a>
+
+    <span class="eyebrow">ADVANCED LEARNING</span>
+
+    <h1>Import Theory Quiz</h1>
+
+    <p>
+      Configure your quiz, upload your questions, review the preview,
+      and import the quiz as a draft.
+    </p>
+  </header>
+
+  <!-- ==================================================
+       QUIZ SETUP AND CSV UPLOAD
+  =================================================== -->
+  <section class="upload-card">
+
+    <!-- Education hierarchy heading -->
+    <div class="section-heading">
+      <h2>Education Details</h2>
+      <p>
+        Select the education level where this quiz belongs.
+      </p>
+    </div>
+
+    <!-- Education Program -->
+    <div class="form-group">
+      <label for="program">Education Program</label>
+
+      <select
+        id="program"
+        name="program"
+        [ngModel]="selectedProgramId()"
+        (ngModelChange)="selectedProgramId.set($event); onProgramChange($event)"
+      >
+        <option [ngValue]="null">
+          Select education program
+        </option>
+
+        <option
+          *ngFor="let program of programs()"
+          [ngValue]="program.id"
+        >
+          {{ program.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Department -->
+    <div class="form-group">
+      <label for="department">Department</label>
+
+      <select
+        id="department"
+        name="department"
+        [ngModel]="selectedDepartmentId()"
+        (ngModelChange)="selectedDepartmentId.set($event); onDepartmentChange($event)"
+        [disabled]="selectedProgramId() === null || loadingDepartments()"
+      >
+        <option [ngValue]="null">
+          {{
+            loadingDepartments()
+              ? 'Loading departments...'
+              : 'Select department'
+          }}
+        </option>
+
+        <option
+          *ngFor="let department of departments()"
+          [ngValue]="department.id"
+        >
+          {{ department.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Education Year -->
+  
+<!-- Education Year -->
+<div class="form-group">
+  <label for="educationYear">Education Year</label>
+
+  <select
+    id="educationYear"
+    name="educationYear"
+    [ngModel]="selectedEducationYearId()"
+    (ngModelChange)="selectedEducationYearId.set($event); onEducationYearChange($event)"
+    [disabled]="selectedDepartmentId() === null || loadingEducationYears()"
+  >
+    <option [ngValue]="null">
+      {{
+        loadingEducationYears()
+          ? 'Loading education years...'
+          : 'Select education year'
+      }}
+    </option>
+
+    <option
+      *ngFor="let year of educationYears()"
+      [ngValue]="year.id"
+    >
+      {{ year.name }}
+    </option>
+  </select>
+</div>
+
+
+
+<!-- Subject -->
+<div class="form-group">
+  <label for="subject">Subject</label>
+
+  <select
+    id="subject"
+    name="subject"
+    [ngModel]="selectedSubjectId()"
+    (ngModelChange)="selectedSubjectId.set($event); onSubjectChange($event)"
+    [disabled]="selectedEducationYearId() === null || loadingSubjects() || subjects().length === 0"
+  >
+    <option [ngValue]="null">
+      {{
+        loadingSubjects()
+          ? 'Loading subjects...'
+          : subjects().length === 0
+            ? 'No subjects available'
+            : 'Select subject'
+      }}
+    </option>
+
+    <option
+      *ngFor="let subject of subjects()"
+      [ngValue]="subject.id"
+    >
+      {{ subject.name }}
+    </option>
+  </select>
+</div>
+
+
+
+    <!-- Topic -->
+    <div class="form-group">
+      <label for="topic">Topic</label>
+
+      <select
+        id="topic"
+        name="topic"
+        [ngModel]="selectedTopicId()"
+        (ngModelChange)="selectedTopicId.set($event); onTopicChange($event)"
+        [disabled]="selectedSubjectId() === null || loadingTopics()"
+      >
+        <option [ngValue]="null">
+          {{
+            loadingTopics()
+              ? 'Loading topics...'
+              : 'Select topic'
+          }}
+        </option>
+
+        <option
+          *ngFor="let topic of topics()"
+          [ngValue]="topic.id"
+        >
+          {{ topic.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Subtopic -->
+    <div class="form-group">
+      <label for="subtopic">Subtopic</label>
+
+      <select
+  id="subtopic"
+  name="subtopic"
+  [ngModel]="selectedSubtopicId()"
+  (ngModelChange)="selectedSubtopicId.set($event)"
+  [disabled]="selectedTopicId() === null || loadingSubtopics()"
+>
+  <option [ngValue]="null">
+    {{
+      loadingSubtopics()
+        ? 'Loading subtopics...'
+        : subtopics().length === 0
+          ? 'No subtopics available'
+          : 'Select subtopic (optional)'
+    }}
+  </option>
+
+  <option
+    *ngFor="let subtopic of subtopics()"
+    [ngValue]="subtopic.id"
+  >
+    {{ subtopic.title }}
+  </option>
+</select>
+    </div>
+
+    <!-- ==================================================
+         QUIZ DETAILS
+    =================================================== -->
+    <div class="quiz-details">
+
+      <div class="section-heading">
+        <h2>Quiz Details</h2>
+        <p>
+          Set the title, description, difficulty, and passing score.
+        </p>
+      </div>
+
+      <!-- Quiz Title -->
+      <div class="form-group">
+        <label for="quizTitle">Quiz Title</label>
+
+        <input
+          id="quizTitle"
+          name="quizTitle"
+          type="text"
+          [ngModel]="quizTitle()"
+          (ngModelChange)="quizTitle.set($event)"
+          placeholder="Enter quiz title"
+          maxlength="150"
+          required
+        />
+      </div>
+
+      <!-- Quiz Description -->
+      <div class="form-group">
+        <label for="quizDescription">Description</label>
+
+        <textarea
+          id="quizDescription"
+          name="quizDescription"
+          [ngModel]="quizDescription()"
+          (ngModelChange)="quizDescription.set($event)"
+          placeholder="Describe what this quiz covers"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <!-- Difficulty -->
+      <div class="form-group">
+        <label for="difficulty">Difficulty</label>
+
+        <select
+          id="difficulty"
+          name="difficulty"
+          [ngModel]="difficulty()"
+          (ngModelChange)="difficulty.set($event)"
+        >
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+
+      <!-- Pass Percentage -->
+      <div class="form-group">
+        <label for="passPercentage">Pass Percentage</label>
+
+        <input
+          id="passPercentage"
+          name="passPercentage"
+          type="number"
+          [ngModel]="passPercentage()"
+          (ngModelChange)="passPercentage.set(+$event)"
+          min="1"
+          max="100"
+          required
+        />
+      </div>
+
+    </div>
+
+    <!-- ==================================================
+         CSV FILE UPLOAD
+    =================================================== -->
+    <div class="section-heading">
+      <h2>Upload CSV File</h2>
+      <p>
+        Use the required CSV format to avoid validation errors.
+      </p>
+    </div>
+
+    <label for="csvFile" class="file-drop">
+      <span class="upload-icon">↑</span>
+      <strong>Select your CSV file</strong>
+      <span>Choose a .csv file from your computer</span>
+
+      <input
+        id="csvFile"
+        type="file"
+        accept=".csv,text/csv"
+        (change)="onFileSelected($event)"
+      />
+    </label>
+
+    <!-- Selected file details -->
+    <div class="selected-file" *ngIf="selectedFile() as file">
+      <span>📄</span>
+
+      <div>
+        <strong>{{ file.name }}</strong>
+        <small>
+          {{ (file.size / 1024).toFixed(1) }} KB
+        </small>
+      </div>
+    </div>
+
+    <!-- Validate and Preview -->
+    <button
+      type="button"
+      class="primary-button"
+      [disabled]="!selectedFile() || loading() || importing()"
+      (click)="previewCsv()"
+    >
+      {{
+        loading()
+          ? 'Validating CSV...'
+          : 'Validate & Preview'
+      }}
+    </button>
+
+    <!-- Success message -->
+    <div class="success-message" *ngIf="message()">
+      {{ message() }}
+    </div>
+
+    <!-- Errors -->
+    <div class="error-message" *ngIf="errors().length">
+      <strong>Please check the following</strong>
+
+      <ul>
+        <li *ngFor="let error of errors()">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ==================================================
+       CSV PREVIEW
+  =================================================== -->
+  <section class="preview-section" *ngIf="preview() as csvPreview">
+
+    <div class="preview-heading">
+      <div>
+        <span class="eyebrow">CSV PREVIEW</span>
+        <h2>Review Your Questions</h2>
+      </div>
+
+      <span class="question-count">
+        {{ csvPreview.totalQuestions }} questions
+      </span>
+    </div>
+
+    <!-- Individual question cards -->
+    <article
+      class="question-card"
+      *ngFor="let question of csvPreview.questions; let i = index"
+    >
+      <div class="question-top">
+        <span class="question-number">
+          Question {{ i + 1 }}
+        </span>
+
+        <span class="marks">
+          {{ question.marks }} mark(s)
+        </span>
+      </div>
+
+      <h3>{{ question.question_text }}</h3>
+
+      <!-- Question options -->
+      <div class="option-list">
+        <div
+          class="option"
+          *ngFor="let option of question.options"
+          [class.correct-option]="option.is_correct === 1"
+        >
+          <span class="option-letter">
+            {{ ['A', 'B', 'C', 'D'][option.display_order - 1] }}
+          </span>
+
+          <span>{{ option.option_text }}</span>
+
+          <span
+            class="correct-label"
+            *ngIf="option.is_correct === 1"
+          >
+            Correct answer
+          </span>
+        </div>
+      </div>
+
+      <!-- Optional explanation -->
+      <p class="explanation" *ngIf="question.explanation">
+        <strong>Explanation:</strong>
+        {{ question.explanation }}
+      </p>
+
+      <!-- Optional concept tag -->
+      <div class="question-meta" *ngIf="question.concept_tag">
+        Concept: {{ question.concept_tag }}
+      </div>
+    </article>
+
+    <!-- Import action -->
+    <div class="import-notice">
+      <strong>Ready to import?</strong>
+
+      <p>
+        Review your questions and quiz details. The quiz will be
+        saved as a draft.
+      </p>
+
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="!canImport()"
+        (click)="importQuiz()"
+      >
+        {{
+          importing()
+            ? 'Importing Quiz...'
+            : 'Import Quiz as Draft'
+        }}
+      </button>
+    </div>
+
+  </section>
+
+</div>

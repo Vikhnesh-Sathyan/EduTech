@@ -1,0 +1,193 @@
+
+<div class="quiz-review-page">
+
+  <!-- Back Navigation -->
+  <a
+    routerLink="/mentor/advanced/theory-quizzes"
+    class="back-link">
+    ← Back to Theory Quizzes
+  </a>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="state-card">
+    <div class="loader"></div>
+    <h3>Loading quiz...</h3>
+    <p>Please wait while we load the questions and answers.</p>
+  </div>
+
+  <!-- Error State -->
+  <div
+    *ngIf="!loading() && errorMessage()"
+    class="state-card error-state">
+
+    <div class="state-icon">!</div>
+
+    <h2>Unable to open quiz</h2>
+    <p>{{ errorMessage() }}</p>
+
+    <a
+      routerLink="/mentor/advanced/theory-quizzes"
+      class="primary-link">
+      Back to quizzes
+    </a>
+  </div>
+
+  <!-- Quiz Content -->
+  <ng-container
+    *ngIf="!loading() && !errorMessage() && quiz() as currentQuiz">
+
+    <!-- Page Header -->
+    <header class="page-header">
+      <div>
+        <span class="eyebrow">ADVANCED THEORY QUIZ</span>
+
+        <h1>{{ currentQuiz.title }}</h1>
+
+        <p>
+          {{ currentQuiz.description || 'Review the quiz content and answer key.' }}
+        </p>
+      </div>
+
+      <span
+        class="status-badge"
+        [ngClass]="'status-' + currentQuiz.status">
+        {{ currentQuiz.status | titlecase }}
+      </span>
+    </header>
+
+    <!-- Quiz Statistics -->
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <span>Total Questions</span>
+        <strong>{{ currentQuiz.questions.length }}</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Total Marks</span>
+        <strong>{{ totalMarks() }}</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Pass Percentage</span>
+        <strong>{{ currentQuiz.pass_percentage }}%</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Difficulty</span>
+        <strong>{{ currentQuiz.difficulty | titlecase }}</strong>
+      </article>
+
+    </section>
+
+    <!-- Questions Section -->
+    <section class="questions-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>Questions &amp; Answer Key</h2>
+          <p>
+            Review each question, its options, and its explanation.
+          </p>
+        </div>
+
+        <span class="question-count">
+          {{ currentQuiz.questions.length }} questions
+        </span>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        *ngIf="currentQuiz.questions.length === 0"
+        class="state-card">
+
+        <h3>No questions found</h3>
+        <p>This quiz does not contain any questions yet.</p>
+      </div>
+
+      <!-- Individual Questions -->
+      <article
+        *ngFor="
+          let question of currentQuiz.questions;
+          let i = index;
+          trackBy: trackQuestion
+        "
+        class="question-card">
+
+        <!-- Question Heading -->
+        <div class="question-top">
+
+          <div class="question-number">
+            Q{{ i + 1 }}
+          </div>
+
+          <div class="question-heading">
+
+            <h3>{{ question.question_text }}</h3>
+
+            <div class="question-meta">
+
+              <span class="marks-badge">
+                {{ question.marks }} marks
+              </span>
+
+              <span
+                *ngIf="question.concept_tag"
+                class="concept-badge">
+                {{ question.concept_tag }}
+              </span>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Answer Options -->
+        <div class="options-list">
+
+          <div
+            *ngFor="
+              let option of question.options;
+              let optionIndex = index;
+              trackBy: trackOption
+            "
+            class="option-row"
+            [class.correct-option]="isCorrect(option)">
+
+            <span class="option-letter">
+              {{ ['A', 'B', 'C', 'D'][optionIndex] || (optionIndex + 1) }}
+            </span>
+
+            <span class="option-text">
+              {{ option.option_text }}
+            </span>
+
+            <span
+              *ngIf="isCorrect(option)"
+              class="correct-label">
+              ✓ Correct answer
+            </span>
+
+          </div>
+        </div>
+
+        <!-- Explanation -->
+        <div
+          *ngIf="question.explanation"
+          class="explanation-box">
+
+          <span class="explanation-icon">i</span>
+
+          <div>
+            <strong>Explanation</strong>
+            <p>{{ question.explanation }}</p>
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </ng-container>
+
+</div>

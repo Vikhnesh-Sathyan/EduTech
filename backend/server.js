@@ -153,6 +153,9 @@ const studentAdvancedRoutes = require(
     "./routes/student/advanced/studentAdvancedRoutes"
 );
 
+const theoryQuizRoutes = require("./routes/student/advanced/theoryQuizRoutes");
+
+
 const studentCheatsheetRoutes = require("./routes/student/cheatsheet/student-cheatsheet-routes");
 
 // =====================================================
@@ -231,6 +234,10 @@ const mentorTopicRoutes = require("./routes/mentor/cheatsheet/topicRoutes");
 
 const mentorSubtopicRoutes = require("./routes/mentor/cheatsheet/subtopicRoutes");
 
+//MENTOR QUIZ
+const mentorTheoryQuizRoutes = require(
+    "./routes/mentor/advanced/theoryQuizRoutes"
+);
 // =====================================================
 // CREATE EXPRESS APPLICATION
 // =====================================================
@@ -343,6 +350,11 @@ app.use(
 app.use(
     "/api/mentor-student",
     mentorStudentRoutes
+);
+// MENTOR QUIZ
+app.use(
+    "/api/mentor/advanced/theory-quizzes",
+    mentorTheoryQuizRoutes
 );
 
 // =====================================================
@@ -538,6 +550,8 @@ app.use(
     "/api/student/advanced",
     studentAdvancedRoutes
 );
+
+app.use("/api/student/advanced", theoryQuizRoutes);
 
 // =====================================================
 // STUDENT MENTOR CHAT ROUTES

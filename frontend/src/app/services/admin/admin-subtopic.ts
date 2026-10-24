@@ -109,4 +109,10 @@ export class AdminSubtopic {
       { contentData }
     );
   }
+
+  getSubtopicsForMentor(topicId: number) {
+  return this.http.get<{ subtopics: any[] }>(
+    `http://localhost:5000/api/admin/subtopics/mentor/topic/${topicId}`
+  );
+}
 }

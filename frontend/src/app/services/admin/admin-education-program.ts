@@ -52,4 +52,9 @@ export class AdminEducationProgram {
       { status }
     );
   }
+  getProgramsForMentor() {
+  return this.http.get<{ programs: any[] }>(
+    'http://localhost:5000/api/admin/education-programs/mentor'
+  );
+}
 }
