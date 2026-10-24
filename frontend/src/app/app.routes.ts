@@ -154,6 +154,7 @@ import { MentorChatComponent } from './features/chat/mentor-chat/mentor-chat';
 import { CsvUpload } from './features/mentor/advanced/csv-upload/csv-upload';
 import { QuizList } from './features/mentor/advanced/quiz-list/quiz-list';
 import { TheoryQuizView } from './features/mentor/advanced/theory-quiz-view/theory-quiz-view';
+import { TheoryQuizEdit } from './features/mentor/advanced/theory-quiz-edit/theory-quiz-edit';
 
 export const routes: Routes = [
 
@@ -535,6 +536,10 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/theory-quizzes/:quizId/view',
         component: TheoryQuizView
+      },
+      {
+        path: 'mentor/advanced/theory-quizzes/:quizId/edit',
+        component: TheoryQuizEdit
       }
 
     ]

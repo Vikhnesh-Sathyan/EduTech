@@ -142,4 +142,67 @@ export class AdvancedTheoryQuizService {
       `${this.apiUrl}/${quizId}`
     );
   }
+
+    // Update quiz basic details
+  updateQuiz(
+    quizId: number,
+    data: {
+      title: string;
+      description: string | null;
+      topic_id: number | null;
+      subtopic_id: number | null;
+      difficulty: 'beginner' | 'intermediate' | 'advanced';
+      pass_percentage: number;
+    }
+  ): Observable<{ message: string; quizId: number }> {
+    return this.http.put<{ message: string; quizId: number }>(
+      `${this.apiUrl}/${quizId}`,
+      data
+    );
+
+}
+
+updateQuizQuestions(
+  quizId: number,
+  questions: {
+    id: number;
+    question_text: string;
+    explanation?: string | null;
+    concept_tag?: string | null;
+    marks: number;
+    display_order: number;
+  }[]
+) {
+  return this.http.put(
+    `${this.apiUrl}/${quizId}/questions`,
+    { questions }
+  );
+}
+
+updateQuestionOptions(
+  quizId: number,
+  questionId: number,
+  options: {
+    id?: number;
+    option_text: string;
+    is_correct: boolean;
+    display_order: number;
+  }[]
+) {
+  return this.http.put(
+    `${this.apiUrl}/${quizId}/questions/${questionId}/options`,
+    { options }
+  );
+}
+
+publishQuiz(quizId: number) {
+  return this.http.patch<{
+    message: string;
+    status: string;
+  }>(
+    `${this.apiUrl}/${quizId}/publish`,
+    {}
+  );
+}
+
 }

@@ -302,13 +302,243 @@ const getMyQuizById = async (req, res) => {
 };
 
 
+ // ==========================================
+ // UPDATE OWN QUIZ DETAILS
+ // ==========================================
+const updateQuiz = async (req, res) => {
+    let connection;
 
+    try {
+        const quizId = Number(req.params.quizId);
 
+        if (!Number.isInteger(quizId) || quizId <= 0) {
+            return res.status(400).json({
+                message: "Invalid quiz ID"
+            });
+        }
+
+        connection = await db.getConnection();
+        await connection.beginTransaction();
+
+        // 1. Verify that the quiz belongs to this mentor.
+        const [quizzes] = await connection.query(
+            `SELECT *
+             FROM advanced_theory_quizzes
+             WHERE id = ? AND mentor_id = ?
+             FOR UPDATE`,
+            [quizId, req.user.id]
+        );
+
+        if (quizzes.length === 0) {
+            await connection.rollback();
+
+            return res.status(404).json({
+                message: "Quiz not found or you do not own it"
+            });
+        }
+
+        const existingQuiz = quizzes[0];
+
+        // 2. Preserve existing values when fields are omitted.
+        const title = req.body.title === undefined
+            ? existingQuiz.title
+            : req.body.title;
+
+        const description = req.body.description === undefined
+            ? existingQuiz.description
+            : req.body.description;
+
+        const difficulty = req.body.difficulty === undefined
+            ? existingQuiz.difficulty
+            : req.body.difficulty;
+
+        const passPercentage = req.body.pass_percentage === undefined
+            ? Number(existingQuiz.pass_percentage)
+            : Number(req.body.pass_percentage);
+
+        const topicId = req.body.topic_id === undefined
+            ? existingQuiz.topic_id
+            : (
+                req.body.topic_id === null || req.body.topic_id === ""
+                    ? null
+                    : Number(req.body.topic_id)
+            );
+
+        const subtopicId = req.body.subtopic_id === undefined
+            ? existingQuiz.subtopic_id
+            : (
+                req.body.subtopic_id === null || req.body.subtopic_id === ""
+                    ? null
+                    : Number(req.body.subtopic_id)
+            );
+
+        // 3. Validate the title.
+        if (typeof title !== "string" || !title.trim()) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                message: "Quiz title is required"
+            });
+        }
+
+        if (title.trim().length > 200) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                message: "Quiz title cannot exceed 200 characters"
+            });
+        }
+
+        // 4. Validate difficulty.
+        const allowedDifficulties = [
+            "beginner",
+            "intermediate",
+            "advanced"
+        ];
+
+        if (!allowedDifficulties.includes(difficulty)) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                message: "Invalid difficulty"
+            });
+        }
+
+        // 5. Validate pass percentage.
+        if (
+            !Number.isFinite(passPercentage) ||
+            passPercentage < 0 ||
+            passPercentage > 100
+        ) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                message: "Pass percentage must be between 0 and 100"
+            });
+        }
+
+        // 6. Validate topic ID.
+        if (
+            topicId !== null &&
+            (!Number.isInteger(Number(topicId)) || Number(topicId) <= 0)
+        ) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                message: "Invalid topic ID"
+            });
+        }
+
+        // 7. Validate subtopic ID.
+        if (
+            subtopicId !== null &&
+            (!Number.isInteger(Number(subtopicId)) ||
+                Number(subtopicId) <= 0)
+        ) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                message: "Invalid subtopic ID"
+            });
+        }
+
+        // 8. Confirm that the topic exists.
+        if (topicId !== null) {
+            const [topics] = await connection.query(
+                `SELECT id
+                 FROM subject_topics
+                 WHERE id = ?`,
+                [topicId]
+            );
+
+            if (topics.length === 0) {
+                await connection.rollback();
+
+                return res.status(404).json({
+                    message: "Topic not found"
+                });
+            }
+        }
+
+        // 9. Confirm that the subtopic belongs to the selected topic.
+        if (subtopicId !== null) {
+            if (topicId === null) {
+                await connection.rollback();
+
+                return res.status(400).json({
+                    message: "Select a topic before selecting a subtopic"
+                });
+            }
+
+            const [subtopics] = await connection.query(
+                `SELECT id
+                 FROM learning_subtopics
+                 WHERE id = ? AND topic_id = ?`,
+                [subtopicId, topicId]
+            );
+
+            if (subtopics.length === 0) {
+                await connection.rollback();
+
+                return res.status(400).json({
+                    message: "The subtopic does not belong to the selected topic"
+                });
+            }
+        }
+
+        // 10. Update quiz details.
+        await connection.query(
+            `UPDATE advanced_theory_quizzes
+             SET title = ?,
+                 description = ?,
+                 topic_id = ?,
+                 subtopic_id = ?,
+                 difficulty = ?,
+                 pass_percentage = ?
+             WHERE id = ? AND mentor_id = ?`,
+            [
+                title.trim(),
+                typeof description === "string"
+                    ? description.trim() || null
+                    : description,
+                topicId,
+                subtopicId,
+                difficulty,
+                passPercentage,
+                quizId,
+                req.user.id
+            ]
+        );
+
+        await connection.commit();
+
+        return res.status(200).json({
+            message: "Quiz details updated successfully",
+            quizId
+        });
+
+    } catch (error) {
+        if (connection) {
+            await connection.rollback().catch(() => {});
+        }
+
+        console.error("Update mentor theory quiz error:", error);
+
+        return res.status(500).json({
+            message: "Failed to update quiz"
+        });
+
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+};
 
 
 module.exports = {
     createQuiz,
     getMyQuizzes,
     getMyQuizById,
-    
+    updateQuiz
 };

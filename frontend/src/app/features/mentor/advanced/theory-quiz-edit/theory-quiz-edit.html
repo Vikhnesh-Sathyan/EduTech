@@ -1,0 +1,438 @@
+<div class="edit-quiz-page">
+
+  <!-- Back navigation -->
+  <a
+    routerLink="/mentor/advanced/theory-quizzes"
+    class="back-link">
+    ← Back to Theory Quizzes
+  </a>
+
+  <!-- Page heading -->
+  <header class="page-header">
+    <span class="eyebrow">ADVANCED THEORY QUIZ</span>
+    <h1>Edit Quiz</h1>
+    <p>Update quiz details, questions, and answer options.</p>
+  </header>
+
+  <!-- Initial loading state -->
+  <div *ngIf="loading()" class="state-card">
+    <div class="loader"></div>
+    <h3>Loading quiz...</h3>
+  </div>
+
+  <!-- Main quiz loading error -->
+  <div
+    *ngIf="!loading() && errorMessage()"
+    class="message error">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- General success message -->
+  <div
+    *ngIf="successMessage()"
+    class="message success">
+    {{ successMessage() }}
+  </div>
+
+  <!-- Show the editor only after the quiz has loaded successfully -->
+  <ng-container *ngIf="!loading() && !errorMessage()">
+
+    <!-- ================================================== -->
+    <!-- SECTION 1: QUIZ DETAILS                             -->
+    <!-- ================================================== -->
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="saveChanges()"
+      class="edit-form">
+
+      <div class="section-header">
+        <h2>Quiz Details</h2>
+        <p>Manage the basic information for your quiz.</p>
+      </div>
+
+      <!-- Quiz title -->
+      <div class="form-group">
+        <label for="title">Quiz title</label>
+
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          maxlength="200"
+          placeholder="Enter quiz title">
+
+        <small
+          class="field-error"
+          *ngIf="
+            form.controls.title.touched &&
+            form.controls.title.invalid
+          ">
+          Enter a title (maximum 200 characters).
+        </small>
+      </div>
+
+      <!-- Quiz description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+
+        <textarea
+          id="description"
+          rows="4"
+          formControlName="description"
+          placeholder="Describe this quiz">
+        </textarea>
+      </div>
+
+      <!-- Difficulty and passing percentage -->
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="difficulty">Difficulty</label>
+
+          <select
+            id="difficulty"
+            formControlName="difficulty">
+
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pass_percentage">Pass percentage</label>
+
+          <input
+            id="pass_percentage"
+            type="number"
+            min="0"
+            max="100"
+            step="0.01"
+            formControlName="pass_percentage">
+
+          <small
+            class="field-error"
+            *ngIf="
+              form.controls.pass_percentage.touched &&
+              form.controls.pass_percentage.invalid
+            ">
+            Enter a value between 0 and 100.
+          </small>
+        </div>
+
+      </div>
+
+      <!-- Save or cancel quiz details -->
+      <div class="form-actions">
+
+        <a
+          routerLink="/mentor/advanced/theory-quizzes"
+          class="secondary-button">
+          Cancel
+        </a>
+
+        <button
+          type="submit"
+          [disabled]="saving() || loading()">
+
+          {{ saving() ? 'Saving...' : 'Save Quiz Details' }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- ================================================== -->
+    <!-- SECTION 2: PUBLISH QUIZ                             -->
+    <!-- ================================================== -->
+
+    <section class="publish-section">
+
+      <div class="section-header">
+        <h2>Quiz Publishing</h2>
+        <p>
+          Validate and publish your quiz when it is ready
+          for students.
+        </p>
+      </div>
+
+      <!-- Current quiz status -->
+      <div class="publish-status-row">
+
+        <span class="status-label">Current status</span>
+
+        <!-- Draft status -->
+        <span
+          class="quiz-status draft"
+          *ngIf="quizStatus === 'draft'">
+          Draft
+        </span>
+
+        <!-- Published status -->
+        <span
+          class="quiz-status published"
+          *ngIf="quizStatus === 'published'">
+          Published
+        </span>
+
+        <!-- Inactive status -->
+        <span
+          class="quiz-status inactive"
+          *ngIf="quizStatus === 'inactive'">
+          Inactive
+        </span>
+
+      </div>
+
+      <!-- Only draft quizzes can be published through this button -->
+      <button
+        type="button"
+        class="publish-quiz-btn"
+        *ngIf="quizStatus === 'draft'"
+        [disabled]="
+          publishing ||
+          saving() ||
+          loading() ||
+          questionsSaving ||
+          questionsLoading
+        "
+        (click)="publishQuiz()">
+
+        {{ publishing ? 'Publishing...' : 'Publish Quiz' }}
+
+      </button>
+
+      <!-- Published quizzes no longer show the Publish button -->
+      <p
+        class="publish-help"
+        *ngIf="quizStatus === 'published'">
+        This quiz is published. Students can access it only
+        if the student-side listing and access APIs allow it.
+      </p>
+
+      <!-- Inactive quizzes cannot be published using this button -->
+      <p
+        class="publish-help"
+        *ngIf="quizStatus === 'inactive'">
+        This quiz is inactive. Activate it through the
+        appropriate workflow before publishing.
+      </p>
+
+    </section>
+
+    <!-- ================================================== -->
+    <!-- SECTION 3: QUESTION EDITOR                          -->
+    <!-- ================================================== -->
+
+    <section class="questions-section">
+
+      <div class="section-header">
+        <h2>Questions</h2>
+        <p>Edit existing questions and their answer options.</p>
+      </div>
+
+      <!-- Questions loading state -->
+      <div
+        *ngIf="questionsLoading"
+        class="state-card">
+
+        <div class="loader"></div>
+        <h3>Loading questions...</h3>
+
+      </div>
+
+      <!-- Question or option saving errors -->
+      <div
+        *ngIf="questionError"
+        class="message error">
+        {{ questionError }}
+      </div>
+
+      <!-- Empty question state -->
+      <div
+        *ngIf="
+          !questionsLoading &&
+          questions.length === 0
+        "
+        class="state-card">
+
+        <h3>No questions found</h3>
+        <p>This quiz currently has no questions to edit.</p>
+
+      </div>
+
+      <!-- Individual question cards -->
+      <article
+        *ngFor="let question of questions; let i = index"
+        class="question-card">
+
+        <!-- Question number and marks -->
+        <div class="question-top">
+
+          <span class="question-number">
+            Question {{ i + 1 }}
+          </span>
+
+          <span class="marks-badge">
+            {{ question.marks }} marks
+          </span>
+
+        </div>
+
+        <!-- Question text -->
+        <div class="form-group">
+
+          <label [for]="'question-' + question.id">
+            Question text
+          </label>
+
+          <textarea
+            [id]="'question-' + question.id"
+            rows="3"
+            [(ngModel)]="question.question_text"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Enter the question">
+          </textarea>
+
+        </div>
+
+        <!-- Concept tag and marks -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label [for]="'concept-' + question.id">
+              Concept tag
+            </label>
+
+            <input
+              [id]="'concept-' + question.id"
+              type="text"
+              [(ngModel)]="question.concept_tag"
+              [ngModelOptions]="{ standalone: true }"
+              maxlength="150"
+              placeholder="e.g. Angular Basics">
+
+          </div>
+
+          <div class="form-group">
+
+            <label [for]="'marks-' + question.id">
+              Marks
+            </label>
+
+            <input
+              [id]="'marks-' + question.id"
+              type="number"
+              [(ngModel)]="question.marks"
+              [ngModelOptions]="{ standalone: true }"
+              min="0.01"
+              step="0.01">
+
+          </div>
+
+        </div>
+
+        <!-- Explanation for the correct answer -->
+        <div class="form-group">
+
+          <label [for]="'explanation-' + question.id">
+            Explanation
+          </label>
+
+          <textarea
+            [id]="'explanation-' + question.id"
+            rows="3"
+            [(ngModel)]="question.explanation"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Explain the correct answer">
+          </textarea>
+
+        </div>
+
+        <!-- Answer option editor -->
+        <div class="options-heading">
+
+          <h3>Answer options</h3>
+          <span>Choose one correct answer</span>
+
+        </div>
+
+        <div
+          *ngFor="
+            let option of question.options;
+            let j = index
+          "
+          class="option-row">
+
+          <!-- Select the correct option -->
+        <input
+  type="radio"
+  [name]="'correct-' + question.id"
+  [checked]="isCorrect(option)"
+  (change)="setCorrectOption(question, j)"
+  [attr.aria-label]="'Mark option ' + (j + 1) + ' correct'">
+
+          <!-- Option text -->
+          <input
+            type="text"
+            [(ngModel)]="option.option_text"
+            [ngModelOptions]="{ standalone: true }"
+            [placeholder]="'Option ' + (j + 1)">
+
+          <!-- Identify the selected correct answer -->
+          <span
+            *ngIf="
+              option.is_correct === true ||
+              option.is_correct === 1
+            "
+            class="correct-label">
+            Correct answer
+          </span>
+
+          <!-- Saved options cannot currently be deleted -->
+          <button
+            *ngIf="!option.id"
+            type="button"
+            class="remove-option"
+            (click)="removeOption(question, j)">
+            Remove
+          </button>
+
+        </div>
+
+        <!-- Add and save question options -->
+        <div class="question-actions">
+
+          <button
+            type="button"
+            class="secondary-button"
+            [disabled]="questionsSaving"
+            (click)="addOption(question)">
+            + Add Option
+          </button>
+
+          <button
+            type="button"
+            class="save-question-btn"
+            [disabled]="questionsSaving || questionsLoading"
+            (click)="saveQuestion(question)">
+
+            {{ questionsSaving
+              ? 'Saving...'
+              : 'Save Question & Options' }}
+
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </ng-container>
+
+</div>
