@@ -404,7 +404,143 @@ const updateQuestionOptions = async (req, res) => {
 };
 
 
+const deleteQuizQuestion = async (req, res) => {
+    let connection;
+
+    try {
+        const quizId = Number(req.params.quizId);
+        const questionId = Number(req.params.questionId);
+        const mentorId = req.user.id;
+
+        if (
+            !Number.isInteger(quizId) || quizId <= 0 ||
+            !Number.isInteger(questionId) || questionId <= 0
+        ) {
+            return res.status(400).json({
+                message: "Invalid quiz or question ID."
+            });
+        }
+
+        connection = await db.getConnection();
+        await connection.beginTransaction();
+
+        // 1. Verify quiz ownership and lock the quiz.
+        const [quizzes] = await connection.query(
+            `SELECT id
+             FROM advanced_theory_quizzes
+             WHERE id = ? AND mentor_id = ?
+             FOR UPDATE`,
+            [quizId, mentorId]
+        );
+
+        if (quizzes.length === 0) {
+            await connection.rollback();
+
+            return res.status(404).json({
+                message: "Quiz not found or you do not own it."
+            });
+        }
+
+        // 2. Verify the question belongs to this quiz.
+        const [questions] = await connection.query(
+            `SELECT id
+             FROM advanced_theory_questions
+             WHERE id = ? AND quiz_id = ?
+             FOR UPDATE`,
+            [questionId, quizId]
+        );
+
+        if (questions.length === 0) {
+            await connection.rollback();
+
+            return res.status(404).json({
+                message: "Question not found in this quiz."
+            });
+        }
+
+        // 3. Protect student attempts and answer history.
+        // Safest initial rule: don't delete questions from a quiz
+        // that students have already attempted.
+        const [attempts] = await connection.query(
+            `SELECT id
+             FROM advanced_theory_attempts
+             WHERE quiz_id = ?
+             LIMIT 1`,
+            [quizId]
+        );
+
+        if (attempts.length > 0) {
+            await connection.rollback();
+
+            return res.status(409).json({
+                message:
+                    "This question cannot be deleted because students have attempted this quiz."
+            });
+        }
+
+        // 4. Delete only this question's options.
+        await connection.query(
+            `DELETE FROM advanced_theory_options
+             WHERE question_id = ?`,
+            [questionId]
+        );
+
+        // 5. Delete only the selected question.
+        await connection.query(
+            `DELETE FROM advanced_theory_questions
+             WHERE id = ? AND quiz_id = ?`,
+            [questionId, quizId]
+        );
+
+        // 6. Keep the remaining questions in display order.
+        const [remainingQuestions] = await connection.query(
+            `SELECT id
+             FROM advanced_theory_questions
+             WHERE quiz_id = ?
+             ORDER BY display_order ASC, id ASC
+             FOR UPDATE`,
+            [quizId]
+        );
+
+        for (let index = 0; index < remainingQuestions.length; index++) {
+            await connection.query(
+                `UPDATE advanced_theory_questions
+                 SET display_order = ?
+                 WHERE id = ? AND quiz_id = ?`,
+                [index + 1, remainingQuestions[index].id, quizId]
+            );
+        }
+
+        await connection.commit();
+
+        return res.status(200).json({
+            message: "Question deleted successfully.",
+            quizId,
+            deletedQuestionId: questionId,
+            remainingCount: remainingQuestions.length
+        });
+
+    } catch (error) {
+        if (connection) {
+            await connection.rollback().catch(() => {});
+        }
+
+        console.error("Delete theory question error:", error);
+
+        return res.status(500).json({
+            message: "Failed to delete question."
+        });
+
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+};
+
+
 module.exports = {
     updateQuizQuestions,
-    updateQuestionOptions
+    updateQuestionOptions,
+    deleteQuizQuestion
 };

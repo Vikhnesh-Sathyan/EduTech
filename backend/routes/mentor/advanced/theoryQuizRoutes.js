@@ -17,13 +17,13 @@ const {
 
 const {
     updateQuizQuestions,
-    updateQuestionOptions
+    updateQuestionOptions,
+    deleteQuizQuestion
 } = require("../../../controllers/mentor/advanced/theoryQuizQuestionController");
 
 const {
     publishQuiz
 } = require("../../../controllers/mentor/advanced/theoryQuizPublishController");
-
 
 const authMiddleware = require("../../../middleware/authMiddleware");
 const roleMiddleware = require("../../../middleware/roleMiddleware");
@@ -64,6 +64,11 @@ router.put("/:quizId/questions", updateQuizQuestions);
 router.put(
     "/:quizId/questions/:questionId/options",
     updateQuestionOptions
+);
+
+router.delete(
+    "/:quizId/questions/:questionId",
+    deleteQuizQuestion
 );
 
 router.patch("/:quizId/publish", publishQuiz);

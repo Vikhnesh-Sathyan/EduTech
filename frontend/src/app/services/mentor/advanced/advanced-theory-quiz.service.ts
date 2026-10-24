@@ -205,4 +205,13 @@ publishQuiz(quizId: number) {
   );
 }
 
+
+deleteQuestion(quizId: number, questionId: number) {
+  return this.http.delete<{
+    message: string;
+    quizId: number;
+    deletedQuestionId: number;
+    remainingCount: number;
+  }>(`${this.apiUrl}/${quizId}/questions/${questionId}`);
+}
 }

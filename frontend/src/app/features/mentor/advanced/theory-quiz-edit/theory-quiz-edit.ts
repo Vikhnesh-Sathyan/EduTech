@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit, signal } from '@angular/core';
+
+import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal';
+
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AdvancedTheoryQuizService } from '../../../../services/mentor/advanced/advanced-theory-quiz.service';
@@ -40,7 +44,8 @@ interface TheoryQuizQuestion {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    ConfirmModalComponent
   ],
   templateUrl: './theory-quiz-edit.html',
   styleUrl: './theory-quiz-edit.css'
@@ -64,7 +69,8 @@ export class TheoryQuizEdit implements OnInit {
   quizStatus: 'draft' | 'published' | 'inactive' = 'draft';
   publishing = false;
  
-
+  deletingQuestionId: number | null = null;
+  questionToDelete: TheoryQuizQuestion | null = null;
 
   form!: FormGroup<{
     title: FormControl<string>;
@@ -393,4 +399,63 @@ publishQuiz(): void {
   return option.is_correct === true ||
     Number(option.is_correct) === 1;
 }
+
+
+
+requestDeleteQuestion(question: TheoryQuizQuestion): void {
+  if (this.questionsSaving || this.questionsLoading ||
+      this.deletingQuestionId !== null) {
+    return;
+  }
+
+  this.questionToDelete = question;
+}
+
+cancelDeleteQuestion(): void {
+  this.questionToDelete = null;
+}
+
+
+confirmDeleteQuestion(): void {
+  const question = this.questionToDelete;
+
+  if (!question || this.deletingQuestionId !== null) {
+    return;
+  }
+
+  this.deletingQuestionId = question.id;
+  this.questionError = '';
+
+  this.quizService.deleteQuestion(
+    this.quizId,
+    question.id
+  ).subscribe({
+    next: (response) => {
+      this.questions = this.questions
+        .filter(item => item.id !== question.id)
+        .map((item, index) => ({
+          ...item,
+          display_order: index + 1
+        }));
+
+      // Close the modal after successful deletion
+      this.questionToDelete = null;
+      this.deletingQuestionId = null;
+
+      this.toastService.success(
+        response.message || 'Question deleted successfully.'
+      );
+    },
+
+    error: (error) => {
+      this.deletingQuestionId = null;
+
+      this.toastService.error(
+        error.error?.message || 'Unable to delete this question.'
+      );
+    }
+  });
+}
+
+
 }
