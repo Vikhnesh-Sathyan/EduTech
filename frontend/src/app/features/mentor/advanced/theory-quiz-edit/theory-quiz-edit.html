@@ -176,6 +176,7 @@
           loading() ||
           questionsSaving ||
           questionsLoading ||
+          addingQuestion||
           deletingQuestionId !== null
         "
         (click)="publishQuiz()">
@@ -198,7 +199,7 @@
 
     </section>
 
-    <!-- SECTION 3: QUESTION EDITOR -->
+     <!-- SECTION 3: QUESTION EDITOR -->
     <section class="questions-section">
 
       <div class="section-header">
@@ -206,7 +207,26 @@
         <p>Edit existing questions and their answer options.</p>
       </div>
 
-      <!-- Questions loading state -->
+      <!-- Add Question Toolbar -->
+      <div class="questions-toolbar">
+        <p>Add new questions and their answer options to this quiz.</p>
+
+        <button
+          type="button"
+          class="save-question-btn"
+          [disabled]="
+            questionsLoading ||
+            questionsSaving ||
+            addingQuestion ||
+            deletingQuestionId !== null ||
+            newQuestion !== null
+          "
+          (click)="addNewQuestion()">
+          + Add Question
+        </button>
+      </div>
+
+      <!-- Questions Loading State -->
       <div
         *ngIf="questionsLoading"
         class="state-card">
@@ -214,42 +234,154 @@
         <h3>Loading questions...</h3>
       </div>
 
-      <!-- Question or option saving errors -->
+      <!-- Question or Option Errors -->
       <div
         *ngIf="questionError"
         class="message error">
         {{ questionError }}
       </div>
 
-      <!-- Empty question state -->
+      <!-- New Question Form -->
+      <article
+        *ngIf="newQuestion as question"
+        class="question-card new-question-card">
+
+        <div class="question-top">
+          <span class="question-number">New Question</span>
+          <span class="marks-badge">{{ question.marks }} marks</span>
+        </div>
+
+        <div class="form-group">
+          <label for="new-question-text">Question text</label>
+          <textarea
+            id="new-question-text"
+            rows="3"
+            [(ngModel)]="question.question_text"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Enter the question">
+          </textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="new-concept-tag">Concept tag</label>
+            <input
+              id="new-concept-tag"
+              type="text"
+              [(ngModel)]="question.concept_tag"
+              [ngModelOptions]="{ standalone: true }"
+              maxlength="150"
+              placeholder="e.g. Angular Basics">
+          </div>
+
+          <div class="form-group">
+            <label for="new-question-marks">Marks</label>
+            <input
+              id="new-question-marks"
+              type="number"
+              [(ngModel)]="question.marks"
+              [ngModelOptions]="{ standalone: true }"
+              min="0.01"
+              step="0.01">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="new-question-explanation">Explanation</label>
+          <textarea
+            id="new-question-explanation"
+            rows="3"
+            [(ngModel)]="question.explanation"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Explain the correct answer">
+          </textarea>
+        </div>
+
+        <div class="options-heading">
+          <h3>Answer options</h3>
+          <span>Choose one correct answer</span>
+        </div>
+
+        <div
+          *ngFor="let option of question.options; let j = index"
+          class="option-row">
+
+          <input
+            type="radio"
+            name="new-question-correct"
+            [checked]="isCorrect(option)"
+            (change)="setCorrectOption(question, j)"
+            [attr.aria-label]="'Mark option ' + (j + 1) + ' correct'">
+
+          <input
+            type="text"
+            [(ngModel)]="option.option_text"
+            [ngModelOptions]="{ standalone: true }"
+            [placeholder]="'Option ' + (j + 1)">
+
+          <span
+            *ngIf="isCorrect(option)"
+            class="correct-label">
+            Correct answer
+          </span>
+
+          <button
+            *ngIf="question.options.length > 2"
+            type="button"
+            class="remove-option"
+            [disabled]="addingQuestion"
+            (click)="removeOption(question, j)">
+            Remove
+          </button>
+        </div>
+
+        <div class="question-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            [disabled]="addingQuestion"
+            (click)="addOption(question)">
+            + Add Option
+          </button>
+
+          <button
+            type="button"
+            class="save-question-btn"
+            [disabled]="addingQuestion"
+            (click)="saveNewQuestion()">
+            {{ addingQuestion ? 'Adding Question...' : 'Save New Question' }}
+          </button>
+
+          <button
+            type="button"
+            class="secondary-button"
+            [disabled]="addingQuestion"
+            (click)="cancelNewQuestion()">
+            Cancel
+          </button>
+        </div>
+      </article>
+
+      <!-- Empty State -->
       <div
-        *ngIf="!questionsLoading && questions.length === 0"
+        *ngIf="!questionsLoading && questions.length === 0 && !newQuestion"
         class="state-card">
         <h3>No questions found</h3>
-        <p>This quiz currently has no questions to edit.</p>
+        <p>This quiz currently has no questions. Click Add Question to begin.</p>
       </div>
 
-      <!-- Individual question cards -->
+      <!-- Existing Question Cards -->
       <article
         *ngFor="let question of questions; let i = index"
         class="question-card">
 
         <div class="question-top">
-          <span class="question-number">
-            Question {{ i + 1 }}
-          </span>
-
-          <span class="marks-badge">
-            {{ question.marks }} marks
-          </span>
+          <span class="question-number">Question {{ i + 1 }}</span>
+          <span class="marks-badge">{{ question.marks }} marks</span>
         </div>
 
-        <!-- Question text -->
         <div class="form-group">
-          <label [for]="'question-' + question.id">
-            Question text
-          </label>
-
+          <label [for]="'question-' + question.id">Question text</label>
           <textarea
             [id]="'question-' + question.id"
             rows="3"
@@ -259,14 +391,9 @@
           </textarea>
         </div>
 
-        <!-- Concept tag and marks -->
         <div class="form-row">
-
           <div class="form-group">
-            <label [for]="'concept-' + question.id">
-              Concept tag
-            </label>
-
+            <label [for]="'concept-' + question.id">Concept tag</label>
             <input
               [id]="'concept-' + question.id"
               type="text"
@@ -277,10 +404,7 @@
           </div>
 
           <div class="form-group">
-            <label [for]="'marks-' + question.id">
-              Marks
-            </label>
-
+            <label [for]="'marks-' + question.id">Marks</label>
             <input
               [id]="'marks-' + question.id"
               type="number"
@@ -289,15 +413,10 @@
               min="0.01"
               step="0.01">
           </div>
-
         </div>
 
-        <!-- Explanation -->
         <div class="form-group">
-          <label [for]="'explanation-' + question.id">
-            Explanation
-          </label>
-
+          <label [for]="'explanation-' + question.id">Explanation</label>
           <textarea
             [id]="'explanation-' + question.id"
             rows="3"
@@ -307,7 +426,6 @@
           </textarea>
         </div>
 
-        <!-- Answer options -->
         <div class="options-heading">
           <h3>Answer options</h3>
           <span>Choose one correct answer</span>
@@ -344,12 +462,9 @@
             (click)="removeOption(question, j)">
             Remove
           </button>
-
         </div>
 
-        <!-- Save and delete actions for this question -->
         <div class="question-actions">
-
           <button
             type="button"
             class="secondary-button"
@@ -364,6 +479,7 @@
             [disabled]="
               questionsSaving ||
               questionsLoading ||
+              addingQuestion ||
               deletingQuestionId !== null
             "
             (click)="saveQuestion(question)">
@@ -376,6 +492,7 @@
             [disabled]="
               questionsSaving ||
               questionsLoading ||
+              addingQuestion ||
               deletingQuestionId !== null
             "
             (click)="requestDeleteQuestion(question)">
@@ -385,7 +502,6 @@
                 : 'Delete Question'
             }}
           </button>
-
         </div>
 
       </article>

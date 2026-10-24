@@ -901,6 +901,24 @@ button:focus-visible,
 
 
 
+.questions-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
+.questions-toolbar p {
+  margin: 0;
+  color: var(--text-secondary, #64748b);
+}
+
+.new-question-card {
+  border: 1px solid #8b5cf6;
+  background: #faf8ff;
+  margin-bottom: 24px;
+}
 
 

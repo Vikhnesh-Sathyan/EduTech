@@ -214,4 +214,32 @@ deleteQuestion(quizId: number, questionId: number) {
     remainingCount: number;
   }>(`${this.apiUrl}/${quizId}/questions/${questionId}`);
 }
+
+addQuestion(
+  quizId: number,
+  data: {
+    question_text: string;
+    explanation?: string | null;
+    concept_tag?: string | null;
+    marks: number;
+    options: {
+      option_text: string;
+      is_correct: boolean;
+      display_order: number;
+    }[];
+  }
+): Observable<{
+  message: string;
+  quizId: number;
+  questionId: number;
+  display_order: number;
+}> {
+  return this.http.post<{
+    message: string;
+    quizId: number;
+    questionId: number;
+    display_order: number;
+  }>(`${this.apiUrl}/${quizId}/questions`, data);
+}
+
 }

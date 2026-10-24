@@ -72,6 +72,9 @@ export class TheoryQuizEdit implements OnInit {
   deletingQuestionId: number | null = null;
   questionToDelete: TheoryQuizQuestion | null = null;
 
+  addingQuestion = false;
+  newQuestion: TheoryQuizQuestion | null = null;
+
   form!: FormGroup<{
     title: FormControl<string>;
     description: FormControl<string>;
@@ -453,6 +456,123 @@ confirmDeleteQuestion(): void {
       this.toastService.error(
         error.error?.message || 'Unable to delete this question.'
       );
+    }
+  });
+}
+
+addNewQuestion(): void {
+  this.questionError = '';
+  this.successMessage.set('');
+
+  if (this.newQuestion) {
+    this.questionError = 'Finish or cancel the current new question first.';
+    return;
+  }
+
+  this.newQuestion = {
+    id: 0,
+    question_text: '',
+    explanation: '',
+    concept_tag: '',
+    marks: 1,
+    display_order: this.questions.length + 1,
+    options: [
+      { option_text: '', is_correct: true, display_order: 1 },
+      { option_text: '', is_correct: false, display_order: 2 }
+    ]
+  };
+}
+
+cancelNewQuestion(): void {
+  if (this.addingQuestion) return;
+
+  this.newQuestion = null;
+  this.questionError = '';
+}
+
+saveNewQuestion(): void {
+  const question = this.newQuestion;
+
+  if (!question || this.addingQuestion) return;
+
+  this.questionError = '';
+
+  const normalizedText = (value: string) =>
+    value.trim().replace(/\s+/g, ' ').toLowerCase();
+
+  if (!question.question_text.trim()) {
+    this.questionError = 'Question text is required.';
+    return;
+  }
+
+  const duplicate = this.questions.some(
+    existing =>
+      normalizedText(existing.question_text) ===
+      normalizedText(question.question_text)
+  );
+
+  if (duplicate) {
+    this.questionError = 'This question already exists in the quiz.';
+    return;
+  }
+
+  if (!Number.isFinite(Number(question.marks)) ||
+      Number(question.marks) <= 0) {
+    this.questionError = 'Marks must be greater than zero.';
+    return;
+  }
+
+  if (question.options.length < 2) {
+    this.questionError = 'Add at least two options.';
+    return;
+  }
+
+  if (question.options.some(option => !option.option_text.trim())) {
+    this.questionError = 'Please fill in every option.';
+    return;
+  }
+
+  const correctCount = question.options.filter(
+    option => option.is_correct === true ||
+              Number(option.is_correct) === 1
+  ).length;
+
+  if (correctCount !== 1) {
+    this.questionError = 'Select exactly one correct answer.';
+    return;
+  }
+
+  this.addingQuestion = true;
+
+  this.quizService.addQuestion(this.quizId, {
+    question_text: question.question_text.trim(),
+    explanation: question.explanation?.trim() || null,
+    concept_tag: question.concept_tag?.trim() || null,
+    marks: Number(question.marks),
+    options: question.options.map((option, index) => ({
+      option_text: option.option_text.trim(),
+      is_correct: Boolean(
+        option.is_correct === true ||
+        Number(option.is_correct) === 1
+      ),
+      display_order: index + 1
+    }))
+  }).subscribe({
+    next: response => {
+      this.addingQuestion = false;
+      this.newQuestion = null;
+
+      this.toastService.success(
+        response.message || 'Question added successfully.'
+      );
+
+      this.loadQuiz();
+    },
+    error: error => {
+      this.addingQuestion = false;
+
+      this.questionError =
+        error.error?.message || 'Unable to add question.';
     }
   });
 }

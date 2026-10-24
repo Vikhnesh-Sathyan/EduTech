@@ -16,6 +16,7 @@ const {
 } = require("../../../controllers/mentor/advanced/theoryQuizCsvController");
 
 const {
+    createQuizQuestion,
     updateQuizQuestions,
     updateQuestionOptions,
     deleteQuizQuestion
@@ -56,6 +57,8 @@ router.get("/", getMyQuizzes);
 
 // Get one quiz owned by this mentor
 router.get("/:quizId", getMyQuizById);
+
+router.post("/:quizId/questions", createQuizQuestion);
 
 router.put("/:quizId", updateQuiz);
 
