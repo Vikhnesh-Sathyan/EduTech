@@ -89,8 +89,6 @@ export class QuizAttempt implements OnInit, OnDestroy {
   }
 
 
-
-
 loadQuiz(quizId: number): void {
   this.loading.set(true);
   this.error.set('');

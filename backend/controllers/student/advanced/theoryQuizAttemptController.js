@@ -330,6 +330,48 @@ const startOrResumeAttempt = async (req, res) => {
     }
 };
 
+// Checks the student's latest attempt without creating a new attempt.
+const getTheoryQuizAttemptStatus = async (req, res) => {
+    try {
+        const quizId = Number(req.params.quizId);
+        const studentId = Number(req.user.id);
+
+        if (!Number.isInteger(quizId) || quizId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid quiz ID"
+            });
+        }
+
+        const [attempts] = await pool.query(
+            `SELECT id, attempt_number, status, deadline_at,
+                    current_question_index
+             FROM advanced_theory_attempts
+             WHERE student_id = ? AND quiz_id = ?
+             ORDER BY attempt_number DESC
+             LIMIT 1`,
+            [studentId, quizId]
+        );
+
+        const attempt = attempts[0] || null;
+
+        return res.status(200).json({
+            success: true,
+            hasAttempt: !!attempt,
+            attempt
+        });
+
+    } catch (error) {
+        console.error("Get theory quiz attempt status error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to check quiz attempt status"
+        });
+    }
+};
+
 module.exports = {
-    startOrResumeAttempt
+    startOrResumeAttempt,
+    getTheoryQuizAttemptStatus
 };

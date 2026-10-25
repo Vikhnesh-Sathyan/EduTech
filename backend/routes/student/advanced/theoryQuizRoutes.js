@@ -8,7 +8,8 @@ const {
 } = require("../../../controllers/student/advanced/theoryQuizController");
 
 const {
-    startOrResumeAttempt
+    startOrResumeAttempt,
+    getTheoryQuizAttemptStatus
 } = require("../../../controllers/student/advanced/theoryQuizAttemptController");
 
 const {
@@ -36,6 +37,14 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getTheoryQuizById
+);
+
+// Check the latest attempt without creating a new attempt
+router.get(
+    "/theory-quizzes/:quizId/attempt/status",
+    authMiddleware,
+    roleMiddleware("student"),
+    getTheoryQuizAttemptStatus
 );
 
 // Start a new attempt or resume an existing one

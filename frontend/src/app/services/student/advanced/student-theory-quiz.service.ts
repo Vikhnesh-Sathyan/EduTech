@@ -85,4 +85,10 @@ submitAttempt(
   );
 }
 
+getAttemptStatus(quizId: number): Observable<any> {
+  return this.http.get<any>(
+    `${this.apiUrl}/${quizId}/attempt/status`
+  );
+}
+
 }

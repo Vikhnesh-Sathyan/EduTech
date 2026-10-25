@@ -1,4 +1,3 @@
-
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -18,6 +17,11 @@ export class QuizDetails implements OnInit {
   loading = signal(false);
   errorMessage = signal('');
   quiz = signal<any | null>(null);
+
+  attemptStatus = signal<any | null>(null);
+  statusChecked = signal(false);
+  statusLoading = signal(false);
+  statusError = signal('');
 
   constructor(
     private route: ActivatedRoute,
@@ -41,42 +45,85 @@ export class QuizDetails implements OnInit {
     this.errorMessage.set('');
 
     this.quizService.getQuizById(quizId).subscribe({
-    next: response => {
-  console.log('Full quiz details response:', response);
+      next: response => {
+        const quizData = response?.quiz ?? response;
 
-  const quizData = response?.quiz ?? response;
-  console.log('Quiz data used by page:', quizData);
+        this.quiz.set(quizData);
+        this.loading.set(false);
 
-  this.quiz.set(quizData);
-  this.loading.set(false);
-},
+        this.loadAttemptStatus(quizId);
+      },
       error: error => {
         this.errorMessage.set(
           error.error?.message ||
           'Unable to load quiz details. Please try again.'
         );
+
         this.loading.set(false);
       }
     });
   }
 
-  startQuiz(): void {
-  const currentQuiz = this.quiz();
+  loadAttemptStatus(quizId: number): void {
+    this.statusLoading.set(true);
+    this.statusChecked.set(false);
+    this.statusError.set('');
+    this.attemptStatus.set(null);
 
-  if (currentQuiz?.id) {
+    this.quizService.getAttemptStatus(quizId).subscribe({
+      next: response => {
+        this.attemptStatus.set(response?.attempt ?? null);
+        this.statusChecked.set(true);
+        this.statusLoading.set(false);
+      },
+      error: error => {
+        this.statusError.set(
+          error.error?.message ||
+          'Unable to check your quiz attempt. Please try again.'
+        );
+
+        this.statusLoading.set(false);
+      }
+    });
+  }
+
+  get attemptButtonLabel(): string {
+    return this.attemptStatus()?.status === 'in_progress'
+      ? 'Resume Quiz →'
+      : 'Start Quiz →';
+  }
+
+  get isAttemptCompleted(): boolean {
+    return this.attemptStatus()?.status === 'completed';
+  }
+
+  startQuiz(): void {
+    const currentQuiz = this.quiz();
+
+    if (!currentQuiz?.id || this.isAttemptCompleted) {
+      return;
+    }
+
     this.router.navigate([
       '/theory-quizzes',
       currentQuiz.id,
       'attempt'
     ]);
   }
-}
 
   retryLoad(): void {
-  const quizId = Number(this.route.snapshot.paramMap.get('id'));
+    const quizId = Number(this.route.snapshot.paramMap.get('id'));
 
-  if (Number.isInteger(quizId) && quizId > 0) {
-    this.loadQuiz(quizId);
+    if (Number.isInteger(quizId) && quizId > 0) {
+      this.loadQuiz(quizId);
+    }
   }
-}
+
+  retryAttemptStatus(): void {
+    const currentQuiz = this.quiz();
+
+    if (currentQuiz?.id) {
+      this.loadAttemptStatus(Number(currentQuiz.id));
+    }
+  }
 }
