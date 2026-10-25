@@ -62,4 +62,19 @@ export class QuizList implements OnInit {
   ): number {
     return quiz.id;
   }
+
+  // Tracks which quiz cards have expanded education details
+expandedEducationDetails = signal<number[]>([]);
+
+toggleEducationDetails(quizId: number): void {
+  this.expandedEducationDetails.update(ids =>
+    ids.includes(quizId)
+      ? ids.filter(id => id !== quizId)
+      : [...ids, quizId]
+  );
+}
+
+isEducationDetailsOpen(quizId: number): boolean {
+  return this.expandedEducationDetails().includes(quizId);
+}
 }

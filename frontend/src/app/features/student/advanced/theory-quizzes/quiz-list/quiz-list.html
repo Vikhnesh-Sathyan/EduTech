@@ -1,0 +1,103 @@
+
+<div class="quiz-page">
+
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>Theory Quizzes</h1>
+      <p>Test your understanding and track your learning progress.</p>
+    </div>
+
+    <div class="header-icon">✦</div>
+  </header>
+
+  <section class="quiz-toolbar">
+    <div class="search-box">
+      <span>⌕</span>
+      <input
+        type="text"
+        placeholder="Search theory quizzes..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+    </div>
+
+    <select
+      [value]="selectedDifficulty()"
+      (change)="selectedDifficulty.set($any($event.target).value)"
+    >
+      <option value="all">All difficulties</option>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+  </section>
+
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading theory quizzes...</p>
+  </div>
+
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <p>{{ errorMessage() }}</p>
+    <button type="button" (click)="loadQuizzes()">Try again</button>
+  </div>
+
+  <section
+    class="quiz-grid"
+    *ngIf="!loading() && !errorMessage() && filteredQuizzes().length"
+  >
+    <article
+      class="quiz-card"
+      *ngFor="let quiz of filteredQuizzes(); trackBy: trackByQuizId"
+    >
+      <div class="card-top">
+        <span class="quiz-label">THEORY QUIZ</span>
+
+        <span
+          class="difficulty"
+          [ngClass]="quiz.difficulty"
+        >
+          {{ quiz.difficulty | titlecase }}
+        </span>
+      </div>
+
+      <h2>{{ quiz.title }}</h2>
+
+      <p class="description">
+        {{ quiz.description || 'Test your knowledge with this theory quiz.' }}
+      </p>
+
+      <div class="quiz-meta">
+        <div>
+          <span class="meta-label">PASS MARK</span>
+          <strong>{{ quiz.pass_percentage }}%</strong>
+        </div>
+
+        <div>
+          <span class="meta-label">LAST UPDATED</span>
+          <strong>
+            {{ quiz.updated_at ? (quiz.updated_at | date:'mediumDate') : '—' }}
+          </strong>
+        </div>
+      </div>
+
+      <a
+        class="start-button"
+        [routerLink]="['/theory-quizzes', quiz.id]"
+      >
+        View Quiz <span>→</span>
+      </a>
+    </article>
+  </section>
+
+  <div
+    class="empty-state"
+    *ngIf="!loading() && !errorMessage() && filteredQuizzes().length === 0"
+  >
+    <div class="empty-icon">📚</div>
+    <h2>No theory quizzes found</h2>
+    <p>Try changing your search or difficulty filter.</p>
+  </div>
+
+</div>

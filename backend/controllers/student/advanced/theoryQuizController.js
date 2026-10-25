@@ -1,22 +1,43 @@
 
 const pool = require("../../../config/db");
 
+// Reusable condition: quiz must match the logged-in student's education.
+const studentEducationFilter = `
+    EXISTS (
+        SELECT 1
+        FROM student_profiles sp
+        WHERE sp.user_id = ?
+          AND sp.education_program_id = q.education_program_id
+          AND sp.department_id = q.department_id
+          AND sp.education_year_id = q.education_year_id
+          AND EXISTS (
+              SELECT 1
+              FROM student_subjects ss
+              WHERE ss.student_id = sp.user_id
+                AND ss.subject_id = q.subject_id
+          )
+    )
+`;
+
 // GET /api/student/advanced/theory-quizzes
 const getPublishedQuizzes = async (req, res) => {
     try {
         const [quizzes] = await pool.query(
-            `SELECT
-                id,
-                title,
-                description,
-                topic_id,
-                subtopic_id,
-                difficulty,
-                pass_percentage
-             FROM advanced_theory_quizzes
-             WHERE status = 'published'
-             ORDER BY created_at DESC`
-        );
+    `SELECT
+        q.id,
+        q.title,
+        q.description,
+        q.topic_id,
+        q.subtopic_id,
+        q.difficulty,
+        q.pass_percentage,
+        q.updated_at
+     FROM advanced_theory_quizzes q
+     WHERE q.status = 'published'
+       AND ${studentEducationFilter}
+     ORDER BY q.created_at DESC`,
+    [req.user.id]
+);
 
         return res.status(200).json({
             success: true,
@@ -44,16 +65,25 @@ const getTheoryQuizById = async (req, res) => {
             });
         }
 
+        // Verify the quiz is published AND matches this student.
         const [quizzes] = await pool.query(
             `SELECT
-                id,
-                title,
-                description,
-                difficulty,
-                pass_percentage
-             FROM advanced_theory_quizzes
-             WHERE id = ? AND status = 'published'`,
-            [quizId]
+                q.id,
+                q.title,
+                q.description,
+                q.education_program_id,
+                q.department_id,
+                q.education_year_id,
+                q.subject_id,
+                q.topic_id,
+                q.subtopic_id,
+                q.difficulty,
+                q.pass_percentage
+             FROM advanced_theory_quizzes q
+             WHERE q.id = ?
+               AND q.status = 'published'
+               AND ${studentEducationFilter}`,
+            [quizId, req.user.id]
         );
 
         if (quizzes.length === 0) {
@@ -71,7 +101,8 @@ const getTheoryQuizById = async (req, res) => {
                 marks,
                 display_order
              FROM advanced_theory_questions
-             WHERE quiz_id = ? AND status = 'active'
+             WHERE quiz_id = ?
+               AND status = 'active'
              ORDER BY display_order ASC, id ASC`,
             [quizId]
         );
@@ -84,7 +115,7 @@ const getTheoryQuizById = async (req, res) => {
         }
 
         const questionIds = questions.map(question => question.id);
-        const placeholders = questionIds.map(() => "?").join(",");
+        const placeholders = questionIds.map(() => "?").join(", ");
 
         const [options] = await pool.query(
             `SELECT
@@ -121,6 +152,7 @@ const getTheoryQuizById = async (req, res) => {
             quiz: quizzes[0],
             questions: quizQuestions
         });
+
     } catch (error) {
         console.error("Get theory quiz details error:", error);
 

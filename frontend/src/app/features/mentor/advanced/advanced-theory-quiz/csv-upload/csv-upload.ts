@@ -18,6 +18,10 @@ type QuizDifficulty = 'beginner' | 'intermediate' | 'advanced';
 interface QuizImportPayload {
   title: string;
   description: string;
+  education_program_id: number;
+  department_id: number;
+  education_year_id: number;
+  subject_id: number;
   topic_id: number;
   subtopic_id: number | null;
   difficulty: QuizDifficulty;
@@ -48,6 +52,10 @@ export class CsvUpload {
   readonly loading = signal(false);
   readonly importing = signal(false);
 
+  readonly selectedProgramId = signal<number | null>(null);
+  readonly selectedDepartmentId = signal<number | null>(null);
+  readonly selectedEducationYearId = signal<number | null>(null);
+  readonly selectedSubjectId = signal<number | null>(null);
   readonly selectedTopicId = signal<number | null>(null);
   readonly selectedSubtopicId = signal<number | null>(null);
 
@@ -63,6 +71,10 @@ export class CsvUpload {
       this.selectedFile() !== null &&
       this.preview() !== null &&
       this.quizTitle().trim().length > 0 &&
+      this.selectedProgramId() !== null &&
+      this.selectedDepartmentId() !== null &&
+      this.selectedEducationYearId() !== null &&
+      this.selectedSubjectId() !== null &&
       this.selectedTopicId() !== null &&
       Number.isFinite(percentage) &&
       percentage >= 1 &&
@@ -170,6 +182,14 @@ export class CsvUpload {
         ]);
       } else if (!this.quizTitle().trim()) {
         this.errors.set(['Please enter a quiz title.']);
+      } else if (this.selectedProgramId() === null) {
+        this.errors.set(['Please select an education program.']);
+      } else if (this.selectedDepartmentId() === null) {
+        this.errors.set(['Please select a department.']);
+      } else if (this.selectedEducationYearId() === null) {
+        this.errors.set(['Please select an education year.']);
+      } else if (this.selectedSubjectId() === null) {
+        this.errors.set(['Please select a subject.']);
       } else if (this.selectedTopicId() === null) {
         this.errors.set(['Please select a topic.']);
       } else {
@@ -188,16 +208,39 @@ export class CsvUpload {
     this.clearMessages();
 
     const file = this.selectedFile();
+    const programId = this.selectedProgramId();
+    const departmentId = this.selectedDepartmentId();
+    const educationYearId = this.selectedEducationYearId();
+    const subjectId = this.selectedSubjectId();
     const topicId = this.selectedTopicId();
 
-    // These values have already been checked by canImport().
-    if (!file || topicId === null) {
+    if (
+      !file ||
+      programId === null ||
+      departmentId === null ||
+      educationYearId === null ||
+      subjectId === null ||
+      topicId === null
+    ) {
       return;
     }
+
+    console.log('Selected education IDs:', {
+  programId,
+  departmentId,
+  educationYearId,
+  subjectId,
+  topicId,
+  subtopicId: this.selectedSubtopicId()
+});
 
     const quizDetails: QuizImportPayload = {
       title: this.quizTitle().trim(),
       description: this.quizDescription().trim(),
+      education_program_id: programId,
+      department_id: departmentId,
+      education_year_id: educationYearId,
+      subject_id: subjectId,
       topic_id: topicId,
       subtopic_id: this.selectedSubtopicId(),
       difficulty: this.difficulty(),

@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { RouterModule } from '@angular/router';
 import {
   StudentAdvancedService,
   StudentAdvancedSubjectGroup,
@@ -16,6 +16,7 @@ import { AdvancedSubjectGrid } from '../../../../features/student/advanced/advan
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     AdvancedPageHeader,
     AdvancedSubjectGrid
   ],

@@ -16,10 +16,15 @@
   </header>
 
   <section class="upload-card">
+
     <app-education-hierarchy
-      (topicChange)="selectedTopicId.set($event)"
-      (subtopicChange)="selectedSubtopicId.set($event)"
-    ></app-education-hierarchy>
+  (programChange)="selectedProgramId.set($event)"
+  (departmentChange)="selectedDepartmentId.set($event)"
+  (educationYearChange)="selectedEducationYearId.set($event)"
+  (subjectChange)="selectedSubjectId.set($event)"
+  (topicChange)="selectedTopicId.set($event)"
+  (subtopicChange)="selectedSubtopicId.set($event)"
+></app-education-hierarchy>
 
     <app-quiz-import-details
       [quizTitle]="quizTitle()"

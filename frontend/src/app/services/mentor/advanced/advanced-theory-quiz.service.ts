@@ -15,6 +15,21 @@ export interface AdvancedTheoryQuiz {
   status: string;
   created_at: string;
   updated_at: string;
+
+  education_program_id: number | null;
+program_name: string | null;
+
+department_id: number | null;
+department_name: string | null;
+
+education_year_id: number | null;
+education_year_name: string | null;
+
+subject_id: number | null;
+subject_name: string | null;
+
+topic_name: string | null;
+subtopic_name: string | null;
 }
 
 export interface TheoryQuizCsvPreview {
@@ -93,35 +108,63 @@ export class AdvancedTheoryQuizService {
   }
 
   // Import CSV and create a draft quiz
-  importCsv(
-    file: File,
-    quizDetails: {
-      title: string;
-      description?: string;
-      topic_id?: number | null;
-      subtopic_id?: number | null;
-      difficulty: 'beginner' | 'intermediate' | 'advanced';
-      pass_percentage: number;
-    }
-  ): Observable<TheoryQuizCsvImportResponse> {
-    const formData = new FormData();
 
-    formData.append('file', file);
-    formData.append('title', quizDetails.title);
-    formData.append('description', quizDetails.description ?? '');
-    formData.append('topic_id', String(quizDetails.topic_id ?? ''));
-    formData.append('subtopic_id', String(quizDetails.subtopic_id ?? ''));
-    formData.append('difficulty', quizDetails.difficulty);
-    formData.append(
-      'pass_percentage',
-      String(quizDetails.pass_percentage)
-    );
-
-    return this.http.post<TheoryQuizCsvImportResponse>(
-      `${this.csvUrl}/import`,
-      formData
-    );
+importCsv(
+  file: File,
+  quizDetails: {
+    title: string;
+    description?: string;
+    education_program_id: number;
+    department_id: number;
+    education_year_id: number;
+    subject_id: number;
+    topic_id: number | null;
+    subtopic_id: number | null;
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    pass_percentage: number;
   }
+): Observable<TheoryQuizCsvImportResponse> {
+  const formData = new FormData();
+
+  formData.append('file', file);
+  formData.append('title', quizDetails.title);
+  formData.append('description', quizDetails.description ?? '');
+
+  // Education hierarchy IDs
+  formData.append(
+    'education_program_id',
+    String(quizDetails.education_program_id)
+  );
+  formData.append(
+    'department_id',
+    String(quizDetails.department_id)
+  );
+  formData.append(
+    'education_year_id',
+    String(quizDetails.education_year_id)
+  );
+  formData.append(
+    'subject_id',
+    String(quizDetails.subject_id)
+  );
+
+  // Topic and optional subtopic
+  formData.append('topic_id', String(quizDetails.topic_id ?? ''));
+  formData.append('subtopic_id', String(quizDetails.subtopic_id ?? ''));
+
+  // Quiz configuration
+  formData.append('difficulty', quizDetails.difficulty);
+  formData.append(
+    'pass_percentage',
+    String(quizDetails.pass_percentage)
+  );
+
+  return this.http.post<TheoryQuizCsvImportResponse>(
+    `${this.csvUrl}/import`,
+    formData
+  );
+}
+
 
   // Get all quizzes belonging to the logged-in mentor
   getMyQuizzes(): Observable<{

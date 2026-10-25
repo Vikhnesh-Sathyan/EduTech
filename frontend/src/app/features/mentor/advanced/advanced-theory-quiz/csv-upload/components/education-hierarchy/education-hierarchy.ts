@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -86,7 +87,11 @@ export class EducationHierarchy implements OnInit {
   readonly loadingTopics = signal(false);
   readonly loadingSubtopics = signal(false);
 
-  // Send selected topic/subtopic to the parent
+  // Send selected education IDs to the parent component
+  readonly programChange = output<number | null>();
+  readonly departmentChange = output<number | null>();
+  readonly educationYearChange = output<number | null>();
+  readonly subjectChange = output<number | null>();
   readonly topicChange = output<number | null>();
   readonly subtopicChange = output<number | null>();
 
@@ -108,7 +113,11 @@ export class EducationHierarchy implements OnInit {
       return response as T[];
     }
 
-    if (response !== null && typeof response === 'object' && key in response) {
+    if (
+      response !== null &&
+      typeof response === 'object' &&
+      key in response
+    ) {
       const value = (response as Record<string, unknown>)[key];
       return Array.isArray(value) ? value as T[] : [];
     }
@@ -116,7 +125,9 @@ export class EducationHierarchy implements OnInit {
     return [];
   }
 
-  private activeRecords<T extends { status?: string }>(records: T[]): T[] {
+  private activeRecords<T extends { status?: string }>(
+    records: T[]
+  ): T[] {
     return records.filter(
       record => !record.status || record.status === 'active'
     );
@@ -137,30 +148,36 @@ export class EducationHierarchy implements OnInit {
 
   onProgramChange(programId: number | null): void {
     this.selectedProgramId.set(programId);
+    this.programChange.emit(programId);
+
     this.clearDepartmentsAndChildren();
 
     if (programId === null) return;
 
     this.loadingDepartments.set(true);
 
-    this.departmentService.getDepartmentsByProgramForMentor(programId).subscribe({
-      next: response => {
-        this.departments.set(
-          this.activeRecords(
-            this.extractList<Department>(response, 'departments')
-          )
-        );
-        this.loadingDepartments.set(false);
-      },
-      error: error => {
-        console.error('Failed to load departments:', error);
-        this.loadingDepartments.set(false);
-      }
-    });
+    this.departmentService
+      .getDepartmentsByProgramForMentor(programId)
+      .subscribe({
+        next: response => {
+          this.departments.set(
+            this.activeRecords(
+              this.extractList<Department>(response, 'departments')
+            )
+          );
+          this.loadingDepartments.set(false);
+        },
+        error: error => {
+          console.error('Failed to load departments:', error);
+          this.loadingDepartments.set(false);
+        }
+      });
   }
 
   onDepartmentChange(departmentId: number | null): void {
     this.selectedDepartmentId.set(departmentId);
+    this.departmentChange.emit(departmentId);
+
     this.clearYearsAndChildren();
 
     if (departmentId === null) return;
@@ -187,6 +204,8 @@ export class EducationHierarchy implements OnInit {
 
   onEducationYearChange(yearId: number | null): void {
     this.selectedEducationYearId.set(yearId);
+    this.educationYearChange.emit(yearId);
+
     this.clearSubjectsAndChildren();
 
     if (yearId === null) return;
@@ -211,6 +230,8 @@ export class EducationHierarchy implements OnInit {
 
   onSubjectChange(subjectId: number | null): void {
     this.selectedSubjectId.set(subjectId);
+    this.subjectChange.emit(subjectId);
+
     this.clearTopicsAndChildren();
 
     if (subjectId === null) return;
@@ -267,21 +288,27 @@ export class EducationHierarchy implements OnInit {
   private clearDepartmentsAndChildren(): void {
     this.departments.set([]);
     this.selectedDepartmentId.set(null);
+    this.departmentChange.emit(null);
     this.loadingDepartments.set(false);
+
     this.clearYearsAndChildren();
   }
 
   private clearYearsAndChildren(): void {
     this.educationYears.set([]);
     this.selectedEducationYearId.set(null);
+    this.educationYearChange.emit(null);
     this.loadingEducationYears.set(false);
+
     this.clearSubjectsAndChildren();
   }
 
   private clearSubjectsAndChildren(): void {
     this.subjects.set([]);
     this.selectedSubjectId.set(null);
+    this.subjectChange.emit(null);
     this.loadingSubjects.set(false);
+
     this.clearTopicsAndChildren();
   }
 
@@ -289,6 +316,7 @@ export class EducationHierarchy implements OnInit {
     this.topics.set([]);
     this.selectedTopicId.set(null);
     this.loadingTopics.set(false);
+
     this.clearSubtopics();
     this.topicChange.emit(null);
   }

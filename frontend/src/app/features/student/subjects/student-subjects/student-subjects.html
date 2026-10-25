@@ -34,10 +34,10 @@
 
     <div class="group-header">
       <h3>Available Subjects</h3>
-      <span>{{ availableSubjects.length }} available</span>
+      <span>{{ displayedAvailableSubjects.length }} available</span>
     </div>
 
-    @if (availableSubjects.length === 0) {
+   @if (displayedAvailableSubjects.length === 0) {
 
       <p class="empty-message">
         No subjects are currently available.
@@ -47,7 +47,7 @@
 
       <div class="subject-list">
 
-        @for (subject of availableSubjects; track subject.id) {
+        @for (subject of displayedAvailableSubjects; track getSubjectId(subject)) {
 
           <div class="subject-item">
 
@@ -61,7 +61,7 @@
 
             <button
               type="button"
-              (click)="selectSubject(subject.id)"
+              (click)="selectSubject(getSubjectId(subject))"
             >
               Select
             </button>
@@ -83,10 +83,10 @@
 
     <div class="group-header">
       <h3>Selected Subjects</h3>
-      <span>{{ selectedSubjects.length }} selected</span>
+      <span>{{ displayedSelectedSubjects.length }} selected</span>
     </div>
 
-    @if (selectedSubjects.length === 0) {
+    @if (displayedSelectedSubjects.length === 0) {
 
       <p class="empty-message">
         You haven't selected any subjects yet.
@@ -96,28 +96,24 @@
 
       <div class="subject-list">
 
-        @for (subject of selectedSubjects; track subject.id) {
+   @for (subject of displayedSelectedSubjects; track getSubjectId(subject)) {
+  <div class="subject-item selected">
+    <div>
+      <h4>{{ subject.name }}</h4>
 
-          <div class="subject-item selected">
+      @if (subject.description) {
+        <p>{{ subject.description }}</p>
+      }
+    </div>
 
-            <div>
-              <h4>{{ subject.name }}</h4>
-
-              @if (subject.description) {
-                <p>{{ subject.description }}</p>
-              }
-            </div>
-
-            <button
-              type="button"
-              (click)="removeSubject(subject.subject_id)"
-            >
-              Remove
-            </button>
-
-          </div>
-
-        }
+    <button
+      type="button"
+      (click)="removeSubject(getSubjectId(subject))"
+    >
+      Remove
+    </button>
+  </div>
+}
 
       </div>
 

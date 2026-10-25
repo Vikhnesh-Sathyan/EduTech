@@ -52,8 +52,11 @@ import { StudentSubjectProgress } from './features/student/progress/student-subj
 import { AdvancedDashboard } from './features/student/advanced/advanced-dashboard/advanced-dashboard';
 import { AdvancedLearningContent } from './features/student/advanced/advanced-learning-content/advanced-learning-content';
 
-
-
+// STUDENT THEORY QUIZZES
+import { QuizList as StudentTheoryQuizList } from './features/student/advanced/theory-quizzes/quiz-list/quiz-list';
+import { QuizDetails } from './features/student/advanced/theory-quizzes/quiz-details/quiz-details';
+import { QuizAttempt } from './features/student/advanced/theory-quizzes/quiz-attempt/quiz-attempt';
+import { QuizResult } from './features/student/advanced/theory-quizzes/quiz-result/quiz-result';
 
 
 // Student mentors
@@ -88,7 +91,6 @@ import {
 import {
   ProjectSectionContent as StudentProjectSectionContent
 } from './features/student/projects/project-section-content/project-section-content';
-
 
 
 // Admin dashboard
@@ -132,8 +134,6 @@ import { MentorVerification } from './features/admin/mentors/mentor-verification
 
 // Admin Cheat Sheet
 import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
-
-
 
 
 // Mentor dashboard
@@ -284,6 +284,24 @@ export const routes: Routes = [
       {
         path: 'advanced-learning/:sectionId',
         component: AdvancedLearningContent
+      },
+
+      // STUDENT THEORY QUIZZES
+      {
+        path: 'theory-quizzes',
+        component: StudentTheoryQuizList
+      },
+      {
+        path: 'theory-quizzes/:id/attempt',
+        component: QuizAttempt
+      },
+      {
+        path: 'theory-quizzes/:id/result',
+        component: QuizResult
+      },
+      {
+        path: 'theory-quizzes/:id',
+        component: QuizDetails
       },
 
       // Study progress

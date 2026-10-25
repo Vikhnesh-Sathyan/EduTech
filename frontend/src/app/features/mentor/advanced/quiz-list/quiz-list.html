@@ -1,3 +1,4 @@
+
 <div class="quiz-page">
 
   <!-- Page Header -->
@@ -88,6 +89,7 @@
         class="quiz-card"
         *ngFor="let quiz of quizzes(); trackBy: trackByQuizId"
       >
+        <!-- Card Header -->
         <div class="quiz-card-top">
           <span class="quiz-icon">▤</span>
 
@@ -110,6 +112,62 @@
           </p>
         </div>
 
+        <!-- Education Hierarchy -->
+
+<!-- Education Details Toggle -->
+<button
+  type="button"
+  class="education-toggle"
+  (click)="toggleEducationDetails(quiz.id)"
+  [attr.aria-expanded]="isEducationDetailsOpen(quiz.id)"
+>
+  <span class="education-toggle-left">
+    <span class="details-icon">▦</span>
+    <span>Education Details</span>
+  </span>
+
+  <span class="toggle-arrow">
+    {{ isEducationDetailsOpen(quiz.id) ? '−' : '+' }}
+  </span>
+</button>
+
+<!-- Expandable Education Details -->
+<section
+  class="education-details"
+  *ngIf="isEducationDetailsOpen(quiz.id)"
+>
+  <div class="education-row">
+    <span>Program</span>
+    <strong>{{ quiz.program_name || 'Not assigned' }}</strong>
+  </div>
+
+  <div class="education-row">
+    <span>Department</span>
+    <strong>{{ quiz.department_name || 'Not assigned' }}</strong>
+  </div>
+
+  <div class="education-row">
+    <span>Year</span>
+    <strong>{{ quiz.education_year_name || 'Not assigned' }}</strong>
+  </div>
+
+  <div class="education-row">
+    <span>Subject</span>
+    <strong>{{ quiz.subject_name || 'Not assigned' }}</strong>
+  </div>
+
+  <div class="education-row">
+    <span>Topic</span>
+    <strong>{{ quiz.topic_name || 'Not assigned' }}</strong>
+  </div>
+
+  <div class="education-row">
+    <span>Subtopic</span>
+    <strong>{{ quiz.subtopic_name || 'Not assigned' }}</strong>
+  </div>
+</section>
+
+
         <!-- Quiz Metadata -->
         <div class="quiz-meta">
           <div>
@@ -123,46 +181,43 @@
           </div>
         </div>
 
-        <!-- Footer and Actions Dropdown -->
-   
-<div class="quiz-footer">
-  <span class="updated-date">
-    Updated
-    {{
-      quiz.updated_at
-        ? (quiz.updated_at | date:'mediumDate')
-        : '—'
-    }}
-  </span>
+        <!-- Footer and Actions -->
+        <div class="quiz-footer">
+          <span class="updated-date">
+            Updated
+            {{
+              quiz.updated_at
+                ? (quiz.updated_at | date:'mediumDate')
+                : '—'
+            }}
+          </span>
 
-  <div class="quiz-actions">
-    <a
-      class="action-button view-action"
-      [routerLink]="[
-        '/mentor/advanced/theory-quizzes',
-        quiz.id,
-        'view'
-      ]"
-    >
-      <span>◉</span>
-      View
-    </a>
+          <div class="quiz-actions">
+            <a
+              class="action-button view-action"
+              [routerLink]="[
+                '/mentor/advanced/theory-quizzes',
+                quiz.id,
+                'view'
+              ]"
+            >
+              <span>◉</span>
+              View
+            </a>
 
-    <a
-      class="action-button edit-action"
-      [routerLink]="[
-        '/mentor/advanced/theory-quizzes',
-        quiz.id,
-        'edit'
-      ]"
-    >
-      <span>✎</span>
-      Edit
-    </a>
-  </div>
-</div>
-
-
+            <a
+              class="action-button edit-action"
+              [routerLink]="[
+                '/mentor/advanced/theory-quizzes',
+                quiz.id,
+                'edit'
+              ]"
+            >
+              <span>✎</span>
+              Edit
+            </a>
+          </div>
+        </div>
       </article>
     </div>
   </section>

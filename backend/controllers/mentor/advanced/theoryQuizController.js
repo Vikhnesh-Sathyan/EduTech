@@ -165,23 +165,62 @@ const createQuiz = async (req, res) => {
 // ==========================================
 // GET MY QUIZZES
 // ==========================================
+
 const getMyQuizzes = async (req, res) => {
     try {
         const [quizzes] = await db.query(
             `SELECT
-                id,
-                title,
-                description,
-                topic_id,
-                subtopic_id,
-                difficulty,
-                pass_percentage,
-                status,
-                created_at,
-                updated_at
-             FROM advanced_theory_quizzes
-             WHERE mentor_id = ?
-             ORDER BY updated_at DESC, id DESC`,
+                q.id,
+                q.title,
+                q.description,
+
+                q.education_program_id,
+                ep.name AS program_name,
+
+                q.department_id,
+                d.name AS department_name,
+
+                q.education_year_id,
+                ey.name AS education_year_name,
+
+                q.subject_id,
+                s.name AS subject_name,
+
+                q.topic_id,
+                st.name AS topic_name,
+
+                q.subtopic_id,
+                ls.title AS subtopic_name,
+
+                q.difficulty,
+                q.pass_percentage,
+                q.status,
+                q.created_at,
+                q.updated_at
+
+             FROM advanced_theory_quizzes q
+
+             LEFT JOIN education_programs ep
+                ON ep.id = q.education_program_id
+
+             LEFT JOIN departments d
+                ON d.id = q.department_id
+
+             LEFT JOIN education_years ey
+                ON ey.id = q.education_year_id
+
+             LEFT JOIN subjects s
+                ON s.id = q.subject_id
+
+             LEFT JOIN subject_topics st
+                ON st.id = q.topic_id
+
+             LEFT JOIN learning_subtopics ls
+                ON ls.id = q.subtopic_id
+
+             WHERE q.mentor_id = ?
+
+             ORDER BY q.updated_at DESC, q.id DESC`,
             [req.user.id]
         );
 
@@ -189,6 +228,7 @@ const getMyQuizzes = async (req, res) => {
             message: "Your quizzes retrieved successfully",
             quizzes
         });
+
     } catch (error) {
         console.error("Get mentor theory quizzes error:", error);
 
@@ -197,6 +237,8 @@ const getMyQuizzes = async (req, res) => {
         });
     }
 };
+
+
 
 // ==========================================
 // GET ONE OWN QUIZ
@@ -213,23 +255,60 @@ const getMyQuizById = async (req, res) => {
         }
 
         // 1. Get quiz details and verify mentor ownership.
-        const [quizzes] = await db.query(
-            `SELECT
-                id,
-                mentor_id,
-                title,
-                description,
-                topic_id,
-                subtopic_id,
-                difficulty,
-                pass_percentage,
-                status,
-                created_at,
-                updated_at
-             FROM advanced_theory_quizzes
-             WHERE id = ? AND mentor_id = ?`,
-            [quizId, req.user.id]
-        );
+       const [quizzes] = await db.query(
+    `SELECT
+        q.id,
+        q.mentor_id,
+        q.title,
+        q.description,
+
+        q.education_program_id,
+        ep.name AS program_name,
+
+        q.department_id,
+        d.name AS department_name,
+
+        q.education_year_id,
+        ey.name AS education_year_name,
+
+        q.subject_id,
+        s.name AS subject_name,
+
+        q.topic_id,
+        st.name AS topic_name,
+
+        q.subtopic_id,
+        ls.title AS subtopic_name,
+
+        q.difficulty,
+        q.pass_percentage,
+        q.status,
+        q.created_at,
+        q.updated_at
+
+     FROM advanced_theory_quizzes q
+
+     LEFT JOIN education_programs ep
+        ON ep.id = q.education_program_id
+
+     LEFT JOIN departments d
+        ON d.id = q.department_id
+
+     LEFT JOIN education_years ey
+        ON ey.id = q.education_year_id
+
+     LEFT JOIN subjects s
+        ON s.id = q.subject_id
+
+     LEFT JOIN subject_topics st
+        ON st.id = q.topic_id
+
+     LEFT JOIN learning_subtopics ls
+        ON ls.id = q.subtopic_id
+
+     WHERE q.id = ? AND q.mentor_id = ?`,
+    [quizId, req.user.id]
+);
 
         if (quizzes.length === 0) {
             return res.status(404).json({
