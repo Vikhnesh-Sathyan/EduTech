@@ -151,7 +151,7 @@ import { MentorInboxComponent } from './features/chat/mentor-inbox/mentor-inbox'
 import { MentorChatComponent } from './features/chat/mentor-chat/mentor-chat';
 
 //ADVANCED QUIZ
-import { CsvUpload } from './features/mentor/advanced/csv-upload/csv-upload';
+import { CsvUpload } from './features/mentor/advanced/advanced-theory-quiz/csv-upload/csv-upload';
 import { QuizList } from './features/mentor/advanced/quiz-list/quiz-list';
 import { TheoryQuizView } from './features/mentor/advanced/theory-quiz-view/theory-quiz-view';
 import { TheoryQuizEdit } from './features/mentor/advanced/theory-quiz-edit/theory-quiz-edit';

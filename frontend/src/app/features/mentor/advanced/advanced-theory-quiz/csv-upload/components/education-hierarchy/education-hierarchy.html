@@ -1,0 +1,179 @@
+
+<section class="education-hierarchy">
+
+  <!-- Section Heading -->
+  <div class="section-heading">
+    <h2>Education Details</h2>
+    <p>Select the education level where this quiz belongs.</p>
+  </div>
+
+  <!-- Education Program -->
+  <div class="form-group">
+    <label for="educationProgram">Education Program</label>
+
+    <select
+      id="educationProgram"
+      name="educationProgram"
+      [ngModel]="selectedProgramId()"
+      (ngModelChange)="onProgramChange($event)"
+    >
+      <option [ngValue]="null">Select education program</option>
+
+      <option
+        *ngFor="let program of programs()"
+        [ngValue]="program.id"
+      >
+        {{ program.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Department -->
+  <div class="form-group">
+    <label for="educationDepartment">Department</label>
+
+    <select
+      id="educationDepartment"
+      name="educationDepartment"
+      [ngModel]="selectedDepartmentId()"
+      (ngModelChange)="onDepartmentChange($event)"
+      [disabled]="selectedProgramId() === null || loadingDepartments()"
+    >
+      <option [ngValue]="null">
+        {{
+          loadingDepartments()
+            ? 'Loading departments...'
+            : 'Select department'
+        }}
+      </option>
+
+      <option
+        *ngFor="let department of departments()"
+        [ngValue]="department.id"
+      >
+        {{ department.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Education Year -->
+  <div class="form-group">
+    <label for="educationYear">Education Year</label>
+
+    <select
+      id="educationYear"
+      name="educationYear"
+      [ngModel]="selectedEducationYearId()"
+      (ngModelChange)="onEducationYearChange($event)"
+      [disabled]="selectedDepartmentId() === null || loadingEducationYears()"
+    >
+      <option [ngValue]="null">
+        {{
+          loadingEducationYears()
+            ? 'Loading education years...'
+            : 'Select education year'
+        }}
+      </option>
+
+      <option
+        *ngFor="let year of educationYears()"
+        [ngValue]="year.id"
+      >
+        {{ year.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Subject -->
+  <div class="form-group">
+    <label for="educationSubject">Subject</label>
+
+    <select
+      id="educationSubject"
+      name="educationSubject"
+      [ngModel]="selectedSubjectId()"
+      (ngModelChange)="onSubjectChange($event)"
+      [disabled]="
+        selectedEducationYearId() === null ||
+        loadingSubjects() ||
+        subjects().length === 0
+      "
+    >
+      <option [ngValue]="null">
+        {{
+          loadingSubjects()
+            ? 'Loading subjects...'
+            : subjects().length === 0
+              ? 'No subjects available'
+              : 'Select subject'
+        }}
+      </option>
+
+      <option
+        *ngFor="let subject of subjects()"
+        [ngValue]="subject.id"
+      >
+        {{ subject.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Topic -->
+  <div class="form-group">
+    <label for="educationTopic">Topic</label>
+
+    <select
+      id="educationTopic"
+      name="educationTopic"
+      [ngModel]="selectedTopicId()"
+      (ngModelChange)="onTopicChange($event)"
+      [disabled]="selectedSubjectId() === null || loadingTopics()"
+    >
+      <option [ngValue]="null">
+        {{
+          loadingTopics()
+            ? 'Loading topics...'
+            : 'Select topic'
+        }}
+      </option>
+
+      <option
+        *ngFor="let topic of topics()"
+        [ngValue]="topic.id"
+      >
+        {{ topic.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Optional Subtopic -->
+  <div class="form-group">
+    <label for="educationSubtopic">Subtopic (Optional)</label>
+
+    <select
+      id="educationSubtopic"
+      name="educationSubtopic"
+      [ngModel]="selectedSubtopicId()"
+      (ngModelChange)="onSubtopicChange($event)"
+      [disabled]="selectedTopicId() === null || loadingSubtopics()"
+    >
+      <option [ngValue]="null">
+        {{
+          loadingSubtopics()
+            ? 'Loading subtopics...'
+            : subtopics().length === 0
+              ? 'No subtopics available'
+              : 'Select subtopic (optional)'
+        }}
+      </option>
+
+      <option
+        *ngFor="let subtopic of subtopics()"
+        [ngValue]="subtopic.id"
+      >
+        {{ subtopic.title }}
+      </option>
+    </select>
+  </div>
+
+</section>

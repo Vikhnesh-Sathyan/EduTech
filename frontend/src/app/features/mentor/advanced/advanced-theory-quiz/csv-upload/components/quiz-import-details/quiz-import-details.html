@@ -1,0 +1,88 @@
+
+<section class="quiz-details">
+
+  <!-- Section heading -->
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">QUIZ CONFIGURATION</span>
+      <h2>Quiz Details</h2>
+      <p>Set the title, description, difficulty, and passing score.</p>
+    </div>
+
+    <div class="heading-icon">✦</div>
+  </div>
+
+  <!-- Quiz title -->
+  <div class="details-grid">
+
+    <div class="form-group full-width">
+      <label for="quizTitle">Quiz Title</label>
+
+      <input
+        id="quizTitle"
+        name="quizTitle"
+        type="text"
+        [ngModel]="quizTitle()"
+        (ngModelChange)="quizTitleChange.emit($event)"
+        placeholder="Enter quiz title"
+        maxlength="150"
+        required
+      />
+
+      <small>Choose a clear title for your theory quiz.</small>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group full-width">
+      <label for="quizDescription">Description</label>
+
+      <textarea
+        id="quizDescription"
+        name="quizDescription"
+        [ngModel]="quizDescription()"
+        (ngModelChange)="quizDescriptionChange.emit($event)"
+        placeholder="Describe what this quiz covers"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="form-group">
+      <label for="difficulty">Difficulty</label>
+
+      <select
+        id="difficulty"
+        name="difficulty"
+        [ngModel]="difficulty()"
+        (ngModelChange)="difficultyChange.emit($event)"
+      >
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+
+    <!-- Passing score -->
+    <div class="form-group">
+      <label for="passPercentage">Pass Percentage</label>
+
+      <div class="percentage-field">
+        <input
+          id="passPercentage"
+          name="passPercentage"
+          type="number"
+          [ngModel]="passPercentage()"
+          (ngModelChange)="passPercentageChange.emit(+$event)"
+          min="1"
+          max="100"
+          required
+        />
+
+        <span>%</span>
+      </div>
+
+      <small>Required score to pass the quiz.</small>
+    </div>
+
+  </div>
+</section>

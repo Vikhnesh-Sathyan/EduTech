@@ -1,0 +1,60 @@
+
+<section class="csv-file-upload">
+
+  <!-- Section heading -->
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">QUESTION IMPORT</span>
+      <h2>Upload CSV File</h2>
+      <p>
+        Select a CSV file containing your theory quiz questions.
+      </p>
+    </div>
+  </div>
+
+  <!-- File selection -->
+  <label for="csvFile" class="file-drop">
+    <span class="upload-icon">↑</span>
+    <strong>Select your CSV file</strong>
+    <span>Choose a .csv file from your computer</span>
+
+    <input
+      #csvInput
+      id="csvFile"
+      type="file"
+      accept=".csv,text/csv"
+      (change)="onFileSelected($event)"
+    />
+  </label>
+
+  <!-- Selected file -->
+  <div class="selected-file" *ngIf="selectedFile() as file">
+    <span class="file-icon">📄</span>
+
+    <div class="file-info">
+      <strong>{{ file.name }}</strong>
+      <small>{{ (file.size / 1024).toFixed(1) }} KB</small>
+    </div>
+
+    <button
+      type="button"
+      class="remove-file"
+      [disabled]="loading() || importing()"
+      (click)="fileSelected.emit(null); csvInput.value = ''"
+      aria-label="Remove selected file"
+    >
+      Remove
+    </button>
+  </div>
+
+  <!-- Validate and preview -->
+  <button
+    type="button"
+    class="primary-button"
+    [disabled]="!selectedFile() || loading() || importing()"
+    (click)="requestPreview()"
+  >
+    {{ loading() ? 'Validating CSV...' : 'Validate & Preview' }}
+  </button>
+
+</section>

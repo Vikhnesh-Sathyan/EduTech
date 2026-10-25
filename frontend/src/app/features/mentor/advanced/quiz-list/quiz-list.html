@@ -1,5 +1,6 @@
 <div class="quiz-page">
 
+  <!-- Page Header -->
   <header class="page-header">
     <div>
       <span class="eyebrow">MENTOR WORKSPACE</span>
@@ -12,6 +13,7 @@
     </button>
   </header>
 
+  <!-- Statistics -->
   <section class="stats-grid">
     <article class="stat-card">
       <span class="stat-icon total-icon">▤</span>
@@ -38,8 +40,8 @@
     </article>
   </section>
 
+  <!-- Quiz List -->
   <section class="quiz-section">
-
     <div class="section-heading">
       <div>
         <h2>Your quizzes</h2>
@@ -47,20 +49,27 @@
       </div>
     </div>
 
+    <!-- Loading -->
     <div *ngIf="loading()" class="state-card">
       <div class="loader"></div>
       <h3>Loading your quizzes...</h3>
       <p>Please wait while we retrieve your quizzes.</p>
     </div>
 
-    <div *ngIf="!loading() && errorMessage()" class="state-card error-state">
+    <!-- Error -->
+    <div
+      *ngIf="!loading() && errorMessage()"
+      class="state-card error-state"
+    >
       <h3>Unable to load quizzes</h3>
       <p>{{ errorMessage() }}</p>
+
       <button class="primary-btn" (click)="loadQuizzes()">
         Try again
       </button>
     </div>
 
+    <!-- Empty State -->
     <div
       *ngIf="!loading() && !errorMessage() && quizzes().length === 0"
       class="state-card"
@@ -70,6 +79,7 @@
       <p>Your created or imported quizzes will appear here.</p>
     </div>
 
+    <!-- Quiz Cards -->
     <div
       class="quiz-grid"
       *ngIf="!loading() && !errorMessage() && quizzes().length > 0"
@@ -89,6 +99,7 @@
           </span>
         </div>
 
+        <!-- Quiz Information -->
         <div class="quiz-content">
           <span class="quiz-id">QUIZ #{{ quiz.id }}</span>
 
@@ -99,6 +110,7 @@
           </p>
         </div>
 
+        <!-- Quiz Metadata -->
         <div class="quiz-meta">
           <div>
             <span>Difficulty</span>
@@ -111,9 +123,10 @@
           </div>
         </div>
 
-        
+        <!-- Footer and Actions Dropdown -->
+   
 <div class="quiz-footer">
-  <span>
+  <span class="updated-date">
     Updated
     {{
       quiz.updated_at
@@ -122,29 +135,35 @@
     }}
   </span>
 
-  <a
-    class="btn-view"
-    [routerLink]="[
-      '/mentor/advanced/theory-quizzes',
-      quiz.id,
-      'view'
-    ]">
-    View Quiz →
-  </a>
+  <div class="quiz-actions">
+    <a
+      class="action-button view-action"
+      [routerLink]="[
+        '/mentor/advanced/theory-quizzes',
+        quiz.id,
+        'view'
+      ]"
+    >
+      <span>◉</span>
+      View
+    </a>
+
+    <a
+      class="action-button edit-action"
+      [routerLink]="[
+        '/mentor/advanced/theory-quizzes',
+        quiz.id,
+        'edit'
+      ]"
+    >
+      <span>✎</span>
+      Edit
+    </a>
+  </div>
 </div>
 
-<a
-  [routerLink]="[
-    '/mentor/advanced/theory-quizzes',
-    quiz.id,
-    'edit'
-  ]"
-  class="edit-link">
-  Edit Quiz
-</a>
 
       </article>
     </div>
-
   </section>
 </div>

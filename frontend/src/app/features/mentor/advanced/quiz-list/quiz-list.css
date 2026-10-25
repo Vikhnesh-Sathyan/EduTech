@@ -1,3 +1,4 @@
+
 :host {
   display: block;
   color: #172033;
@@ -9,6 +10,7 @@
   padding: 32px;
 }
 
+/* Page Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -39,13 +41,16 @@
   line-height: 1.6;
 }
 
+/* Buttons */
 .refresh-btn,
-.primary-btn {
+.primary-btn,
+.secondary-btn {
   border: 0;
   border-radius: 10px;
   padding: 11px 16px;
   font-weight: 650;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .refresh-btn {
@@ -54,11 +59,29 @@
   color: #343b50;
 }
 
-.primary-btn {
+.refresh-btn:hover {
+  background: #f4f5fb;
+}
+
+.primary-btn,
+.secondary-btn {
   background: #6554d9;
   color: #fff;
 }
 
+.primary-btn:hover,
+.secondary-btn:hover {
+  background: #5141c0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Statistics */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -114,6 +137,7 @@
   font-size: 27px;
 }
 
+/* Quiz Section */
 .quiz-section {
   padding: 24px;
   background: #fff;
@@ -136,6 +160,7 @@
   gap: 20px;
 }
 
+/* Quiz Card */
 .quiz-card {
   min-width: 0;
   padding: 20px;
@@ -162,6 +187,7 @@
   background: #f0edff;
 }
 
+/* Quiz Status */
 .status-badge {
   padding: 6px 10px;
   border-radius: 20px;
@@ -180,6 +206,7 @@
   background: #dcf8e9;
 }
 
+/* Quiz Content */
 .quiz-id {
   color: #8b91a2;
   font-size: 11px;
@@ -203,6 +230,7 @@
   overflow-wrap: anywhere;
 }
 
+/* Quiz Metadata */
 .quiz-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -232,10 +260,102 @@
   overflow-wrap: anywhere;
 }
 
+/* Quiz Footer */
 .quiz-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
   padding-top: 15px;
 }
 
+.updated-date {
+  color: #858da0;
+  font-size: 12px;
+}
+
+/* Actions Dropdown */
+
+.quiz-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 15px;
+}
+
+.updated-date {
+  color: #858da0;
+  font-size: 12px;
+}
+
+.quiz-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+.view-action {
+  color: #6045d8;
+  background: #f5f3ff;
+  border-color: #ded8ff;
+}
+
+.view-action:hover {
+  background: #e9e4ff;
+  border-color: #cfc6ff;
+}
+
+.edit-action {
+  color: #087f8c;
+  background: #e9f9fa;
+  border-color: #c8eef0;
+}
+
+.edit-action:hover {
+  background: #d8f3f5;
+  border-color: #a9e3e7;
+}
+
+@media (max-width: 480px) {
+  .quiz-footer {
+    align-items: flex-start;
+  }
+
+  .quiz-actions {
+    width: 100%;
+  }
+
+  .action-button {
+    flex: 1;
+  }
+}
+
+
+
+/* Loading, Empty and Error States */
 .state-card {
   display: flex;
   flex-direction: column;
@@ -289,6 +409,7 @@
   }
 }
 
+/* Responsive Layout */
 @media (max-width: 1100px) {
   .quiz-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -316,39 +437,7 @@
   .quiz-grid {
     grid-template-columns: 1fr;
   }
-}
 
-
-
-
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.secondary-btn {
-  border: 0;
-  border-radius: 10px;
-  padding: 11px 16px;
-  background: #6554d9;
-  color: #fff;
-  font-weight: 650;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.secondary-btn:hover {
-  background: #5141c0;
-}
-
-.refresh-btn:hover {
-  background: #f4f5fb;
-}
-
-@media (max-width: 700px) {
   .header-actions {
     width: 100%;
   }
@@ -358,31 +447,12 @@
   }
 }
 
+@media (max-width: 480px) {
+  .quiz-footer {
+    align-items: flex-start;
+  }
 
-.quiz-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.btn-view {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 9px 14px;
-  border: 1px solid #ded8ff;
-  border-radius: 9px;
-  background: #f5f3ff;
-  color: #6045d8;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.btn-view:hover {
-  background: #e9e4ff;
-  transform: translateY(-1px);
+  .actions-menu {
+    width: 220px;
+  }
 }

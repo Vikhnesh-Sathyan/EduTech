@@ -1,0 +1,72 @@
+
+<div class="csv-upload-page">
+  <header class="page-header">
+    <a routerLink="/mentor-dashboard" class="back-link">
+      ← Mentor Dashboard
+    </a>
+
+    <span class="eyebrow">ADVANCED LEARNING</span>
+
+    <h1>Import Theory Quiz</h1>
+
+    <p>
+      Configure your quiz, upload your questions, review the preview,
+      and import the quiz as a draft.
+    </p>
+  </header>
+
+  <section class="upload-card">
+    <app-education-hierarchy
+      (topicChange)="selectedTopicId.set($event)"
+      (subtopicChange)="selectedSubtopicId.set($event)"
+    ></app-education-hierarchy>
+
+    <app-quiz-import-details
+      [quizTitle]="quizTitle()"
+      [quizDescription]="quizDescription()"
+      [difficulty]="difficulty()"
+      [passPercentage]="passPercentage()"
+      (quizTitleChange)="quizTitle.set($event)"
+      (quizDescriptionChange)="quizDescription.set($event)"
+      (difficultyChange)="difficulty.set($event)"
+      (passPercentageChange)="passPercentage.set($event)"
+    ></app-quiz-import-details>
+
+    <app-csv-file-upload
+      [selectedFile]="selectedFile()"
+      [loading]="loading()"
+      [importing]="importing()"
+      (fileSelected)="handleFileSelection($event)"
+      (previewRequested)="previewCsv()"
+    ></app-csv-file-upload>
+
+    <div
+      class="success-message"
+      *ngIf="message()"
+      role="status"
+    >
+      {{ message() }}
+    </div>
+
+    <div
+      class="error-message"
+      *ngIf="errors().length"
+      role="alert"
+    >
+      <strong>Please check the following</strong>
+
+      <ul>
+        <li *ngFor="let error of errors()">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <app-csv-preview
+    [preview]="preview()"
+    [canImport]="canImport()"
+    [importing]="importing()"
+    (importRequested)="importQuiz()"
+  ></app-csv-preview>
+</div>

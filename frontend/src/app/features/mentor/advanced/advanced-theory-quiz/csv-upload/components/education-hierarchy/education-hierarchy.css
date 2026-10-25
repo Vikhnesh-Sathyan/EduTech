@@ -1,0 +1,194 @@
+
+/* =========================================================
+   EDUCATION HIERARCHY
+   Premium Silver • Espresso Brown • Warm Ivory
+========================================================= */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  color: #382b25;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Main section */
+
+.education-hierarchy {
+  width: 100%;
+  padding: 26px;
+  margin-bottom: 30px;
+  border: 1px solid #ded9d3;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff, #f8f7f5);
+  box-shadow: 0 5px 18px rgba(50, 36, 27, 0.035);
+}
+
+/* Heading */
+
+.section-heading {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e7e2dd;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #3c2b22;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.section-heading p {
+  margin: 8px 0 0;
+  color: #83766e;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Dropdown grid */
+
+.hierarchy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 24px;
+  align-items: start;
+}
+
+/* Individual fields */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 9px;
+}
+
+.form-group label {
+  color: #514036;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.form-group select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 47px;
+  padding: 11px 38px 11px 14px;
+  border: 1px solid #d8d3ce;
+  border-radius: 10px;
+  outline: none;
+  background-color: #fdfcfb;
+  color: #392b24;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.form-group select:hover:not(:disabled) {
+  border-color: #b8aaa0;
+}
+
+.form-group select:focus {
+  border-color: #80604d;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(104, 76, 61, 0.09);
+}
+
+.form-group select:disabled {
+  border-color: #e3dfdb;
+  background-color: #f0eeeb;
+  color: #a39a93;
+  cursor: not-allowed;
+}
+
+/* Loading and empty states */
+
+.field-hint {
+  margin: 0;
+  color: #897d74;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.field-hint.loading {
+  color: #80604d;
+}
+
+.field-hint.empty {
+  color: #8b7565;
+}
+
+/* Optional subtopic field */
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Responsive: tablet */
+
+@media (max-width: 760px) {
+  .education-hierarchy {
+    padding: 22px;
+  }
+
+  .hierarchy-grid {
+    gap: 19px;
+  }
+}
+
+/* Responsive: mobile */
+
+@media (max-width: 560px) {
+  .education-hierarchy {
+    padding: 19px 15px;
+    margin-bottom: 24px;
+    border-radius: 13px;
+  }
+
+  .section-heading {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+
+  .section-heading h2 {
+    font-size: 18px;
+  }
+
+  .section-heading p {
+    font-size: 12px;
+  }
+
+  .hierarchy-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+
+  .form-group select {
+    min-height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
