@@ -66,25 +66,46 @@ const getTheoryQuizById = async (req, res) => {
         }
 
         // Verify the quiz is published AND matches this student.
-        const [quizzes] = await pool.query(
-            `SELECT
-                q.id,
-                q.title,
-                q.description,
-                q.education_program_id,
-                q.department_id,
-                q.education_year_id,
-                q.subject_id,
-                q.topic_id,
-                q.subtopic_id,
-                q.difficulty,
-                q.pass_percentage
-             FROM advanced_theory_quizzes q
-             WHERE q.id = ?
-               AND q.status = 'published'
-               AND ${studentEducationFilter}`,
-            [quizId, req.user.id]
-        );
+       
+const [quizzes] = await pool.query(
+    `SELECT
+        q.id,
+        q.title,
+        q.description,
+        q.education_program_id,
+        q.department_id,
+        q.education_year_id,
+        q.subject_id,
+        q.topic_id,
+        q.subtopic_id,
+        q.difficulty,
+        q.pass_percentage,
+
+        p.name AS program_name,
+        d.name AS department_name,
+        ey.name AS education_year_name,
+        s.name AS subject_name
+
+     FROM advanced_theory_quizzes q
+
+     LEFT JOIN education_programs p
+        ON p.id = q.education_program_id
+
+     LEFT JOIN departments d
+        ON d.id = q.department_id
+
+     LEFT JOIN education_years ey
+        ON ey.id = q.education_year_id
+
+     LEFT JOIN subjects s
+        ON s.id = q.subject_id
+
+     WHERE q.id = ?
+       AND q.status = 'published'
+       AND ${studentEducationFilter}`,
+    [quizId, req.user.id]
+);
+
 
         if (quizzes.length === 0) {
             return res.status(404).json({
@@ -94,18 +115,19 @@ const getTheoryQuizById = async (req, res) => {
         }
 
         const [questions] = await pool.query(
-            `SELECT
-                id,
-                question_text,
-                concept_tag,
-                marks,
-                display_order
-             FROM advanced_theory_questions
-             WHERE quiz_id = ?
-               AND status = 'active'
-             ORDER BY display_order ASC, id ASC`,
-            [quizId]
-        );
+    `SELECT
+        id,
+        question_text,
+        concept_tag,
+        marks,
+        display_order
+     FROM advanced_theory_questions
+     WHERE quiz_id = ?
+       AND status = 'active'
+     ORDER BY display_order ASC, id ASC
+     LIMIT 20`,
+    [quizId]
+);
 
         if (questions.length === 0) {
             return res.status(404).json({

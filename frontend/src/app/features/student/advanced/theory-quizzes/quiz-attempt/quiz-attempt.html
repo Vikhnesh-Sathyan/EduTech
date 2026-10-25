@@ -1,1 +1,450 @@
-<p>quiz-attempt works!</p>
+
+<div class="quiz-attempt-page">
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="loading-spinner"></div>
+    <h2>Preparing your assessment</h2>
+    <p>Loading questions and answer options...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loading() && error()" class="error-banner">
+    <span class="error-icon">!</span>
+    <div>
+      <strong>Something needs attention</strong>
+      <p>{{ error() }}</p>
+    </div>
+    <button
+      type="button"
+      class="text-button"
+      (click)="error.set('')">
+      Dismiss
+    </button>
+  </div>
+
+  <!-- Quiz content -->
+  <ng-container *ngIf="!loading() && questions().length > 0">
+
+    <!-- Premium top bar -->
+    <header class="quiz-topbar">
+      <button
+        type="button"
+        class="back-button"
+        (click)="router.navigate(['/theory-quizzes'])">
+        <span>←</span> Exit quiz
+      </button>
+
+      <div class="topbar-center">
+        <span class="live-dot"></span>
+        <span>{{ phase() === 'attempt' ? 'Assessment in progress' : 'Assessment review' }}</span>
+      </div>
+
+      <div
+  *ngIf="phase() !== 'submitted'"
+  class="timer-card"
+  [class.timer-warning]="remainingSeconds() <= 60">
+  <span class="timer-icon">◷</span>
+  <div>
+    <small>TIME LEFT</small>
+    <strong>{{ formattedTime }}</strong>
+  </div>
+</div>
+    </header>
+
+    <!-- Attempt screen -->
+    <ng-container *ngIf="phase() === 'attempt'">
+
+      <section class="quiz-heading">
+        <div>
+          <span class="eyebrow">ADVANCED LEARNING / THEORY QUIZ</span>
+          <h1>{{ quiz()?.title }}</h1>
+          <p>
+            Take your time, think carefully, and review your answers before submitting.
+          </p>
+        </div>
+
+        <div class="heading-badge">
+          <span class="badge-label">TOTAL QUESTIONS</span>
+          <strong>{{ questions().length }}</strong>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon purple">✓</span>
+          <div>
+            <strong>{{ answeredCount }}</strong>
+            <span>Answered</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon orange">○</span>
+          <div>
+            <strong>{{ unansweredCount }}</strong>
+            <span>Unanswered</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon yellow">★</span>
+          <div>
+            <strong>{{ markedCount }}</strong>
+            <span>For review</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon blue">◎</span>
+          <div>
+            <strong>{{ progressPercentage }}%</strong>
+            <span>Progress</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Overall progress -->
+      <section class="overall-progress">
+        <div class="progress-labels">
+          <span>Assessment progress</span>
+          <strong>{{ answeredCount }} of {{ questions().length }} completed</strong>
+        </div>
+
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="progressPercentage">
+          </div>
+        </div>
+      </section>
+
+      <!-- Main layout -->
+      <div class="quiz-layout">
+
+        <!-- Question area -->
+        <main class="question-card">
+          <div class="question-meta">
+            <span class="question-number">
+              QUESTION {{ currentIndex() + 1 }}
+            </span>
+
+            <span class="marks-pill">
+              {{ questions()[currentIndex()].marks }} mark(s)
+            </span>
+          </div>
+
+          <h2>{{ questions()[currentIndex()].question_text }}</h2>
+
+          <p class="instruction-text">
+            Select one answer from the options below.
+          </p>
+
+          <div class="options-list">
+            <button
+              *ngFor="let option of questions()[currentIndex()].options; let i = index"
+              type="button"
+              class="option-button"
+              [class.selected]="isSelected(questions()[currentIndex()].id, option.id)"
+              [attr.aria-pressed]="isSelected(questions()[currentIndex()].id, option.id)"
+              (click)="selectOption(questions()[currentIndex()].id, option.id)">
+
+              <span class="option-letter">
+                {{ ['A', 'B', 'C', 'D', 'E', 'F'][i] || (i + 1) }}
+              </span>
+
+              <span class="option-text">{{ option.option_text }}</span>
+
+              <span class="option-check">
+                {{ isSelected(questions()[currentIndex()].id, option.id) ? '✓' : '' }}
+              </span>
+            </button>
+          </div>
+
+          <div class="question-footer">
+            <button
+              type="button"
+              class="review-toggle"
+              [class.review-active]="isMarkedForReview(questions()[currentIndex()].id)"
+              (click)="toggleReview(questions()[currentIndex()].id)">
+              <span>★</span>
+              {{
+                isMarkedForReview(questions()[currentIndex()].id)
+                  ? 'Marked for review'
+                  : 'Mark for review'
+              }}
+            </button>
+
+            <div class="navigation-actions">
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="previousQuestion()"
+                [disabled]="currentIndex() === 0">
+                ← Previous
+              </button>
+
+              <button
+                *ngIf="currentIndex() < questions().length - 1"
+                type="button"
+                class="primary-button"
+                (click)="nextQuestion()">
+                Next question →
+              </button>
+
+              <button
+                *ngIf="currentIndex() === questions().length - 1"
+                type="button"
+                class="primary-button"
+                (click)="openReview()">
+                Review answers →
+              </button>
+            </div>
+          </div>
+        </main>
+
+        <!-- Question navigator -->
+        <aside class="navigator-card">
+          <div class="navigator-heading">
+            <div>
+              <h3>Question palette</h3>
+              <p>Jump to any question</p>
+            </div>
+            <span class="palette-count">{{ questions().length }}</span>
+          </div>
+
+          <div class="question-number-list">
+            <button
+              *ngFor="let question of questions(); let i = index"
+              type="button"
+              [class.current]="currentIndex() === i"
+              [class.answered]="answers()[question.id] !== undefined"
+              [class.marked]="isMarkedForReview(question.id)"
+              [attr.aria-label]="'Go to question ' + (i + 1)"
+              (click)="goToQuestion(i)">
+              {{ i + 1 }}
+            </button>
+          </div>
+
+          <div class="palette-legend">
+            <span><i class="legend-current"></i> Current</span>
+            <span><i class="legend-answered"></i> Answered</span>
+            <span><i class="legend-marked"></i> Review</span>
+            <span><i class="legend-empty"></i> Unanswered</span>
+          </div>
+
+          <div class="navigator-tip">
+            <span>✦</span>
+            <p>Questions marked for review can be revisited before submission.</p>
+          </div>
+
+          <button
+            type="button"
+            class="submit-review-button"
+            (click)="openReview()">
+            Review & submit <span>→</span>
+          </button>
+        </aside>
+
+      </div>
+    </ng-container>
+
+    <!-- Final review screen -->
+    <section *ngIf="phase() === 'review'" class="final-review">
+
+      <div class="review-hero">
+        <span class="eyebrow">FINAL CHECK</span>
+        <h1>Review your answers</h1>
+        <p>
+          Check unanswered and flagged questions before completing your assessment.
+        </p>
+      </div>
+
+      <div class="review-summary-grid">
+        <div class="review-summary-card">
+          <span>✓</span>
+          <strong>{{ answeredCount }}</strong>
+          <small>Answered</small>
+        </div>
+
+        <div class="review-summary-card warning-summary">
+          <span>○</span>
+          <strong>{{ unansweredCount }}</strong>
+          <small>Unanswered</small>
+        </div>
+
+        <div class="review-summary-card flagged-summary">
+          <span>★</span>
+          <strong>{{ markedCount }}</strong>
+          <small>Marked for review</small>
+        </div>
+      </div>
+
+      <div class="review-question-list">
+        <article
+          *ngFor="let question of questions(); let i = index"
+          class="review-question-row">
+
+          <div class="review-question-index">{{ i + 1 }}</div>
+
+          <div class="review-question-content">
+            <h3>{{ question.question_text }}</h3>
+
+            <p *ngIf="getSelectedOption(question.id) as selectedOption"
+               class="review-selected-answer">
+              <span>Selected answer:</span> {{ selectedOption.option_text }}
+            </p>
+
+            <p
+              *ngIf="!getSelectedOption(question.id)"
+              class="review-unanswered">
+              No answer selected
+            </p>
+          </div>
+
+          <span
+            *ngIf="isMarkedForReview(question.id)"
+            class="review-status flagged">
+            ★ Review
+          </span>
+
+          <span
+            *ngIf="!isMarkedForReview(question.id) && answers()[question.id] !== undefined"
+            class="review-status completed">
+            Answered
+          </span>
+
+          <span
+            *ngIf="!isMarkedForReview(question.id) && answers()[question.id] === undefined"
+            class="review-status missing">
+            Unanswered
+          </span>
+
+          <button
+            type="button"
+            class="edit-answer-button"
+            (click)="goToQuestion(i); phase.set('attempt')">
+            Edit
+          </button>
+        </article>
+      </div>
+
+      <div *ngIf="unansweredCount > 0" class="review-warning">
+        <span>!</span>
+        <p>
+          You still have {{ unansweredCount }} unanswered question(s).
+          You can return to them or continue to submission confirmation.
+        </p>
+      </div>
+
+      <div class="review-actions">
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="returnToAttempt()"
+          [disabled]="timeExpired()">
+          ← Back to quiz
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="requestSubmit()">
+          Continue to submit →
+        </button>
+      </div>
+    </section>
+
+    <!-- Completed attempt screen -->
+<section
+  *ngIf="phase() === 'submitted'"
+  class="final-review">
+
+  <div class="review-hero">
+    <span class="eyebrow">ASSESSMENT COMPLETED</span>
+    <h1>This attempt is already completed</h1>
+    <p>
+      You have already submitted this assessment.
+      You cannot answer or submit it again.
+    </p>
+  </div>
+
+  <div class="review-actions">
+    <button
+      type="button"
+      class="primary-button"
+      (click)="router.navigate(['/theory-quizzes'])">
+      ← Back to quizzes
+    </button>
+  </div>
+</section>
+
+    <!-- Submission confirmation modal -->
+    <div
+      *ngIf="showSubmitConfirmation()"
+      class="modal-backdrop"
+      (click)="cancelSubmit()">
+
+      <section
+        class="confirmation-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="submit-title"
+        (click)="$event.stopPropagation()">
+
+        <div class="confirmation-icon">✓</div>
+
+        <h2 id="submit-title">Ready to submit?</h2>
+
+        <p>
+          You have answered {{ answeredCount }} of {{ questions().length }}
+          questions.
+        </p>
+
+        <div class="confirmation-stats">
+          <span>Unanswered: <strong>{{ unansweredCount }}</strong></span>
+          <span>For review: <strong>{{ markedCount }}</strong></span>
+        </div>
+
+        <p class="confirmation-note">
+          Your answers are not yet saved as a submitted attempt.
+          Submission requires the backend endpoint to be connected.
+        </p>
+
+        <div class="confirmation-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="cancelSubmit()">
+            Keep reviewing
+          </button>
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="confirmSubmit()">
+            Confirm
+          </button>
+        </div>
+      </section>
+    </div>
+
+  </ng-container>
+
+  <!-- Empty quiz -->
+  <div
+    *ngIf="!loading() && !error() && questions().length === 0"
+    class="empty-state">
+    <div class="empty-icon">◇</div>
+    <h2>No questions available</h2>
+    <p>This quiz currently has no active questions to attempt.</p>
+    <button
+      type="button"
+      class="primary-button"
+      (click)="router.navigate(['/theory-quizzes'])">
+      Back to quizzes
+    </button>
+  </div>
+
+</div>

@@ -1,1 +1,67 @@
-<p>quiz-details works!</p>
+
+<div class="quiz-details-page">
+
+  <a routerLink="/student/advanced/theory-quizzes" class="back-link">
+    ← Back to Quizzes
+  </a>
+
+  <div *ngIf="loading()" class="state-message">
+    Loading quiz details...
+  </div>
+
+  <div *ngIf="errorMessage() && !loading()" class="error-message">
+    <p>{{ errorMessage() }}</p>
+    <button type="button" (click)="retryLoad()">Try Again</button>
+  </div>
+
+  <ng-container *ngIf="quiz() as currentQuiz">
+    <section class="quiz-card" *ngIf="!loading()">
+
+      <span class="eyebrow">THEORY QUIZ</span>
+
+      <h1>{{ currentQuiz.title }}</h1>
+
+      <p class="description">
+        {{ currentQuiz.description || 'Test and strengthen your understanding of this topic.' }}
+      </p>
+
+      <div class="metadata">
+        <div class="meta-item">
+          <span>Difficulty</span>
+          <strong>{{ currentQuiz.difficulty || 'Not specified' }}</strong>
+        </div>
+
+        <div class="meta-item">
+          <span>Pass Percentage</span>
+          <strong>
+            {{ currentQuiz.pass_percentage != null
+              ? currentQuiz.pass_percentage + '%'
+              : 'Not specified' }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="academic-details">
+        <p><strong>Program:</strong> {{ currentQuiz.program_name || '—' }}</p>
+        <p><strong>Department:</strong> {{ currentQuiz.department_name || '—' }}</p>
+        <p><strong>Education Year:</strong> {{ currentQuiz.education_year_name || '—' }}</p>
+        <p><strong>Subject:</strong> {{ currentQuiz.subject_name || '—' }}</p>
+      </div>
+
+      <div class="instructions">
+        <h2>Before you begin</h2>
+        <ul>
+          <li>Read each question carefully.</li>
+          <li>Review your selected answer before submitting.</li>
+          <li>Your result will depend on your submitted answers.</li>
+        </ul>
+      </div>
+
+      <button type="button" class="start-button" (click)="startQuiz()">
+        Start Quiz →
+      </button>
+
+    </section>
+  </ng-container>
+
+</div>

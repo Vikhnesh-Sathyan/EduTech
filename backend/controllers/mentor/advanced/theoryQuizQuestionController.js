@@ -119,6 +119,24 @@ const updateQuizQuestions = async (req, res) => {
             });
         }
 
+        // Prevent changing questions after any student has attempted this quiz.
+const [attempts] = await connection.query(
+    `SELECT id
+     FROM advanced_theory_attempts
+     WHERE quiz_id = ?
+     LIMIT 1`,
+    [quizId]
+);
+
+if (attempts.length > 0) {
+    await connection.rollback();
+
+    return res.status(409).json({
+        message:
+            "Questions cannot be edited because students have already attempted this quiz."
+    });
+}
+
         // Verify that every submitted question belongs to this quiz.
         const placeholders = questionIds.map(() => "?").join(", ");
 
@@ -309,6 +327,26 @@ const updateQuestionOptions = async (req, res) => {
                 message: "Question not found or you do not own this quiz"
             });
         }
+        
+        // Prevent changing options or correct answers after any student
+        // has attempted this quiz.
+        const [attempts] = await connection.query(
+            `SELECT id
+             FROM advanced_theory_attempts
+             WHERE quiz_id = ?
+             LIMIT 1`,
+            [quizId]
+        );
+
+        if (attempts.length > 0) {
+            await connection.rollback();
+
+            return res.status(409).json({
+                message:
+                    "Options cannot be edited because students have already attempted this quiz."
+            });
+        }
+
 
         // Retrieve current option IDs.
         const [existingOptions] = await connection.query(

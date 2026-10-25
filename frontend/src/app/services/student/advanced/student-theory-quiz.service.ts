@@ -38,4 +38,51 @@ export class StudentTheoryQuizService {
   getQuizById(quizId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${quizId}`);
   }
+
+  
+  startOrResumeAttempt(quizId: number): Observable<any> {
+    return this.http.post<any>(
+      `${this.apiUrl}/${quizId}/attempt`,
+      {}
+    );
+  }
+
+submitAttempt(
+  quizId: number,
+  attemptId: number,
+  answers: {
+    question_id: number;
+    selected_option_id: number | null;
+    hint_used?: boolean;
+  }[],
+  autoSubmit = false
+): Observable<any> {
+  return this.http.post<any>(
+    `${this.apiUrl}/${quizId}/attempt/${attemptId}/submit`,
+    {
+      answers,
+      auto_submit: autoSubmit
+    }
+  );
+}
+  saveAttemptProgress(
+  quizId: number,
+  attemptId: number,
+  currentQuestionIndex: number,
+  answers: {
+    question_id: number;
+    selected_option_id: number | null;
+    marked_for_review: boolean;
+    hint_used?: boolean;
+  }[]
+): Observable<any> {
+  return this.http.post<any>(
+    `${this.apiUrl}/${quizId}/attempt/${attemptId}/progress`,
+    {
+      current_question_index: currentQuestionIndex,
+      answers
+    }
+  );
+}
+
 }
