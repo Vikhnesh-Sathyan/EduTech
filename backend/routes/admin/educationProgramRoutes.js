@@ -6,7 +6,8 @@ const {
     createEducationProgram,
     getEducationPrograms,
     updateEducationProgram,
-    updateEducationProgramStatus
+    updateEducationProgramStatus,
+    getDepartmentsByEducationProgram
 } = require("../../controllers/admin/educationProgramController");
 
 const authMiddleware = require("../../middleware/authMiddleware");
@@ -55,6 +56,13 @@ router.patch(
     authMiddleware,
     roleMiddleware("admin"),
     updateEducationProgramStatus
+);
+
+router.get(
+    "/:programId/departments",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getDepartmentsByEducationProgram
 );
 
 

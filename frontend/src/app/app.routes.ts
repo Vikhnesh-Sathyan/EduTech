@@ -58,6 +58,8 @@ import { QuizDetails } from './features/student/advanced/theory-quizzes/quiz-det
 import { QuizAttempt } from './features/student/advanced/theory-quizzes/quiz-attempt/quiz-attempt';
 import { QuizResult } from './features/student/advanced/theory-quizzes/quiz-result/quiz-result';
 
+//CONCEPT COMPARISON
+import { ConceptComparisonDetails } from './features/student/advanced/concept-comparison/concept-comparison-detail/concept-comparison-detail';
 
 // Student mentors
 import { StudentMentors } from './features/student/mentors/student-mentors/student-mentors';
@@ -289,6 +291,16 @@ export const routes: Routes = [
         path: 'advanced-learning/:sectionId',
         component: AdvancedLearningContent
       },
+
+      //CONCEPT COMPARISON
+
+      {
+  path: 'advanced-learning/concept-comparisons/:id',
+  component: ConceptComparisonDetails,
+},
+      
+
+    
 
       // STUDENT THEORY QUIZZES
       {
@@ -574,7 +586,9 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/my-comparisons/:id',
         component: ComparisonDetailsComponent
-      }
+      },
+      
+
 
     ]
   },

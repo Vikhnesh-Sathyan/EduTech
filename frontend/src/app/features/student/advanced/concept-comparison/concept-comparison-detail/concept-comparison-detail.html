@@ -1,1 +1,128 @@
-<p>concept-comparison-detail works!</p>
+<div class="comparison-details-page">
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBack()">
+    ← Back to Advanced Learning
+  </button>
+
+  @if (loading()) {
+    <section class="details-state">
+      <div class="loading-spinner"></div>
+      <h2>Loading comparison...</h2>
+      <p>Please wait while we prepare your learning material.</p>
+    </section>
+  } @else if (errorMessage()) {
+    <section class="details-state error-state">
+      <div class="state-icon">!</div>
+      <h2>Unable to open comparison</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="back-button primary-button"
+        (click)="goBack()">
+        Back to Advanced Learning
+      </button>
+    </section>
+  } @else if (comparison(); as item) {
+    <header class="comparison-hero">
+      <span class="eyebrow">CONCEPT COMPARISON</span>
+
+      <h1>{{ item.title }}</h1>
+
+      <p class="comparison-description">
+        {{ item.description || 'Explore the concepts and compare their key differences.' }}
+      </p>
+
+      <div class="comparison-badges">
+        <span>{{ item.subjectName }}</span>
+        <span>{{ item.concepts.length }} concepts</span>
+        <span>{{ item.rows.length }} comparison points</span>
+      </div>
+    </header>
+
+    <section class="concepts-section">
+      <div class="section-title">
+        <span class="eyebrow">THE CONCEPTS</span>
+        <h2>What you'll compare</h2>
+      </div>
+
+      <div class="concepts-grid">
+        @for (concept of item.concepts; track concept.id) {
+          <article class="concept-card">
+            <span class="concept-number">
+              {{ concept.displayOrder + 1 }}
+            </span>
+            <h3>{{ concept.name }}</h3>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="comparison-content-section">
+      <div class="section-title">
+        <span class="eyebrow">SIDE-BY-SIDE LEARNING</span>
+        <h2>Comparison details</h2>
+      </div>
+
+      @if (item.rows.length === 0) {
+        <div class="details-state">
+          <h3>No comparison details yet</h3>
+          <p>The mentor has not added comparison points.</p>
+        </div>
+      } @else {
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th class="point-heading">Comparison Point</th>
+
+                @for (concept of item.concepts; track concept.id) {
+                  <th>{{ concept.name }}</th>
+                }
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (row of item.rows; track row.id) {
+                <tr>
+                  <th class="point-title">
+                    {{ row.pointTitle }}
+                  </th>
+
+                  @for (concept of item.concepts; track concept.id) {
+                    <td>
+                      @if (
+                        row.cells.find(cell => cell.conceptId === concept.id);
+                        as cell
+                      ) {
+                        @if (cell.contentText) {
+                          <p class="cell-content">{{ cell.contentText }}</p>
+                        }
+
+                        @if (cell.imageUrl) {
+                          <img
+                            class="comparison-image"
+                            [src]="cell.imageUrl"
+                            [alt]="concept.name + ' - ' + row.pointTitle"
+                            loading="lazy">
+                        }
+
+                        @if (!cell.contentText && !cell.imageUrl) {
+                          <span class="empty-cell">—</span>
+                        }
+                      } @else {
+                        <span class="empty-cell">—</span>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+</div>

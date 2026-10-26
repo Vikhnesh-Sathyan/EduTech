@@ -87,4 +87,75 @@
 </section>
 
 
+
+
+
+
+<!-- Concept Comparisons -->
+<section class="comparison-section">
+  <div class="comparison-heading">
+    <div>
+      <span class="comparison-eyebrow">LEARN BY COMPARING</span>
+      <h2>Concept Comparisons</h2>
+      <p>Compare concepts side by side and understand their differences.</p>
+    </div>
+    <div class="comparison-icon" aria-hidden="true">⇄</div>
+  </div>
+
+  @if (comparisonsLoading()) {
+    <div class="comparison-state">
+      <div class="loading-spinner"></div>
+      <p>Loading Concept Comparisons...</p>
+    </div>
+  } @else if (comparisonsError()) {
+    <div class="comparison-state comparison-error">
+      <p>{{ comparisonsError() }}</p>
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadComparisons()">
+        Try Again
+      </button>
+    </div>
+  } @else if (comparisons().length === 0) {
+    <div class="comparison-state">
+      <div class="empty-icon">⇄</div>
+      <h3>No Comparisons Available Yet</h3>
+      <p>
+        Published comparisons matching your academic profile and selected
+        subjects will appear here.
+      </p>
+    </div>
+  } @else {
+    <div class="comparison-grid">
+      @for (comparison of comparisons(); track comparison.id) {
+        <article class="comparison-card">
+          <div class="comparison-card-top">
+            <span class="comparison-label">CONCEPT COMPARISON</span>
+            <span class="comparison-arrow" aria-hidden="true">↗</span>
+          </div>
+
+          <h3>{{ comparison.title }}</h3>
+
+          <p class="comparison-description">
+            {{ comparison.description || 'Explore and compare these concepts.' }}
+          </p>
+
+          <div class="comparison-meta">
+            <span>{{ comparison.subjectName }}</span>
+            <span>{{ comparison.concepts.length }} concepts</span>
+          </div>
+
+          <button
+            type="button"
+            class="comparison-view-button"
+            (click)="openComparison(comparison)">
+            View Comparison <span aria-hidden="true">→</span>
+          </button>
+        </article>
+      }
+    </div>
+  }
+</section>
+
 </div>

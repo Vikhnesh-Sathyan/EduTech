@@ -211,9 +211,42 @@ const updateEducationProgramStatus = async (req, res) => {
 };
 
 
+
+// ==========================================
+// GET DEPARTMENTS BY EDUCATION PROGRAM
+// ==========================================
+
+const getDepartmentsByEducationProgram = async (req, res) => {
+    const { programId } = req.params;
+
+    const sql = `
+        SELECT id, name, education_program_id
+        FROM departments
+        WHERE education_program_id = ?
+          AND status = 'active'
+        ORDER BY name ASC
+    `;
+
+    try {
+        const [departments] = await db.query(sql, [programId]);
+
+        return res.status(200).json({ departments });
+    } catch (err) {
+        console.error(
+            "Departments by program fetch failed:",
+            err.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to fetch departments for this program"
+        });
+    }
+};
+
 module.exports = {
     createEducationProgram,
     getEducationPrograms,
     updateEducationProgram,
-    updateEducationProgramStatus
+    updateEducationProgramStatus,
+    getDepartmentsByEducationProgram
 };

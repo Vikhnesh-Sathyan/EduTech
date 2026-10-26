@@ -155,6 +155,11 @@ const studentAdvancedRoutes = require(
 
 const theoryQuizRoutes = require("./routes/student/advanced/theoryQuizRoutes");
 
+//ADVANCED STUDENT COMPARISON
+
+const studentConceptComparisonRoutes = require(
+    "./routes/student/advanced/concept-comparison/conceptComparisonRoutes"
+);
 
 const studentCheatsheetRoutes = require("./routes/student/cheatsheet/student-cheatsheet-routes");
 
@@ -236,7 +241,11 @@ const mentorSubtopicRoutes = require("./routes/mentor/cheatsheet/subtopicRoutes"
 
 //MENTOR QUIZ
 const mentorTheoryQuizRoutes = require(
-    "./routes/mentor/advanced/theoryQuizRoutes"
+    "./routes/mentor/advanced/theoryQuizRoutes");
+
+//Mentor Concept COMPARISON 
+const mentorConceptComparisonRoutes = require(
+    "./routes/mentor/advanced/concept-comparison/conceptComparisonRoutes"
 );
 // =====================================================
 // CREATE EXPRESS APPLICATION
@@ -357,6 +366,11 @@ app.use(
     mentorTheoryQuizRoutes
 );
 
+// Mentor Concept Comparison routes
+app.use(
+    "/api/mentor/advanced/concept-comparisons",
+    mentorConceptComparisonRoutes
+);
 // =====================================================
 // ADMIN ROUTES
 // =====================================================
@@ -545,13 +559,18 @@ app.use(
     "/api/student/basic-challenge",
     studentBasicChallengeRoutes
 );
-
+//STUDENT ADVANCED 
 app.use(
     "/api/student/advanced",
     studentAdvancedRoutes
 );
 
 app.use("/api/student/advanced", theoryQuizRoutes);
+
+app.use(
+    "/api/student/advanced/concept-comparisons",
+    studentConceptComparisonRoutes
+);
 
 // =====================================================
 // STUDENT MENTOR CHAT ROUTES
