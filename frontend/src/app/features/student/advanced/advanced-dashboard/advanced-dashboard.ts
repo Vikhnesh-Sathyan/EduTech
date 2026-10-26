@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
@@ -111,4 +111,12 @@ export class AdvancedDashboard implements OnInit {
       comparison.id
     ]);
   }
+
+
+
+
+
+openConceptComparisons(): void {
+  this.router.navigate(['/advanced-learning/concept-comparisons']);
+}
 }

@@ -1,4 +1,6 @@
+
 <div class="comparison-details-page">
+
   <button
     type="button"
     class="back-button"
@@ -26,44 +28,23 @@
       </button>
     </section>
   } @else if (comparison(); as item) {
+
+    <!-- Comparison Header -->
     <header class="comparison-hero">
       <span class="eyebrow">CONCEPT COMPARISON</span>
 
       <h1>{{ item.title }}</h1>
 
       <p class="comparison-description">
-        {{ item.description || 'Explore the concepts and compare their key differences.' }}
+        {{ item.description || 'Compare the concepts and understand their key differences.' }}
       </p>
-
-      <div class="comparison-badges">
-        <span>{{ item.subjectName }}</span>
-        <span>{{ item.concepts.length }} concepts</span>
-        <span>{{ item.rows.length }} comparison points</span>
-      </div>
     </header>
 
-    <section class="concepts-section">
-      <div class="section-title">
-        <span class="eyebrow">THE CONCEPTS</span>
-        <h2>What you'll compare</h2>
-      </div>
-
-      <div class="concepts-grid">
-        @for (concept of item.concepts; track concept.id) {
-          <article class="concept-card">
-            <span class="concept-number">
-              {{ concept.displayOrder + 1 }}
-            </span>
-            <h3>{{ concept.name }}</h3>
-          </article>
-        }
-      </div>
-    </section>
-
+    <!-- Comparison Table -->
     <section class="comparison-content-section">
       <div class="section-title">
         <span class="eyebrow">SIDE-BY-SIDE LEARNING</span>
-        <h2>Comparison details</h2>
+        <h2>Comparison Details</h2>
       </div>
 
       @if (item.rows.length === 0) {
@@ -98,7 +79,9 @@
                         as cell
                       ) {
                         @if (cell.contentText) {
-                          <p class="cell-content">{{ cell.contentText }}</p>
+                          <p class="cell-content">
+                            {{ cell.contentText }}
+                          </p>
                         }
 
                         @if (cell.imageUrl) {

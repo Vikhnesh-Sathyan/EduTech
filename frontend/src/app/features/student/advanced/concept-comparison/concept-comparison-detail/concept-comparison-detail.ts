@@ -1,3 +1,4 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -26,32 +27,49 @@ export class ConceptComparisonDetails implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const id = Number(idParam);
 
-    if (!Number.isInteger(id) || id <= 0) {
+    if (
+      idParam === null ||
+      idParam.trim() === '' ||
+      !Number.isSafeInteger(id) ||
+      id <= 0
+    ) {
       this.errorMessage.set('Invalid comparison selected.');
       this.loading.set(false);
       return;
     }
 
-    this.comparisonService.getAvailableComparisons().subscribe({
-      next: (comparisons) => {
-        const selected = comparisons.find(item => item.id === id);
+    this.loadComparison(id);
+  }
 
-        if (!selected) {
+  private loadComparison(id: number): void {
+    this.loading.set(true);
+    this.errorMessage.set('');
+
+    this.comparisonService.getAvailableComparisons().subscribe({
+      next: (comparisons: ConceptComparison[]) => {
+        const selected = comparisons.find(
+          (item: ConceptComparison) => item.id === id
+        );
+
+        if (selected === undefined) {
           this.errorMessage.set(
             'This comparison is unavailable or does not match your academic profile.'
           );
+          this.comparison.set(null);
         } else {
           this.comparison.set(selected);
         }
 
         this.loading.set(false);
       },
-      error: (error) => {
+      error: (error: unknown) => {
+        console.error('Failed to load comparison details:', error);
+
         this.errorMessage.set(
-          error.error?.message ||
-          'Failed to load comparison details.'
+          'Failed to load comparison details. Please try again.'
         );
         this.loading.set(false);
       }

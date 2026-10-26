@@ -1,0 +1,135 @@
+<div class="comparison-list-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()">
+      <span aria-hidden="true">←</span>
+      Back to Advanced Learning
+    </button>
+
+    <div class="header-content">
+      <div class="header-icon" aria-hidden="true">⇄</div>
+
+      <div>
+        <span class="page-eyebrow">LEARN BY COMPARING</span>
+        <h1>Concept Comparisons</h1>
+        <p>
+          Choose a subject to explore comparisons and understand the
+          differences between related concepts.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="comparison-state">
+      <div class="loading-spinner"></div>
+      <p>Loading Concept Comparisons...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @else if (errorMessage()) {
+    <div class="comparison-state error-state">
+      <div class="state-icon" aria-hidden="true">!</div>
+      <h2>Unable to load comparisons</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadComparisons()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  <!-- Empty -->
+  @else if (comparisonGroups().length === 0) {
+    <div class="comparison-state empty-state">
+      <div class="state-icon" aria-hidden="true">⇄</div>
+      <h2>No Comparisons Available Yet</h2>
+      <p>
+        Published comparisons matching your academic profile and selected
+        subjects will appear here.
+      </p>
+    </div>
+  }
+
+  <!-- Subjects and Comparison Titles -->
+  @else {
+    <section class="subjects-section">
+      <div class="section-heading">
+        <div>
+          <h2>Choose a Subject</h2>
+          <p>Expand a subject to view its available comparisons.</p>
+        </div>
+      </div>
+
+      <div class="subject-list">
+        @for (group of comparisonGroups(); track group.subjectName) {
+          <article class="subject-card">
+
+            <!-- Subject Dropdown -->
+            <button
+              type="button"
+              class="subject-toggle"
+              [attr.aria-expanded]="expandedSubject() === group.subjectName"
+              (click)="toggleSubject(group.subjectName)">
+
+              <span class="subject-leading">
+                <span class="subject-icon" aria-hidden="true">📘</span>
+
+                <span class="subject-name">
+                  {{ group.subjectName }}
+                </span>
+              </span>
+
+              <span
+                class="subject-chevron"
+                [class.is-expanded]="expandedSubject() === group.subjectName"
+                aria-hidden="true">
+                ⌄
+              </span>
+            </button>
+
+            <!-- Comparison Titles -->
+            @if (expandedSubject() === group.subjectName) {
+              <div class="comparison-title-list">
+                @for (comparison of group.comparisons; track comparison.id) {
+                  <button
+                    type="button"
+                    class="comparison-title-item"
+                    (click)="openComparison(comparison)">
+
+                    <span class="title-icon" aria-hidden="true">⇄</span>
+
+                    <span class="title-content">
+                      <span class="comparison-title">
+                        {{ comparison.title }}
+                      </span>
+
+                      @if (comparison.description) {
+                        <span class="comparison-description">
+                          {{ comparison.description }}
+                        </span>
+                      }
+                    </span>
+
+                    <span class="title-arrow" aria-hidden="true">→</span>
+                  </button>
+                }
+              </div>
+            }
+
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+</div>
