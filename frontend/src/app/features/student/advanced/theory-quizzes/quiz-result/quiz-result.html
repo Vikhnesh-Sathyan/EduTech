@@ -1,1 +1,87 @@
-<p>quiz-result works!</p>
+<div class="result-page">
+
+  <div *ngIf="loading()" class="result-state">
+    <div class="loader"></div>
+    <p>Loading your quiz result...</p>
+  </div>
+
+  <div *ngIf="!loading() && error()" class="result-state error-state">
+    <h2>Result unavailable</h2>
+    <p>{{ error() }}</p>
+    <button class="primary-btn" (click)="backToQuizzes()">
+      Back to Quizzes
+    </button>
+  </div>
+
+  <ng-container *ngIf="!loading() && result() as r">
+
+    <header class="result-header">
+      <span class="eyebrow">THEORY QUIZ</span>
+      <h1>Quiz Result</h1>
+      <p>Your submission has been evaluated successfully.</p>
+    </header>
+
+    <section class="result-card">
+
+      <div class="score-icon">✓</div>
+
+      <p class="result-label">Your Score</p>
+
+      <h2 class="score">
+        {{ r.score }} <span>/ {{ r.total_marks }}</span>
+      </h2>
+
+      <div class="percentage">
+        {{ r.percentage }}%
+      </div>
+
+      <p class="completion-message">
+        Quiz completed successfully!
+      </p>
+
+      <div class="progress-track">
+        <div
+          class="progress-fill"
+          [style.width.%]="r.percentage">
+        </div>
+      </div>
+
+    </section>
+
+ <section class="stats-grid">
+
+  <article class="stat-card">
+    <span class="stat-icon total-icon">Q</span>
+    <p>Total Questions</p>
+    <h3>{{ r.total_questions }}</h3>
+  </article>
+
+  <article class="stat-card">
+    <span class="stat-icon attempted-icon">✓</span>
+    <p>Attempted Questions</p>
+    <h3>{{ r.attempted_questions }}</h3>
+  </article>
+
+  <article class="stat-card">
+    <span class="stat-icon correct-icon">✓</span>
+    <p>Correct Answers</p>
+    <h3>{{ r.correct_answers }}</h3>
+  </article>
+
+  <article class="stat-card">
+    <span class="stat-icon not-attempted-icon">—</span>
+    <p>Not Attempted</p>
+    <h3>{{ r.not_attempted_questions }}</h3>
+  </article>
+
+</section>
+
+    <footer class="result-actions">
+      <button class="primary-btn" (click)="backToQuizzes()">
+        Back to Quizzes
+      </button>
+    </footer>
+
+  </ng-container>
+
+</div>

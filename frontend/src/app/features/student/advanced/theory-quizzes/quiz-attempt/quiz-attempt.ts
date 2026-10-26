@@ -146,18 +146,23 @@ loadQuiz(quizId: number): void {
       this.questions.set(validQuestions);
       this.loading.set(false);
 
-      // Completed attempts must not restart or submit again.
-      if (attempt?.status === 'completed') {
-        this.stopTimer();
-        this.showSubmitConfirmation.set(false);
-        this.timeExpired.set(false);
-        this.phase.set('submitted');
-        this.error.set('');
-        this.successMessage.set(
-          'This quiz attempt has already been completed.'
-        );
-        return;
-      }
+    // Completed attempts must not restart or submit again.
+if (attempt?.status === 'completed') {
+  this.stopTimer();
+  this.showSubmitConfirmation.set(false);
+  this.timeExpired.set(false);
+  this.phase.set('submitted');
+  this.error.set('');
+  this.successMessage.set('');
+
+  this.router.navigate([
+    '/theory-quizzes',
+    this.quizId,
+    'result'
+  ]);
+
+  return;
+}
 
       const configuredDuration = Number(
         quizData.duration_minutes
@@ -630,8 +635,14 @@ startTimer(): void {
     .subscribe({
       next: (response: any) => {
         this.submitting.set(false);
-        this.stopTimer();
-        this.phase.set('submitted');
+this.stopTimer();
+this.phase.set('submitted');
+
+this.router.navigate([
+  '/theory-quizzes',
+  quizId,
+  'result'
+]);
 
         const result = response?.result ?? response;
         const score = Number(result?.score);

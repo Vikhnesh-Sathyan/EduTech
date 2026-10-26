@@ -1,6 +1,22 @@
 
 const pool = require("../../../config/db");
 
+// Randomizes an array using Fisher–Yates shuffle.
+const shuffleArray = (items) => {
+    const shuffled = [...items];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [shuffled[i], shuffled[j]] = [
+            shuffled[j],
+            shuffled[i]
+        ];
+    }
+
+    return shuffled;
+};
+
 // Starts/resumes an attempt and loads database-saved progress.
 const startOrResumeAttempt = async (req, res) => {
     let connection;
@@ -117,6 +133,15 @@ const startOrResumeAttempt = async (req, res) => {
                     message: "This quiz has no active questions"
                 });
             }
+                    // Shuffle question order for this new attempt.
+const originalQuestionOrder = questions.map(q => q.id);
+
+questions.splice(0, questions.length, ...shuffleArray(questions));
+
+console.log("NEW ATTEMPT CREATED — question order:", {
+    original: originalQuestionOrder,
+    shuffled: questions.map(q => q.id)
+});
 
             const questionIds = questions.map(q => q.id);
             const placeholders = questionIds.map(() => "?").join(", ");
@@ -208,7 +233,10 @@ const startOrResumeAttempt = async (req, res) => {
                     ]
                 );
 
-                const questionOptions = optionsByQuestion[question.id];
+                // Shuffle options independently for each question.
+const questionOptions = shuffleArray(
+    optionsByQuestion[question.id]
+);
 
                 for (let j = 0; j < questionOptions.length; j++) {
                     const option = questionOptions[j];
@@ -343,15 +371,66 @@ const getTheoryQuizAttemptStatus = async (req, res) => {
             });
         }
 
-        const [attempts] = await pool.query(
-            `SELECT id, attempt_number, status, deadline_at,
-                    current_question_index
-             FROM advanced_theory_attempts
-             WHERE student_id = ? AND quiz_id = ?
-             ORDER BY attempt_number DESC
-             LIMIT 1`,
-            [studentId, quizId]
-        );
+const [attempts] = await pool.query(
+    `SELECT
+        a.id,
+        a.attempt_number,
+        a.status,
+        a.deadline_at,
+        a.current_question_index,
+        a.total_questions,
+        a.correct_answers,
+        a.wrong_answers,
+        a.score,
+        a.total_marks,
+        a.percentage,
+        a.started_at,
+        a.completed_at,
+
+        COUNT(DISTINCT CASE
+            WHEN ans.selected_option_id IS NOT NULL
+            THEN aq.question_id
+        END) AS attempted_questions,
+
+        GREATEST(
+            a.total_questions - COUNT(DISTINCT CASE
+                WHEN ans.selected_option_id IS NOT NULL
+                THEN aq.question_id
+            END),
+            0
+        ) AS not_attempted_questions
+
+    FROM advanced_theory_attempts a
+
+    LEFT JOIN advanced_theory_attempt_questions aq
+        ON aq.attempt_id = a.id
+
+    LEFT JOIN advanced_theory_answers ans
+        ON ans.attempt_id = aq.attempt_id
+        AND ans.question_id = aq.question_id
+
+    WHERE a.student_id = ?
+      AND a.quiz_id = ?
+
+    GROUP BY
+        a.id,
+        a.attempt_number,
+        a.status,
+        a.deadline_at,
+        a.current_question_index,
+        a.total_questions,
+        a.correct_answers,
+        a.wrong_answers,
+        a.score,
+        a.total_marks,
+        a.percentage,
+        a.started_at,
+        a.completed_at
+
+    ORDER BY a.attempt_number DESC
+    LIMIT 1`,
+    [studentId, quizId]
+);
 
         const attempt = attempts[0] || null;
 

@@ -126,4 +126,18 @@ export class QuizDetails implements OnInit {
       this.loadAttemptStatus(Number(currentQuiz.id));
     }
   }
+
+viewResult(): void {
+  const quizId = this.quiz()?.id;
+
+  if (!quizId) {
+    return;
+  }
+
+  this.router.navigate([
+    '/theory-quizzes',
+    quizId,
+    'result'
+  ]);
+}
 }

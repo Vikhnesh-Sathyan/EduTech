@@ -275,10 +275,11 @@ if (deadlinePassed) {
          is_correct, marks_awarded, hint_used)
      VALUES (?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE
-        selected_option_id = VALUES(selected_option_id),
-        is_correct = VALUES(is_correct),
-        marks_awarded = VALUES(marks_awarded),
-        answered_at = CURRENT_TIMESTAMP`,
+    selected_option_id = VALUES(selected_option_id),
+    is_correct = VALUES(is_correct),
+    marks_awarded = VALUES(marks_awarded),
+    hint_used = VALUES(hint_used),
+    answered_at = CURRENT_TIMESTAMP`,
     [
         attemptId,
         questionId,
