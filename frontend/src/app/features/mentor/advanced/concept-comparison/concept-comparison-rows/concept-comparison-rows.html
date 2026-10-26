@@ -1,0 +1,54 @@
+<section class="rows-section">
+  <div class="section-heading">
+    <div>
+      <h3>Comparison points</h3>
+      <p>Add a row for each difference you want to explain.</p>
+    </div>
+
+    <button type="button" (click)="addRow()">
+      + Add Row
+    </button>
+  </div>
+
+  @for (row of rows; track $index; let i = $index) {
+    <article class="comparison-row">
+      <div class="row-heading">
+        <h4>Comparison Row {{ i + 1 }}</h4>
+
+        @if (rows.length > 1) {
+          <button type="button" (click)="removeRow(i)">
+            Remove
+          </button>
+        }
+      </div>
+
+      <label [for]="'point-title-' + i">Comparison point</label>
+      <input
+        [id]="'point-title-' + i"
+        [name]="'pointTitle' + i"
+        [(ngModel)]="row.pointTitle"
+        (ngModelChange)="emitRows()"
+        placeholder="e.g. Scope"
+      />
+
+      <div class="cell-grid">
+        @for (concept of concepts; track concept.id; let j = $index) {
+          <div class="cell-editor">
+            <label [for]="'cell-' + i + '-' + j">
+              {{ concept.name || 'Concept ' + (j + 1) }}
+            </label>
+
+            <textarea
+              [id]="'cell-' + i + '-' + j"
+              [name]="'cell-' + i + '-' + j"
+              [(ngModel)]="row.cells[j].content"
+              (ngModelChange)="emitRows()"
+              placeholder="Explain this concept..."
+              rows="3"
+            ></textarea>
+          </div>
+        }
+      </div>
+    </article>
+  }
+</section>

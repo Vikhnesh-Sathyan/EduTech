@@ -57,4 +57,10 @@ export class AdminEducationProgram {
     'http://localhost:5000/api/admin/education-programs/mentor'
   );
 }
+
+getDepartmentsByProgramForMentor(programId: number) {
+  return this.http.get<{ departments: any[] }>(
+    `${this.apiUrl}/${programId}/departments`
+  );
+}
 }

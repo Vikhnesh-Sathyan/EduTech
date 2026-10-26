@@ -156,6 +156,10 @@ import { QuizList } from './features/mentor/advanced/quiz-list/quiz-list';
 import { TheoryQuizView } from './features/mentor/advanced/theory-quiz-view/theory-quiz-view';
 import { TheoryQuizEdit } from './features/mentor/advanced/theory-quiz-edit/theory-quiz-edit';
 
+//MENTOR COMPARISON
+import { ConceptComparisonManagement } from './features/mentor/advanced/concept-comparison/concept-comparison-management/concept-comparison-management';
+import { MyComparisons } from './features/mentor/advanced/concept-comparison/my-comparisons/my-comparisons'
+import {ComparisonDetailsComponent} from './features/mentor/advanced/concept-comparison/comparison-details/comparison-details'
 export const routes: Routes = [
 
   // Public routes
@@ -558,6 +562,18 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/theory-quizzes/:quizId/edit',
         component: TheoryQuizEdit
+      },
+      {
+        path: 'mentor/advanced/concept-comparison',
+        component: ConceptComparisonManagement
+      },
+      {
+       path: 'mentor/advanced/my-comparisons',
+        component: MyComparisons
+      },
+      {
+        path: 'mentor/advanced/my-comparisons/:id',
+        component: ComparisonDetailsComponent
       }
 
     ]

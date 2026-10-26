@@ -1,0 +1,200 @@
+
+<div class="comparison-details-page">
+  <!-- Back Navigation -->
+  <a
+    routerLink="/mentor/advanced/my-comparisons"
+    class="back-link"
+  >
+    ← Back to My Comparisons
+  </a>
+
+  @if (loading()) {
+    <div class="state-card">
+      Loading comparison details...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-card">
+      {{ errorMessage() }}
+    </div>
+  } @else if (comparison(); as item) {
+
+    <!-- Header -->
+    <header class="details-header">
+      <div>
+        <span class="eyebrow">MENTOR WORKSPACE</span>
+        <h1>{{ item.title }}</h1>
+        <p>{{ item.description || 'No description provided.' }}</p>
+      </div>
+
+      <div class="header-actions">
+        <span class="status-badge" [class]="item.status">
+          {{ item.status }}
+        </span>
+
+        @if (item.status === 'draft') {
+          <button
+            type="button"
+            class="publish-button"
+            (click)="publishComparison()"
+          >
+            Publish
+          </button>
+        }
+
+        @if (item.status === 'published') {
+          <button
+            type="button"
+            class="unpublish-button"
+            (click)="unpublishComparison()"
+          >
+            Unpublish
+          </button>
+        }
+      </div>
+    </header>
+
+    <!-- Metadata -->
+    <div class="metadata-card">
+      <div>
+        <span>Subject</span>
+        <strong>
+          {{ item.subject_name || 'Subject unavailable' }}
+        </strong>
+      </div>
+
+      <div>
+        <span>Created</span>
+        <strong>{{ item.created_at | date: 'mediumDate' }}</strong>
+      </div>
+    </div>
+
+    <!-- Comparison Points -->
+    <section class="points-section">
+      <div class="section-heading">
+        <div>
+          <h2>Comparison points</h2>
+          <p>Compare the concepts side by side.</p>
+        </div>
+
+        <button
+          *ngIf="isDraft()"
+          type="button"
+          class="primary-button"
+          (click)="openAddRowForm()"
+        >
+          + Add Row
+        </button>
+      </div>
+
+      @if (item.concepts.length === 0) {
+        <div class="state-card">
+          Add concepts to create columns in the comparison table.
+        </div>
+      } @else if (item.rows.length > 0) {
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Comparison Point</th>
+
+                @for (concept of item.concepts; track concept.id) {
+                  <th>{{ concept.name }}</th>
+                }
+
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (row of item.rows; track row.id) {
+                <tr>
+                  <td class="point-title">
+                    {{ row.point_title }}
+                  </td>
+
+                  @for (concept of item.concepts; track concept.id) {
+                    <td>
+                      {{
+                        row.cells.find(
+                          cell => cell.concept_id === concept.id
+                        )?.content_text || 'No explanation provided.'
+                      }}
+
+                      @if (
+                        row.cells.find(
+                          cell => cell.concept_id === concept.id
+                        )?.image_url
+                      ) {
+                        <img
+                          class="cell-image"
+                          [src]="
+                            row.cells.find(
+                              cell => cell.concept_id === concept.id
+                            )?.image_url
+                          "
+                          [alt]="concept.name"
+                        />
+                      }
+                    </td>
+                  }
+
+                  <td>
+                    <div class="row-actions" *ngIf="isDraft()">
+                      <button
+                        type="button"
+                        class="edit-button"
+                        (click)="openEditRowForm(row)"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="delete-button"
+                        (click)="openDeleteRowModal(row.id)"
+                      >
+                        Delete
+                      </button>
+                    </div>
+
+                    <span *ngIf="!isDraft()">—</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="state-card">
+          No comparison points have been added yet.
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Add/Edit Comparison Row Form -->
+  <app-comparison-row-form
+    *ngIf="showRowForm()"
+    [mode]="rowFormMode()"
+    [initialTitle]="editingRowTitle()"
+    [initialRow]="editingRow()"
+    [concepts]="comparison()?.concepts ?? []"
+    [saving]="savingRow()"
+    (save)="onSaveRowTitle($event)"
+    (cancel)="closeRowForm()"
+  ></app-comparison-row-form>
+
+  <!-- Delete Row Confirmation -->
+  <app-confirm-modal
+    [visible]="showDeleteRowModal()"
+    title="Delete Comparison Row"
+    message="Are you sure you want to delete this row and its cell contents?"
+    confirmText="Delete Row"
+    cancelText="Cancel"
+    [danger]="true"
+    (confirmed)="onConfirmDeleteRow()"
+    (cancelled)="closeDeleteRowModal()"
+  ></app-confirm-modal>
+
+
+</div>

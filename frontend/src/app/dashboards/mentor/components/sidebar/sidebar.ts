@@ -16,4 +16,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Sidebar {
   advancedTheoryOpen = false;
+
+  conceptComparisonOpen = false;
 }

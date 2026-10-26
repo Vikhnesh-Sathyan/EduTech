@@ -1,0 +1,112 @@
+<div class="comparison-page">
+
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>Concept Comparison</h1>
+      <p>
+        Compare related concepts side by side and understand
+        their differences clearly.
+      </p>
+    </div>
+
+    <div class="header-icon" aria-hidden="true">
+      ⇄
+    </div>
+  </header>
+
+  <section class="comparison-intro">
+    <div class="intro-icon">▤</div>
+
+    <div>
+      <h2>Learn by comparing</h2>
+      <p>
+        Explore mentor-created comparison topics relevant to
+        your program, academic year, and subjects.
+      </p>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <section class="state-card">
+      <div class="loading-spinner"></div>
+      <h2>Loading comparisons...</h2>
+      <p>Finding comparison topics for your learning profile.</p>
+    </section>
+  }
+
+  <!-- Error -->
+  @else if (errorMessage()) {
+    <section class="state-card error-state">
+      <h2>Unable to load comparisons</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadComparisons()"
+      >
+        Try Again
+      </button>
+    </section>
+  }
+
+  <!-- Empty -->
+  @else if (comparisons().length === 0) {
+    <section class="state-card">
+      <div class="empty-icon">⇄</div>
+      <h2>No comparisons available yet</h2>
+      <p>
+        Mentor-created comparisons will appear here when
+        they are available for your academic profile.
+      </p>
+    </section>
+  }
+
+  <!-- Comparison cards -->
+  @else {
+    <section class="comparison-section">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">EXPLORE CONCEPTS</span>
+          <h2>Available Comparisons</h2>
+        </div>
+
+        <span class="comparison-count">
+          {{ comparisons().length }} topics
+        </span>
+      </div>
+
+      <div class="comparison-grid">
+        @for (item of comparisons(); track item.id) {
+          <article class="comparison-card">
+            <div class="comparison-card-top">
+              <span class="comparison-icon">⇄</span>
+              <span class="comparison-label">CONCEPT GUIDE</span>
+            </div>
+
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+
+            <div class="concept-tags">
+              @for (concept of item.concepts; track concept) {
+                <span>{{ concept }}</span>
+              }
+            </div>
+
+            <button
+              type="button"
+              class="open-button"
+              (click)="openComparison(item.id)"
+            >
+              Explore Comparison
+              <span aria-hidden="true">→</span>
+            </button>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+</div>

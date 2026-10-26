@@ -1,0 +1,236 @@
+
+<div class="comparison-management-page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>Concept Comparison</h1>
+      <p>Create side-by-side concept guides for your students.</p>
+    </div>
+  </header>
+
+  <section class="form-card">
+    <div class="form-heading">
+      <div class="form-icon">⇄</div>
+      <div>
+        <h2>Create a Comparison</h2>
+        <p>Add concepts and explain their differences.</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="createComparison()">
+      <!-- Comparison title -->
+      <div class="form-group">
+        <label for="title">Comparison title</label>
+        <input
+          id="title"
+          type="text"
+          name="title"
+          [(ngModel)]="title"
+          placeholder="e.g. JavaScript Variable Declarations"
+          required
+        />
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          [(ngModel)]="description"
+          placeholder="Explain what students will learn..."
+          rows="3"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Program -->
+      <div class="form-group">
+        <label for="program">Program</label>
+        <select
+          id="program"
+          name="program"
+          [ngModel]="selectedProgramId()"
+          (ngModelChange)="onProgramChange($event)"
+          required
+        >
+          <option [ngValue]="null" disabled>
+            {{ loadingPrograms() ? 'Loading programs...' : 'Select program' }}
+          </option>
+
+          @for (program of programs(); track program.id) {
+            <option [ngValue]="Number(program.id)">
+              {{ program.name }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Department -->
+<div class="form-group">
+  <label for="department">Department</label>
+
+  <select
+    id="department"
+    name="department"
+    [ngModel]="selectedDepartmentId()"
+    (ngModelChange)="onDepartmentChange($event)"
+    [disabled]="selectedProgramId() === null || loadingDepartments()"
+    required
+  >
+    <option [ngValue]="null" disabled>
+      {{
+        loadingDepartments()
+          ? 'Loading departments...'
+          : 'Select department'
+      }}
+    </option>
+
+    @for (department of departments(); track department.id) {
+      <option [ngValue]="Number(department.id)">
+        {{ department.name }}
+      </option>
+    }
+  </select>
+</div>
+
+      <!-- Academic year -->
+      <div class="form-group">
+        <label for="academicYear">Academic Year</label>
+        <select
+          id="academicYear"
+          name="academicYear"
+          [ngModel]="selectedYearId()"
+          (ngModelChange)="onYearChange($event)"
+          [disabled]="selectedDepartmentId() === null || loadingYears()"
+          required
+        >
+          <option [ngValue]="null" disabled>
+            {{ loadingYears() ? 'Loading academic years...' : 'Select academic year' }}
+          </option>
+
+          @for (year of educationYears(); track year.id) {
+            <option [ngValue]="Number(year.id)">
+              {{ year.name }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Subject: display the name, not the ID -->
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <select
+          id="subject"
+          name="subject"
+          [ngModel]="selectedSubjectId()"
+          (ngModelChange)="selectedSubjectId.set($event)"
+          [disabled]="selectedYearId() === null || loadingSubjects()"
+          required
+        >
+          <option [ngValue]="null" disabled>
+            {{ loadingSubjects() ? 'Loading subjects...' : 'Select subject' }}
+          </option>
+
+          @for (subject of subjects(); track subject.id) {
+            <option [ngValue]="Number(subject.id)">
+              {{ subject.name }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Comparison concepts -->
+      <section class="concepts-section">
+        <div class="concepts-heading">
+          <div>
+            <h3>Comparison concepts</h3>
+            <p>Add two or more concepts to compare.</p>
+          </div>
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="addConcept()"
+          >
+            + Add Concept
+          </button>
+        </div>
+
+        @for (concept of concepts; track concept.id; let i = $index) {
+          <article class="concept-editor">
+            <div class="concept-editor-header">
+              <h4>Concept {{ i + 1 }}</h4>
+
+              @if (concepts.length > 2) {
+                <button
+                  type="button"
+                  class="remove-button"
+                  (click)="removeConcept(i)"
+                >
+                  Remove
+                </button>
+              }
+            </div>
+
+            <div class="form-group">
+              <label [for]="'concept-name-' + concept.id">
+                Concept name
+              </label>
+
+              <input
+                [id]="'concept-name-' + concept.id"
+                type="text"
+                [name]="'conceptName' + concept.id"
+                [(ngModel)]="concept.name"
+                (ngModelChange)="onConceptsChanged()"
+                placeholder="e.g. let"
+                required
+              />
+            </div>
+          </article>
+        }
+      </section>
+
+      <!-- Comparison points and values -->
+      <app-concept-comparison-rows
+        [concepts]="concepts"
+        (rowsChange)="onRowsChange($event)"
+      />
+
+      <!-- Optional image -->
+      <div class="form-group">
+        <label for="image">Optional image</label>
+        <input
+          id="image"
+          type="file"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
+
+        @if (selectedImageName) {
+          <p class="file-name">Selected: {{ selectedImageName }}</p>
+        }
+      </div>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving()"
+        >
+          {{ saving() ? 'Saving...' : 'Create Comparison' }}
+        </button>
+      </div>
+
+      @if (message()) {
+        <p class="success-message">{{ message() }}</p>
+      }
+
+      @if (errorMessage()) {
+        <p class="error-message">{{ errorMessage() }}</p>
+      }
+    </form>
+  </section>
+</div>

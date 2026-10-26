@@ -1,0 +1,98 @@
+<div class="row-form">
+  <div class="form-header">
+    <h2>
+      {{ mode === 'add' ? 'Add Comparison Row' : 'Edit Comparison Row' }}
+    </h2>
+
+    <p>
+      {{
+        mode === 'add'
+          ? 'Add a comparison point and enter content for each concept.'
+          : 'Edit the comparison point and its definitions or code examples.'
+      }}
+    </p>
+  </div>
+
+  <form (ngSubmit)="submit()" novalidate>
+    <!-- Comparison point title -->
+    <div class="form-field">
+      <label for="pointTitle">Comparison point title</label>
+
+      <input
+        id="pointTitle"
+        type="text"
+        name="pointTitle"
+        [(ngModel)]="pointTitle"
+        (ngModelChange)="onTitleChange($event)"
+        placeholder="e.g. Can reassign value?"
+        maxlength="150"
+        autocomplete="off"
+        [disabled]="saving"
+      />
+
+      <p class="field-error" *ngIf="titleError">
+        {{ titleError }}
+      </p>
+    </div>
+
+    <!-- Editable content for every concept -->
+    <div class="concept-fields" *ngIf="concepts.length > 0">
+      <h3>Concept definitions and examples</h3>
+
+      <div
+        class="form-field concept-field"
+        *ngFor="let concept of concepts"
+      >
+        <label [for]="'concept-' + concept.id">
+          {{ concept.name }}
+        </label>
+
+        <textarea
+          [id]="'concept-' + concept.id"
+          [name]="'concept-' + concept.id"
+          [(ngModel)]="cellContents[concept.id]"
+          (ngModelChange)="onCellChange(concept.id, $event)"
+          [placeholder]="'Enter the definition or code example for ' + concept.name"
+          rows="4"
+          maxlength="5000"
+          [disabled]="saving"
+        ></textarea>
+
+        <p
+          class="field-error"
+          *ngIf="cellErrors[concept.id]"
+        >
+          {{ cellErrors[concept.id] }}
+        </p>
+      </div>
+    </div>
+
+    <div class="state-card" *ngIf="concepts.length === 0">
+      Add concepts before creating comparison rows.
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()"
+        [disabled]="saving"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="saving || concepts.length === 0"
+      >
+        <span *ngIf="saving">Saving...</span>
+
+        <span *ngIf="!saving">
+          {{ mode === 'add' ? 'Add Row' : 'Save Changes' }}
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

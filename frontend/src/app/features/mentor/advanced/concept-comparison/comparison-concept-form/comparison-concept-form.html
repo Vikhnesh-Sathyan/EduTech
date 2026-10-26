@@ -1,0 +1,84 @@
+<div class="concept-form-backdrop" (click)="closeForm()">
+  <section
+    class="concept-form-card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="concept-form-title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="form-header">
+      <div>
+        <span class="eyebrow">CONCEPT COMPARISON</span>
+
+        <h2 id="concept-form-title">
+          {{ mode === 'add' ? 'Add Concept' : 'Edit Concept' }}
+        </h2>
+
+        <p>
+          {{
+            mode === 'add'
+              ? 'Add a concept to compare.'
+              : 'Update the concept name.'
+          }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        aria-label="Close form"
+        [disabled]="saving"
+        (click)="closeForm()"
+      >
+        ×
+      </button>
+    </div>
+
+    <form (ngSubmit)="submitForm()">
+      <div class="form-group">
+        <label for="conceptName">Concept Name</label>
+
+        <input
+          id="conceptName"
+          name="conceptName"
+          type="text"
+          [(ngModel)]="conceptName"
+          (ngModelChange)="onNameChange()"
+          placeholder="e.g. Artificial Intelligence"
+          maxlength="150"
+          autocomplete="off"
+          [disabled]="saving"
+        />
+
+        <small *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </small>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="saving"
+          (click)="closeForm()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="saving"
+        >
+          {{
+            saving
+              ? 'Saving...'
+              : mode === 'add'
+                ? 'Add Concept'
+                : 'Save Changes'
+          }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

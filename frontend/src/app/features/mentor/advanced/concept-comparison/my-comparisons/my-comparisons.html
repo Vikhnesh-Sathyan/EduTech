@@ -1,0 +1,90 @@
+<div class="my-comparisons-page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>My Comparisons</h1>
+      <p>View and manage your saved concept comparison guides.</p>
+    </div>
+
+    <a
+      routerLink="/mentor/advanced/concept-comparison"
+      class="create-button"
+    >
+      + Create Comparison
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="state-card">Loading your comparisons...</div>
+  } @else if (errorMessage()) {
+    <div class="error-card">
+      {{ errorMessage() }}
+      <button type="button" (click)="loadComparisons()">
+        Try Again
+      </button>
+    </div>
+  } @else if (comparisons().length === 0) {
+    <div class="state-card empty-state">
+      <h2>No comparisons yet</h2>
+      <p>Create your first side-by-side concept guide.</p>
+
+      <a
+        routerLink="/mentor/advanced/concept-comparison"
+        class="create-button"
+      >
+        Create Comparison
+      </a>
+    </div>
+  } @else {
+    <div class="comparison-grid">
+      @for (comparison of comparisons(); track comparison.id) {
+        <article class="comparison-card">
+          <div class="card-top">
+            <span
+              class="status"
+              [class.draft]="comparison.status === 'draft'"
+              [class.published]="comparison.status === 'published'"
+              [class.inactive]="comparison.status === 'inactive'"
+            >
+              {{ comparison.status }}
+            </span>
+
+            <span class="comparison-id">
+              #{{ comparison.id }}
+            </span>
+          </div>
+
+          <h2>{{ comparison.title }}</h2>
+
+          <p class="description">
+            {{ comparison.description || 'No description provided.' }}
+          </p>
+
+          <div class="subject-info">
+            <span>Subject</span>
+            <strong>
+              {{ comparison.subject_name || 'Subject unavailable' }}
+            </strong>
+          </div>
+
+          <div class="card-footer">
+            <span>
+              Created
+              {{ comparison.created_at | date: 'mediumDate' }}
+            </span>
+          </div>
+
+          <div class="card-actions">
+  <button
+    type="button"
+    class="view-button"
+    (click)="viewComparison(comparison.id)"
+  >
+    View Details →
+  </button>
+</div>
+        </article>
+      }
+    </div>
+  }
+</div>
