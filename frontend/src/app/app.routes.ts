@@ -38,7 +38,6 @@ import { SubtopicDetailComponent } from './features/student/cheatsheet/subtopic-
 import { Study } from './features/student/study/study/study';
 import { Subject } from './features/student/study/subject-learning/subject-learning';
 
-
 import { Diagnostic } from './features/student/study/diagnostic/diagnostic';
 import { DiagnosticResult } from './features/student/study/diagnostic-result/diagnostic-result';
 import { StudentLearningSection } from './features/student/study/student-learning/student-learning-section/student-learning-section';
@@ -58,10 +57,14 @@ import { QuizDetails } from './features/student/advanced/theory-quizzes/quiz-det
 import { QuizAttempt } from './features/student/advanced/theory-quizzes/quiz-attempt/quiz-attempt';
 import { QuizResult } from './features/student/advanced/theory-quizzes/quiz-result/quiz-result';
 
-//CONCEPT COMPARISON
+//STUDENT CONCEPT COMPARISON
 import { ConceptComparisonDetails } from './features/student/advanced/concept-comparison/concept-comparison-detail/concept-comparison-detail';
 import { ConceptComparisonList } from './features/student/advanced/concept-comparison/concept-comparison-list/concept-comparison-list';
 
+//STUDENT CODE SHUFFLE
+import { StudentCodeShuffleList } from './features/student/advanced/code-shuffle/code-shuffle-list/code-shuffle-list';
+import { StudentCodeShuffleTask } from './features/student/advanced/code-shuffle/code-shuffle-task/code-shuffle-task';
+import { CodeShuffleProgress } from './features/student/advanced/code-shuffle/code-shuffle-progress/code-shuffle-progress';
 
 // Student mentors
 import { StudentMentors } from './features/student/mentors/student-mentors/student-mentors';
@@ -96,7 +99,6 @@ import {
   ProjectSectionContent as StudentProjectSectionContent
 } from './features/student/projects/project-section-content/project-section-content';
 
-
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
@@ -104,7 +106,6 @@ import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
 //Admin SKILLSWAP
 import { ManageSkills } from './features/admin/skillswap/manage-skills/manage-skills';
 import { SkillSuggestions } from './features/admin/skillswap/skill-suggestions/skill-suggestions';
-
 
 // Admin education management
 import { EducationPrograms } from './features/admin/education/education-programs/education-programs';
@@ -135,10 +136,8 @@ import { ProjectSectionContent } from './features/admin/projects/project-section
 
 // Admin mentor verification
 import { MentorVerification } from './features/admin/mentors/mentor-verification/mentor-verification';
-
 // Admin Cheat Sheet
 import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
-
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -406,22 +405,41 @@ export const routes: Routes = [
         component: SubtopicDetailComponent
       },
 
+      // STUDENT CODE SHUFFLE
+      {
+        path: 'code-shuffle',
+        component: StudentCodeShuffleList
+      },
+
+      {
+        path: 'code-shuffle/tasks/:id',
+        component: StudentCodeShuffleTask
+      },
+      {
+        path: 'code-shuffle/progress',
+        component: CodeShuffleProgress
+      },
+      {
+        path: 'code-shuffle/progress/:id',
+        component: CodeShuffleProgress,
+      },
+
     ]
   },
 
-  // Admin dashboard
-  {
-    path: 'admin-dashboard',
-    component: AdminDashboard,
-    canActivate: [authGuard, adminRoleGuard]
-  },
+      // Admin dashboard
+      {
+        path: 'admin-dashboard',
+        component: AdminDashboard,
+        canActivate: [authGuard, adminRoleGuard]
+      },
 
-  // Admin routes
-  {
-    path: 'admin',
-    component: AdminLayout,
-    canActivate: [authGuard, adminRoleGuard],
-    children: [
+      //Admin routes
+      {
+        path: 'admin',
+        component: AdminLayout,
+        canActivate: [authGuard, adminRoleGuard],
+        children: [
 
       // Education management
       {

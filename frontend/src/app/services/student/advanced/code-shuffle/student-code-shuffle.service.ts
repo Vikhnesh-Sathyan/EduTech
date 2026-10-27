@@ -47,6 +47,9 @@ export interface StudentCodeShuffleAttempt {
   time_taken_seconds: number;
   is_correct: number;
   submitted_at: string;
+  attempt_number?: number;
+  correct_positions?: number;
+  total_correct_blocks?: number;
 }
 
 @Injectable({
@@ -132,4 +135,14 @@ export class StudentCodeShuffleService {
       attempts: StudentCodeShuffleAttempt[];
     }>(`${this.apiUrl}/tasks/${taskId}/attempts`);
   }
+
+  saveActiveTaskOrder(
+  taskId: number,
+  currentOrder: number[]
+): Observable<{ message: string }> {
+  return this.http.patch<{ message: string }>(
+    `${this.apiUrl}/tasks/${taskId}/order`,
+    { currentOrder }
+  );
+}
 }

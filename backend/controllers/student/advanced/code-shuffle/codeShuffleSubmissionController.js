@@ -174,30 +174,46 @@ const submitCodeShuffleAttempt = async (req, res) => {
             : "in_progress";
 
         // Store the submitted order, never the answer key in the response.
-        await connection.execute(
-            `INSERT INTO code_shuffle_attempts
-                (
-                    student_id,
-                    task_id,
-                    submitted_order,
-                    score,
-                    max_marks,
-                    hints_used,
-                    time_taken_seconds,
-                    is_correct
-                )
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-                studentId,
-                taskId,
-                JSON.stringify(blockIds),
-                score,
-                maxMarks,
-                hintsUsed,
-                timeTakenSeconds,
-                isCorrect ? 1 : 0
-            ]
-        );
+     // Calculate the next attempt number for this student and task.
+const [attemptRows] = await connection.execute(
+    `SELECT COALESCE(MAX(attempt_number), 0) + 1 AS next_attempt_number
+     FROM code_shuffle_attempts
+     WHERE student_id = ?
+       AND task_id = ?`,
+    [studentId, taskId]
+);
+
+const attemptNumber = Number(
+    attemptRows[0].next_attempt_number
+);
+
+// Store the submitted order and attempt number.
+await connection.execute(
+    `INSERT INTO code_shuffle_attempts
+        (
+            student_id,
+            task_id,
+            attempt_number,
+            submitted_order,
+            score,
+            max_marks,
+            hints_used,
+            time_taken_seconds,
+            is_correct
+        )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+        studentId,
+        taskId,
+        attemptNumber,
+        JSON.stringify(blockIds),
+        score,
+        maxMarks,
+        hintsUsed,
+        timeTakenSeconds,
+        isCorrect ? 1 : 0
+    ]
+);
 
         // Keep first, latest, best scores and attempt count.
         await connection.execute(

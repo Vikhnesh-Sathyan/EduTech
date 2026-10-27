@@ -1,0 +1,240 @@
+<div class="code-shuffle-task-page">
+
+  <!-- Back navigation -->
+  <a routerLink="/code-shuffle" class="back-link">
+    <span aria-hidden="true">←</span>
+    Back to Code Shuffle
+  </a>
+
+  <!-- Loading -->
+  <section *ngIf="loading()" class="state-card">
+    <div class="loading-spinner"></div>
+    <h2>Preparing your challenge...</h2>
+    <p>Loading the code blocks.</p>
+  </section>
+
+  <!-- Error -->
+  <section *ngIf="!loading() && errorMessage() && !task()"
+           class="state-card error-state">
+    <div class="state-icon">!</div>
+    <h2>Unable to load challenge</h2>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" class="primary-button"
+            (click)="retryLoading()">
+      Try Again
+    </button>
+  </section>
+
+  <!-- Challenge -->
+  <ng-container *ngIf="!loading() && task() as currentTask">
+
+    <!-- Header -->
+    <header class="challenge-header">
+      <div class="challenge-heading">
+        <span class="eyebrow">CODE SHUFFLE CHALLENGE</span>
+        <h1>{{ currentTask.title }}</h1>
+
+        <p *ngIf="currentTask.description">
+          {{ currentTask.description }}
+        </p>
+
+        <div class="challenge-badges">
+          <span class="language-badge">
+            {{ currentTask.language_name }}
+          </span>
+
+          <span class="difficulty-badge"
+                [ngClass]="'difficulty-' + currentTask.difficulty.toLowerCase()">
+            {{ currentTask.difficulty }}
+          </span>
+        </div>
+      </div>
+
+      <div class="timer-card">
+        <span class="timer-label">TIME ELAPSED</span>
+        <strong>{{ formatTime(timeTakenSeconds()) }}</strong>
+      </div>
+    </header>
+
+    <!-- Summary -->
+    <section class="challenge-stats">
+      <div class="stat-card">
+        <span>Code Blocks</span>
+        <strong>{{ blocks().length }}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Maximum Marks</span>
+        <strong>{{ currentTask.max_marks }}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Hints Used</span>
+        <strong>{{ hintsUsed() }}</strong>
+      </div>
+    </section>
+
+    <!-- Instructions -->
+    <section class="instructions-card">
+      <div class="instructions-icon">🧩</div>
+
+      <div>
+        <h2>Arrange the code blocks</h2>
+        <p>
+          Drag the blocks into the correct order to rebuild the program.
+          You can also use the up and down arrows to rearrange them.
+        </p>
+      </div>
+    </section>
+
+    <!-- General error -->
+    <div *ngIf="errorMessage() && task()"
+         class="inline-message error-message"
+         role="alert">
+      {{ errorMessage() }}
+    </div>
+
+    <!-- Submission success -->
+    <div *ngIf="successMessage()"
+         class="inline-message success-message"
+         role="status">
+      {{ successMessage() }}
+    </div>
+
+    <!-- Hint -->
+<!-- Hint -->
+<section *ngIf="currentTask.hint_text" class="hint-section">
+  <div class="hint-heading">
+    <div>
+      <span class="eyebrow">NEED A LITTLE HELP?</span>
+      <h2>Challenge Hint</h2>
+    </div>
+
+    <button
+      type="button"
+      class="hint-button"
+      (click)="useHint()"
+      [disabled]="submitted() || submitting() || showHint()">
+      {{ showHint() ? 'Hint Revealed' : 'Reveal Hint' }}
+    </button>
+  </div>
+
+  <div *ngIf="showHint()" class="hint-content">
+    <span aria-hidden="true">💡</span>
+    <p>{{ currentTask.hint_text }}</p>
+  </div>
+</section>
+
+    <!-- Code blocks -->
+    <section class="blocks-section">
+      <div class="blocks-heading">
+        <div>
+          <span class="eyebrow">YOUR WORKSPACE</span>
+          <h2>Rebuild the Program</h2>
+        </div>
+
+        <span class="block-count">
+          {{ blocks().length }} blocks
+        </span>
+      </div>
+
+      <div *ngIf="blocks().length === 0" class="empty-state">
+        <h3>No code blocks available</h3>
+        <p>This challenge does not contain any blocks to arrange.</p>
+      </div>
+
+      <div *ngIf="blocks().length > 0"
+           class="code-block-list">
+
+        <div
+          *ngFor="let block of blocks(); let i = index"
+          class="code-block"
+          [class.dragging]="draggedIndex() === i"
+          [class.locked]="submitted()"
+          [attr.draggable]="!submitted() && !submitting()"
+          (dragstart)="onDragStart(i)"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop(i)"
+          (dragend)="draggedIndex.set(null)">
+
+          <div class="block-number">
+            {{ i + 1 }}
+          </div>
+
+          <div class="block-grip"
+               *ngIf="!submitted()"
+               aria-hidden="true">
+            ⠿
+          </div>
+
+          <pre class="block-code"><code>{{ block.block_content }}</code></pre>
+
+          <div class="block-controls" *ngIf="!submitted()">
+            <button
+              type="button"
+              class="move-button"
+              aria-label="Move block up"
+              title="Move up"
+              [disabled]="i === 0 || submitting()"
+              (click)="moveBlock(i, 'up')">
+              ↑
+            </button>
+
+            <button
+              type="button"
+              class="move-button"
+              aria-label="Move block down"
+              title="Move down"
+              [disabled]="i === blocks().length - 1 || submitting()"
+              (click)="moveBlock(i, 'down')">
+              ↓
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Submit -->
+    <section class="submit-section" *ngIf="!submitted()">
+      <div>
+        <h2>Ready to submit?</h2>
+        <p>Review your code block order before submitting.</p>
+      </div>
+
+      <button
+        type="button"
+        class="submit-button"
+        [disabled]="submitting() || blocks().length === 0"
+        (click)="submitAnswer()">
+
+        {{ submitting() ? 'Submitting...' : 'Submit Answer →' }}
+      </button>
+    </section>
+
+<!-- Progress navigation -->
+<section *ngIf="submitted()" class="progress-navigation">
+  <div class="progress-navigation-icon" aria-hidden="true">
+    ↗
+  </div>
+
+  <div class="progress-navigation-content">
+    <span class="eyebrow">YOUR LEARNING JOURNEY</span>
+    <h2>Challenge submitted!</h2>
+    <p>
+      View your scores, best performance, and previous attempts
+      on your personal progress dashboard.
+    </p>
+  </div>
+
+  <a
+    class="progress-button"
+    [routerLink]="['/code-shuffle/progress', currentTask.id]">
+    View My Progress
+    <span aria-hidden="true">→</span>
+  </a>
+</section>
+
+  </ng-container>
+</div>

@@ -1,0 +1,230 @@
+<div class="code-shuffle-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>Code Shuffle</h1>
+      <p>
+        Rebuild code snippets in the correct order and sharpen your
+        programming logic.
+      </p>
+    </div>
+
+    <a routerLink="/code-shuffle/progress" class="my-progress-btn">
+  <span aria-hidden="true">📊</span>
+  My Progress
+  <span aria-hidden="true">→</span>
+</a>
+  </header>
+
+  <!-- Summary Cards -->
+  <section class="summary-grid">
+    <article class="summary-card">
+      <div class="summary-icon purple">▤</div>
+      <div>
+        <span>Available Tasks</span>
+        <h2>{{ tasks().length }}</h2>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <div class="summary-icon green">✓</div>
+      <div>
+        <span>Completed</span>
+        <h2>
+          {{
+            tasks().filter(task => task.progress_status === 'completed').length
+          }}
+        </h2>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <div class="summary-icon orange">◷</div>
+      <div>
+        <span>In Progress</span>
+        <h2>
+          {{
+            tasks().filter(task =>
+              task.progress_status !== 'completed' &&
+              (task.attempt_count ?? 0) > 0
+            ).length
+          }}
+        </h2>
+      </div>
+    </article>
+  </section>
+
+  <!-- Search and Filters -->
+  <section class="filter-panel">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input
+        type="text"
+        placeholder="Search tasks, languages or topics..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+    </div>
+
+    <select
+      aria-label="Filter by difficulty"
+      [value]="selectedDifficulty()"
+      (change)="selectedDifficulty.set($any($event.target).value)"
+    >
+      <option value="all">All Difficulties</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+
+    <button
+      type="button"
+      class="reset-btn"
+      (click)="searchTerm.set(''); selectedDifficulty.set('all')"
+    >
+      Reset
+    </button>
+  </section>
+
+  <!-- Loading -->
+  <section *ngIf="loading()" class="state-card">
+    <div class="loader"></div>
+    <h3>Loading Code Shuffle tasks...</h3>
+    <p>Finding programming challenges for you.</p>
+  </section>
+
+  <!-- Error -->
+  <section *ngIf="!loading() && errorMessage()" class="state-card error-state">
+    <div class="state-icon">!</div>
+    <h3>Unable to load tasks</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" class="primary-btn" (click)="retryLoading()">
+      Try Again
+    </button>
+  </section>
+
+  <!-- Task Grid -->
+  <section
+    *ngIf="!loading() && !errorMessage() && filteredTasks().length > 0"
+    class="task-grid"
+  >
+    <article
+      class="task-card"
+      *ngFor="let task of filteredTasks(); trackBy: trackByTaskId"
+    >
+      <div class="card-top">
+        <span class="language-badge">
+          {{ task.language_name }}
+        </span>
+
+        <span
+          class="difficulty-badge"
+          [ngClass]="getDifficultyClass(task.difficulty)"
+        >
+          {{ task.difficulty }}
+        </span>
+      </div>
+
+      <h2>{{ task.title }}</h2>
+
+      <p class="task-description">
+        {{ task.description || 'Rearrange the code blocks to solve this challenge.' }}
+      </p>
+
+      <div class="topic-list" *ngIf="task.topics">
+        <span class="topic-tag" *ngFor="let topic of task.topics.split(', ')">
+          {{ topic }}
+        </span>
+      </div>
+
+      <div class="task-meta">
+        <div>
+          <span class="meta-label">Code Blocks</span>
+          <strong>{{ task.total_blocks ?? '—' }}</strong>
+        </div>
+
+        <div>
+          <span class="meta-label">Max Marks</span>
+          <strong>{{ task.max_marks }}</strong>
+        </div>
+
+        <div>
+          <span class="meta-label">Attempts</span>
+          <strong>{{ task.attempt_count ?? 0 }}</strong>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <span
+          class="progress-badge"
+          [ngClass]="{
+            'progress-completed': task.progress_status === 'completed',
+            'progress-started':
+              task.progress_status !== 'completed' &&
+              (task.attempt_count ?? 0) > 0,
+            'progress-new': (task.attempt_count ?? 0) === 0
+          }"
+        >
+          {{ getProgressLabel(task) }}
+        </span>
+
+        <span class="best-score" *ngIf="task.best_score != null">
+          Best: {{ task.best_score }} / {{ task.max_marks }}
+        </span>
+      </div>
+
+      <div class="card-footer">
+        <span class="date-text" *ngIf="task.due_date">
+          Due: {{ task.due_date | date:'mediumDate' }}
+        </span>
+
+        <a
+          class="primary-btn"
+          [routerLink]="['/code-shuffle/tasks', task.id]"
+        >
+          {{
+            task.progress_status === 'completed'
+              ? 'Review Task'
+              : (task.attempt_count ?? 0) > 0
+                ? 'Continue'
+                : 'Start Challenge'
+          }}
+          <span>→</span>
+        </a>
+      </div>
+    </article>
+  </section>
+
+  <!-- Empty Search Results -->
+  <section
+    *ngIf="!loading() && !errorMessage() && tasks().length > 0 &&
+           filteredTasks().length === 0"
+    class="state-card"
+  >
+    <div class="state-icon">⌕</div>
+    <h3>No matching tasks</h3>
+    <p>Try another search term or difficulty filter.</p>
+
+    <button
+      type="button"
+      class="primary-btn"
+      (click)="searchTerm.set(''); selectedDifficulty.set('all')"
+    >
+      Clear Filters
+    </button>
+  </section>
+
+  <!-- No Published Tasks -->
+  <section
+    *ngIf="!loading() && !errorMessage() && tasks().length === 0"
+    class="state-card"
+  >
+    <div class="state-icon">&lt;/&gt;</div>
+    <h3>No Code Shuffle tasks yet</h3>
+    <p>Published programming challenges will appear here when available.</p>
+  </section>
+
+</div>

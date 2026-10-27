@@ -15,6 +15,12 @@ const {
     "../../../../controllers/student/advanced/code-shuffle/codeShuffleSubmissionController"
 );
 
+const {
+    saveActiveTaskOrder
+} = require(
+    "../../../../controllers/student/advanced/code-shuffle/codeShuffleActiveAttemptController"
+);
+
 const authMiddleware = require("../../../../middleware/authMiddleware");
 const roleMiddleware = require("../../../../middleware/roleMiddleware");
 
@@ -48,6 +54,13 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getMyTaskAttempts
+);
+
+router.patch(
+    "/tasks/:id/order",
+    authMiddleware,
+    roleMiddleware("student"),
+    saveActiveTaskOrder
 );
 
 module.exports = router;

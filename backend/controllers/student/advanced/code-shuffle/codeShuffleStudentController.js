@@ -1,4 +1,3 @@
-
 const db = require("../../../../config/db");
 
 // =====================================================
@@ -83,9 +82,11 @@ const getPublishedTasks = async (req, res) => {
 };
 
 
+
 const getPublishedTaskById = async (req, res) => {
     try {
         const taskId = Number(req.params.id);
+        const studentId = req.user.id;
 
         if (!Number.isInteger(taskId) || taskId <= 0) {
             return res.status(400).json({
@@ -93,7 +94,7 @@ const getPublishedTaskById = async (req, res) => {
             });
         }
 
-        // Only retrieve published tasks with active languages.
+        // 1. Retrieve the published task and active subject.
         const [tasks] = await db.execute(
             `SELECT
                 task.id,
@@ -104,13 +105,13 @@ const getPublishedTaskById = async (req, res) => {
                 task.hint_text,
                 task.publish_date,
                 task.due_date,
-                language.name AS language_name
-             FROM code_shuffle_tasks task
-             JOIN code_shuffle_languages language
-                ON language.id = task.language_id
+                subject.name AS language_name
+             FROM code_shuffle_tasks AS task
+             JOIN subjects AS subject
+                ON subject.id = task.language_id
              WHERE task.id = ?
                AND task.status = 'published'
-               AND language.status = 'active'`,
+               AND subject.status = 'active'`,
             [taskId]
         );
 
@@ -122,12 +123,12 @@ const getPublishedTaskById = async (req, res) => {
 
         const task = tasks[0];
 
-        // Return only block IDs and content.
-        // Never send block_type or correct_position to students.
+        // 2. Retrieve the task's blocks.
         const [blocks] = await db.execute(
             `SELECT id, block_content
              FROM code_shuffle_blocks
-             WHERE task_id = ?`,
+             WHERE task_id = ?
+             ORDER BY id ASC`,
             [taskId]
         );
 
@@ -137,17 +138,101 @@ const getPublishedTaskById = async (req, res) => {
             });
         }
 
-        // Shuffle the blocks using Fisher-Yates.
-        for (let i = blocks.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+        // 3. Check whether this student already has an active attempt.
+        const [activeAttempts] = await db.execute(
+            `SELECT
+                current_order,
+                started_at,
+                hints_used
+             FROM code_shuffle_active_attempts
+             WHERE student_id = ?
+               AND task_id = ?
+             LIMIT 1`,
+            [studentId, taskId]
+        );
 
-            [blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+        let activeAttempt;
+        let orderedBlocks;
+
+        if (activeAttempts.length > 0) {
+            // Restore the saved order after refresh.
+            activeAttempt = activeAttempts[0];
+
+            let savedOrder = activeAttempt.current_order;
+
+            if (typeof savedOrder === "string") {
+                savedOrder = JSON.parse(savedOrder);
+            }
+
+            if (!Array.isArray(savedOrder)) {
+                throw new Error("Saved Code Shuffle order is invalid.");
+            }
+
+            const blocksById = new Map(
+                blocks.map(block => [Number(block.id), block])
+            );
+
+            // Only restore valid block IDs belonging to this task.
+            orderedBlocks = savedOrder
+                .map(id => blocksById.get(Number(id)))
+                .filter(Boolean);
+
+            // If the saved order is incomplete, append missing blocks.
+            const savedIds = new Set(
+                orderedBlocks.map(block => Number(block.id))
+            );
+
+            for (const block of blocks) {
+                if (!savedIds.has(Number(block.id))) {
+                    orderedBlocks.push(block);
+                }
+            }
+        } else {
+            // 4. First visit: create a shuffled order.
+            orderedBlocks = [...blocks];
+
+            for (let i = orderedBlocks.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+
+                [orderedBlocks[i], orderedBlocks[j]] =
+                    [orderedBlocks[j], orderedBlocks[i]];
+            }
+
+            const initialOrder = orderedBlocks.map(block => block.id);
+
+            // Save the order and start time in MySQL.
+            await db.execute(
+                `INSERT INTO code_shuffle_active_attempts
+                    (task_id, student_id, current_order, hints_used)
+                 VALUES (?, ?, ?, 0)`,
+                [
+                    taskId,
+                    studentId,
+                    JSON.stringify(initialOrder)
+                ]
+            );
+
+            // Read the database-generated start timestamp.
+            const [createdAttempts] = await db.execute(
+                `SELECT started_at, hints_used
+                 FROM code_shuffle_active_attempts
+                 WHERE student_id = ?
+                   AND task_id = ?
+                 LIMIT 1`,
+                [studentId, taskId]
+            );
+
+            activeAttempt = createdAttempts[0];
         }
 
         return res.status(200).json({
             message: "Code Shuffle task retrieved successfully.",
             task,
-            blocks
+            blocks: orderedBlocks,
+            activeAttempt: {
+                started_at: activeAttempt.started_at,
+                hints_used: activeAttempt.hints_used
+            }
         });
     } catch (error) {
         console.error("Get Code Shuffle task error:", error);
@@ -157,6 +242,7 @@ const getPublishedTaskById = async (req, res) => {
         });
     }
 };
+
 
 
 const getMyTaskAttempts = async (req, res) => {

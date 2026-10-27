@@ -1,0 +1,343 @@
+<div class="progress-page">
+
+  <!-- Page Header -->
+  <header class="progress-header">
+    <div class="header-content">
+      <a routerLink="/code-shuffle" class="back-link">
+        <span aria-hidden="true">←</span>
+        Back to Code Shuffle
+      </a>
+
+      <span class="eyebrow">YOUR LEARNING JOURNEY</span>
+
+      <h1>{{ isOverallProgress() ? 'My Code Shuffle Progress' : 'Challenge Progress' }}</h1>
+
+      <p *ngIf="task() as currentTask">
+        Track your attempts and improve your performance in
+        <strong>{{ currentTask.title }}</strong>.
+      </p>
+
+      <p *ngIf="isOverallProgress()">
+        Review your scores, attempts, and learning progress across challenges.
+      </p>
+
+      <p *ngIf="!isOverallProgress() && !task()">
+        Review your scores, attempts, and learning progress.
+      </p>
+    </div>
+
+    <div class="header-icon" aria-hidden="true">↗</div>
+  </header>
+
+  <!-- Loading -->
+  <section *ngIf="loading()" class="state-card">
+    <div class="loading-spinner"></div>
+    <h2>Loading your progress</h2>
+    <p>Gathering your challenge and attempt history...</p>
+  </section>
+
+  <!-- Error -->
+  <section *ngIf="!loading() && errorMessage()" class="state-card error-state">
+    <div class="state-icon" aria-hidden="true">!</div>
+    <h2>Couldn't load progress</h2>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="isOverallProgress() ? loadOverallProgress() : loadProgress()"
+    >
+      Try again
+    </button>
+  </section>
+
+  <!-- Overall Progress: My Progress button -->
+  <ng-container *ngIf="!loading() && !errorMessage() && isOverallProgress()">
+
+    <section class="overall-progress-section">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">YOUR LEARNING JOURNEY</span>
+          <h2>All Challenge Progress</h2>
+          <p>Choose a challenge to see its detailed attempts and scores.</p>
+        </div>
+      </div>
+
+      <div
+        class="overall-task-list"
+        *ngIf="tasks().length > 0; else noOverallTasks"
+      >
+        <article
+          class="overall-task-card"
+          *ngFor="let item of tasks()"
+        >
+          <div>
+            <h3>{{ item.title }}</h3>
+
+            <p>
+              {{ item.description || 'Practise your programming logic.' }}
+            </p>
+
+            <span class="difficulty">
+              {{ item.difficulty }}
+            </span>
+
+            <p>
+              Attempts: {{ item.attempt_count ?? 0 }}
+            </p>
+
+            <p>
+              Best score:
+              {{ item.best_score ?? 0 }} / {{ item.max_marks }}
+            </p>
+
+            <p>
+              Status:
+              {{
+                item.progress_status === 'completed'
+                  ? 'Completed'
+                  : (item.attempt_count ?? 0) > 0
+                    ? 'In Progress'
+                    : 'Not Started'
+              }}
+            </p>
+          </div>
+
+          <a
+            class="primary-button"
+            [routerLink]="['/code-shuffle/progress', item.id]"
+          >
+            View Progress →
+          </a>
+        </article>
+      </div>
+
+      <ng-template #noOverallTasks>
+        <section class="state-card">
+          <div class="state-icon" aria-hidden="true">◎</div>
+          <h2>No Code Shuffle challenges available</h2>
+          <p>Published programming challenges will appear here.</p>
+
+          <a routerLink="/code-shuffle" class="secondary-button">
+            Browse Challenges
+          </a>
+        </section>
+      </ng-template>
+    </section>
+
+  </ng-container>
+
+  <!-- Individual Challenge Progress -->
+  <ng-container *ngIf="!loading() && !errorMessage() && !isOverallProgress()">
+
+    <!-- Empty State -->
+    <section *ngIf="attempts().length === 0" class="state-card">
+      <div class="state-icon" aria-hidden="true">◎</div>
+      <h2>Your journey starts here</h2>
+      <p>
+        You haven't submitted an attempt for this challenge yet.
+        Complete your first attempt to see your progress here.
+      </p>
+
+      <a
+        *ngIf="task() as currentTask"
+        class="primary-button"
+        [routerLink]="['/code-shuffle/tasks', currentTask.id]"
+      >
+        Start Challenge
+      </a>
+
+      <a
+        routerLink="/code-shuffle"
+        class="secondary-button"
+      >
+        All Challenges
+      </a>
+    </section>
+
+    <!-- Results -->
+    <ng-container *ngIf="attempts().length > 0 && task() as currentTask">
+
+      <!-- Summary Cards -->
+      <section class="stats-grid">
+
+        <article class="stat-card score-card">
+          <div class="stat-top">
+            <span class="stat-label">Latest Score</span>
+            <span class="stat-icon" aria-hidden="true">◈</span>
+          </div>
+
+          <div class="stat-value">
+            {{ latestAttempt?.score ?? 0 | number:'1.0-2' }}
+            <span>/ {{ maxMarks }}</span>
+          </div>
+
+          <div class="score-track">
+            <div
+              class="score-fill"
+              [style.width.%]="scorePercentage">
+            </div>
+          </div>
+
+          <span class="stat-caption">
+            {{ scorePercentage | number:'1.0-0' }}% of available marks
+          </span>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Total Attempts</span>
+            <span class="stat-icon purple-icon" aria-hidden="true">↻</span>
+          </div>
+
+          <div class="stat-value">{{ attempts().length }}</div>
+
+          <span class="stat-caption">
+            Recorded submissions
+          </span>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Best Score</span>
+            <span class="stat-icon green-icon" aria-hidden="true">↗</span>
+          </div>
+
+          <div class="stat-value">
+            {{ bestScore | number:'1.0-2' }}
+            <span>/ {{ maxMarks }}</span>
+          </div>
+
+          <span class="stat-caption">
+            Your highest recorded score
+          </span>
+        </article>
+
+      </section>
+
+      <!-- Latest Attempt Highlight -->
+      <section class="latest-card">
+        <div class="latest-heading">
+          <div>
+            <span class="eyebrow">MOST RECENT</span>
+            <h2>Latest Challenge Result</h2>
+          </div>
+
+          <span
+            class="status-badge"
+            [class.status-success]="latestAttempt?.is_correct"
+            [class.status-warning]="!latestAttempt?.is_correct"
+          >
+            {{ latestAttempt?.is_correct ? 'Completed' : 'Needs Review' }}
+          </span>
+        </div>
+
+        <div class="latest-details">
+          <div class="detail-item">
+            <span>Submitted</span>
+            <strong>
+              {{ latestAttempt?.submitted_at | date:'medium' }}
+            </strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Time Taken</span>
+            <strong>
+              {{ formatDuration(latestAttempt?.time_taken_seconds ?? 0) }}
+            </strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Hints Used</span>
+            <strong>{{ latestAttempt?.hints_used ?? 0 }}</strong>
+          </div>
+        </div>
+
+        <div class="latest-actions">
+          <a
+            class="primary-button"
+            [routerLink]="['/code-shuffle/tasks', currentTask.id]"
+          >
+            Practise Again
+            <span aria-hidden="true">→</span>
+          </a>
+
+          <a routerLink="/code-shuffle" class="secondary-button">
+            All Challenges
+          </a>
+        </div>
+      </section>
+
+      <!-- Attempt History -->
+      <section class="history-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">YOUR ACTIVITY</span>
+            <h2>Attempt History</h2>
+            <p>Follow your progress across every submission.</p>
+          </div>
+
+          <span class="attempt-count">
+            {{ attempts().length }} attempts
+          </span>
+        </div>
+
+        <div class="history-list">
+          <article
+            class="attempt-card"
+            *ngFor="
+              let attempt of attempts();
+              let i = index;
+              trackBy: trackAttempt
+            "
+          >
+            <div class="attempt-number">
+              {{ attempt.attempt_number ?? attempts().length - i }}
+            </div>
+
+            <div class="attempt-content">
+              <div class="attempt-title-row">
+                <h3>
+                  Attempt {{ attempt.attempt_number ?? attempts().length - i }}
+                </h3>
+
+                <span
+                  class="status-badge"
+                  [class.status-success]="attempt.is_correct"
+                  [class.status-warning]="!attempt.is_correct"
+                >
+                  {{ attempt.is_correct ? 'Completed' : 'Needs Review' }}
+                </span>
+              </div>
+
+              <p class="attempt-date">
+                {{ attempt.submitted_at | date:'medium' }}
+              </p>
+
+              <div class="attempt-meta">
+                <span>
+                  <span aria-hidden="true">◷</span>
+                  {{ formatDuration(attempt.time_taken_seconds) }}
+                </span>
+
+                <span>
+                  <span aria-hidden="true">✦</span>
+                  {{ attempt.hints_used }} hints
+                </span>
+              </div>
+            </div>
+
+            <div class="attempt-score">
+              <strong>
+                {{ attempt.score | number:'1.0-2' }}
+              </strong>
+              <span>/ {{ attempt.max_marks }} marks</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </ng-container>
+  </ng-container>
+
+</div>
