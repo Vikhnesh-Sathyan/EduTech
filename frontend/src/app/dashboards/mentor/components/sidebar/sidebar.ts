@@ -2,7 +2,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
 @Component({
   selector: 'app-mentor-sidebar',
   standalone: true,
@@ -18,4 +19,12 @@ export class Sidebar {
   advancedTheoryOpen = false;
 
   conceptComparisonOpen = false;
+
+  
+codeShuffleExpanded = false;
+
+toggleCodeShuffle(): void {
+  this.codeShuffleExpanded = !this.codeShuffleExpanded;
+}
+
 }

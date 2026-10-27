@@ -128,6 +128,46 @@
   }
 </div>
 
+  
+<!-- Code Shuffle -->
+
+<div class="code-shuffle-menu">
+
+  <button
+    type="button"
+    class="code-shuffle-toggle"
+    (click)="toggleCodeShuffle()"
+    [attr.aria-expanded]="codeShuffleExpanded"
+  >
+    <span class="nav-icon">⌘</span>
+    <span class="nav-label">Code Shuffle</span>
+    <span class="dropdown-arrow"
+      [class.rotated]="codeShuffleExpanded">⌄</span>
+  </button>
+
+  <div class="code-shuffle-submenu" *ngIf="codeShuffleExpanded">
+
+    <a
+      routerLink="/mentor/advanced/code-shuffle/create"
+      routerLinkActive="active"
+      class="code-shuffle-submenu-link"
+    >
+      <span class="submenu-dot"></span>
+      Create Task
+    </a>
+
+    <a
+      routerLink="/mentor/advanced/code-shuffle/topics"
+      routerLinkActive="active"
+      class="code-shuffle-submenu-link"
+    >
+      <span class="submenu-dot"></span>
+      Manage Topics
+    </a>
+
+  </div>
+</div>
+
     <!-- Profile -->
     <a routerLink="/mentor-profile" routerLinkActive="active">
       <span class="nav-icon">○</span>

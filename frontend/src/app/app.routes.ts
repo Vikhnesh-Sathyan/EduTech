@@ -164,6 +164,11 @@ import { TheoryQuizEdit } from './features/mentor/advanced/theory-quiz-edit/theo
 import { ConceptComparisonManagement } from './features/mentor/advanced/concept-comparison/concept-comparison-management/concept-comparison-management';
 import { MyComparisons } from './features/mentor/advanced/concept-comparison/my-comparisons/my-comparisons'
 import {ComparisonDetailsComponent} from './features/mentor/advanced/concept-comparison/comparison-details/comparison-details'
+
+//SHUFFLE CODE
+import { CodeShuffleCreate } from './features/mentor/advanced/code-shuffle/code-shuffle-create/code-shuffle-create';
+import { CodeShuffleTopics } from './features/mentor/advanced/code-shuffle/code-shuffle-topics/code-shuffle-topics';
+
 export const routes: Routes = [
 
   // Public routes
@@ -590,7 +595,14 @@ export const routes: Routes = [
         path: 'mentor/advanced/my-comparisons/:id',
         component: ComparisonDetailsComponent
       },
-      
+      {
+        path: 'mentor/advanced/code-shuffle/create',
+        component: CodeShuffleCreate,
+      },
+      {
+        path: 'mentor/advanced/code-shuffle/topics',
+        component: CodeShuffleTopics,
+      },
 
 
     ]

@@ -1,0 +1,163 @@
+
+<div class="topics-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <a
+        routerLink="/mentor/advanced/code-shuffle/create"
+        class="back-link"
+      >
+        ← Back to Code Shuffle
+      </a>
+
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>Topic Management</h1>
+      <p>
+        Create and organize topics for your programming challenges.
+      </p>
+    </div>
+
+    <div class="header-icon">⌘</div>
+  </header>
+
+  <!-- Status Messages -->
+  <div class="status-message error" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="status-message success" *ngIf="successMessage()">
+    {{ successMessage() }}
+  </div>
+
+  <!-- Create Topic -->
+  <section class="content-card">
+    <div class="section-heading">
+      <div>
+        <span class="section-label">NEW TOPIC</span>
+        <h2>Create a Topic</h2>
+        <p>Add a topic that you can attach to your Code Shuffle tasks.</p>
+      </div>
+      <span class="section-icon">＋</span>
+    </div>
+
+    <form (ngSubmit)="createTopic()" #topicForm="ngForm">
+
+      <div class="form-group">
+        <label for="topicName">Topic Name <span>*</span></label>
+
+        <input
+          id="topicName"
+          name="topicName"
+          type="text"
+          [(ngModel)]="topicName"
+          required
+          maxlength="100"
+          placeholder="e.g. Conditional Statements"
+        />
+
+        <small>Choose a clear, easy-to-understand topic name.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="topicDescription">Description (Optional)</label>
+
+        <textarea
+          id="topicDescription"
+          name="topicDescription"
+          [(ngModel)]="topicDescription"
+          rows="4"
+          maxlength="500"
+          placeholder="Describe what students will practise in this topic..."
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving() || !topicName.trim()"
+        >
+          <span *ngIf="!saving()">＋ Create Topic</span>
+          <span *ngIf="saving()">Creating...</span>
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- Existing Topics -->
+  <section class="content-card topics-card">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">YOUR COLLECTION</span>
+        <h2>My Topics</h2>
+        <p>Topics available for your Code Shuffle challenges.</p>
+      </div>
+
+      <span class="topic-count">{{ topics().length }} topics</span>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading()">
+      <span class="loader"></span>
+      <p>Loading your topics...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      class="empty-state"
+      *ngIf="!loading() && topics().length === 0"
+    >
+      <div class="empty-icon">📚</div>
+      <h3>No topics created yet</h3>
+      <p>
+        Create your first topic above. You can then select it
+        when creating a Code Shuffle challenge.
+      </p>
+    </div>
+
+    <!-- Topic List -->
+    <div class="topic-list" *ngIf="!loading() && topics().length > 0">
+
+      <article class="topic-item" *ngFor="let topic of topics()">
+
+        <div class="topic-icon">📘</div>
+
+        <div class="topic-details">
+          <h3>{{ topic.name }}</h3>
+
+          <p *ngIf="topic.description">
+            {{ topic.description }}
+          </p>
+
+          <p class="no-description" *ngIf="!topic.description">
+            No description added.
+          </p>
+
+          <span class="topic-id">Topic #{{ topic.id }}</span>
+        </div>
+
+        <span class="topic-status">Created</span>
+
+      </article>
+
+    </div>
+
+    <div class="card-footer" *ngIf="!loading() && topics().length > 0">
+      <span>Manage your topics here, bro.</span>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="loadTopics()"
+        [disabled]="loading()"
+      >
+        ↻ Refresh
+      </button>
+    </div>
+
+  </section>
+
+</div>

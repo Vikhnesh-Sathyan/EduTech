@@ -30,6 +30,12 @@ const {
     "../../../../controllers/mentor/advanced/code-shuffle/codeShufflePublishController"
 );
 
+const {
+    deleteTask
+} = require(
+    "../../../../controllers/mentor/advanced/code-shuffle/codeShuffleDeleteController"
+);
+
 const authMiddleware = require("../../../../middleware/authMiddleware");
 const roleMiddleware = require("../../../../middleware/roleMiddleware");
 
@@ -112,6 +118,14 @@ router.patch(
     authMiddleware,
     roleMiddleware("mentor"),
     unpublishTask
+);
+
+// Delete a task owned by the logged-in mentor.
+router.delete(
+    "/tasks/:id",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    deleteTask
 );
 
 module.exports = router;

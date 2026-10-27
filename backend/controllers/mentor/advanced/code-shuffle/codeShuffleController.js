@@ -1,29 +1,33 @@
-
 const db = require("../../../../config/db");
+const {
+    generateDistractors
+} = require("../../../../utils/codeShuffleDistractorGenerator");
 
 // =====================================================
 // GET ACTIVE PROGRAMMING LANGUAGES
 // Languages are managed by the admin.
 // =====================================================
-
 const getAvailableLanguages = async (req, res) => {
     try {
-        const [languages] = await db.query(`
-            SELECT id, name, slug
-            FROM code_shuffle_languages
+        const [subjects] = await db.query(`
+            SELECT id, name
+            FROM subjects
             WHERE status = 'active'
             ORDER BY name ASC
         `);
 
-        return res.status(200).json({ languages });
-    } catch (error) {
-        console.error("Get Code Shuffle languages error:", error);
+        return res.status(200).json({
+            languages: subjects
+        });
+    } catch (err) {
+        console.error('Active subjects fetch failed:', err.message);
 
         return res.status(500).json({
-            message: "Failed to fetch programming languages."
+            message: 'Failed to fetch active subjects'
         });
     }
 };
+
 
 // =====================================================
 // GET TOPICS CREATED BY THE LOGGED-IN MENTOR
@@ -125,9 +129,11 @@ const createTopic = async (req, res) => {
 // =====================================================
 
 const createTask = async (req, res) => {
-    const connection = await db.getConnection();
+    let connection;
 
     try {
+        connection = await db.getConnection();
+
         const mentorId = req.user.id;
 
         const {
@@ -140,37 +146,34 @@ const createTask = async (req, res) => {
             publishDate,
             dueDate,
             topicIds,
-            correctBlocks,
-            distractorBlocks
+            correctBlocks
         } = req.body;
 
-        // ---------------------------------------------
-        // Validate basic task details
-        // ---------------------------------------------
-
+        // 1. Validate basic task details
         if (
             typeof title !== "string" ||
             !title.trim() ||
             typeof description !== "string" ||
             !description.trim() ||
             !Number.isInteger(Number(languageId)) ||
+            Number(languageId) <= 0 ||
             !["easy", "medium", "hard"].includes(difficulty) ||
             !Number.isFinite(Number(maxMarks)) ||
             Number(maxMarks) <= 0
         ) {
             return res.status(400).json({
-                message: "Please provide a title, description, language, difficulty and valid maximum marks."
+                message:
+                    "Please provide a title, description, language, difficulty and valid maximum marks."
             });
         }
 
-        // ---------------------------------------------
-        // Validate topics
-        // ---------------------------------------------
-
+        // 2. Validate selected topics
         if (
             !Array.isArray(topicIds) ||
             topicIds.length === 0 ||
-            topicIds.some(id => !Number.isInteger(Number(id)) || Number(id) <= 0) ||
+            topicIds.some(
+                id => !Number.isInteger(Number(id)) || Number(id) <= 0
+            ) ||
             new Set(topicIds.map(Number)).size !== topicIds.length
         ) {
             return res.status(400).json({
@@ -178,44 +181,21 @@ const createTask = async (req, res) => {
             });
         }
 
-        // ---------------------------------------------
-        // Validate correct code blocks
-        // ---------------------------------------------
-
+        // 3. Validate correct code blocks
         if (
             !Array.isArray(correctBlocks) ||
             correctBlocks.length < 2 ||
-            correctBlocks.some(block =>
-                typeof block !== "string" || !block.trim()
+            correctBlocks.some(
+                block => typeof block !== "string" || !block.trim()
             )
         ) {
             return res.status(400).json({
-                message: "Provide at least two non-empty correct code blocks."
+                message:
+                    "Provide at least two non-empty correct code blocks."
             });
         }
 
-        // ---------------------------------------------
-        // Validate optional distractor blocks
-        // ---------------------------------------------
-
-        const safeDistractorBlocks =
-            distractorBlocks === undefined ? [] : distractorBlocks;
-
-        if (
-            !Array.isArray(safeDistractorBlocks) ||
-            safeDistractorBlocks.some(block =>
-                typeof block !== "string" || !block.trim()
-            )
-        ) {
-            return res.status(400).json({
-                message: "Each distractor must contain non-empty code."
-            });
-        }
-
-        // ---------------------------------------------
-        // Validate optional hint and dates
-        // ---------------------------------------------
-
+        // 4. Validate optional hint
         if (
             hintText !== undefined &&
             hintText !== null &&
@@ -226,46 +206,56 @@ const createTask = async (req, res) => {
             });
         }
 
+        // 5. Validate publish date
         if (
             publishDate !== undefined &&
             publishDate !== null &&
-            (typeof publishDate !== "string" ||
+            (
+                typeof publishDate !== "string" ||
                 !/^\d{4}-\d{2}-\d{2}$/.test(publishDate) ||
-                Number.isNaN(Date.parse(`${publishDate}T00:00:00Z`)))
+                Number.isNaN(
+                    Date.parse(`${publishDate}T00:00:00Z`)
+                )
+            )
         ) {
             return res.status(400).json({
                 message: "Publish date must use YYYY-MM-DD format."
             });
         }
 
+        // 6. Validate due date
         if (
             dueDate !== undefined &&
             dueDate !== null &&
-            (typeof dueDate !== "string" ||
-                Number.isNaN(Date.parse(dueDate)))
+            (
+                typeof dueDate !== "string" ||
+                Number.isNaN(Date.parse(dueDate))
+            )
         ) {
             return res.status(400).json({
                 message: "Due date must be a valid date and time."
             });
         }
 
-        // ---------------------------------------------
-        // Validate active language and mentor-owned topics
-        // ---------------------------------------------
-
+        // 7. Validate the selected programming language
         const [languages] = await connection.execute(
-            `SELECT id
-             FROM code_shuffle_languages
-             WHERE id = ? AND status = 'active'`,
-            [Number(languageId)]
-        );
+    `SELECT id, name
+     FROM subjects
+     WHERE id = ?
+       AND status = 'active'`,
+    [Number(languageId)]
+);
 
         if (languages.length === 0) {
             return res.status(400).json({
-                message: "The selected programming language is invalid or inactive."
+                message:
+                    "The selected programming language is invalid or inactive."
             });
         }
 
+        const languageName = languages[0].name;
+
+        // 8. Validate that selected topics belong to this mentor
         const placeholders = topicIds.map(() => "?").join(", ");
 
         const [topics] = await connection.execute(
@@ -279,14 +269,46 @@ const createTask = async (req, res) => {
 
         if (topics.length !== topicIds.length) {
             return res.status(400).json({
-                message: "One or more selected topics are invalid or do not belong to you."
+                message:
+                    "One or more selected topics are invalid or do not belong to you."
             });
         }
 
-        // ---------------------------------------------
-        // Save task, topics and blocks in one transaction
-        // ---------------------------------------------
+        // 9. Generate distractors automatically
+        const normalizedCorrectBlocks = correctBlocks.map(
+            block => block.trim()
+        );
 
+        const correctContentSet = new Set(
+            normalizedCorrectBlocks
+        );
+
+        const generatedDistractors = generateDistractors(
+            normalizedCorrectBlocks,
+            languageName
+        );
+
+        // Remove empty blocks, duplicates and exact matches
+        // against the correct blocks.
+        const uniqueDistractors = [
+            ...new Set(
+                generatedDistractors
+                    .map(block =>
+                        typeof block === "string"
+                            ? block.trim()
+                            : typeof block?.blockContent === "string"
+                                ? block.blockContent.trim()
+                                : ""
+                    )
+                    .filter(
+                        content =>
+                            content &&
+                            !correctContentSet.has(content)
+                    )
+            )
+        ].slice(0, 5);
+
+        // 10. Save task and blocks in one transaction
         await connection.beginTransaction();
 
         const [taskResult] = await connection.execute(
@@ -321,7 +343,7 @@ const createTask = async (req, res) => {
 
         const taskId = taskResult.insertId;
 
-        // Attach selected topics to this task.
+        // Save topic relationships
         for (const topicId of topicIds) {
             await connection.execute(
                 `INSERT INTO code_shuffle_task_topics
@@ -331,23 +353,41 @@ const createTask = async (req, res) => {
             );
         }
 
-        // Correct blocks keep their original correct positions.
-        for (let index = 0; index < correctBlocks.length; index++) {
+        // Save correct blocks with their original order
+        for (
+            let index = 0;
+            index < normalizedCorrectBlocks.length;
+            index++
+        ) {
             await connection.execute(
                 `INSERT INTO code_shuffle_blocks
-                    (task_id, block_content, block_type, correct_position)
+                    (
+                        task_id,
+                        block_content,
+                        block_type,
+                        correct_position
+                    )
                  VALUES (?, ?, 'correct', ?)`,
-                [taskId, correctBlocks[index].trim(), index + 1]
+                [
+                    taskId,
+                    normalizedCorrectBlocks[index],
+                    index + 1
+                ]
             );
         }
 
-        // Distractors have no correct position.
-        for (const block of safeDistractorBlocks) {
+        // Save automatically generated distractors
+        for (const blockContent of uniqueDistractors) {
             await connection.execute(
                 `INSERT INTO code_shuffle_blocks
-                    (task_id, block_content, block_type, correct_position)
+                    (
+                        task_id,
+                        block_content,
+                        block_type,
+                        correct_position
+                    )
                  VALUES (?, ?, 'distractor', NULL)`,
-                [taskId, block.trim()]
+                [taskId, blockContent]
             );
         }
 
@@ -355,18 +395,33 @@ const createTask = async (req, res) => {
 
         return res.status(201).json({
             message: "Code Shuffle task saved as a draft.",
-            taskId
+            taskId,
+            correctBlockCount: normalizedCorrectBlocks.length,
+            distractorCount: uniqueDistractors.length
         });
+
     } catch (error) {
-        await connection.rollback();
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error(
+                    "Code Shuffle rollback error:",
+                    rollbackError
+                );
+            }
+        }
 
         console.error("Create Code Shuffle task error:", error);
 
         return res.status(500).json({
             message: "Failed to create the Code Shuffle task."
         });
+
     } finally {
-        connection.release();
+        if (connection) {
+            connection.release();
+        }
     }
 };
 
@@ -391,12 +446,12 @@ const getMyTasks = async (req, res) => {
                 t.status,
                 t.created_at,
                 t.updated_at,
-                l.name AS language_name,
+                s.name AS language_name,
                 COUNT(DISTINCT b.id) AS total_blocks,
                 COUNT(DISTINCT tt.topic_id) AS topic_count
              FROM code_shuffle_tasks t
-             JOIN code_shuffle_languages l
-                ON l.id = t.language_id
+             JOIN subjects s
+                ON s.id = t.language_id
              LEFT JOIN code_shuffle_blocks b
                 ON b.task_id = t.id
              LEFT JOIN code_shuffle_task_topics tt
@@ -413,7 +468,7 @@ const getMyTasks = async (req, res) => {
                 t.status,
                 t.created_at,
                 t.updated_at,
-                l.name
+                s.name
              ORDER BY t.created_at DESC`,
             [mentorId]
         );

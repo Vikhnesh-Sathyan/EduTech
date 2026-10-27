@@ -1,0 +1,353 @@
+
+<div class="create-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <a routerLink="/mentor/advanced/code-shuffle/topics"
+         class="back-link">
+        ← Back to Topics
+      </a>
+
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>Create Code Shuffle</h1>
+      <p>
+        Create a coding challenge from your solution.
+        Distractor candidates are generated automatically.
+      </p>
+    </div>
+
+    <div class="header-icon">⌘</div>
+  </header>
+
+  <!-- Error Message -->
+  <div class="message error-message"
+       *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Success Message -->
+  <div class="message success-message"
+       *ngIf="successMessage()">
+    {{ successMessage() }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="loading()">
+    Loading programming languages and topics...
+  </div>
+
+  <form
+    *ngIf="!loading()"
+    [formGroup]="taskForm"
+    (ngSubmit)="submitTask()"
+    class="task-form"
+  >
+
+    <!-- Task Details -->
+    <section class="form-section">
+      <div class="section-heading">
+        <span class="section-number">01</span>
+        <div>
+          <h2>Challenge Details</h2>
+          <p>Describe the task students need to solve.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-field full-width">
+          <label for="title">Task Title *</label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="e.g. JavaScript Conditional Logic"
+          />
+
+          <small
+            class="field-error"
+            *ngIf="
+              taskForm.controls.title.touched &&
+              taskForm.controls.title.invalid
+            "
+          >
+            Enter a title (maximum 150 characters).
+          </small>
+        </div>
+
+        <div class="form-field full-width">
+          <label for="description">Description *</label>
+          <textarea
+            id="description"
+            rows="4"
+            formControlName="description"
+            placeholder="Explain what the student should achieve..."
+          ></textarea>
+
+          <small
+            class="field-error"
+            *ngIf="
+              taskForm.controls.description.touched &&
+              taskForm.controls.description.invalid
+            "
+          >
+            Enter a description.
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="languageId">Programming Language *</label>
+
+          <select
+            id="languageId"
+            formControlName="languageId"
+          >
+            <option value="">Choose a language</option>
+
+            <option
+              *ngFor="let language of languages()"
+              [value]="language.id"
+            >
+              {{ language.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="difficulty">Difficulty *</label>
+
+          <select
+            id="difficulty"
+            formControlName="difficulty"
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="maxMarks">Maximum Marks *</label>
+
+          <input
+            id="maxMarks"
+            type="number"
+            min="1"
+            max="100"
+            formControlName="maxMarks"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="hintText">Hint (Optional)</label>
+
+          <input
+            id="hintText"
+            type="text"
+            formControlName="hintText"
+            placeholder="Give students a small clue"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="publishDate">Publish Date *</label>
+
+          <input
+            id="publishDate"
+            type="date"
+            formControlName="publishDate"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="dueDate">Due Date (Optional)</label>
+
+          <input
+            id="dueDate"
+            type="datetime-local"
+            formControlName="dueDate"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Topics -->
+    <section class="form-section">
+      <div class="section-heading">
+        <span class="section-number">02</span>
+        <div>
+          <h2>Choose Topics</h2>
+          <p>Select at least one of your active topics.</p>
+        </div>
+      </div>
+
+      <div class="topic-list" *ngIf="topics().length > 0">
+
+        <label
+          class="topic-option"
+          *ngFor="let topic of topics()"
+        >
+          <input
+            type="checkbox"
+            [checked]="isTopicSelected(topic.id)"
+            (change)="
+              toggleTopic(
+                topic.id,
+                $any($event.target).checked
+              )
+            "
+          />
+
+          <span class="topic-checkbox"></span>
+
+          <span class="topic-details">
+            <strong>{{ topic.name }}</strong>
+
+            <small *ngIf="topic.description">
+              {{ topic.description }}
+            </small>
+          </span>
+        </label>
+
+      </div>
+
+      <div class="empty-state" *ngIf="topics().length === 0">
+        <h3>No active topics available</h3>
+        <p>Create a topic before creating a challenge.</p>
+
+        <a
+          routerLink="/mentor/advanced/code-shuffle/topics"
+          class="secondary-button"
+        >
+          Manage Topics
+        </a>
+      </div>
+
+      <small
+        class="field-error"
+        *ngIf="
+          taskForm.controls.topicIds.touched &&
+          taskForm.controls.topicIds.value.length === 0
+        "
+      >
+        Select at least one topic.
+      </small>
+    </section>
+
+    <!-- Complete Solution -->
+    <section class="form-section solution-section">
+      <div class="section-heading">
+        <span class="section-number">03</span>
+        <div>
+          <h2>Correct Code Solution</h2>
+          <p>
+            Enter the complete solution once. Each non-empty line
+            becomes a block in this initial version.
+          </p>
+        </div>
+      </div>
+
+      <div class="solution-editor">
+        <div class="editor-toolbar">
+          <div class="editor-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <span>Solution Editor</span>
+        </div>
+
+        <textarea
+          id="codeSolution"
+          formControlName="codeSolution"
+          class="code-editor"
+          rows="12"
+          spellcheck="false"
+          placeholder="const number = 5;
+if (number > 0) {
+  console.log('Positive');
+}"
+        ></textarea>
+      </div>
+
+      <small
+        class="field-error"
+        *ngIf="
+          taskForm.controls.codeSolution.touched &&
+          taskForm.controls.codeSolution.invalid
+        "
+      >
+        Enter the correct solution.
+      </small>
+
+      <div class="preview-actions">
+        <div>
+          <h3>Block Preview</h3>
+          <p>Review how the solution will be split.</p>
+        </div>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="generateBlockPreview()"
+        >
+          Generate Preview
+        </button>
+      </div>
+
+      <div
+        class="block-preview"
+        *ngIf="previewBlocks().length > 0"
+      >
+        <div
+          class="preview-block"
+          *ngFor="
+            let block of previewBlocks();
+            let i = index
+          "
+        >
+          <span class="block-number">{{ i + 1 }}</span>
+          <code>{{ block }}</code>
+        </div>
+      </div>
+
+      <div
+        class="empty-preview"
+        *ngIf="previewBlocks().length === 0"
+      >
+        Your code blocks will appear here after you generate
+        the preview.
+      </div>
+
+      <div class="info-note">
+        <span>ⓘ</span>
+        <p>
+          Distractor candidates are generated by the backend.
+          The current generator uses simple transformations, so
+          review generated challenges before publishing them.
+        </p>
+      </div>
+    </section>
+
+    <!-- Submit -->
+    <footer class="form-footer">
+      <div>
+        <strong>Ready to save?</strong>
+        <p>Your task will be saved as a draft.</p>
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="saving() || loading()"
+      >
+        <span *ngIf="!saving()">Save Draft</span>
+        <span *ngIf="saving()">Saving...</span>
+      </button>
+    </footer>
+
+  </form>
+</div>
