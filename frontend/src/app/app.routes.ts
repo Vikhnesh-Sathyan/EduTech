@@ -170,6 +170,7 @@ import { CodeShuffleCreate } from './features/mentor/advanced/code-shuffle/code-
 import { CodeShuffleTopics } from './features/mentor/advanced/code-shuffle/code-shuffle-topics/code-shuffle-topics';
 import { CodeShuffleList } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-list';
 import { CodeShuffleEdit } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-edit/code-shuffle-edit';
+import { CodeShuffleDetails } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-details/code-shuffle-details';
 
 export const routes: Routes = [
 
@@ -612,8 +613,11 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/code-shuffle/tasks/:id/edit',
         component: CodeShuffleEdit,
-      }
-
+      },
+      {
+        path: 'mentor/advanced/code-shuffle/tasks/:id',
+        component: CodeShuffleDetails,
+      },
 
     ]
   },

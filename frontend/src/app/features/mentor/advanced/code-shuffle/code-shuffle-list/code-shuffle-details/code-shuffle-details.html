@@ -1,1 +1,270 @@
-<p>code-shuffle-details works!</p>
+<div class="details-page">
+
+  <!-- Loading -->
+  @if (loading()) {
+
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading task details...</p>
+    </div>
+
+  } @else {
+
+    @if (task(); as t) {
+
+      <!-- Header -->
+      <header class="page-header">
+        <div class="header-content">
+          <button class="back-btn" type="button" (click)="goBack()">
+            ← Back to My Tasks
+          </button>
+
+          <span class="eyebrow">CODE SHUFFLE / TASK DETAILS</span>
+          <h1>{{ t.title }}</h1>
+          <p>View task information, topics and code blocks.</p>
+        </div>
+
+        <div class="header-actions">
+          <span class="status-badge" [class]="t.status">
+            {{ t.status | titlecase }}
+          </span>
+
+          @if (t.status === 'draft') {
+            <button
+              class="edit-btn"
+              type="button"
+              (click)="editTask()"
+            >
+              ✎ Edit Task
+            </button>
+          }
+        </div>
+      </header>
+
+      <!-- Overview Cards -->
+      <section class="overview-grid">
+        <article class="overview-card">
+          <span class="card-icon purple">⌘</span>
+          <div>
+            <span class="card-label">Programming Subject</span>
+            <h3>{{ t.language_name }}</h3>
+          </div>
+        </article>
+
+        <article class="overview-card">
+          <span class="card-icon blue">◈</span>
+          <div>
+            <span class="card-label">Difficulty</span>
+            <h3>
+              <span class="difficulty-badge" [class]="getDifficultyClass()">
+                {{ t.difficulty | titlecase }}
+              </span>
+            </h3>
+          </div>
+        </article>
+
+        <article class="overview-card">
+          <span class="card-icon green">✦</span>
+          <div>
+            <span class="card-label">Maximum Marks</span>
+            <h3>{{ t.max_marks }}</h3>
+          </div>
+        </article>
+
+        <article class="overview-card">
+          <span class="card-icon orange">▤</span>
+          <div>
+            <span class="card-label">Total Topics</span>
+            <h3>{{ topics().length }}</h3>
+          </div>
+        </article>
+      </section>
+
+      <!-- Description -->
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">OVERVIEW</span>
+            <h2>Task Description</h2>
+          </div>
+        </div>
+
+        <p class="description-text">{{ t.description }}</p>
+      </section>
+
+      <!-- Topics -->
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">LEARNING CONTENT</span>
+            <h2>Associated Topics</h2>
+            <p>Topics covered by this Code Shuffle task.</p>
+          </div>
+
+          <span class="count-badge">{{ topics().length }} topics</span>
+        </div>
+
+        @if (topics().length > 0) {
+          <div class="topics-grid">
+            @for (topic of topics(); track topic.id) {
+              <article class="topic-card">
+                <div class="topic-icon">#</div>
+                <div>
+                  <h3>{{ topic.name }}</h3>
+                  <p>{{ topic.description || 'No description provided.' }}</p>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            No topics are associated with this task.
+          </div>
+        }
+      </section>
+
+      <!-- Correct Blocks -->
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">EXPECTED SOLUTION</span>
+            <h2>Correct Code Blocks</h2>
+            <p>These blocks represent the correct solution sequence.</p>
+          </div>
+
+          <span class="count-badge success">
+            {{ correctBlocks().length }} blocks
+          </span>
+        </div>
+
+        @if (correctBlocks().length > 0) {
+          <div class="blocks-list">
+            @for (block of correctBlocks(); track block.id; let i = $index) {
+              <article class="code-block correct-block">
+                <div class="block-number">{{ i + 1 }}</div>
+
+                <div class="block-content">
+                  <span class="block-label">CORRECT BLOCK {{ i + 1 }}</span>
+                  <pre><code>{{ block.block_content }}</code></pre>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            No correct code blocks were found.
+          </div>
+        }
+      </section>
+
+      <!-- Distractor Blocks -->
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">EXTRA BLOCKS</span>
+            <h2>Distractor Code Blocks</h2>
+            <p>Additional blocks that learners must evaluate.</p>
+          </div>
+
+          <span class="count-badge warning">
+            {{ distractorBlocks().length }} blocks
+          </span>
+        </div>
+
+        @if (distractorBlocks().length > 0) {
+          <div class="blocks-list">
+            @for (block of distractorBlocks(); track block.id; let i = $index) {
+              <article class="code-block distractor-block">
+                <div class="block-number">{{ i + 1 }}</div>
+
+                <div class="block-content">
+                  <span class="block-label">DISTRACTOR {{ i + 1 }}</span>
+                  <pre><code>{{ block.block_content }}</code></pre>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            No distractor blocks were added to this task.
+          </div>
+        }
+      </section>
+
+      <!-- Additional Information -->
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">SCHEDULE & SETTINGS</span>
+            <h2>Additional Information</h2>
+          </div>
+        </div>
+
+        <div class="metadata-grid">
+          <div class="metadata-item">
+            <span>Publish Date</span>
+            <strong>{{ t.publish_date ? (t.publish_date | date:'mediumDate') : 'Not set' }}</strong>
+          </div>
+
+          <div class="metadata-item">
+            <span>Due Date</span>
+            <strong>{{ t.due_date ? (t.due_date | date:'mediumDate') : 'Not set' }}</strong>
+          </div>
+
+          <div class="metadata-item">
+            <span>Created</span>
+            <strong>{{ t.created_at | date:'medium' }}</strong>
+          </div>
+
+          <div class="metadata-item">
+            <span>Last Updated</span>
+            <strong>{{ t.updated_at | date:'medium' }}</strong>
+          </div>
+        </div>
+
+        @if (t.hint_text) {
+          <div class="hint-panel">
+            <span class="hint-icon">✦</span>
+            <div>
+              <h3>Learning Hint</h3>
+              <p>{{ t.hint_text }}</p>
+            </div>
+          </div>
+        }
+      </section>
+
+      <!-- Footer Actions -->
+      <footer class="details-footer">
+        <button class="secondary-btn" type="button" (click)="goBack()">
+          ← Back to My Tasks
+        </button>
+
+        @if (t.status === 'draft') {
+          <button
+            class="edit-btn"
+            type="button"
+            (click)="editTask()"
+          >
+            ✎ Edit Draft
+          </button>
+        }
+      </footer>
+
+    } @else {
+
+      <!-- Task Not Loaded -->
+      <div class="empty-page">
+        <div class="empty-page-icon">!</div>
+        <h2>Task details unavailable</h2>
+        <p>The task could not be loaded. Return to My Tasks and try again.</p>
+
+        <button class="secondary-btn" type="button" (click)="goBack()">
+          Back to My Tasks
+        </button>
+      </div>
+
+    }
+
+  }
+
+</div>

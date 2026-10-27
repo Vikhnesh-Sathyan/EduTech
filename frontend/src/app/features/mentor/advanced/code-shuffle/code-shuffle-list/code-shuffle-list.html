@@ -3,17 +3,14 @@
   <!-- Page Header -->
   <header class="page-header">
     <div class="header-content">
-      <a routerLink="../code-shuffle-create" class="back-link">
-        ← Create Task
-      </a>
-
+     
       <span class="eyebrow">MENTOR WORKSPACE</span>
       <h1>My Code Shuffle Tasks</h1>
       <p>Manage your coding challenges, publication status and tasks.</p>
     </div>
 
     <a
-      routerLink="../code-shuffle-create"
+      routerLink="/mentor/advanced/code-shuffle/create"
       class="primary-btn"
     >
       <span>＋</span>
@@ -133,11 +130,11 @@
       <div class="task-actions">
 
         <a
-          [routerLink]="['../code-shuffle-details', task.id]"
-          class="action-btn view-btn"
-        >
-          View
-        </a>
+  [routerLink]="['/mentor/advanced/code-shuffle/tasks', task.id]"
+  class="action-btn view-btn"
+>
+  View
+</a>
 
         <a
           [routerLink]="['/mentor/advanced/code-shuffle/tasks', task.id, 'edit']"

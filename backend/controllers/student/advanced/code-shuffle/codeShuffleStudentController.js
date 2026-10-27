@@ -32,8 +32,8 @@ const getPublishedTasks = async (req, res) => {
                 progress.latest_score,
                 progress.best_score,
                 progress.attempt_count
-            FROM code_shuffle_tasks task
-            JOIN code_shuffle_languages language
+                FROM code_shuffle_tasks task
+            JOIN subjects language
                 ON language.id = task.language_id
             LEFT JOIN code_shuffle_task_topics taskTopic
                 ON taskTopic.task_id = task.id

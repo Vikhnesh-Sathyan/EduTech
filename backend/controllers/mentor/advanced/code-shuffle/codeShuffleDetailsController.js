@@ -10,8 +10,7 @@ const getTaskById = async (req, res) => {
     try {
         const mentorId = req.user.id;
         const taskId = Number(req.params.id);
-        console.log("Logged-in mentor ID:", mentorId);
-console.log("Requested task ID:", taskId);
+        
         if (!Number.isInteger(taskId) || taskId <= 0) {
             return res.status(400).json({
                 message: "Invalid task ID."
