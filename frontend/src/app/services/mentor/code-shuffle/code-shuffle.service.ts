@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
@@ -27,6 +26,22 @@ export interface CodeShuffleTaskPayload {
   dueDate: string | null;
   topicIds: number[];
   correctBlocks: string[];
+}
+
+export interface CodeShuffleTask {
+  id: number;
+  title: string;
+  description: string;
+  language_name: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  max_marks: number;
+  publish_date: string | null;
+  due_date: string | null;
+  status: 'draft' | 'published' | 'unpublished';
+  total_blocks: number;
+  topic_count: number;
+  created_at: string;
+  updated_at: string;
 }
 
 @Injectable({
@@ -84,7 +99,6 @@ export class CodeShuffleService {
     }>(`${this.apiUrl}/tasks`, payload);
   }
 
-  
 createTopic(payload: {
   name: string;
   description: string | null;
@@ -109,6 +123,42 @@ createTopic(payload: {
 deleteTask(taskId: number): Observable<{ message: string }> {
   return this.http.delete<{ message: string }>(
     `${this.apiUrl}/tasks/${taskId}`
+  );
+}
+
+getMyTasks(): Observable<{ tasks: CodeShuffleTask[] }> {
+  return this.http.get<{ tasks: CodeShuffleTask[] }>(
+    `${this.apiUrl}/tasks/mine`
+  );
+}
+
+publishTask(taskId: number): Observable<{ message: string }> {
+  return this.http.patch<{ message: string }>(
+    `${this.apiUrl}/tasks/${taskId}/publish`,
+    {}
+  );
+}
+
+unpublishTask(taskId: number): Observable<{ message: string }> {
+  return this.http.patch<{ message: string }>(
+    `${this.apiUrl}/tasks/${taskId}/unpublish`,
+    {}
+  );
+}
+
+getTaskById(taskId: number): Observable<{ task: any }> {
+  return this.http.get<{ task: any }>(
+    `${this.apiUrl}/tasks/${taskId}`
+  );
+}
+
+updateTask(
+  taskId: number,
+  payload: any
+): Observable<{ message: string }> {
+  return this.http.put<{ message: string }>(
+    `${this.apiUrl}/tasks/${taskId}`,
+    payload
   );
 }
 

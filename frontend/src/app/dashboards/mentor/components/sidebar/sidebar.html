@@ -130,7 +130,6 @@
 
   
 <!-- Code Shuffle -->
-
 <div class="code-shuffle-menu">
 
   <button
@@ -141,8 +140,10 @@
   >
     <span class="nav-icon">⌘</span>
     <span class="nav-label">Code Shuffle</span>
-    <span class="dropdown-arrow"
-      [class.rotated]="codeShuffleExpanded">⌄</span>
+    <span
+      class="dropdown-arrow"
+      [class.rotated]="codeShuffleExpanded"
+    >⌄</span>
   </button>
 
   <div class="code-shuffle-submenu" *ngIf="codeShuffleExpanded">
@@ -163,6 +164,15 @@
     >
       <span class="submenu-dot"></span>
       Manage Topics
+    </a>
+
+    <a
+      routerLink="/mentor/advanced/code-shuffle/my-tasks"
+      routerLinkActive="active"
+      class="code-shuffle-submenu-link"
+    >
+      <span class="submenu-dot"></span>
+      My Tasks
     </a>
 
   </div>

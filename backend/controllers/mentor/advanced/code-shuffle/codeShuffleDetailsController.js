@@ -10,7 +10,8 @@ const getTaskById = async (req, res) => {
     try {
         const mentorId = req.user.id;
         const taskId = Number(req.params.id);
-
+        console.log("Logged-in mentor ID:", mentorId);
+console.log("Requested task ID:", taskId);
         if (!Number.isInteger(taskId) || taskId <= 0) {
             return res.status(400).json({
                 message: "Invalid task ID."
@@ -23,7 +24,7 @@ const getTaskById = async (req, res) => {
                 t.title,
                 t.description,
                 t.language_id,
-                l.name AS language_name,
+                s.name AS language_name,
                 t.difficulty,
                 t.max_marks,
                 t.hint_text,
@@ -33,8 +34,8 @@ const getTaskById = async (req, res) => {
                 t.created_at,
                 t.updated_at
              FROM code_shuffle_tasks t
-             JOIN code_shuffle_languages l
-                ON l.id = t.language_id
+             JOIN subjects s
+                ON s.id = t.language_id
              WHERE t.id = ?
                AND t.mentor_id = ?
              LIMIT 1`,

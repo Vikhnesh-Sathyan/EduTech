@@ -168,6 +168,8 @@ import {ComparisonDetailsComponent} from './features/mentor/advanced/concept-com
 //SHUFFLE CODE
 import { CodeShuffleCreate } from './features/mentor/advanced/code-shuffle/code-shuffle-create/code-shuffle-create';
 import { CodeShuffleTopics } from './features/mentor/advanced/code-shuffle/code-shuffle-topics/code-shuffle-topics';
+import { CodeShuffleList } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-list';
+import { CodeShuffleEdit } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-edit/code-shuffle-edit';
 
 export const routes: Routes = [
 
@@ -603,6 +605,14 @@ export const routes: Routes = [
         path: 'mentor/advanced/code-shuffle/topics',
         component: CodeShuffleTopics,
       },
+      {
+        path: 'mentor/advanced/code-shuffle/my-tasks',
+        component: CodeShuffleList
+      },
+      {
+        path: 'mentor/advanced/code-shuffle/tasks/:id/edit',
+        component: CodeShuffleEdit,
+      }
 
 
     ]

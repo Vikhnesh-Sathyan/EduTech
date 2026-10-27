@@ -1,0 +1,195 @@
+<div class="code-shuffle-list-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <a routerLink="../code-shuffle-create" class="back-link">
+        ← Create Task
+      </a>
+
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h1>My Code Shuffle Tasks</h1>
+      <p>Manage your coding challenges, publication status and tasks.</p>
+    </div>
+
+    <a
+      routerLink="../code-shuffle-create"
+      class="primary-btn"
+    >
+      <span>＋</span>
+      Create Task
+    </a>
+  </header>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="state-card">
+    <div class="loader"></div>
+    <p>Loading your Code Shuffle tasks...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    *ngIf="!loading() && tasks().length === 0"
+    class="state-card empty-state"
+  >
+    <div class="empty-icon">⌘</div>
+    <h2>No Code Shuffle tasks yet</h2>
+    <p>Create your first task and manage it here.</p>
+
+    <a
+      routerLink="../code-shuffle-create"
+      class="primary-btn"
+    >
+      Create Your First Task
+    </a>
+  </div>
+
+  <!-- Task List -->
+  <section
+    *ngIf="!loading() && tasks().length > 0"
+    class="task-grid"
+  >
+    <article
+      class="task-card"
+      *ngFor="let task of tasks()"
+    >
+      <!-- Card Header -->
+      <div class="card-top">
+        <span class="task-id">TASK #{{ task.id }}</span>
+
+        <span
+          class="status-badge"
+          [ngClass]="getStatusClass(task.status)"
+        >
+          {{ task.status | titlecase }}
+        </span>
+      </div>
+
+      <!-- Task Information -->
+      <div class="task-content">
+        <h2>{{ task.title }}</h2>
+        <p class="task-description">
+          {{ task.description }}
+        </p>
+
+        <div class="task-tags">
+          <span class="tag language-tag">
+            {{ task.language_name }}
+          </span>
+
+          <span
+            class="tag difficulty-tag"
+            [ngClass]="'difficulty-' + task.difficulty"
+          >
+            {{ task.difficulty | titlecase }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Task Statistics -->
+      <div class="task-stats">
+        <div class="stat-item">
+          <span class="stat-label">Max Marks</span>
+          <strong>{{ task.max_marks }}</strong>
+        </div>
+
+        <div class="stat-item">
+          <span class="stat-label">Code Blocks</span>
+          <strong>{{ task.total_blocks }}</strong>
+        </div>
+
+        <div class="stat-item">
+          <span class="stat-label">Topics</span>
+          <strong>{{ task.topic_count }}</strong>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="task-dates">
+        <div>
+          <span>Publish Date</span>
+          <strong>
+            {{
+              task.publish_date
+                ? (task.publish_date | date:'mediumDate')
+                : 'Not set'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>Due Date</span>
+          <strong>
+            {{
+              task.due_date
+                ? (task.due_date | date:'mediumDate')
+                : 'No deadline'
+            }}
+          </strong>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="task-actions">
+
+        <a
+          [routerLink]="['../code-shuffle-details', task.id]"
+          class="action-btn view-btn"
+        >
+          View
+        </a>
+
+        <a
+          [routerLink]="['/mentor/advanced/code-shuffle/tasks', task.id, 'edit']"
+          class="action-btn edit-btn"
+          [class.disabled-link]="task.status === 'published'"
+          [attr.aria-disabled]="task.status === 'published'"
+          [attr.tabindex]="task.status === 'published' ? -1 : null"
+          (click)="task.status === 'published' ? $event.preventDefault() : null"
+        >
+          Edit
+        </a>
+
+        <button
+          *ngIf="task.status === 'draft' || task.status === 'unpublished'"
+          type="button"
+          class="action-btn publish-btn"
+          [disabled]="actionTaskId() === task.id"
+          (click)="publishTask(task)"
+        >
+          {{ actionTaskId() === task.id ? 'Please wait...' : 'Publish' }}
+        </button>
+
+        <button
+          *ngIf="task.status === 'published'"
+          type="button"
+          class="action-btn unpublish-btn"
+          [disabled]="actionTaskId() === task.id"
+          (click)="unpublishTask(task)"
+        >
+          {{ actionTaskId() === task.id ? 'Please wait...' : 'Unpublish' }}
+        </button>
+<button
+  type="button"
+  class="action-btn delete-btn"
+  (click)="openDeleteConfirmation(task.id)"
+>
+  Delete
+</button>
+
+      </div>
+    </article>
+  </section>
+
+  <app-confirm-modal
+  [visible]="confirmDeleteVisible"
+  title="Delete Code Shuffle Task?"
+  message="Are you sure you want to delete this task? This action cannot be undone."
+  confirmText="Delete Task"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmDeleteTask()"
+  (cancelled)="cancelDeleteConfirmation()"
+></app-confirm-modal>
+
+</div>

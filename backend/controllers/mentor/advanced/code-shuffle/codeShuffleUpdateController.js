@@ -163,13 +163,12 @@ const updateTask = async (req, res) => {
         }
 
         // Verify that the language is active.
-        const [languages] = await connection.execute(
-            `SELECT id
-             FROM code_shuffle_languages
-             WHERE id = ? AND status = 'active'`,
-            [Number(languageId)]
-        );
-
+      const [languages] = await connection.execute(
+    `SELECT id
+     FROM subjects
+     WHERE id = ? AND status = 'active'`,
+    [Number(languageId)]
+);
         if (languages.length === 0) {
             await connection.rollback();
             transactionStarted = false;
