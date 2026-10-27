@@ -156,7 +156,6 @@ const studentAdvancedRoutes = require(
 const theoryQuizRoutes = require("./routes/student/advanced/theoryQuizRoutes");
 
 //ADVANCED STUDENT COMPARISON
-
 const studentConceptComparisonRoutes = require(
     "./routes/student/advanced/concept-comparison/conceptComparisonRoutes"
 );
@@ -224,6 +223,13 @@ const studentSwapSkillSessionRoutes =
 const studentSwapSkillSuggestionRoutes =
     require("./routes/student/skillswap/swapskillsuggestionroutes");
 
+
+//STUDENT SHUFFLE CODE
+
+const studentCodeShuffleRoutes = require(
+    "./routes/student/advanced/code-shuffle/codeShuffleStudentRoutes"
+);
+
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -245,8 +251,15 @@ const mentorTheoryQuizRoutes = require(
 
 //Mentor Concept COMPARISON 
 const mentorConceptComparisonRoutes = require(
-    "./routes/mentor/advanced/concept-comparison/conceptComparisonRoutes"
+    "./routes/mentor/advanced/concept-comparison/conceptComparisonRoutes");
+
+//MENTOR CODE SHUFFLE
+
+const mentorCodeShuffleRoutes = require(
+    "./routes/mentor/advanced/code-shuffle/codeShuffleRoutes"
 );
+
+
 // =====================================================
 // CREATE EXPRESS APPLICATION
 // =====================================================
@@ -371,6 +384,13 @@ app.use(
     "/api/mentor/advanced/concept-comparisons",
     mentorConceptComparisonRoutes
 );
+
+//MENTOR CODE SHUFFLE
+app.use(
+    "/api/mentor/advanced/code-shuffle",
+    mentorCodeShuffleRoutes
+);
+
 // =====================================================
 // ADMIN ROUTES
 // =====================================================
@@ -623,6 +643,11 @@ app.use(
 app.use(
     "/api/student/skillswap/suggestions",
     studentSwapSkillSuggestionRoutes
+);
+
+app.use(
+    "/api/student/advanced/code-shuffle",
+    studentCodeShuffleRoutes
 );
 
 // =====================================================
