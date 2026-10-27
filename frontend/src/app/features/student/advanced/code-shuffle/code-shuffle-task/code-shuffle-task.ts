@@ -8,6 +8,7 @@ import {
   StudentCodeShuffleService
 } from '../../../../../services/student/advanced/code-shuffle/student-code-shuffle.service';
 
+import { ToastService } from '../../../../../services/toast.service';
 @Component({
   selector: 'app-student-code-shuffle-task',
   standalone: true,
@@ -39,7 +40,8 @@ export class StudentCodeShuffleTask implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private codeShuffleService: StudentCodeShuffleService
+    private codeShuffleService: StudentCodeShuffleService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -224,51 +226,57 @@ private saveCurrentBlockOrder(): void {
     this.showHint.set(true);
   }
 
-  submitAnswer(): void {
-    if (this.submitted() || this.submitting()) {
-      return;
-    }
-
-    if (this.blocks().length === 0) {
-      this.errorMessage.set('There are no code blocks to submit.');
-      return;
-    }
-
-    this.submitting.set(true);
-    this.errorMessage.set('');
-    this.successMessage.set('');
-
-    const submittedOrder = this.blocks().map(block => block.id);
-
-    this.codeShuffleService.submitAttempt(this.taskId, {
-      submittedOrder,
-      hintsUsed: this.hintsUsed(),
-      timeTakenSeconds: this.timeTakenSeconds()
-    }).subscribe({
-      next: response => {
-        this.submitted.set(true);
-        this.submitting.set(false);
-
-        localStorage.removeItem(`code-shuffle-start-${this.taskId}`);
-
-        if (this.timerId) {
-          clearInterval(this.timerId);
-          this.timerId = null;
-        }
-
-        this.successMessage.set(response.message || 'Answer submitted successfully.');
-
-      },
-      error: error => {
-        this.errorMessage.set(
-          error.error?.message ||
-          'Unable to submit your answer. Please try again.'
-        );
-
-        this.submitting.set(false);
-      }
-    });
+submitAnswer(): void {
+  if (this.submitted() || this.submitting()) {
+    return;
   }
+
+  if (this.blocks().length === 0) {
+    this.errorMessage.set('There are no code blocks to submit.');
+    this.toastService.error('There are no code blocks to submit.');
+    return;
+  }
+
+  this.submitting.set(true);
+  this.errorMessage.set('');
+  this.successMessage.set('');
+
+  const submittedOrder = this.blocks().map(block => block.id);
+
+  this.codeShuffleService.submitAttempt(this.taskId, {
+    submittedOrder,
+    hintsUsed: this.hintsUsed(),
+    timeTakenSeconds: this.timeTakenSeconds()
+  }).subscribe({
+    next: response => {
+      this.submitted.set(true);
+      this.submitting.set(false);
+
+      localStorage.removeItem(`code-shuffle-start-${this.taskId}`);
+
+      if (this.timerId) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+
+      const message =
+        response.message || 'Answer submitted successfully.';
+
+      this.successMessage.set(message);
+      this.toastService.success(message);
+    },
+
+    error: error => {
+      const message =
+        error.error?.message ||
+        'Unable to submit your answer. Please try again.';
+
+      this.errorMessage.set(message);
+      this.toastService.error(message);
+      this.submitting.set(false);
+    }
+  });
+}
 
   retryLoading(): void {
     this.loadTask();
