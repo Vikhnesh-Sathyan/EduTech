@@ -229,8 +229,9 @@ const studentCodeShuffleRoutes = require(
 );
 
 //STUDENT CODE-LOGIC
-
-
+const studentCodeLogicRoutes = require(
+    "./routes/student/advanced/code-logic/codeLogicRoutes"
+);
 
 
 // =====================================================
@@ -664,6 +665,12 @@ app.use(
 );
 
 //STUDENT CODE_LOGIC
+
+app.use(
+    "/api/student/advanced/code-logic",
+    studentCodeLogicRoutes
+);
+
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
