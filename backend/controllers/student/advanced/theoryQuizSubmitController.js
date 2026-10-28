@@ -89,6 +89,50 @@ const submitTheoryQuizAttempt = async (req, res) => {
         connection = await pool.getConnection();
         await connection.beginTransaction();
 
+        // Lock the quiz row so starting and submitting attempts
+// cannot bypass the passing restriction concurrently.
+const [quizzes] = await connection.query(
+    `SELECT pass_percentage
+     FROM advanced_theory_quizzes
+     WHERE id = ?
+       AND status = 'published'
+     FOR UPDATE`,
+    [quizId]
+);
+
+if (quizzes.length === 0) {
+    await connection.rollback();
+
+    return res.status(404).json({
+        success: false,
+        message: "Published quiz not found"
+    });
+}
+
+const passPercentage = Number(quizzes[0].pass_percentage);
+
+// Check whether the student passed in a previous attempt.
+const [passedAttempts] = await connection.query(
+    `SELECT id, percentage
+     FROM advanced_theory_attempts
+     WHERE student_id = ?
+       AND quiz_id = ?
+       AND status = 'completed'
+       AND percentage >= ?
+     LIMIT 1`,
+    [studentId, quizId, passPercentage]
+);
+
+if (passedAttempts.length > 0) {
+    await connection.rollback();
+
+    return res.status(409).json({
+        success: false,
+        passed: true,
+        message: "You have already passed this quiz. Further attempts are not allowed."
+    });
+}
+
         // Lock the attempt so concurrent submissions cannot both complete it.
         const [attempts] = await connection.query(
     `SELECT id, student_id, quiz_id, status,
@@ -294,6 +338,7 @@ if (deadlinePassed) {
         const percentage = totalMarks > 0
             ? Number(((score / totalMarks) * 100).toFixed(2))
             : 0;
+        const passed = percentage >= passPercentage;
 
         await connection.query(
             `UPDATE advanced_theory_attempts
@@ -322,20 +367,24 @@ if (deadlinePassed) {
 
         await connection.commit();
 
-        return res.status(200).json({
-            success: true,
-            message: "Quiz submitted successfully",
-            result: {
-                attempt_id: attemptId,
-                total_questions: snapshotQuestions.length,
-                correct_answers: correctAnswers,
-                wrong_answers: wrongAnswers,
-                score,
-                total_marks: totalMarks,
-                percentage,
-                status: "completed"
-            }
-        });
+       return res.status(200).json({
+    success: true,
+    message: passed
+        ? "Congratulations! You passed the quiz."
+        : "Quiz submitted. You can retry this quiz.",
+    result: {
+        attempt_id: attemptId,
+        total_questions: snapshotQuestions.length,
+        correct_answers: correctAnswers,
+        wrong_answers: wrongAnswers,
+        score,
+        total_marks: totalMarks,
+        percentage,
+        pass_percentage: passPercentage,
+        passed,
+        status: "completed"
+    }
+});
 
     } catch (error) {
         if (connection) {

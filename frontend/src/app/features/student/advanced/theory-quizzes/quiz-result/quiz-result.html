@@ -1,10 +1,13 @@
+
 <div class="result-page">
 
+  <!-- Loading State -->
   <div *ngIf="loading()" class="result-state">
     <div class="loader"></div>
     <p>Loading your quiz result...</p>
   </div>
 
+  <!-- Error State -->
   <div *ngIf="!loading() && error()" class="result-state error-state">
     <h2>Result unavailable</h2>
     <p>{{ error() }}</p>
@@ -15,28 +18,54 @@
 
   <ng-container *ngIf="!loading() && result() as r">
 
+    <!-- Page Header -->
     <header class="result-header">
-      <span class="eyebrow">THEORY QUIZ</span>
-      <h1>Quiz Result</h1>
-      <p>Your submission has been evaluated successfully.</p>
+      <span class="eyebrow">✦ THEORY QUIZ ANALYTICS</span>
+      <h1>Your Quiz Results</h1>
+      <p>
+        Review your performance, understand your mistakes,
+        and track your learning progress.
+      </p>
     </header>
 
+    <!-- Main Score Card -->
     <section class="result-card">
 
-      <div class="score-icon">✓</div>
+      <div class="score-icon">
+        {{ passed() ? '✓' : '!' }}
+      </div>
 
-      <p class="result-label">Your Score</p>
+      <p class="result-label">FINAL SCORE</p>
 
       <h2 class="score">
-        {{ r.score }} <span>/ {{ r.total_marks }}</span>
+        {{ r.score }}
+        <span>/ {{ r.total_marks }}</span>
       </h2>
 
       <div class="percentage">
         {{ r.percentage }}%
       </div>
 
+      <h3
+        [class.passed-text]="passed()"
+        [class.failed-text]="!passed()">
+        {{ passed() ? '🎉 Passed!' : 'Keep Learning — Not Passed Yet' }}
+      </h3>
+
       <p class="completion-message">
-        Quiz completed successfully!
+        <ng-container *ngIf="passed(); else retryMessage">
+          Congratulations! You passed this quiz.
+          Further attempts are not available.
+        </ng-container>
+
+        <ng-template #retryMessage>
+          You need {{ passPercentage() }}% to pass.
+          Review your results and retry when you're ready.
+        </ng-template>
+      </p>
+
+      <p class="pass-requirement">
+        Required pass mark: {{ passPercentage() }}%
       </p>
 
       <div class="progress-track">
@@ -48,38 +77,158 @@
 
     </section>
 
- <section class="stats-grid">
+    <!-- Performance Statistics -->
+    <section class="stats-grid">
 
-  <article class="stat-card">
-    <span class="stat-icon total-icon">Q</span>
-    <p>Total Questions</p>
-    <h3>{{ r.total_questions }}</h3>
-  </article>
+      <article class="stat-card">
+        <span class="stat-icon total-icon">Q</span>
+        <p>Total Questions</p>
+        <h3>{{ r.total_questions }}</h3>
+      </article>
 
-  <article class="stat-card">
-    <span class="stat-icon attempted-icon">✓</span>
-    <p>Attempted Questions</p>
-    <h3>{{ r.attempted_questions }}</h3>
-  </article>
+      <article class="stat-card">
+        <span class="stat-icon attempted-icon">↗</span>
+        <p>Attempted Questions</p>
+        <h3>{{ r.attempted_questions }}</h3>
+      </article>
 
-  <article class="stat-card">
-    <span class="stat-icon correct-icon">✓</span>
-    <p>Correct Answers</p>
-    <h3>{{ r.correct_answers }}</h3>
-  </article>
+      <article class="stat-card">
+        <span class="stat-icon correct-icon">✓</span>
+        <p>Correct Answers</p>
+        <h3>{{ r.correct_answers }}</h3>
+      </article>
 
-  <article class="stat-card">
-    <span class="stat-icon not-attempted-icon">—</span>
-    <p>Not Attempted</p>
-    <h3>{{ r.not_attempted_questions }}</h3>
-  </article>
+      <article class="stat-card">
+        <span class="stat-icon wrong-icon">✕</span>
+        <p>Wrong Answers</p>
+        <h3>{{ r.wrong_answers }}</h3>
+      </article>
 
-</section>
+    </section>
 
+    <!-- Answer Breakdown Graph -->
+    <section class="answer-breakdown">
+
+      <div class="section-heading">
+        <h2>Answer Breakdown</h2>
+        <p>
+          See how your answers are distributed across the quiz.
+        </p>
+      </div>
+
+      <!-- Correct Answers -->
+      <div class="graph-row">
+
+        <div class="graph-labels">
+          <span class="graph-label">
+            <span class="graph-dot correct-dot"></span>
+            Correct Answers
+          </span>
+
+          <span class="graph-count">
+            {{ r.correct_answers }}
+            /
+            {{ r.total_questions }}
+          </span>
+        </div>
+
+        <div class="graph-track">
+          <div
+            class="graph-fill correct-fill"
+            [style.width.%]="r.total_questions > 0
+              ? (r.correct_answers / r.total_questions) * 100
+              : 0">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Wrong Answers -->
+      <div class="graph-row">
+
+        <div class="graph-labels">
+          <span class="graph-label">
+            <span class="graph-dot wrong-dot"></span>
+            Wrong Answers
+          </span>
+
+          <span class="graph-count">
+            {{ r.wrong_answers }}
+            /
+            {{ r.total_questions }}
+          </span>
+        </div>
+
+        <div class="graph-track">
+          <div
+            class="graph-fill wrong-fill"
+            [style.width.%]="r.total_questions > 0
+              ? (r.wrong_answers / r.total_questions) * 100
+              : 0">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Unanswered Questions -->
+      <div class="graph-row">
+
+        <div class="graph-labels">
+          <span class="graph-label">
+            <span class="graph-dot unanswered-dot"></span>
+            Not Attempted
+          </span>
+
+          <span class="graph-count">
+            {{ r.not_attempted_questions }}
+            /
+            {{ r.total_questions }}
+          </span>
+        </div>
+
+        <div class="graph-track">
+          <div
+            class="graph-fill unanswered-fill"
+            [style.width.%]="r.total_questions > 0
+              ? (r.not_attempted_questions / r.total_questions) * 100
+              : 0">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Accuracy Summary -->
+      <div class="accuracy-card">
+        <div>
+          <h3>Answer Accuracy</h3>
+          <p>
+            Percentage of attempted questions you answered correctly.
+        </p>
+    </div>
+
+  <div class="accuracy-value">
+      {{ accuracy() }}%
+  </div>
+</div>
+
+    </section>
+
+    <!-- Actions -->
     <footer class="result-actions">
-      <button class="primary-btn" (click)="backToQuizzes()">
-        Back to Quizzes
+
+      <button
+        *ngIf="!passed()"
+        class="primary-btn"
+        (click)="retryQuiz()">
+        ↻ Retry Quiz
       </button>
+
+      <button
+        class="primary-btn"
+        (click)="backToQuizzes()">
+        Back to Quizzes →
+      </button>
+
     </footer>
 
   </ng-container>

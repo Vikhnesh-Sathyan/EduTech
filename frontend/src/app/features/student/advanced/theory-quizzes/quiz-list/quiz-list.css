@@ -306,3 +306,39 @@
   }
 }
 
+
+.quiz-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 12px 0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-passed {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.status-retry {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.status-in_progress {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.status-not_attempted {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.status-unknown {
+  color: #64748b;
+  background: #f1f5f9;
+}

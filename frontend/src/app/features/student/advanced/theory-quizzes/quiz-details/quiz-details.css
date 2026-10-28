@@ -176,3 +176,29 @@ h1 {
     padding: 13px 18px;
   }
 }
+
+
+.quiz-passed-message,
+.quiz-retry-message {
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.quiz-passed-message {
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+}
+
+.quiz-retry-message {
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+}
+
+.quiz-passed-message p,
+.quiz-retry-message p {
+  margin: 8px 0 0;
+  line-height: 1.5;
+}

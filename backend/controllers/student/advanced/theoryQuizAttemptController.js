@@ -18,6 +18,7 @@ const shuffleArray = (items) => {
 };
 
 // Starts/resumes an attempt and loads database-saved progress.
+// Starts/resumes an attempt and loads database-saved progress.
 const startOrResumeAttempt = async (req, res) => {
     let connection;
 
@@ -35,9 +36,13 @@ const startOrResumeAttempt = async (req, res) => {
         connection = await pool.getConnection();
         await connection.beginTransaction();
 
-        // Verify the quiz is published and available to this student.
+        // 1. Verify the quiz is published and available to this student.
         const [quizzes] = await connection.query(
-            `SELECT q.id, q.title, q.description, q.pass_percentage
+            `SELECT
+                q.id,
+                q.title,
+                q.description,
+                q.pass_percentage
              FROM advanced_theory_quizzes q
              WHERE q.id = ?
                AND q.status = 'published'
@@ -68,55 +73,83 @@ const startOrResumeAttempt = async (req, res) => {
             });
         }
 
-        // First, resume an attempt that is still in progress.
-        const [existingAttempts] = await connection.query(
-            `SELECT id, attempt_number, total_questions,
-                    total_marks, status, started_at, deadline_at,
-                    current_question_index
-             FROM advanced_theory_attempts
-             WHERE student_id = ?
-               AND quiz_id = ?
-               AND status = 'in_progress'
-             ORDER BY attempt_number DESC
-             LIMIT 1
-             FOR UPDATE`,
-            [studentId, quizId]
-        );
+        const quiz = quizzes[0];
+        const passPercentage = Number(quiz.pass_percentage);
 
-        let attempt = existingAttempts[0];
+        let attempt = null;
         let isNewAttempt = false;
         let isCompletedAttempt = false;
 
-        // If no attempt is in progress, inspect the latest attempt.
+        // 2. Check passing status FIRST.
+        // Any previous passing attempt permanently blocks new attempts.
+        const [passedAttempts] = await connection.query(
+            `SELECT
+                id,
+                attempt_number,
+                total_questions,
+                correct_answers,
+                wrong_answers,
+                score,
+                total_marks,
+                percentage,
+                status,
+                started_at,
+                completed_at,
+                deadline_at,
+                current_question_index
+             FROM advanced_theory_attempts
+             WHERE student_id = ?
+               AND quiz_id = ?
+               AND status = 'completed'
+               AND percentage >= ?
+             ORDER BY attempt_number DESC
+             LIMIT 1
+             FOR UPDATE`,
+            [studentId, quizId, passPercentage]
+        );
+
+        if (passedAttempts.length > 0) {
+            // The student already passed. Return that completed attempt.
+            attempt = passedAttempts[0];
+            isCompletedAttempt = true;
+        }
+
+        // 3. If the student has not passed, resume an active attempt.
         if (!attempt) {
-            const [latestAttempts] = await connection.query(
-                `SELECT id, attempt_number, total_questions,
-                        total_marks, status, started_at, deadline_at,
-                        current_question_index
+            const [existingAttempts] = await connection.query(
+                `SELECT
+                    id,
+                    attempt_number,
+                    total_questions,
+                    total_marks,
+                    status,
+                    started_at,
+                    deadline_at,
+                    current_question_index
                  FROM advanced_theory_attempts
                  WHERE student_id = ?
                    AND quiz_id = ?
+                   AND status = 'in_progress'
                  ORDER BY attempt_number DESC
                  LIMIT 1
                  FOR UPDATE`,
                 [studentId, quizId]
             );
 
-            const latestAttempt = latestAttempts[0];
-
-            if (latestAttempt?.status === "completed") {
-                // Do not create another attempt just because of refresh.
-                attempt = latestAttempt;
-                isCompletedAttempt = true;
-            }
+            attempt = existingAttempts[0] || null;
         }
 
-        // Create a new attempt only when no attempt exists to resume
-        // and the latest attempt is not completed.
+        // 4. If no attempt is active and the student has not passed,
+        // create a new attempt. Failed completed attempts allow retries.
         if (!attempt) {
             const [questions] = await connection.query(
-                `SELECT id, question_text, explanation,
-                        concept_tag, marks, display_order
+                `SELECT
+                    id,
+                    question_text,
+                    explanation,
+                    concept_tag,
+                    marks,
+                    display_order
                  FROM advanced_theory_questions
                  WHERE quiz_id = ?
                    AND status = 'active'
@@ -133,22 +166,31 @@ const startOrResumeAttempt = async (req, res) => {
                     message: "This quiz has no active questions"
                 });
             }
-                    // Shuffle question order for this new attempt.
-const originalQuestionOrder = questions.map(q => q.id);
 
-questions.splice(0, questions.length, ...shuffleArray(questions));
+            // Shuffle question order for the new attempt.
+            const originalQuestionOrder = questions.map(q => q.id);
 
-console.log("NEW ATTEMPT CREATED — question order:", {
-    original: originalQuestionOrder,
-    shuffled: questions.map(q => q.id)
-});
+            questions.splice(
+                0,
+                questions.length,
+                ...shuffleArray(questions)
+            );
+
+            console.log("NEW ATTEMPT CREATED — question order:", {
+                original: originalQuestionOrder,
+                shuffled: questions.map(q => q.id)
+            });
 
             const questionIds = questions.map(q => q.id);
             const placeholders = questionIds.map(() => "?").join(", ");
 
             const [options] = await connection.query(
-                `SELECT id, question_id, option_text,
-                        is_correct, display_order
+                `SELECT
+                    id,
+                    question_id,
+                    option_text,
+                    is_correct,
+                    display_order
                  FROM advanced_theory_options
                  WHERE question_id IN (${placeholders})
                  ORDER BY display_order ASC, id ASC`,
@@ -179,10 +221,13 @@ console.log("NEW ATTEMPT CREATED — question order:", {
                 });
             }
 
+            // Get the next attempt number without deleting old attempts.
             const [attemptCount] = await connection.query(
-                `SELECT COALESCE(MAX(attempt_number), 0) + 1 AS next_number
+                `SELECT
+                    COALESCE(MAX(attempt_number), 0) + 1 AS next_number
                  FROM advanced_theory_attempts
-                 WHERE student_id = ? AND quiz_id = ?`,
+                 WHERE student_id = ?
+                   AND quiz_id = ?`,
                 [studentId, quizId]
             );
 
@@ -191,15 +236,25 @@ console.log("NEW ATTEMPT CREATED — question order:", {
                 0
             );
 
-            // Uses a 20-minute deadline for now.
+            // Preserve the existing 20-minute deadline.
             const [insertResult] = await connection.query(
                 `INSERT INTO advanced_theory_attempts
-                    (student_id, quiz_id, attempt_number,
-                     total_questions, total_marks, status,
-                     started_at, deadline_at)
-                 VALUES (?, ?, ?, ?, ?, 'in_progress',
-                         CURRENT_TIMESTAMP,
-                         DATE_ADD(NOW(), INTERVAL 20 MINUTE))`,
+                    (
+                        student_id,
+                        quiz_id,
+                        attempt_number,
+                        total_questions,
+                        total_marks,
+                        status,
+                        started_at,
+                        deadline_at
+                    )
+                 VALUES (
+                    ?, ?, ?, ?, ?,
+                    'in_progress',
+                    CURRENT_TIMESTAMP,
+                    DATE_ADD(NOW(), INTERVAL 20 MINUTE)
+                 )`,
                 [
                     studentId,
                     quizId,
@@ -218,9 +273,15 @@ console.log("NEW ATTEMPT CREATED — question order:", {
 
                 await connection.query(
                     `INSERT INTO advanced_theory_attempt_questions
-                        (attempt_id, question_id, question_text_snapshot,
-                         explanation_snapshot, concept_tag_snapshot,
-                         marks_snapshot, display_order)
+                        (
+                            attempt_id,
+                            question_id,
+                            question_text_snapshot,
+                            explanation_snapshot,
+                            concept_tag_snapshot,
+                            marks_snapshot,
+                            display_order
+                        )
                      VALUES (?, ?, ?, ?, ?, ?, ?)`,
                     [
                         attemptId,
@@ -234,18 +295,23 @@ console.log("NEW ATTEMPT CREATED — question order:", {
                 );
 
                 // Shuffle options independently for each question.
-const questionOptions = shuffleArray(
-    optionsByQuestion[question.id]
-);
+                const questionOptions = shuffleArray(
+                    optionsByQuestion[question.id]
+                );
 
                 for (let j = 0; j < questionOptions.length; j++) {
                     const option = questionOptions[j];
 
                     await connection.query(
                         `INSERT INTO advanced_theory_attempt_options
-                            (attempt_id, question_id, option_id,
-                             option_text_snapshot, is_correct_snapshot,
-                             display_order)
+                            (
+                                attempt_id,
+                                question_id,
+                                option_id,
+                                option_text_snapshot,
+                                is_correct_snapshot,
+                                display_order
+                            )
                          VALUES (?, ?, ?, ?, ?, ?)`,
                         [
                             attemptId,
@@ -260,25 +326,34 @@ const questionOptions = shuffleArray(
             }
 
             const [createdAttempts] = await connection.query(
-                `SELECT id, attempt_number, total_questions,
-                        total_marks, status, started_at, deadline_at,
-                        current_question_index
+                `SELECT
+                    id,
+                    attempt_number,
+                    total_questions,
+                    total_marks,
+                    status,
+                    started_at,
+                    deadline_at,
+                    current_question_index
                  FROM advanced_theory_attempts
-                 WHERE id = ? AND student_id = ?`,
-                [attemptId, studentId]
+                 WHERE id = ?
+                   AND student_id = ?
+                   AND quiz_id = ?`,
+                [attemptId, studentId, quizId]
             );
 
             attempt = createdAttempts[0];
             isNewAttempt = true;
         }
 
-        // Load saved snapshots for the selected attempt.
+        // 5. Load saved snapshots for the selected attempt.
         const [snapshotQuestions] = await connection.query(
-            `SELECT question_id AS id,
-                    question_text_snapshot AS question_text,
-                    concept_tag_snapshot AS concept_tag,
-                    marks_snapshot AS marks,
-                    display_order
+            `SELECT
+                question_id AS id,
+                question_text_snapshot AS question_text,
+                concept_tag_snapshot AS concept_tag,
+                marks_snapshot AS marks,
+                display_order
              FROM advanced_theory_attempt_questions
              WHERE attempt_id = ?
              ORDER BY display_order ASC`,
@@ -286,10 +361,11 @@ const questionOptions = shuffleArray(
         );
 
         const [snapshotOptions] = await connection.query(
-            `SELECT question_id,
-                    option_id AS id,
-                    option_text_snapshot AS option_text,
-                    display_order
+            `SELECT
+                question_id,
+                option_id AS id,
+                option_text_snapshot AS option_text,
+                display_order
              FROM advanced_theory_attempt_options
              WHERE attempt_id = ?
              ORDER BY question_id, display_order ASC`,
@@ -297,10 +373,11 @@ const questionOptions = shuffleArray(
         );
 
         const [savedAnswers] = await connection.query(
-            `SELECT question_id,
-                    selected_option_id,
-                    marked_for_review,
-                    hint_used
+            `SELECT
+                question_id,
+                selected_option_id,
+                marked_for_review,
+                hint_used
              FROM advanced_theory_answers
              WHERE attempt_id = ?`,
             [attempt.id]
@@ -331,10 +408,12 @@ const questionOptions = shuffleArray(
             message: isNewAttempt
                 ? "Attempt started and question snapshots saved"
                 : isCompletedAttempt
-                    ? "This quiz attempt is already completed"
+                    ? "You have already passed this quiz"
                     : "Existing attempt resumed",
-            quiz: quizzes[0],
+            quiz,
             attempt,
+            passed: isCompletedAttempt,
+            pass_percentage: passPercentage,
             questions: responseQuestions,
             savedAnswers
         });

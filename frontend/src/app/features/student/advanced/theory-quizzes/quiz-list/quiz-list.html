@@ -35,7 +35,7 @@
 
   <div class="loading-state" *ngIf="loading()">
     <div class="loader"></div>
-    <p>Loading theory quizzes...</p>
+    <p>Loading theory quizzes and your progress...</p>
   </div>
 
   <div class="error-state" *ngIf="!loading() && errorMessage()">
@@ -68,10 +68,17 @@
         {{ quiz.description || 'Test your knowledge with this theory quiz.' }}
       </p>
 
+      <div
+        class="quiz-status"
+        [ngClass]="'status-' + getQuizStatus(quiz.id)"
+      >
+        {{ getStatusLabel(quiz.id) }}
+      </div>
+
       <div class="quiz-meta">
         <div>
           <span class="meta-label">PASS MARK</span>
-          <strong>{{ quiz.pass_percentage }}%</strong>
+          <strong>{{ quiz.pass_percentage ?? 60 }}%</strong>
         </div>
 
         <div>
@@ -86,7 +93,7 @@
         class="start-button"
         [routerLink]="['/theory-quizzes', quiz.id]"
       >
-        View Quiz <span>→</span>
+        {{ getActionLabel(quiz.id) }} <span>→</span>
       </a>
     </article>
   </section>

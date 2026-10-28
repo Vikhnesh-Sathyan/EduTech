@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentTheoryQuizService } from '../../../../../services/student/advanced/student-theory-quiz.service';
@@ -13,6 +14,8 @@ interface TheoryQuizResult {
   score: number;
   total_marks: number;
   percentage: number;
+  pass_percentage?: number;
+  passed?: boolean;
   started_at: string;
   completed_at: string | null;
   attempted_questions: number;
@@ -30,6 +33,33 @@ export class QuizResult implements OnInit {
   loading = signal(true);
   error = signal('');
   result = signal<TheoryQuizResult | null>(null);
+  quizId = signal<number | null>(null);
+
+  passPercentage = computed(() =>
+    this.result()?.pass_percentage ?? 60
+  );
+
+  accuracy = computed(() => {
+  const r = this.result();
+
+    if (!r || r.attempted_questions <= 0) {
+      return 0;
+  }
+
+  return Number(
+    ((r.correct_answers / r.attempted_questions) * 100).toFixed(1)
+  );
+});
+
+  passed = computed(() => {
+    const r = this.result();
+
+    if (!r) {
+      return false;
+    }
+
+    return r.passed ?? r.percentage >= this.passPercentage();
+  });
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +75,8 @@ export class QuizResult implements OnInit {
       this.loading.set(false);
       return;
     }
+
+    this.quizId.set(quizId);
 
     this.quizService.getAttemptStatus(quizId).subscribe({
       next: (response: any) => {
@@ -67,6 +99,16 @@ export class QuizResult implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  retryQuiz(): void {
+    const id = this.quizId();
+
+    if (!id || this.passed()) {
+      return;
+    }
+
+    this.router.navigate(['/theory-quizzes', id]);
   }
 
   backToQuizzes(): void {

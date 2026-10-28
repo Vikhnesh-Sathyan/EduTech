@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
@@ -22,6 +23,24 @@ export class QuizDetails implements OnInit {
   statusChecked = signal(false);
   statusLoading = signal(false);
   statusError = signal('');
+
+  passPercentage = computed(() =>
+    Number(this.quiz()?.pass_percentage ?? 60)
+  );
+
+  isPassed = computed(() => {
+    const attempt = this.attemptStatus();
+
+    if (!attempt || attempt.status !== 'completed') {
+      return false;
+    }
+
+    if (attempt.passed === true) {
+      return true;
+    }
+
+    return Number(attempt.percentage ?? 0) >= this.passPercentage();
+  });
 
   constructor(
     private route: ActivatedRoute,
@@ -88,9 +107,19 @@ export class QuizDetails implements OnInit {
   }
 
   get attemptButtonLabel(): string {
-    return this.attemptStatus()?.status === 'in_progress'
-      ? 'Resume Quiz →'
-      : 'Start Quiz →';
+    if (this.isPassed()) {
+      return 'Quiz Passed';
+    }
+
+    if (this.attemptStatus()?.status === 'in_progress') {
+      return 'Resume Quiz →';
+    }
+
+    if (this.attemptStatus()?.status === 'completed') {
+      return 'Retry Quiz →';
+    }
+
+    return 'Start Quiz →';
   }
 
   get isAttemptCompleted(): boolean {
@@ -100,7 +129,7 @@ export class QuizDetails implements OnInit {
   startQuiz(): void {
     const currentQuiz = this.quiz();
 
-    if (!currentQuiz?.id || this.isAttemptCompleted) {
+    if (!currentQuiz?.id || this.isPassed()) {
       return;
     }
 
@@ -127,17 +156,17 @@ export class QuizDetails implements OnInit {
     }
   }
 
-viewResult(): void {
-  const quizId = this.quiz()?.id;
+  viewResult(): void {
+    const quizId = this.quiz()?.id;
 
-  if (!quizId) {
-    return;
+    if (!quizId) {
+      return;
+    }
+
+    this.router.navigate([
+      '/theory-quizzes',
+      quizId,
+      'result'
+    ]);
   }
-
-  this.router.navigate([
-    '/theory-quizzes',
-    quizId,
-    'result'
-  ]);
-}
 }

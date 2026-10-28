@@ -1,3 +1,4 @@
+
 <div class="quiz-details-page">
 
   @if (loading()) {
@@ -41,13 +42,7 @@
 
           <div class="meta-item">
             <span>Pass Percentage</span>
-            <strong>
-              {{
-                currentQuiz.pass_percentage != null
-                  ? currentQuiz.pass_percentage + '%'
-                  : 'Not specified'
-              }}
-            </strong>
+            <strong>{{ passPercentage() }}%</strong>
           </div>
         </div>
 
@@ -103,7 +98,37 @@
         }
 
         @if (statusChecked() && !statusError()) {
-          @if (!isAttemptCompleted) {
+
+          @if (isPassed()) {
+            <div class="quiz-passed-message">
+              <strong>✓ Quiz Passed!</strong>
+              <p>
+                Your score is
+                {{ attemptStatus()?.percentage }}%.
+                You have achieved the required
+                {{ passPercentage() }}%.
+              </p>
+              <p>Further attempts are not available.</p>
+            </div>
+
+            <button
+              type="button"
+              class="primary-btn"
+              (click)="viewResult()"
+            >
+              View Result
+            </button>
+          } @else {
+            @if (attemptStatus()?.status === 'completed') {
+              <div class="quiz-retry-message">
+                <strong>Not passed yet</strong>
+                <p>
+                  Your score is {{ attemptStatus()?.percentage }}%.
+                  You need {{ passPercentage() }}% to pass.
+                </p>
+              </div>
+            }
+
             <button
               type="button"
               class="start-button"
@@ -111,17 +136,8 @@
             >
               {{ attemptButtonLabel }}
             </button>
-          } @else {
-            <div class="state-message">
-              You have already completed this quiz.
-            </div>
-            <button
-  type="button"
-  class="primary-btn"
-  (click)="viewResult()">
-  View Result
-</button>
           }
+
         }
 
       </section>
