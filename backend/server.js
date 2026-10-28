@@ -223,12 +223,15 @@ const studentSwapSkillSessionRoutes =
 const studentSwapSkillSuggestionRoutes =
     require("./routes/student/skillswap/swapskillsuggestionroutes");
 
-
 //STUDENT SHUFFLE CODE
-
 const studentCodeShuffleRoutes = require(
     "./routes/student/advanced/code-shuffle/codeShuffleStudentRoutes"
 );
+
+//STUDENT CODE-LOGIC
+
+
+
 
 // =====================================================
 // MENTOR ROUTES
@@ -254,10 +257,15 @@ const mentorConceptComparisonRoutes = require(
     "./routes/mentor/advanced/concept-comparison/conceptComparisonRoutes");
 
 //MENTOR CODE SHUFFLE
-
 const mentorCodeShuffleRoutes = require(
     "./routes/mentor/advanced/code-shuffle/codeShuffleRoutes"
 );
+
+//MENOT CODE-LOGIC
+const mentorCodeLogicRoutes = require(
+    "./routes/mentor/advanced/code-logic/codeLogicRoutes"
+);
+
 
 
 // =====================================================
@@ -391,6 +399,11 @@ app.use(
     mentorCodeShuffleRoutes
 );
 
+//MENTOR CODE-LOGIC
+app.use(
+    "/api/mentor/advanced/code-logic",
+     mentorCodeLogicRoutes);
+    
 // =====================================================
 // ADMIN ROUTES
 // =====================================================
@@ -649,6 +662,8 @@ app.use(
     "/api/student/advanced/code-shuffle",
     studentCodeShuffleRoutes
 );
+
+//STUDENT CODE_LOGIC
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
