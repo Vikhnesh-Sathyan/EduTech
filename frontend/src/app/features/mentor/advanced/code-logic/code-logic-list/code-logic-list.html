@@ -1,4 +1,3 @@
-
 <section class="logic-page">
 
   <header class="page-header">
@@ -11,7 +10,7 @@
       </p>
     </div>
 
-    <button class="primary-btn" (click)="createProblem()">
+    <button type="button" class="primary-btn" (click)="createProblem()">
       <span class="plus-icon">+</span>
       Create Problem
     </button>
@@ -22,7 +21,7 @@
       <span class="stat-icon purple">▤</span>
       <div>
         <p>Total Problems</p>
-        <h2>{{ totalProblems }}</h2>
+        <h2>{{ counts().total }}</h2>
       </div>
     </article>
 
@@ -30,7 +29,7 @@
       <span class="stat-icon green">✓</span>
       <div>
         <p>Published</p>
-        <h2>{{ publishedCount }}</h2>
+        <h2>{{ counts().published }}</h2>
       </div>
     </article>
 
@@ -38,7 +37,7 @@
       <span class="stat-icon amber">◷</span>
       <div>
         <p>Drafts</p>
-        <h2>{{ draftCount }}</h2>
+        <h2>{{ counts().draft }}</h2>
       </div>
     </article>
 
@@ -46,20 +45,24 @@
       <span class="stat-icon gray">Ⅱ</span>
       <div>
         <p>Inactive</p>
-        <h2>{{ inactiveCount }}</h2>
+        <h2>{{ counts().inactive }}</h2>
       </div>
     </article>
   </div>
 
-  <div *ngIf="successMessage" class="alert success-alert">
-    <span>{{ successMessage }}</span>
-    <button (click)="clearMessages()" aria-label="Dismiss">×</button>
-  </div>
+  @if (successMessage()) {
+    <div class="alert success-alert" role="status">
+      <span>{{ successMessage() }}</span>
+      <button type="button" (click)="clearMessages()" aria-label="Dismiss">×</button>
+    </div>
+  }
 
-  <div *ngIf="errorMessage" class="alert error-alert">
-    <span>{{ errorMessage }}</span>
-    <button (click)="clearMessages()" aria-label="Dismiss">×</button>
-  </div>
+  @if (errorMessage()) {
+    <div class="alert error-alert" role="alert">
+      <span>{{ errorMessage() }}</span>
+      <button type="button" (click)="clearMessages()" aria-label="Dismiss">×</button>
+    </div>
+  }
 
   <section class="problems-section">
 
@@ -69,7 +72,7 @@
         <p>Manage your logical thinking challenges in one place.</p>
       </div>
       <span class="result-count">
-        {{ filteredProblems.length }} problems
+        {{ filteredProblems().length }} problems
       </span>
     </div>
 
@@ -79,13 +82,15 @@
         <input
           type="search"
           placeholder="Search by title, language..."
-          [(ngModel)]="searchText"
+          [ngModel]="searchText()"
+          (ngModelChange)="searchText.set($event)"
         />
       </label>
 
       <select
         aria-label="Filter by status"
-        [(ngModel)]="selectedStatus"
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="selectedStatus.set($event)"
       >
         <option value="all">All statuses</option>
         <option value="draft">Draft</option>
@@ -95,7 +100,8 @@
 
       <select
         aria-label="Filter by difficulty"
-        [(ngModel)]="selectedDifficulty"
+        [ngModel]="selectedDifficulty()"
+        (ngModelChange)="selectedDifficulty.set($event)"
       >
         <option value="all">All difficulties</option>
         <option value="easy">Easy</option>
@@ -104,146 +110,133 @@
       </select>
     </div>
 
-    <div *ngIf="isLoading" class="state-card">
-      <span class="loader"></span>
-      <h3>Loading problems</h3>
-      <p>Fetching your Logic to Code challenges...</p>
-    </div>
+    @if (isLoading()) {
 
-    <div *ngIf="!isLoading && !errorMessage && problems.length === 0"
-         class="state-card empty-state">
-      <div class="empty-icon">⌘</div>
-      <h3>Your first challenge starts here</h3>
-      <p>Create a Logic to Code problem to get started.</p>
-      <button class="primary-btn" (click)="createProblem()">
-        Create your first problem
-      </button>
-    </div>
+      <div class="state-card">
+        <span class="loader"></span>
+        <h3>Loading problems</h3>
+        <p>Fetching your Logic to Code challenges...</p>
+      </div>
 
-    <div
-      *ngIf="!isLoading && !errorMessage &&
-             problems.length > 0 && filteredProblems.length === 0"
-      class="state-card"
-    >
-      <h3>No matching problems</h3>
-      <p>Try changing your search or filters.</p>
-      <button
-        class="secondary-btn"
-        (click)="searchText = ''; selectedStatus = 'all';
-                 selectedDifficulty = 'all'"
-      >
-        Clear filters
-      </button>
-    </div>
+    } @else if (problems().length === 0 && !errorMessage()) {
 
-    <div
-      *ngIf="!isLoading && filteredProblems.length > 0"
-      class="problem-grid"
-    >
-      <article
-        class="problem-card"
-        *ngFor="let problem of filteredProblems"
-      >
-        <div class="card-top">
-          <span class="language-label">
-            {{ problem.language_name }}
-          </span>
+      <div class="state-card empty-state">
+        <div class="empty-icon">⌘</div>
+        <h3>Your first challenge starts here</h3>
+        <p>Create a Logic to Code problem to get started.</p>
+        <button type="button" class="primary-btn" (click)="createProblem()">
+          Create your first problem
+        </button>
+      </div>
 
-          <span
-            class="status-badge"
-            [ngClass]="'status-' + problem.status"
-          >
-            {{ problem.status.replace('_', ' ') }}
-          </span>
-        </div>
+    } @else if (problems().length > 0 && filteredProblems().length === 0) {
 
-        <h3>{{ problem.title }}</h3>
-        <p class="problem-description">
-          {{ problem.description }}
-        </p>
+      <div class="state-card">
+        <h3>No matching problems</h3>
+        <p>Try changing your search or filters.</p>
+        <button type="button" class="secondary-btn" (click)="clearFilters()">
+          Clear filters
+        </button>
+      </div>
 
-        <div class="problem-tags">
-          <span [ngClass]="'difficulty-' + problem.difficulty">
-            {{ problem.difficulty }}
-          </span>
+    } @else if (filteredProblems().length > 0) {
 
-          <span class="mode-tag">
-            {{
-              problem.mode === 'build_code'
-                ? 'Logic → Code'
-                : 'Code → Logic'
-            }}
-          </span>
-        </div>
+      <div class="problem-grid">
+        @for (problem of filteredProblems(); track problem.id) {
+          <article class="problem-card">
+            <div class="card-top">
+              <span class="language-label">{{ problem.language_name }}</span>
 
-        <div class="problem-meta">
-          <span>Maximum marks</span>
-          <strong>{{ problem.max_marks }}</strong>
-        </div>
+              <span class="status-badge" [ngClass]="'status-' + problem.status">
+                {{ problem.status.replace('_', ' ') }}
+              </span>
+            </div>
 
-        <div class="card-actions">
-          <button
-            class="secondary-btn"
-            (click)="viewProblem(problem.id)"
-          >
-            View
-          </button>
+            <h3>{{ problem.title }}</h3>
+            <p class="problem-description">{{ problem.description }}</p>
 
-          <button
-            *ngIf="problem.status === 'draft'"
-            class="secondary-btn"
-            (click)="editProblem(problem)"
-          >
-            Edit
-          </button>
+            <div class="problem-tags">
+              <span [ngClass]="'difficulty-' + problem.difficulty">
+                {{ problem.difficulty }}
+              </span>
 
-          <button
-            *ngIf="problem.status === 'draft'"
-            class="action-btn"
-            [disabled]="actionInProgress === problem.id"
-            (click)="publishProblem(problem)"
-          >
-            Publish
-          </button>
+              <span class="mode-tag">
+                {{ problem.mode === 'build_code' ? 'Logic → Code' : 'Code → Logic' }}
+              </span>
+            </div>
 
-          <button
-            *ngIf="problem.status === 'published'"
-            class="secondary-btn"
-            [disabled]="actionInProgress === problem.id"
-            (click)="unpublishProblem(problem)"
-          >
-            Unpublish
-          </button>
+            <div class="problem-meta">
+              <span>Maximum marks</span>
+              <strong>{{ problem.max_marks }}</strong>
+            </div>
 
-          <button
-            *ngIf="problem.status !== 'inactive'"
-            class="danger-btn"
-            [disabled]="actionInProgress === problem.id"
-            (click)="deactivateProblem(problem)"
-          >
-            Deactivate
-          </button>
+            <div class="card-actions">
+              <button type="button" class="secondary-btn" (click)="viewProblem(problem.id)">
+                View
+              </button>
 
-          <button
-            *ngIf="problem.status === 'inactive'"
-            class="action-btn"
-            [disabled]="actionInProgress === problem.id"
-            (click)="reactivateProblem(problem)"
-          >
-            Reactivate
-          </button>
+              @if (problem.status === 'draft') {
+                <button type="button" class="secondary-btn" (click)="editProblem(problem)">
+                  Edit
+                </button>
 
-          <button
-            *ngIf="problem.status === 'draft'"
-            class="text-danger-btn"
-            [disabled]="actionInProgress === problem.id"
-            (click)="deleteProblem(problem)"
-          >
-            Delete draft
-          </button>
-        </div>
-      </article>
-    </div>
+                <button
+                  type="button"
+                  class="action-btn"
+                  [disabled]="actionInProgress() === problem.id"
+                  (click)="publishProblem(problem)"
+                >
+                  Publish
+                </button>
+              }
+
+              @if (problem.status === 'published') {
+                <button
+                  type="button"
+                  class="secondary-btn"
+                  [disabled]="actionInProgress() === problem.id"
+                  (click)="unpublishProblem(problem)"
+                >
+                  Unpublish
+                </button>
+              }
+
+              @if (problem.status !== 'inactive') {
+                <button
+                  type="button"
+                  class="danger-btn"
+                  [disabled]="actionInProgress() === problem.id"
+                  (click)="deactivateProblem(problem)"
+                >
+                  Deactivate
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="action-btn"
+                  [disabled]="actionInProgress() === problem.id"
+                  (click)="reactivateProblem(problem)"
+                >
+                  Reactivate
+                </button>
+              }
+
+              @if (problem.status === 'draft') {
+                <button
+                  type="button"
+                  class="text-danger-btn"
+                  [disabled]="actionInProgress() === problem.id"
+                  (click)="deleteProblem(problem)"
+                >
+                  Delete draft
+                </button>
+              }
+            </div>
+          </article>
+        }
+      </div>
+
+    }
 
   </section>
 </section>

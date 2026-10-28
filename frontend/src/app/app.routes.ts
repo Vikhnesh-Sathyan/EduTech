@@ -173,6 +173,7 @@ import { CodeShuffleDetails } from './features/mentor/advanced/code-shuffle/code
 
 // MENTOR LOGIC TO CODE
 import { CodeLogicListComponent } from './features/mentor/advanced/code-logic/code-logic-list/code-logic-list';
+import { CodeLogicCreate } from './features/mentor/advanced/code-logic/code-logic-create/code-logic-create';
 
 export const routes: Routes = [
 
@@ -643,6 +644,10 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/code-logic',
         component: CodeLogicListComponent
+      },
+      {
+        path: 'mentor/advanced/code-logic/create',
+        component: CodeLogicCreate
       },
 
     ]

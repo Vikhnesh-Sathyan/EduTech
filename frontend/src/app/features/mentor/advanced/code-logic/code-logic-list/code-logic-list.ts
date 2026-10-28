@@ -1,8 +1,16 @@
-
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
 import {
   CodeLogicProblem,
   CodeLogicService
@@ -11,108 +19,100 @@ import {
 @Component({
   selector: 'app-code-logic-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [NgClass, FormsModule],
   templateUrl: './code-logic-list.html',
-  styleUrl: './code-logic-list.css'
+  styleUrl: './code-logic-list.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeLogicListComponent implements OnInit {
 
-  problems: CodeLogicProblem[] = [];
+  private readonly codeLogicService = inject(CodeLogicService);
+  private readonly router = inject(Router);
 
-  searchText = '';
-  selectedStatus = 'all';
-  selectedDifficulty = 'all';
+  // STATE
+  readonly problems = signal<CodeLogicProblem[]>([]);
 
-  isLoading = true;
-  errorMessage = '';
-  successMessage = '';
-  actionInProgress: number | null = null;
+  readonly searchText = signal('');
+  readonly selectedStatus = signal('all');
+  readonly selectedDifficulty = signal('all');
 
-  constructor(
-    private codeLogicService: CodeLogicService,
-    private router: Router
-  ) {}
+  readonly isLoading = signal(true);
+  readonly errorMessage = signal('');
+  readonly successMessage = signal('');
+  readonly actionInProgress = signal<number | null>(null);
+
+  // DERIVED STATE
+  readonly filteredProblems = computed(() => {
+    const search = this.searchText().trim().toLowerCase();
+    const status = this.selectedStatus();
+    const difficulty = this.selectedDifficulty();
+
+    return this.problems().filter((problem) => {
+      const matchesSearch =
+        !search ||
+        (problem.title ?? '').toLowerCase().includes(search) ||
+        (problem.description ?? '').toLowerCase().includes(search) ||
+        (problem.language_name ?? '').toLowerCase().includes(search);
+
+      const matchesStatus = status === 'all' || problem.status === status;
+      const matchesDifficulty =
+        difficulty === 'all' || problem.difficulty === difficulty;
+
+      return matchesSearch && matchesStatus && matchesDifficulty;
+    });
+  });
+
+  // Dashboard counts, calculated in one pass
+  readonly counts = computed(() => {
+    const all = this.problems();
+    return {
+      total: all.length,
+      published: all.filter((p) => p.status === 'published').length,
+      draft: all.filter((p) => p.status === 'draft').length,
+      inactive: all.filter((p) => p.status === 'inactive').length
+    };
+  });
 
   ngOnInit(): void {
     this.loadProblems();
   }
 
   // LOAD MENTOR'S PROBLEMS
-  loadProblems(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+  // showLoader = false refreshes the list quietly after an action
+  loadProblems(showLoader = true): void {
+    if (showLoader) {
+      this.isLoading.set(true);
+      this.errorMessage.set('');
+    }
 
     this.codeLogicService.getMyProblems().subscribe({
       next: (response) => {
-        this.problems = response.problems ?? [];
-        this.isLoading = false;
+        this.problems.set(response.problems ?? []);
+        this.isLoading.set(false);
       },
       error: (error) => {
-        this.errorMessage =
-          error.error?.message ||
-          'Unable to load problems. Please try again.';
-        this.isLoading = false;
+        this.errorMessage.set(
+          error.error?.message || 'Unable to load problems. Please try again.'
+        );
+        this.isLoading.set(false);
       }
     });
   }
 
-  // FILTER PROBLEMS
-  get filteredProblems(): CodeLogicProblem[] {
-    const search = this.searchText.trim().toLowerCase();
-
-    return this.problems.filter((problem) => {
-      const matchesSearch =
-        problem.title.toLowerCase().includes(search) ||
-        problem.description.toLowerCase().includes(search) ||
-        problem.language_name.toLowerCase().includes(search);
-
-      const matchesStatus =
-        this.selectedStatus === 'all' ||
-        problem.status === this.selectedStatus;
-
-      const matchesDifficulty =
-        this.selectedDifficulty === 'all' ||
-        problem.difficulty === this.selectedDifficulty;
-
-      return matchesSearch && matchesStatus && matchesDifficulty;
-    });
-  }
-
-  // DASHBOARD COUNTS
-  get totalProblems(): number {
-    return this.problems.length;
-  }
-
-  get publishedCount(): number {
-    return this.problems.filter(
-      problem => problem.status === 'published'
-    ).length;
-  }
-
-  get draftCount(): number {
-    return this.problems.filter(
-      problem => problem.status === 'draft'
-    ).length;
-  }
-
-  get inactiveCount(): number {
-    return this.problems.filter(
-      problem => problem.status === 'inactive'
-    ).length;
+  // FILTER HELPERS
+  clearFilters(): void {
+    this.searchText.set('');
+    this.selectedStatus.set('all');
+    this.selectedDifficulty.set('all');
   }
 
   // NAVIGATION
   createProblem(): void {
-    this.router.navigate([
-      '/mentor/advanced/code-logic/create'
-    ]);
+    this.router.navigate(['/mentor/advanced/code-logic/create']);
   }
 
   viewProblem(problemId: number): void {
-    this.router.navigate([
-      '/mentor/advanced/code-logic/view',
-      problemId
-    ]);
+    this.router.navigate(['/mentor/advanced/code-logic/view', problemId]);
   }
 
   editProblem(problem: CodeLogicProblem): void {
@@ -120,18 +120,12 @@ export class CodeLogicListComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([
-      '/mentor/advanced/code-logic/edit',
-      problem.id
-    ]);
+    this.router.navigate(['/mentor/advanced/code-logic/edit', problem.id]);
   }
 
   // PUBLISH
   publishProblem(problem: CodeLogicProblem): void {
-    if (
-      problem.status !== 'draft' ||
-      this.actionInProgress !== null
-    ) {
+    if (problem.status !== 'draft' || this.actionInProgress() !== null) {
       return;
     }
 
@@ -148,10 +142,7 @@ export class CodeLogicListComponent implements OnInit {
 
   // UNPUBLISH
   unpublishProblem(problem: CodeLogicProblem): void {
-    if (
-      problem.status !== 'published' ||
-      this.actionInProgress !== null
-    ) {
+    if (problem.status !== 'published' || this.actionInProgress() !== null) {
       return;
     }
 
@@ -168,10 +159,7 @@ export class CodeLogicListComponent implements OnInit {
 
   // DEACTIVATE
   deactivateProblem(problem: CodeLogicProblem): void {
-    if (
-      problem.status === 'inactive' ||
-      this.actionInProgress !== null
-    ) {
+    if (problem.status === 'inactive' || this.actionInProgress() !== null) {
       return;
     }
 
@@ -188,10 +176,7 @@ export class CodeLogicListComponent implements OnInit {
 
   // REACTIVATE
   reactivateProblem(problem: CodeLogicProblem): void {
-    if (
-      problem.status !== 'inactive' ||
-      this.actionInProgress !== null
-    ) {
+    if (problem.status !== 'inactive' || this.actionInProgress() !== null) {
       return;
     }
 
@@ -208,10 +193,7 @@ export class CodeLogicListComponent implements OnInit {
 
   // DELETE DRAFT
   deleteProblem(problem: CodeLogicProblem): void {
-    if (
-      problem.status !== 'draft' ||
-      this.actionInProgress !== null
-    ) {
+    if (problem.status !== 'draft' || this.actionInProgress() !== null) {
       return;
     }
 
@@ -229,30 +211,30 @@ export class CodeLogicListComponent implements OnInit {
   // REUSABLE ACTION HANDLER
   private runAction(
     problemId: number,
-    action: () => import('rxjs').Observable<unknown>,
+    action: () => Observable<unknown>,
     successMessage: string
   ): void {
-    this.actionInProgress = problemId;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.actionInProgress.set(problemId);
+    this.errorMessage.set('');
+    this.successMessage.set('');
 
     action().subscribe({
       next: () => {
-        this.actionInProgress = null;
-        this.successMessage = successMessage;
-        this.loadProblems();
+        this.actionInProgress.set(null);
+        this.successMessage.set(successMessage);
+        this.loadProblems(false);
       },
       error: (error) => {
-        this.actionInProgress = null;
-        this.errorMessage =
-          error.error?.message ||
-          'The action failed. Please try again.';
+        this.actionInProgress.set(null);
+        this.errorMessage.set(
+          error.error?.message || 'The action failed. Please try again.'
+        );
       }
     });
   }
 
   clearMessages(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.errorMessage.set('');
+    this.successMessage.set('');
   }
 }

@@ -45,6 +45,12 @@ const roleMiddleware = require(
     "../../../../middleware/roleMiddleware"
 );
 
+const {
+    importProblemsFromCSV
+} = require(
+    "../../../../controllers/mentor/advanced/code-logic/importCodeLogicProblemsController"
+);
+
 // =====================================================
 // LOGIC TO CODE MENTOR ROUTES
 // =====================================================
@@ -127,6 +133,14 @@ router.patch(
     authMiddleware,
     roleMiddleware("mentor"),
     reactivateProblem
+);
+
+// IMPORT LOGIC TO CODE PROBLEMS FROM CSV
+router.post(
+    "/problems/import-csv",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    importProblemsFromCSV
 );
 
 // DELETE A DRAFT PROBLEM
