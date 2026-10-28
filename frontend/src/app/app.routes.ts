@@ -171,6 +171,9 @@ import { CodeShuffleList } from './features/mentor/advanced/code-shuffle/code-sh
 import { CodeShuffleEdit } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-edit/code-shuffle-edit';
 import { CodeShuffleDetails } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-details/code-shuffle-details';
 
+// MENTOR LOGIC TO CODE
+import { CodeLogicListComponent } from './features/mentor/advanced/code-logic/code-logic-list/code-logic-list';
+
 export const routes: Routes = [
 
   // Public routes
@@ -635,6 +638,11 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/code-shuffle/tasks/:id',
         component: CodeShuffleDetails,
+      },
+        // MENTOR LOGIC TO CODE
+      {
+        path: 'mentor/advanced/code-logic',
+        component: CodeLogicListComponent
       },
 
     ]
