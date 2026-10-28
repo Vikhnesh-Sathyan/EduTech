@@ -1,0 +1,425 @@
+<div class="edit-page">
+  <div class="page-header">
+    <div>
+      <button type="button" class="back-btn" (click)="cancel()">
+        ← Back to Problems
+      </button>
+      <h1>Edit Logic to Code Problem</h1>
+      <p>Update your problem details, examples, code, and questions.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+
+    <div class="loading-state">
+      Loading problem details...
+    </div>
+
+  } @else {
+
+    <div>
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="alert alert-success">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <form (ngSubmit)="saveChanges()" #editForm="ngForm">
+
+        <!-- Problem Details -->
+        <section class="form-card">
+          <h2>01 — Problem Details</h2>
+
+          <div class="form-group">
+            <label for="title">Problem Title *</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              [ngModel]="problem().title"
+              (ngModelChange)="updateProblem('title', $event)"
+              required
+              maxlength="200"
+              placeholder="e.g. Check an Even Number"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Problem Description *</label>
+            <textarea
+              id="description"
+              name="description"
+              [ngModel]="problem().description"
+              (ngModelChange)="updateProblem('description', $event)"
+              required
+              rows="5"
+              placeholder="Explain what the student needs to solve..."
+            ></textarea>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="language">Programming Language *</label>
+              <select
+                id="language"
+                name="language"
+                [ngModel]="problem().languageId"
+                (ngModelChange)="updateProblem('languageId', $event)"
+                required
+              >
+                <option [ngValue]="null">Select language</option>
+                @for (language of languages(); track language.id) {
+                  <option [ngValue]="language.id">
+                    {{ language.name }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="mode">Problem Type *</label>
+              <select
+                id="mode"
+                name="mode"
+                [ngModel]="problem().mode"
+                (ngModelChange)="updateProblem('mode', $event)"
+                required
+              >
+                <option value="build_code">Logic → Code</option>
+                <option value="understand_code">Code → Logic</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="difficulty">Difficulty *</label>
+              <select
+                id="difficulty"
+                name="difficulty"
+                [ngModel]="problem().difficulty"
+                (ngModelChange)="updateProblem('difficulty', $event)"
+                required
+              >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="maxMarks">Maximum Marks *</label>
+              <input
+                id="maxMarks"
+                name="maxMarks"
+                type="number"
+                [ngModel]="problem().maxMarks"
+                (ngModelChange)="updateProblem('maxMarks', $event)"
+                min="0.01"
+                max="99999.99"
+                step="0.01"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="hintText">Hint (Optional)</label>
+            <textarea
+              id="hintText"
+              name="hintText"
+              [ngModel]="problem().hintText"
+              (ngModelChange)="updateProblem('hintText', $event)"
+              rows="2"
+              placeholder="Give students a useful hint..."
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- Input and Output -->
+        <section class="form-card">
+          <h2>02 — Input and Output</h2>
+
+          <div class="form-group">
+            <label for="inputDescription">Input Description</label>
+            <textarea
+              id="inputDescription"
+              name="inputDescription"
+              [ngModel]="content().inputDescription"
+              (ngModelChange)="updateContent('inputDescription', $event)"
+              rows="3"
+              placeholder="Describe the expected input..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="outputDescription">Output Description</label>
+            <textarea
+              id="outputDescription"
+              name="outputDescription"
+              [ngModel]="content().outputDescription"
+              (ngModelChange)="updateContent('outputDescription', $event)"
+              rows="3"
+              placeholder="Describe the expected output..."
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="form-card">
+          <div class="section-heading">
+            <div>
+              <h2>03 — Examples</h2>
+              <p>Add sample inputs and their expected outputs.</p>
+            </div>
+            <button type="button" class="secondary-btn" (click)="addExample()">
+              + Add Example
+            </button>
+          </div>
+
+          @for (example of content().examples; track $index; let i = $index) {
+            <div class="repeat-card">
+              <div class="repeat-heading">
+                <h3>Example {{ i + 1 }}</h3>
+                <button
+                  type="button"
+                  class="remove-btn"
+                  (click)="removeExample(i)"
+                  [disabled]="content().examples.length === 1"
+                >
+                  Remove
+                </button>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label [for]="'exampleInput' + i">Input</label>
+                  <textarea
+                    [id]="'exampleInput' + i"
+                    [name]="'exampleInput' + i"
+                    [ngModel]="example.input"
+                    (ngModelChange)="updateExample(i, 'input', $event)"
+                    rows="2"
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label [for]="'exampleOutput' + i">Expected Output</label>
+                  <textarea
+                    [id]="'exampleOutput' + i"
+                    [name]="'exampleOutput' + i"
+                    [ngModel]="example.output"
+                    (ngModelChange)="updateExample(i, 'output', $event)"
+                    rows="2"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label [for]="'exampleExplanation' + i">Explanation</label>
+                <textarea
+                  [id]="'exampleExplanation' + i"
+                  [name]="'exampleExplanation' + i"
+                  [ngModel]="example.explanation"
+                  (ngModelChange)="updateExample(i, 'explanation', $event)"
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+          }
+        </section>
+
+        <!-- Code -->
+        <section class="form-card">
+          <h2>04 — Code Configuration</h2>
+
+          <div class="form-group">
+            <label for="starterCode">Starter Code</label>
+            <textarea
+              id="starterCode"
+              name="starterCode"
+              [ngModel]="content().starterCode"
+              (ngModelChange)="updateContent('starterCode', $event)"
+              rows="7"
+              class="code-input"
+              placeholder="Enter starter code..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="solutionCode">Solution Code</label>
+            <textarea
+              id="solutionCode"
+              name="solutionCode"
+              [ngModel]="content().solutionCode"
+              (ngModelChange)="updateContent('solutionCode', $event)"
+              rows="7"
+              class="code-input"
+              placeholder="Enter the expected solution..."
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- Algorithm -->
+        <section class="form-card">
+          <div class="section-heading">
+            <div>
+              <h2>05 — Algorithm Steps</h2>
+              <p>Define the steps needed to solve the problem.</p>
+            </div>
+            <button
+              type="button"
+              class="secondary-btn"
+              (click)="addAlgorithmStep()"
+            >
+              + Add Step
+            </button>
+          </div>
+
+          @for (step of content().algorithmSteps; track $index; let i = $index) {
+            <div class="step-row">
+              <span class="step-number">{{ i + 1 }}</span>
+              <input
+                [name]="'algorithmStep' + i"
+                [ngModel]="step"
+                (ngModelChange)="updateAlgorithmStep(i, $event)"
+                placeholder="Enter an algorithm step..."
+              />
+              <button
+                type="button"
+                class="remove-btn"
+                (click)="removeAlgorithmStep(i)"
+                [disabled]="content().algorithmSteps.length === 1"
+              >
+                Remove
+              </button>
+            </div>
+          }
+        </section>
+
+        <!-- Prediction Questions -->
+        <section class="form-card">
+          <div class="section-heading">
+            <div>
+              <h2>06 — Prediction Questions</h2>
+              <p>Students predict code output or explain the logic.</p>
+            </div>
+            <button
+              type="button"
+              class="secondary-btn"
+              (click)="addPredictionQuestion()"
+            >
+              + Add Question
+            </button>
+          </div>
+
+          @for (
+            question of content().predictionQuestions;
+            track $index;
+            let i = $index
+          ) {
+            <div class="repeat-card">
+              <div class="repeat-heading">
+                <h3>Question {{ i + 1 }}</h3>
+                <button
+                  type="button"
+                  class="remove-btn"
+                  (click)="removePredictionQuestion(i)"
+                  [disabled]="content().predictionQuestions.length === 1"
+                >
+                  Remove
+                </button>
+              </div>
+
+              <div class="form-group">
+                <label [for]="'question' + i">Question</label>
+                <textarea
+                  [id]="'question' + i"
+                  [name]="'question' + i"
+                  [ngModel]="question.question"
+                  (ngModelChange)="updatePredictionQuestion(i, 'question', $event)"
+                  rows="3"
+                  placeholder="Enter the question..."
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label [for]="'answer' + i">Expected Answer</label>
+                <textarea
+                  [id]="'answer' + i"
+                  [name]="'answer' + i"
+                  [ngModel]="question.expected_answer"
+                  (ngModelChange)="updatePredictionQuestion(i, 'expected_answer', $event)"
+                  rows="2"
+                  placeholder="Enter the expected answer..."
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label [for]="'marks' + i">Marks</label>
+                <input
+                  [id]="'marks' + i"
+                  [name]="'marks' + i"
+                  type="number"
+                  [ngModel]="question.marks"
+                  (ngModelChange)="updatePredictionQuestion(i, 'marks', $event)"
+                  min="1"
+                  step="1"
+                />
+              </div>
+            </div>
+          }
+        </section>
+
+        <!-- Schedule -->
+        <section class="form-card">
+          <h2>07 — Schedule</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="publishDate">Publish Date</label>
+              <input
+                id="publishDate"
+                name="publishDate"
+                type="date"
+                [ngModel]="problem().publishDate"
+                (ngModelChange)="updateProblem('publishDate', $event)"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="dueDate">Due Date and Time</label>
+              <input
+                id="dueDate"
+                name="dueDate"
+                type="datetime-local"
+                [ngModel]="problem().dueDate"
+                (ngModelChange)="updateProblem('dueDate', $event)"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" (click)="cancel()">
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="save-btn"
+            [disabled]="saving() || editForm.invalid"
+          >
+            {{ saving() ? 'Saving Changes...' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+  }
+</div>

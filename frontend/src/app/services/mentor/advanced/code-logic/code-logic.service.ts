@@ -171,6 +171,32 @@ export class CodeLogicService {
     );
   }
 
+  // GET ONE PROBLEM WITH FULL CONTENT
+getProblemById(problemId: number): Observable<{ problem: any }> {
+  return this.http.get<{ problem: any }>(
+    `${this.apiUrl}/problems/${problemId}`
+  );
+}
+
+// UPDATE AN EXISTING DRAFT PROBLEM
+updateProblem(
+  problemId: number,
+  payload: CodeLogicProblemPayload
+): Observable<{
+  message: string;
+  problemId: number;
+  status: string;
+}> {
+  return this.http.put<{
+    message: string;
+    problemId: number;
+    status: string;
+  }>(
+    `${this.apiUrl}/problems/${problemId}`,
+    payload
+  );
+}
+
 // =====================================================
 // IMPORT LOGIC TO CODE PROBLEMS FROM CSV
 // =====================================================

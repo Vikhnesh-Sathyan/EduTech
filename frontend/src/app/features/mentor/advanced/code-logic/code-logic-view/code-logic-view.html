@@ -1,0 +1,281 @@
+
+<div class="view-page">
+  <div class="page-header">
+    <div>
+      <button type="button" class="back-btn" (click)="goBack()">
+        ← Back to Problems
+      </button>
+
+      <h1>View Logic to Code Problem</h1>
+      <p>Review the problem details and learning content.</p>
+    </div>
+
+    <button
+      *ngIf="problem()?.status === 'draft'"
+      type="button"
+      class="edit-btn"
+      (click)="editProblem()"
+    >
+      Edit Problem
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-state">
+    Loading problem details...
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading()">
+    <div *ngIf="errorMessage()" class="alert alert-error">
+      {{ errorMessage() }}
+    </div>
+
+    <ng-container *ngIf="problem() && !errorMessage()">
+
+      <!-- Problem Overview -->
+      <section class="view-card overview-card">
+        <div class="title-row">
+          <div>
+            <div class="badge-row">
+              <span
+                class="status-badge"
+                [ngClass]="'status-' + problem().status"
+              >
+                {{ statusLabel() }}
+              </span>
+
+              <span class="mode-badge">
+                {{ modeLabel() }}
+              </span>
+            </div>
+
+            <h2>{{ problem().title }}</h2>
+            <p class="problem-description">
+              {{ problem().description }}
+            </p>
+          </div>
+        </div>
+
+        <div class="metadata-grid">
+          <div class="metadata-item">
+            <span class="metadata-label">Programming Language</span>
+            <strong>
+              {{ problem().language_name || 'Not specified' }}
+            </strong>
+          </div>
+
+          <div class="metadata-item">
+            <span class="metadata-label">Difficulty</span>
+            <strong
+              class="difficulty"
+              [ngClass]="'difficulty-' + problem().difficulty"
+            >
+              {{ problem().difficulty | titlecase }}
+            </strong>
+          </div>
+
+          <div class="metadata-item">
+            <span class="metadata-label">Maximum Marks</span>
+            <strong>{{ problem().max_marks }}</strong>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Hint -->
+      <section class="view-card" *ngIf="problem().hint_text">
+        <h2>Hint</h2>
+        <p class="content-text">{{ problem().hint_text }}</p>
+      </section>
+
+      <!-- Input and Output -->
+      <section class="view-card">
+        <h2>Input and Output</h2>
+
+        <div class="content-grid">
+          <div class="content-panel">
+            <h3>Input Description</h3>
+            <p class="content-text">
+              {{
+                problem().input_description ||
+                'No input description provided.'
+              }}
+            </p>
+          </div>
+
+          <div class="content-panel">
+            <h3>Output Description</h3>
+            <p class="content-text">
+              {{
+                problem().output_description ||
+                'No output description provided.'
+              }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Examples -->
+      <section class="view-card">
+        <div class="section-heading">
+          <h2>Examples</h2>
+          <span class="count-badge">{{ examples().length }}</span>
+        </div>
+
+        <p *ngIf="examples().length === 0" class="empty-state">
+          No examples have been added.
+        </p>
+
+        <div
+          class="example-card"
+          *ngFor="let example of examples(); let i = index"
+        >
+          <h3>Example {{ i + 1 }}</h3>
+
+          <div class="content-grid">
+            <div class="content-panel">
+              <h4>Input</h4>
+              <pre>{{ example.input || 'No input' }}</pre>
+            </div>
+
+            <div class="content-panel">
+              <h4>Expected Output</h4>
+              <pre>{{ example.output || 'No output' }}</pre>
+            </div>
+          </div>
+
+          <div *ngIf="example.explanation" class="explanation">
+            <h4>Explanation</h4>
+            <p class="content-text">{{ example.explanation }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Code Configuration -->
+      <section class="view-card">
+        <h2>Code Configuration</h2>
+
+        <div class="code-section">
+          <h3>Starter Code</h3>
+          <pre class="code-block">{{ problem().starter_code || 'No starter code provided.' }}</pre>
+        </div>
+
+        <div class="code-section">
+          <h3>Solution Code</h3>
+          <pre class="code-block">{{ problem().solution_code || 'No solution code provided.' }}</pre>
+        </div>
+      </section>
+
+      <!-- Algorithm Steps -->
+      <section class="view-card">
+        <div class="section-heading">
+          <h2>Algorithm Steps</h2>
+          <span class="count-badge">
+            {{ algorithmSteps().length }}
+          </span>
+        </div>
+
+        <p
+          *ngIf="algorithmSteps().length === 0"
+          class="empty-state"
+        >
+          No algorithm steps have been added.
+        </p>
+
+        <ol
+          class="algorithm-list"
+          *ngIf="algorithmSteps().length > 0"
+        >
+          <li *ngFor="let step of algorithmSteps()">
+            {{ step }}
+          </li>
+        </ol>
+      </section>
+
+      <!-- Prediction Questions -->
+      <section class="view-card">
+        <div class="section-heading">
+          <h2>Prediction Questions</h2>
+          <span class="count-badge">
+            {{ predictionQuestions().length }}
+          </span>
+        </div>
+
+        <p
+          *ngIf="predictionQuestions().length === 0"
+          class="empty-state"
+        >
+          No prediction questions have been added.
+        </p>
+
+        <div
+          class="question-card"
+          *ngFor="let question of predictionQuestions(); let i = index"
+        >
+          <div class="question-heading">
+            <h3>Question {{ i + 1 }}</h3>
+            <span class="marks-badge">
+              {{ question.marks }} marks
+            </span>
+          </div>
+
+          <p class="content-text">{{ question.question }}</p>
+
+          <div class="answer-panel">
+            <h4>Expected Answer</h4>
+            <p class="content-text">
+              {{
+                question.expected_answer ||
+                'No expected answer provided.'
+              }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Schedule -->
+      <section class="view-card">
+        <h2>Schedule</h2>
+
+        <div class="metadata-grid">
+          <div class="metadata-item">
+            <span class="metadata-label">Publish Date</span>
+            <strong>{{ formattedPublishDate() }}</strong>
+          </div>
+
+          <div class="metadata-item">
+            <span class="metadata-label">Due Date</span>
+            <strong>{{ formattedDueDate() }}</strong>
+          </div>
+
+          <div class="metadata-item">
+            <span class="metadata-label">Current Status</span>
+            <strong>{{ statusLabel() }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer Actions -->
+      <div class="footer-actions">
+        <button
+          type="button"
+          class="back-footer-btn"
+          (click)="goBack()"
+        >
+          Back to Problems
+        </button>
+
+        <button
+          *ngIf="problem().status === 'draft'"
+          type="button"
+          class="edit-btn"
+          (click)="editProblem()"
+        >
+          Edit Problem
+        </button>
+      </div>
+
+    </ng-container>
+  </div>
+</div>

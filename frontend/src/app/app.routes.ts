@@ -99,6 +99,10 @@ import {
   ProjectSectionContent as StudentProjectSectionContent
 } from './features/student/projects/project-section-content/project-section-content';
 
+//STUDENT CODE-LOGIC
+import { StudentCodeLogicList } from './features/student/advanced/code-logic/code-logic-list/code-logic-list';
+
+
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
@@ -174,6 +178,8 @@ import { CodeShuffleDetails } from './features/mentor/advanced/code-shuffle/code
 // MENTOR LOGIC TO CODE
 import { CodeLogicListComponent } from './features/mentor/advanced/code-logic/code-logic-list/code-logic-list';
 import { CodeLogicCreate } from './features/mentor/advanced/code-logic/code-logic-create/code-logic-create';
+import { CodeLogicEdit } from './features/mentor/advanced/code-logic/code-logic-edit/code-logic-edit';
+import { CodeLogicView } from './features/mentor/advanced/code-logic/code-logic-view/code-logic-view';
 
 export const routes: Routes = [
 
@@ -428,6 +434,14 @@ export const routes: Routes = [
         component: CodeShuffleProgress,
       },
 
+      //STUDENT CODE-LOGIC
+      {
+        path: 'student/advanced/code-logic',
+        component: StudentCodeLogicList
+      }
+
+
+
     ]
   },
 
@@ -649,7 +663,14 @@ export const routes: Routes = [
         path: 'mentor/advanced/code-logic/create',
         component: CodeLogicCreate
       },
-
+      {
+        path: 'mentor/advanced/code-logic/edit/:id',
+        component: CodeLogicEdit
+      },
+      {
+        path: 'mentor/advanced/code-logic/view/:id',
+        component: CodeLogicView
+      }
     ]
   },
 
