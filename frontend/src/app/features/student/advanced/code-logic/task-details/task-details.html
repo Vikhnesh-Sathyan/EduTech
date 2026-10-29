@@ -30,7 +30,9 @@
 
     <header class="page-header">
       <span class="eyebrow">ADVANCED LEARNING</span>
+
       <h1>{{ currentTask.title }}</h1>
+
       <p>
         Understand the code, follow its logic, and explain
         how the program works in your own words.
@@ -47,21 +49,27 @@
       </div>
     </header>
 
+    <!-- Task instructions -->
     <section class="content-card">
       <div class="section-heading">
         <span class="section-icon">📘</span>
+
         <div>
           <h2>Task Instructions</h2>
           <p>Read the instructions carefully before starting.</p>
         </div>
       </div>
 
-      <div class="instructions-content">{{ currentTask.description }}</div>
+      <div class="instructions-content">
+        {{ currentTask.description }}
+      </div>
     </section>
 
+    <!-- Code content -->
     <section class="content-card">
       <div class="section-heading">
         <span class="section-icon">💻</span>
+
         <div>
           <h2>Code Content</h2>
           <p>Study the code and understand each step.</p>
@@ -71,12 +79,23 @@
       <pre class="code-block"><code>{{ currentTask.code_content }}</code></pre>
     </section>
 
+    <!-- Separate submission status component -->
+    <app-student-code-to-logic-submission-status
+      [taskId]="currentTask.id"
+    />
+
+    <!-- Explanation form -->
     <section class="content-card explanation-card">
+
       <div class="section-heading">
         <span class="section-icon">✍️</span>
+
         <div>
           <h2>Write Your Explanation</h2>
-          <p>Explain the program in your own words.</p>
+
+          <p>
+            Explain the program in your own words.
+          </p>
         </div>
       </div>
 
@@ -84,8 +103,10 @@
         #explanationForm="ngForm"
         (ngSubmit)="submitExplanation()"
       >
+
         <label for="explanation">
-          Your explanation <span class="required">*</span>
+          Your explanation
+          <span class="required">*</span>
         </label>
 
         <textarea
@@ -97,11 +118,20 @@
           rows="9"
           required
           maxlength="10000"
-          [disabled]="submitting()"
+          [disabled]="
+            submitting() ||
+            (
+              submissionStatus() !== null &&
+              !submissionStatus()!.canSubmit
+            )
+          "
         ></textarea>
 
         <div class="input-footer">
-          <span>Write clearly and explain the logic step by step.</span>
+          <span>
+            Write clearly and explain the logic step by step.
+          </span>
+
           <span>{{ explanation.length }}/10000</span>
         </div>
 
@@ -115,7 +145,18 @@
           </p>
         }
 
+        @if (
+          submissionStatus() !== null &&
+          !submissionStatus()!.canSubmit
+        ) {
+          <p class="field-error">
+            Your previous submission is awaiting mentor review.
+            You can submit again after it has been reviewed.
+          </p>
+        }
+
         <div class="form-actions">
+
           <button
             type="button"
             class="btn btn-secondary"
@@ -128,15 +169,37 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="submitting() || !explanation.trim()"
+            [disabled]="
+              submitting() ||
+              !explanation.trim() ||
+              (
+                submissionStatus() !== null &&
+                !submissionStatus()!.canSubmit
+              )
+            "
           >
+
             @if (submitting()) {
               <span class="button-loader"></span>
               Submitting...
+
+            } @else if (
+              submissionStatus() !== null &&
+              !submissionStatus()!.canSubmit
+            ) {
+              Awaiting Review
+
+            } @else if (
+              submissionStatus()?.latestSubmission?.review_status === 'reviewed'
+            ) {
+              Resubmit Explanation →
+
             } @else {
               Submit Explanation →
             }
+
           </button>
+
         </div>
       </form>
     </section>

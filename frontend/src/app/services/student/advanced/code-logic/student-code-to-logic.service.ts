@@ -29,6 +29,23 @@ export interface CodeToLogicSubmission {
   star_rating: number | null;
 }
 
+
+export interface CodeToLogicSubmissionStatus {
+  latestSubmission: {
+    id: number;
+    submission_number: number;
+    review_status: 'pending' | 'reviewed';
+    submitted_at: string;
+    reviewed_at: string | null;
+    mentor_feedback: string | null;
+    star_rating: number | null;
+  } | null;
+
+  canSubmit: boolean;
+  attemptCount: number;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -83,4 +100,11 @@ getTaskDetails(
       submissions: CodeToLogicSubmission[];
     }>(`${this.apiUrl}/submissions`);
   }
+
+getTaskSubmissionStatus(taskId: number) {
+  return this.http.get<CodeToLogicSubmissionStatus>(
+    `${this.apiUrl}/tasks/${taskId}/submission-status`
+  );
+}
+
 }

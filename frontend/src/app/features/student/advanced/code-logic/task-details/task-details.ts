@@ -9,12 +9,16 @@ import {
   CodeToLogicTask
 } from '../../../../../services/student/advanced/code-logic/student-code-to-logic.service';
 
+import {
+  StudentCodeToLogicSubmissionStatusComponent
+} from '../submission-status/submission-status';
+
 import { ToastService } from '../../../../../services/toast.service';
 
 @Component({
   selector: 'app-student-code-to-logic-task-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, StudentCodeToLogicSubmissionStatusComponent],
   templateUrl: './task-details.html',
   styleUrl: './task-details.css'
 })
@@ -47,10 +51,19 @@ export class StudentCodeToLogicTaskDetailsComponent implements OnInit {
     this.errorMessage.set('');
 
     this.service.getTaskDetails(taskId).subscribe({
-      next: response => {
-        this.task.set(response.task);
-        this.loading.set(false);
-      },
+     next: response => {
+  this.task.set(response.task);
+  this.loading.set(false);
+
+  this.service.getTaskSubmissionStatus(taskId).subscribe({
+    next: status => {
+      this.submissionStatus.set(status);
+    },
+    error: error => {
+      console.error('Failed to load submission status:', error);
+    }
+  });
+},
       error: error => {
         console.error('Failed to load task details:', error);
 
@@ -65,47 +78,97 @@ export class StudentCodeToLogicTaskDetailsComponent implements OnInit {
     });
   }
 
-  submitExplanation(): void {
-    const task = this.task();
-    const text = this.explanation.trim();
+submitExplanation(): void {
+  const task = this.task();
+  const text = this.explanation.trim();
 
-    if (!task || this.submitting()) {
-      return;
-    }
-
-    if (!text) {
-      this.errorMessage.set(
-        'Please write your explanation before submitting.'
-      );
-      this.toastService.error(
-        'Please write your explanation before submitting.'
-      );
-      return;
-    }
-
-    this.errorMessage.set('');
-    this.submitting.set(true);
-
-    this.service.submitExplanation(task.id, text).subscribe({
-      next: response => {
-        this.toastService.success(
-          `Explanation submitted successfully! Attempt ${response.submissionNumber}.`
-        );
-
-        this.explanation = '';
-        this.submitting.set(false);
-      },
-      error: error => {
-        console.error('Explanation submission failed:', error);
-
-        const message =
-          error.error?.message ||
-          'Failed to submit your explanation. Please try again.';
-
-        this.errorMessage.set(message);
-        this.toastService.error(message);
-        this.submitting.set(false);
-      }
-    });
+  if (!task || this.submitting()) {
+    return;
   }
+
+  if (!text) {
+    this.errorMessage.set(
+      'Please write your explanation before submitting.'
+    );
+    this.toastService.error(
+      'Please write your explanation before submitting.'
+    );
+    return;
+  }
+
+  // Prevent submission if the latest attempt is awaiting review.
+  const currentStatus = this.submissionStatus();
+
+  if (currentStatus && !currentStatus.canSubmit) {
+    this.toastService.error(
+      'Your previous submission is awaiting mentor review.'
+    );
+    return;
+  }
+
+  this.errorMessage.set('');
+  this.submitting.set(true);
+
+  this.service.submitExplanation(task.id, text).subscribe({
+    next: response => {
+      this.toastService.success(
+        `Explanation submitted successfully! Attempt ${response.submissionNumber}.`
+      );
+
+      this.explanation = '';
+      this.submitting.set(false);
+
+      // Refresh the latest submission status.
+      this.service.getTaskSubmissionStatus(task.id).subscribe({
+        next: status => {
+          this.submissionStatus.set(status);
+        },
+        error: error => {
+          console.error(
+            'Failed to refresh submission status:',
+            error
+          );
+        }
+      });
+    },
+
+    error: error => {
+      console.error('Explanation submission failed:', error);
+
+      const message =
+        error.error?.message ||
+        'Failed to submit your explanation. Please try again.';
+
+      this.errorMessage.set(message);
+      this.toastService.error(message);
+      this.submitting.set(false);
+
+      // Refresh status in case another submission is pending.
+      this.service.getTaskSubmissionStatus(task.id).subscribe({
+        next: status => {
+          this.submissionStatus.set(status);
+        },
+        error: statusError => {
+          console.error(
+            'Failed to refresh submission status:',
+            statusError
+          );
+        }
+      });
+    }
+  });
+}
+
+  submissionStatus = signal<{
+  latestSubmission: {
+    id: number;
+    submission_number: number;
+    review_status: 'pending' | 'reviewed';
+    submitted_at: string;
+    reviewed_at: string | null;
+    mentor_feedback: string | null;
+    star_rating: number | null;
+  } | null;
+  canSubmit: boolean;
+} | null>(null);
 }

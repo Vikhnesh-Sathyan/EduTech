@@ -12,7 +12,8 @@ const {
 
 const {
     submitExplanation,
-    getMySubmissions
+    getMySubmissions,
+    getTaskSubmissionStatus
 } = require(
     "../../../../controllers/student/advanced/code-logic/student-code-logic-submission.controller"
 );
@@ -59,5 +60,12 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getMySubmissions
+);
+
+router.get(
+  "/tasks/:taskId/submission-status",
+  authMiddleware,
+  roleMiddleware("student"),
+  getTaskSubmissionStatus
 );
 module.exports = router;

@@ -1,0 +1,112 @@
+
+<section class="submission-status">
+
+  @if (loading()) {
+    <div class="status-loading">
+      <p>Loading submission status...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="status-error">
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="refreshStatus()"
+      >
+        Try Again
+      </button>
+    </div>
+  } @else if (status(); as submissionStatus) {
+
+    <div class="status-card">
+
+      <!-- Header -->
+      <div class="status-header">
+        <div>
+          <span class="status-eyebrow">SUBMISSION OVERVIEW</span>
+          <h3>Your Progress</h3>
+        </div>
+
+        @if (submissionStatus.latestSubmission; as latest) {
+          <span
+            class="status-badge"
+            [class.pending]="latest.review_status === 'pending'"
+            [class.reviewed]="latest.review_status === 'reviewed'"
+          >
+            {{
+              latest.review_status === 'pending'
+                ? 'Awaiting Review'
+                : 'Reviewed'
+            }}
+          </span>
+        } @else {
+          <span class="status-badge">Not Submitted</span>
+        }
+      </div>
+
+      <!-- Compact statistics -->
+      <div class="overview-stats">
+        <div class="stat-item">
+          <span>Total Attempts</span>
+          <strong>{{ attemptCount() }}</strong>
+        </div>
+
+        <div class="stat-item">
+          <span>Latest Rating</span>
+
+       
+<strong>
+  @if (submissionStatus.latestSubmission; as latest) {
+    @if (
+      latest.review_status === 'reviewed' &&
+      latest.star_rating !== null &&
+      latest.star_rating !== undefined
+    ) {
+      {{ latest.star_rating }}/5 ⭐
+    } @else {
+      —
+    }
+  } @else {
+    —
+  }
+</strong>
+
+        </div>
+      </div>
+
+      <!-- Latest attempt summary -->
+      @if (submissionStatus.latestSubmission; as latest) {
+
+        @if (latest.review_status === 'pending') {
+          <div class="compact-message pending-message">
+            Your latest attempt is awaiting mentor review.
+            Resubmission will be available after review.
+          </div>
+        } @else {
+          <div class="latest-feedback">
+            <span class="detail-label">Latest Mentor Feedback</span>
+
+            <p>
+              {{ latest.mentor_feedback || 'No written feedback provided.' }}
+            </p>
+          </div>
+        }
+
+        <a
+          routerLink="/student/advanced/code-to-logic/submissions"
+          class="history-link"
+        >
+          View all submissions →
+        </a>
+
+      } @else {
+        <p class="compact-message">
+          You haven't submitted an explanation yet.
+        </p>
+      }
+
+    </div>
+  }
+
+</section>

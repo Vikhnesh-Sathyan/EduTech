@@ -115,6 +115,109 @@ if (!Number.isInteger(parsedTaskId) || parsedTaskId <= 0) {
 
 
 
+const getTaskSubmissionStatus = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({
+            message: "Authentication required"
+        });
+    }
+
+    const studentId = req.user.id;
+    const parsedTaskId = Number(req.params.taskId);
+
+    if (!Number.isInteger(parsedTaskId) || parsedTaskId <= 0) {
+        return res.status(400).json({
+            message: "Invalid task ID"
+        });
+    }
+
+    try {
+        // Confirm that the task is available to this student.
+        const [tasks] = await db.query(
+            `
+            SELECT ctl.id
+            FROM code_to_logic_tasks ctl
+            INNER JOIN mentor_student_relationships msr
+                ON msr.mentor_id = ctl.mentor_id
+            WHERE ctl.id = ?
+              AND ctl.status = 'published'
+              AND msr.student_id = ?
+              AND msr.status = 'accepted'
+              AND msr.is_active = TRUE
+            LIMIT 1
+            `,
+            [parsedTaskId, studentId]
+        );
+
+        if (tasks.length === 0) {
+            return res.status(404).json({
+                message: "Task not found or unavailable"
+            });
+        }
+
+        // Get the latest attempt.
+        const [submissions] = await db.query(
+            `
+            SELECT
+                id,
+                submission_number,
+                review_status,
+                submitted_at,
+                reviewed_at,
+                CASE
+                    WHEN review_status = 'reviewed'
+                    THEN mentor_feedback
+                    ELSE NULL
+                END AS mentor_feedback,
+                CASE
+                    WHEN review_status = 'reviewed'
+                    THEN star_rating
+                    ELSE NULL
+                END AS star_rating
+            FROM code_to_logic_submissions
+            WHERE task_id = ?
+              AND student_id = ?
+            ORDER BY submission_number DESC, id DESC
+            LIMIT 1
+            `,
+            [parsedTaskId, studentId]
+        );
+
+        // Count all attempts for this student and task.
+        const [countRows] = await db.query(
+            `
+            SELECT COUNT(*) AS attempt_count
+            FROM code_to_logic_submissions
+            WHERE task_id = ?
+              AND student_id = ?
+            `,
+            [parsedTaskId, studentId]
+        );
+
+        const latestSubmission = submissions[0] || null;
+
+        return res.status(200).json({
+            latestSubmission,
+            attemptCount: Number(countRows[0].attempt_count),
+            canSubmit:
+                !latestSubmission ||
+                latestSubmission.review_status === 'reviewed'
+        });
+
+    } catch (error) {
+        console.error(
+            "Task submission status fetch failed:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Failed to load task submission status"
+        });
+    }
+};
+
+
+
 const getMySubmissions = async (req, res) => {
     const studentId = req.user.id;
 
@@ -176,9 +279,8 @@ const getMySubmissions = async (req, res) => {
 };
 
 
-
-
 module.exports = {
     submitExplanation,
-    getMySubmissions
+    getMySubmissions,
+    getTaskSubmissionStatus
 };
