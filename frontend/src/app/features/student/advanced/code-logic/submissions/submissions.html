@@ -1,0 +1,199 @@
+
+<div class="submissions-page">
+
+  <a
+    routerLink="/student/advanced/code-to-logic/tasks"
+    class="back-link"
+  >
+    ← Back to Tasks
+  </a>
+
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>My Submissions</h1>
+      <p>
+        Track your explanations, check review status, and learn
+        from your mentor's feedback.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSubmissions()"
+      [disabled]="loading()"
+    >
+      ↻ Refresh
+    </button>
+  </header>
+
+  @if (!loading() && !errorMessage()) {
+    <section class="stats-grid">
+      <article class="stat-card">
+        <span class="stat-icon total-icon">📝</span>
+        <div>
+          <p>Total Submissions</p>
+          <h2>{{ submissions().length }}</h2>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon pending-icon">⏳</span>
+        <div>
+          <p>Pending Review</p>
+          <h2>{{ pendingCount }}</h2>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon reviewed-icon">✓</span>
+        <div>
+          <p>Reviewed</p>
+          <h2>{{ reviewedCount }}</h2>
+        </div>
+      </article>
+    </section>
+  }
+
+  <section class="history-section">
+    <div class="section-heading">
+      <div>
+        <h2>Submission History</h2>
+        <p>Your submitted explanations and review details.</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="state-card">
+        <div class="loader"></div>
+        <p>Loading your submissions...</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="state-card error-state">
+        <div class="state-icon">⚠️</div>
+        <h3>Unable to Load Submissions</h3>
+        <p>{{ errorMessage() }}</p>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="loadSubmissions()"
+        >
+          Try Again
+        </button>
+      </div>
+    } @else if (submissions().length === 0) {
+      <div class="state-card empty-state">
+        <div class="state-icon">📚</div>
+        <h3>No Submissions Yet</h3>
+        <p>
+          You haven't submitted any explanations yet.
+          Open a task and explain the code in your own words.
+        </p>
+
+        <a
+          routerLink="/student/advanced/code-to-logic/tasks"
+          class="btn btn-primary"
+        >
+          Explore Tasks →
+        </a>
+      </div>
+    } @else {
+      <div class="submissions-list">
+        @for (submission of submissions(); track submission.id) {
+          <article class="submission-card">
+
+            <div class="submission-top">
+              <div class="submission-title">
+                <span class="task-label">
+                  {{ submission.subject_name }}
+                </span>
+
+                <h3>{{ submission.task_title }}</h3>
+
+                <p class="attempt-label">
+                  Attempt {{ submission.submission_number }}
+                </p>
+              </div>
+
+              <span
+                class="status-badge"
+                [class.status-pending]="submission.review_status === 'pending'"
+                [class.status-reviewed]="submission.review_status === 'reviewed'"
+              >
+                @if (submission.review_status === 'pending') {
+                  <span class="status-dot"></span>
+                  Pending Review
+                } @else {
+                  <span class="status-dot"></span>
+                  Reviewed
+                }
+              </span>
+            </div>
+
+            <div class="submitted-date">
+              <span>Submitted:</span>
+              {{ formatDate(submission.submitted_at) }}
+            </div>
+
+            <div class="explanation-box">
+              <h4>Your Explanation</h4>
+              <p>{{ submission.explanation }}</p>
+            </div>
+
+            @if (submission.review_status === 'reviewed') {
+              <div class="review-section">
+                <div class="review-heading">
+                  <h4>Mentor Feedback</h4>
+
+                  @if (submission.star_rating !== null) {
+                    <div
+                      class="rating"
+                      [attr.aria-label]="submission.star_rating + ' out of 5 stars'"
+                    >
+                      @for (
+                        star of getStars(submission.star_rating);
+                        track $index
+                      ) {
+                        <span [class.star-filled]="star === 1">★</span>
+                      }
+
+                      <span class="rating-value">
+                        {{ submission.star_rating }}/5
+                      </span>
+                    </div>
+                  }
+                </div>
+
+                @if (submission.mentor_feedback) {
+                  <p class="feedback-text">
+                    {{ submission.mentor_feedback }}
+                  </p>
+                } @else {
+                  <p class="feedback-empty">
+                    Your mentor has reviewed this submission but did not
+                    leave written feedback.
+                  </p>
+                }
+
+                @if (submission.reviewed_at) {
+                  <p class="review-date">
+                    Reviewed: {{ formatDate(submission.reviewed_at) }}
+                  </p>
+                }
+              </div>
+            } @else {
+              <div class="pending-note">
+                <span>⏳</span>
+                Your explanation is waiting for your mentor's review.
+              </div>
+            }
+
+          </article>
+        }
+      </div>
+    }
+  </section>
+
+</div>

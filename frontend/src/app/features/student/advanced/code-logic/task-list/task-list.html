@@ -1,0 +1,131 @@
+
+<div class="page-container">
+ 
+
+<header class="page-header">
+  <div>
+    <span class="eyebrow">ADVANCED LEARNING</span>
+    <h1>Code to Logic</h1>
+    <p>
+      Explore coding tasks from your mentor and explain how the code works
+      in your own words.
+    </p>
+  </div>
+
+  <div class="header-actions">
+    <a
+      routerLink="/student/advanced/code-to-logic/submissions"
+      class="btn btn-submissions"
+    >
+      <span aria-hidden="true">📝</span>
+      My Submissions
+      <span aria-hidden="true">→</span>
+    </a>
+
+    <div class="header-icon">&lt;/&gt;</div>
+  </div>
+</header>
+
+
+
+  <section class="intro-card">
+    <div class="intro-icon">⌘</div>
+    <div>
+      <h2>Understand the logic. Explain your thinking.</h2>
+      <p>
+        Read each code snippet carefully, understand its purpose, and submit
+        your explanation for your mentor to review.
+      </p>
+    </div>
+  </section>
+
+  <section class="tasks-section">
+    <div class="section-heading">
+      <div>
+        <h2>Available Tasks</h2>
+        <p>Tasks published by your accepted mentor</p>
+      </div>
+
+      <span class="task-count">{{ tasks().length }} tasks</span>
+    </div>
+
+    <!-- Loading -->
+    <div class="state-card" *ngIf="loading()">
+      <div class="loader"></div>
+      <p>Loading available tasks...</p>
+    </div>
+
+    <!-- Error -->
+    <div class="state-card error-state"
+         *ngIf="!loading() && errorMessage()">
+      <div class="state-icon">!</div>
+      <h3>Unable to load tasks</h3>
+      <p>{{ errorMessage() }}</p>
+
+      <button type="button" class="btn btn-primary" (click)="loadTasks()">
+        Try Again
+      </button>
+    </div>
+
+    <!-- Empty -->
+    <div class="state-card empty-state"
+         *ngIf="!loading() && !errorMessage() && tasks().length === 0">
+      <div class="empty-icon">&lt;/&gt;</div>
+      <h3>No tasks available yet</h3>
+      <p>
+        Your mentor hasn't published any Code to Logic tasks yet.
+        Check back later.
+      </p>
+    </div>
+
+    <!-- Task cards -->
+    <div class="task-grid"
+         *ngIf="!loading() && !errorMessage() && tasks().length > 0">
+
+      <article class="task-card" *ngFor="let task of tasks()">
+        <div class="task-card-top">
+          <span class="subject-badge">
+            {{ task.subject_name }}
+          </span>
+
+          <span class="published-badge">
+            Published
+          </span>
+        </div>
+
+        <h3>{{ task.title }}</h3>
+
+        <p class="task-description">
+          {{ task.description }}
+        </p>
+
+        <div class="task-meta">
+          <div class="mentor-avatar">
+            {{ task.mentor_name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="mentor-info">
+            <span class="meta-label">Your mentor</span>
+            <strong>{{ task.mentor_name }}</strong>
+          </div>
+        </div>
+
+        <div class="task-card-footer">
+          <span class="code-label">
+            <span class="code-icon">&lt;/&gt;</span>
+            Code explanation
+          </span>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="openTask(task)">
+            View Task
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</div>

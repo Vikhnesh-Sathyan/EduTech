@@ -100,6 +100,9 @@ import {
 } from './features/student/projects/project-section-content/project-section-content';
 
 //STUDENT CODE-LOGIC
+import { StudentCodeToLogicTaskListComponent } from '././features/student/advanced/code-logic/task-list/task-list';
+import { StudentCodeToLogicTaskDetailsComponent } from './features/student/advanced/code-logic/task-details/task-details';
+import { StudentCodeToLogicSubmissionsComponent } from './features/student/advanced/code-logic/submissions/submissions';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -434,6 +437,18 @@ export const routes: Routes = [
       },
 
       //STUDENT CODE-LOGIC
+      {
+        path: 'student/advanced/code-to-logic/tasks',
+        component: StudentCodeToLogicTaskListComponent  
+      },
+      {
+        path: 'student/advanced/code-to-logic/tasks/:taskId',
+        component: StudentCodeToLogicTaskDetailsComponent
+      },
+      {
+        path: 'student/advanced/code-to-logic/submissions',
+        component: StudentCodeToLogicSubmissionsComponent
+      }
      
 
     ]
