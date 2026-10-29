@@ -75,6 +75,75 @@ const reviewSubmission = async (req, res) => {
     }
 };
 
+
+// GET SUBMISSIONS FOR A TASK
+const getTaskSubmissions = async (req, res) => {
+    const mentorId = req.user.id;
+    const taskId = Number(req.params.taskId);
+
+    if (!Number.isInteger(taskId) || taskId <= 0) {
+        return res.status(400).json({
+            message: "Invalid task ID"
+        });
+    }
+
+    try {
+        // Confirm that this task belongs to the logged-in mentor.
+        const [tasks] = await db.query(
+            `
+            SELECT id, title
+            FROM code_to_logic_tasks
+            WHERE id = ?
+              AND mentor_id = ?
+            LIMIT 1
+            `,
+            [taskId, mentorId]
+        );
+
+        if (tasks.length === 0) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
+
+        // Retrieve every submission, including resubmissions.
+        const [submissions] = await db.query(
+            `
+            SELECT
+                s.id,
+                s.task_id,
+                s.student_id,
+                s.explanation,
+                s.submission_number,
+                s.mentor_feedback,
+                s.star_rating,
+                s.review_status,
+                s.submitted_at,
+                s.reviewed_at
+            FROM code_to_logic_submissions AS s
+            WHERE s.task_id = ?
+            ORDER BY s.student_id ASC,
+                     s.submission_number DESC
+            `,
+            [taskId]
+        );
+
+        return res.status(200).json({
+            task: tasks[0],
+            submissions
+        });
+
+    } catch (error) {
+        console.error("Get Code to Logic submissions error:", error);
+
+        return res.status(500).json({
+            message: "Failed to load submissions"
+        });
+    }
+};
+
+
 module.exports = {
-    reviewSubmission
+    reviewSubmission,
+    getTaskSubmissions
 };

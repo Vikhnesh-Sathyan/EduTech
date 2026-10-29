@@ -1,0 +1,291 @@
+
+<div class="edit-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <span class="eyebrow">ADVANCED LEARNING / CODE TO LOGIC</span>
+      <h1>Edit Task</h1>
+      <p>Update the task instructions and code students need to explain.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-outline"
+      (click)="cancelEdit()">
+      <span class="btn-icon">←</span>
+      Back to Details
+    </button>
+  </div>
+
+  <!-- LOADING STATE -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading task information...</p>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div
+    class="state-card error-state"
+    *ngIf="!loading() && errorMessage() && !title">
+
+    <div class="state-icon">!</div>
+    <h3>Unable to load task</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="loadTask()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- EDIT FORM -->
+  <ng-container *ngIf="!loading() && title">
+
+    <form
+      class="edit-form"
+      (ngSubmit)="saveChanges()">
+
+      <!-- TASK INFORMATION -->
+      <section class="form-card">
+
+        <div class="section-heading">
+          <div class="section-icon">✎</div>
+
+          <div>
+            <h2>Task Information</h2>
+            <p>Update the basic details of your task.</p>
+          </div>
+
+          <span
+            class="status-badge"
+            [ngClass]="'status-' + taskStatus()">
+            {{ taskStatus() }}
+          </span>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <!-- SUBJECT -->
+       
+<!-- EDUCATION PROGRAM -->
+<div class="form-group">
+  <label for="programId">Education Program <span>*</span></label>
+
+  <select
+    id="programId"
+    name="programId"
+    [ngModel]="selectedProgramId()"
+    (ngModelChange)="onProgramChange($event)"
+    [disabled]="loadingPrograms() || saving()"
+    required>
+
+    <option [ngValue]="null" disabled>
+      {{ loadingPrograms() ? 'Loading programs...' : 'Select a program' }}
+    </option>
+
+    <option
+      *ngFor="let program of programs()"
+      [ngValue]="program.id">
+      {{ program.name }}
+    </option>
+  </select>
+</div>
+
+<!-- DEPARTMENT -->
+<div class="form-group">
+  <label for="departmentId">Department <span>*</span></label>
+
+  <select
+    id="departmentId"
+    name="departmentId"
+    [ngModel]="selectedDepartmentId()"
+    (ngModelChange)="onDepartmentChange($event)"
+    [disabled]="!selectedProgramId() || loadingDepartments() || saving()"
+    required>
+
+    <option [ngValue]="null" disabled>
+      {{ loadingDepartments() ? 'Loading departments...' : 'Select a department' }}
+    </option>
+
+    <option
+      *ngFor="let department of departments()"
+      [ngValue]="department.id">
+      {{ department.name }}
+    </option>
+  </select>
+</div>
+
+<!-- ACADEMIC YEAR -->
+<div class="form-group">
+  <label for="yearId">Academic Year <span>*</span></label>
+
+  <select
+    id="yearId"
+    name="yearId"
+    [ngModel]="selectedYearId()"
+    (ngModelChange)="onYearChange($event)"
+    [disabled]="!selectedDepartmentId() || loadingYears() || saving()"
+    required>
+
+    <option [ngValue]="null" disabled>
+      {{ loadingYears() ? 'Loading academic years...' : 'Select an academic year' }}
+    </option>
+
+    <option
+      *ngFor="let year of educationYears()"
+      [ngValue]="year.id">
+      {{ year.name }}
+    </option>
+  </select>
+</div>
+
+<!-- SUBJECT -->
+<div class="form-group">
+  <label for="subjectId">Subject <span>*</span></label>
+
+  <select
+    id="subjectId"
+    name="subjectId"
+    [(ngModel)]="subjectId"
+    [disabled]="!selectedYearId() || loadingSubjects() || saving()"
+    required>
+
+    <option [ngValue]="null" disabled>
+      {{ loadingSubjects() ? 'Loading subjects...' : 'Select a subject' }}
+    </option>
+
+    <option
+      *ngFor="let subject of subjects()"
+      [ngValue]="subject.id">
+      {{ subject.name }}
+    </option>
+  </select>
+
+  <small>
+    Choose the program, department, academic year, and subject for this task.
+  </small>
+</div>
+
+
+        <!-- TITLE -->
+        <div class="form-group">
+          <label for="title">Task Title <span>*</span></label>
+
+          <input
+            id="title"
+            name="title"
+            type="text"
+            [(ngModel)]="title"
+            placeholder="e.g. Understanding Loops in JavaScript"
+            maxlength="200"
+            required />
+
+          <small>Use a clear title that describes the task.</small>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+          <label for="description">
+            Task Description <span>*</span>
+          </label>
+
+          <textarea
+            id="description"
+            name="description"
+            [(ngModel)]="description"
+            rows="5"
+            placeholder="Explain what students should understand and describe..."
+            required>
+          </textarea>
+
+          <small>Give students clear instructions about what to explain.</small>
+        </div>
+
+      </section>
+
+      <!-- SOURCE CODE -->
+      <section class="form-card code-form-card">
+
+        <div class="section-heading">
+          <div class="section-icon code-icon">&lt;/&gt;</div>
+
+          <div>
+            <h2>Source Code</h2>
+            <p>Update the code students will analyze and explain.</p>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-group">
+          <label for="codeContent">Code Snippet <span>*</span></label>
+
+          <div class="code-editor">
+            <div class="editor-toolbar">
+              <div class="editor-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <span class="editor-label">CODE EDITOR</span>
+              <span class="editor-language">Plain Text</span>
+            </div>
+
+            <textarea
+              id="codeContent"
+              name="codeContent"
+              [(ngModel)]="codeContent"
+              class="code-textarea"
+              spellcheck="false"
+              wrap="off"
+              placeholder="Enter the code students need to explain..."
+              required>
+            </textarea>
+          </div>
+
+          <small>
+            Preserve indentation and line breaks so the code remains readable.
+          </small>
+        </div>
+
+      </section>
+
+      <!-- ERROR MESSAGE -->
+      <div class="form-alert error-alert" *ngIf="errorMessage()">
+        <span class="alert-icon">!</span>
+        <p>{{ errorMessage() }}</p>
+      </div>
+
+      <!-- FORM ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn btn-outline"
+          [disabled]="saving()"
+          (click)="cancelEdit()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="saving() || loading()">
+
+          <span *ngIf="!saving()">Save Changes</span>
+          <span *ngIf="saving()">Saving Changes...</span>
+
+          <span *ngIf="!saving()" class="save-arrow">→</span>
+        </button>
+
+      </div>
+
+    </form>
+
+  </ng-container>
+
+</div>

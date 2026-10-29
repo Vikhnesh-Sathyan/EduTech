@@ -1,0 +1,184 @@
+
+<div class="page-container">
+
+  <button class="back-button" type="button" (click)="goBack()">
+    ← Back to Tasks
+  </button>
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>Student Submissions</h1>
+      <p *ngIf="task()">{{ task()?.title }}</p>
+      <p *ngIf="!task()">Review explanations submitted by your students.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-outline"
+      [disabled]="loading()"
+      (click)="task() && loadSubmissions(task()!.id)">
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon total-icon">▤</span>
+      <div>
+        <p>Total Submissions</p>
+        <h2>{{ totalSubmissions }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-icon pending-icon">◷</span>
+      <div>
+        <p>Pending Reviews</p>
+        <h2>{{ pendingSubmissions }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-icon reviewed-icon">✓</span>
+      <div>
+        <p>Reviewed</p>
+        <h2>{{ reviewedSubmissions }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="message success-message" *ngIf="successMessage()">
+    {{ successMessage() }}
+  </div>
+
+  <div class="message error-message" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="state-card" *ngIf="loading()">
+    Loading student submissions...
+  </div>
+
+  <div
+    class="state-card"
+    *ngIf="!loading() && !errorMessage() && submissions().length === 0">
+    <div class="empty-icon">▤</div>
+    <h3>No submissions yet</h3>
+    <p>Student explanations will appear here when they submit this task.</p>
+  </div>
+
+  <div
+    class="submission-list"
+    *ngIf="!loading() && submissions().length > 0">
+
+    <article class="submission-card" *ngFor="let submission of submissions()">
+
+      <div class="submission-header">
+        <div>
+          <span class="student-label">
+            Student #{{ submission.student_id }}
+          </span>
+
+          <h3>Submission {{ submission.submission_number }}</h3>
+
+          <p class="submitted-date">
+            Submitted:
+            {{ submission.submitted_at | date:'medium' }}
+          </p>
+        </div>
+
+        <span
+          class="status-badge"
+          [ngClass]="'status-' + submission.review_status">
+          {{ submission.review_status }}
+        </span>
+      </div>
+
+      <section class="explanation-section">
+        <h4>Student's Explanation</h4>
+        <div class="explanation-content">{{ submission.explanation }}</div>
+      </section>
+
+      <section
+        class="review-section"
+        *ngIf="submission.review_status === 'pending'">
+
+        <h4>Your Review</h4>
+
+        <div class="form-group">
+          <label [for]="'feedback-' + submission.id">
+            Feedback *
+          </label>
+
+          <textarea
+            [id]="'feedback-' + submission.id"
+            rows="4"
+            [(ngModel)]="feedbackDrafts[submission.id]"
+            [name]="'feedback-' + submission.id"
+            placeholder="Explain what the student did well and what they can improve.">
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Rating *</label>
+
+          <div class="rating-options">
+            <button
+              type="button"
+              *ngFor="let rating of ratings"
+              class="rating-star"
+              [class.selected]="rating <= (ratingDrafts[submission.id] || 0)"
+              [attr.aria-label]="rating + ' stars'"
+              [attr.aria-pressed]="rating === ratingDrafts[submission.id]"
+              (click)="setRating(submission.id, rating)">
+              ★
+            </button>
+
+            <span class="rating-label">
+              {{ ratingDrafts[submission.id] || 0 }} / 5
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="reviewingSubmissionId() !== null"
+          (click)="submitReview(submission)">
+          {{
+            reviewingSubmissionId() === submission.id
+              ? 'Submitting Review...'
+              : 'Submit Review'
+          }}
+        </button>
+      </section>
+
+      <section
+        class="reviewed-section"
+        *ngIf="submission.review_status === 'reviewed'">
+
+        <h4>Mentor Feedback</h4>
+
+        <p class="feedback-content">
+          {{ submission.mentor_feedback }}
+        </p>
+
+        <div class="saved-rating" *ngIf="submission.star_rating">
+          <span class="saved-stars">
+            <ng-container *ngFor="let rating of ratings">
+              {{ rating <= submission.star_rating ? '★' : '☆' }}
+            </ng-container>
+          </span>
+
+          <span>{{ submission.star_rating }} / 5</span>
+        </div>
+
+        <p class="reviewed-date" *ngIf="submission.reviewed_at">
+          Reviewed: {{ submission.reviewed_at | date:'medium' }}
+        </p>
+      </section>
+
+    </article>
+  </div>
+</div>

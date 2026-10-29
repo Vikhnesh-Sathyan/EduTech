@@ -1,0 +1,113 @@
+
+<div class="details-page">
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING / CODE TO LOGIC</span>
+      <h1>Task Details</h1>
+      <p>View the task instructions and code students need to explain.</p>
+    </div>
+
+    <button class="btn btn-outline" type="button" (click)="goBack()">
+      ← Back to Tasks
+    </button>
+  </div>
+
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading task details...</p>
+  </div>
+
+  <div class="state-card error-state"
+       *ngIf="!loading() && errorMessage()">
+    <h3>Unable to load task</h3>
+    <p>{{ errorMessage() }}</p>
+    <button class="btn btn-primary" (click)="goBack()">
+      Back to Tasks
+    </button>
+  </div>
+
+  <ng-container *ngIf="!loading() && task() as currentTask">
+
+    <section class="details-card">
+
+      <div class="task-heading">
+        <div>
+          <span class="subject-label">
+            {{ currentTask.subject_name || 'Subject' }}
+          </span>
+
+          <h2>{{ currentTask.title }}</h2>
+        </div>
+
+        <span
+          class="status-badge"
+          [ngClass]="'status-' + currentTask.status">
+          {{ currentTask.status }}
+        </span>
+      </div>
+
+      <div class="details-divider"></div>
+
+      <div class="detail-section">
+        <h3>Task Description</h3>
+        <p class="description">
+          {{ currentTask.description }}
+        </p>
+      </div>
+
+      <div class="detail-meta">
+        <div>
+          <span class="meta-label">Created</span>
+          <p>{{ currentTask.created_at | date:'medium' }}</p>
+        </div>
+
+        <div>
+          <span class="meta-label">Last Updated</span>
+          <p>{{ currentTask.updated_at | date:'medium' }}</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="details-card code-card">
+      <div class="code-heading">
+        <div>
+          <span class="eyebrow">SOURCE CODE</span>
+          <h2>Code Snippet</h2>
+          <p>Review the code students will explain in their own words.</p>
+        </div>
+
+        <span class="code-language">Code</span>
+      </div>
+
+      <pre class="code-block"><code>{{ currentTask.code_content }}</code></pre>
+    </section>
+
+    <div class="bottom-actions">
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="goBack()">
+        Back to Tasks
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-edit"
+        (click)="editTask()">
+        ✎ Edit Task
+      </button>
+
+      <button
+        *ngIf="currentTask.status === 'published'"
+        type="button"
+        class="btn btn-primary"
+        (click)="viewSubmissions()">
+        View Submissions →
+      </button>
+    </div>
+
+  </ng-container>
+
+</div>

@@ -100,10 +100,6 @@ import {
 } from './features/student/projects/project-section-content/project-section-content';
 
 //STUDENT CODE-LOGIC
-import { StudentCodeLogicList } from './features/student/advanced/code-logic/code-logic-list/code-logic-list';
-import {
-  StudentCodeLogicDetails
-} from './features/student/advanced/code-logic/code-logic-details/code-logic-details';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -177,11 +173,12 @@ import { CodeShuffleList } from './features/mentor/advanced/code-shuffle/code-sh
 import { CodeShuffleEdit } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-edit/code-shuffle-edit';
 import { CodeShuffleDetails } from './features/mentor/advanced/code-shuffle/code-shuffle-list/code-shuffle-details/code-shuffle-details';
 
-// MENTOR LOGIC TO CODE
-import { CodeLogicListComponent } from './features/mentor/advanced/code-logic/code-logic-list/code-logic-list';
-import { CodeLogicCreate } from './features/mentor/advanced/code-logic/code-logic-create/code-logic-create';
-import { CodeLogicEdit } from './features/mentor/advanced/code-logic/code-logic-edit/code-logic-edit';
-import { CodeLogicView } from './features/mentor/advanced/code-logic/code-logic-view/code-logic-view';
+// MENTOR CODE TO LOGIC
+import { TaskListComponent } from './features/mentor/advanced/code-to-logic/task-list/task-list';
+import { CreateTaskComponent } from './features/mentor/advanced/code-to-logic/create-task/create-task';
+import { TaskSubmissionsComponent } from './features/mentor/advanced/code-to-logic/task-submissions/task-submissions';
+import { TaskDetailsComponent } from './features/mentor/advanced/code-to-logic/task-details/task-details';
+import { TaskEditComponent } from './features/mentor/advanced/code-to-logic/task-edit/task-edit';
 
 export const routes: Routes = [
 
@@ -437,14 +434,7 @@ export const routes: Routes = [
       },
 
       //STUDENT CODE-LOGIC
-      {
-        path: 'student/advanced/code-logic',
-        component: StudentCodeLogicList
-      },
-      {
-        path: 'student/advanced/code-logic/:id',
-        component: StudentCodeLogicDetails
-      }
+     
 
     ]
   },
@@ -658,23 +648,33 @@ export const routes: Routes = [
         path: 'mentor/advanced/code-shuffle/tasks/:id',
         component: CodeShuffleDetails,
       },
-        // MENTOR LOGIC TO CODE
+        // MENTOR CODE TO LOGIC
       {
-        path: 'mentor/advanced/code-logic',
-        component: CodeLogicListComponent
+        path: 'mentor/advanced/code-to-logic',
+        redirectTo: 'mentor/advanced/code-to-logic/tasks',
+        pathMatch: 'full'
       },
       {
-        path: 'mentor/advanced/code-logic/create',
-        component: CodeLogicCreate
+        path: 'mentor/advanced/code-to-logic/tasks',
+        component: TaskListComponent
       },
       {
-        path: 'mentor/advanced/code-logic/edit/:id',
-        component: CodeLogicEdit
+        path: 'mentor/advanced/code-to-logic/create',
+        component: CreateTaskComponent
       },
       {
-        path: 'mentor/advanced/code-logic/view/:id',
-        component: CodeLogicView
+        path: 'mentor/advanced/code-to-logic/tasks/:taskId/view',
+        component: TaskDetailsComponent
+      },
+      {
+        path: 'mentor/advanced/code-to-logic/tasks/:taskId/edit',
+        component: TaskEditComponent
+      },
+      {
+        path: 'mentor/advanced/code-to-logic/tasks/:taskId/submissions',
+        component: TaskSubmissionsComponent
       }
+
     ]
   },
 

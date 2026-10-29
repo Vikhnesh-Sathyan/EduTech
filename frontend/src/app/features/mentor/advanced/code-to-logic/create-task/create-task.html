@@ -1,0 +1,194 @@
+
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Create Code to Logic Task</h1>
+      <p>
+        Add a code snippet for your connected students to understand
+        and explain in their own words.
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="taskForm" (ngSubmit)="saveTask('draft')">
+
+    <!-- EDUCATION PROGRAM -->
+    <section class="form-section">
+      <h2>Academic Details</h2>
+
+      <div class="form-group">
+        <label for="program">Education Program *</label>
+
+        <select
+          id="program"
+          [value]="selectedProgramId() ?? ''"
+          (change)="onProgramChange($any($event.target).value ? +$any($event.target).value : null)"
+          [disabled]="loadingPrograms()">
+
+          <option value="">Select program</option>
+
+          <option
+            *ngFor="let program of programs()"
+            [value]="program.id">
+            {{ program.name }}
+          </option>
+        </select>
+
+        <small *ngIf="loadingPrograms()">Loading programs...</small>
+      </div>
+
+      <!-- DEPARTMENT -->
+      <div class="form-group">
+        <label for="department">Department *</label>
+
+        <select
+          id="department"
+          [value]="selectedDepartmentId() ?? ''"
+          (change)="onDepartmentChange($any($event.target).value ? +$any($event.target).value : null)"
+          [disabled]="!selectedProgramId() || loadingDepartments()">
+
+          <option value="">Select department</option>
+
+          <option
+            *ngFor="let department of departments()"
+            [value]="department.id">
+            {{ department.name }}
+          </option>
+        </select>
+
+        <small *ngIf="loadingDepartments()">Loading departments...</small>
+      </div>
+
+      <!-- ACADEMIC YEAR -->
+      <div class="form-group">
+        <label for="year">Academic Year *</label>
+
+        <select
+          id="year"
+          [value]="selectedYearId() ?? ''"
+          (change)="onYearChange($any($event.target).value ? +$any($event.target).value : null)"
+          [disabled]="!selectedDepartmentId() || loadingYears()">
+
+          <option value="">Select academic year</option>
+
+          <option
+            *ngFor="let year of educationYears()"
+            [value]="year.id">
+            {{ year.name }}
+          </option>
+        </select>
+
+        <small *ngIf="loadingYears()">Loading academic years...</small>
+      </div>
+
+      <!-- SUBJECT -->
+      <div class="form-group">
+        <label for="subject">Subject *</label>
+
+        <select
+          id="subject"
+          formControlName="subject_id"
+          [disabled]="!selectedYearId() || loadingSubjects()">
+
+          <option [ngValue]="null">Select subject</option>
+
+          <option
+            *ngFor="let subject of subjects()"
+            [ngValue]="subject.id">
+            {{ subject.name }}
+          </option>
+        </select>
+
+        <small *ngIf="loadingSubjects()">Loading subjects...</small>
+      </div>
+    </section>
+
+    <!-- TASK INFORMATION -->
+    <section class="form-section">
+      <h2>Task Information</h2>
+
+      <div class="form-group">
+        <label for="title">Task Title *</label>
+
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="e.g. Understand a loop in JavaScript">
+
+        <small
+          class="validation-error"
+          *ngIf="taskForm.controls.title.touched &&
+                 taskForm.controls.title.invalid">
+          Enter a title (maximum 200 characters).
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Instructions *</label>
+
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="4"
+          placeholder="Explain what students should identify and describe in the code.">
+        </textarea>
+
+        <small
+          class="validation-error"
+          *ngIf="taskForm.controls.description.touched &&
+                 taskForm.controls.description.invalid">
+          Instructions are required.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="code_content">Code Content *</label>
+
+        <textarea
+          id="code_content"
+          class="code-editor"
+          formControlName="code_content"
+          rows="12"
+          spellcheck="false"
+          placeholder="let total = 0;
+for (let i = 1; i <= 5; i++) {
+  total += i;
+}
+console.log(total);">
+        </textarea>
+
+        <small class="helper-text">
+          Enter the code students must explain. Preserve its formatting.
+        </small>
+
+        <small
+          class="validation-error"
+          *ngIf="taskForm.controls.code_content.touched &&
+                 taskForm.controls.code_content.invalid">
+          Code content is required.
+        </small>
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="saving()"
+        (click)="saveTask('draft')">
+        {{ saving() ? 'Saving...' : 'Save as Draft' }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="saving()"
+        (click)="saveTask('published')">
+        {{ saving() ? 'Saving...' : 'Publish Task' }}
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -5,9 +5,15 @@ const router = express.Router();
 // CODE TO LOGIC STUDENT CONTROLLER
 const {
     getAvailableTasks,
-    submitExplanation
 } = require(
     "../../../../controllers/student/advanced/code-logic/student-code-logic.controller"
+);
+
+const {
+    submitExplanation,
+    getMySubmissions
+} = require(
+    "../../../../controllers/student/advanced/code-logic/student-code-logic-submission.controller"
 );
 
 const authMiddleware = require(
@@ -38,4 +44,11 @@ router.post(
     submitExplanation
 );
 
+// GET THE LOGGED-IN STUDENT'S SUBMISSION HISTORY
+router.get(
+    "/submissions",
+    authMiddleware,
+    roleMiddleware("student"),
+    getMySubmissions
+);
 module.exports = router;

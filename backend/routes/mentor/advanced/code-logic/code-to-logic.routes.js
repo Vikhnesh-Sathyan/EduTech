@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-// CODE TO LOGIC MENTOR TASK CONTROLLER
+// MENTOR TASK CONTROLLER
 const {
     createTask,
     getMyTasks
@@ -10,13 +10,25 @@ const {
     "../../../../controllers/mentor/advanced/code-logic/code-to-logic.controller"
 );
 
-// CODE TO LOGIC MENTOR REVIEW CONTROLLER
+// MENTOR REVIEW CONTROLLER
 const {
-    reviewSubmission
+    reviewSubmission,
+    getTaskSubmissions
 } = require(
     "../../../../controllers/mentor/advanced/code-logic/code-to-logic-review.controller"
 );
 
+// TASK MANAGEMENT CONTROLLER
+const {
+    getTaskById,
+    updateTask,
+    publishTask,
+    deleteTask
+} = require(
+    "../../../../controllers/mentor/advanced/code-logic/code-to-logic-task-management.controller"
+);
+
+// MIDDLEWARE
 const authMiddleware = require(
     "../../../../middleware/authMiddleware"
 );
@@ -25,31 +37,69 @@ const roleMiddleware = require(
     "../../../../middleware/roleMiddleware"
 );
 
+// COMMON MENTOR AUTHENTICATION
+const mentorAuth = [
+    authMiddleware,
+    roleMiddleware("mentor")
+];
+
 // ============================================
 // CODE TO LOGIC MENTOR ROUTES
 // ============================================
 
-// CREATE A TASK
+// CREATE TASK
 router.post(
     "/tasks",
-    authMiddleware,
-    roleMiddleware("mentor"),
+    ...mentorAuth,
     createTask
 );
 
-// GET TASKS CREATED BY THE LOGGED-IN MENTOR
+// GET ALL TASKS CREATED BY THE MENTOR
 router.get(
     "/tasks",
-    authMiddleware,
-    roleMiddleware("mentor"),
+    ...mentorAuth,
     getMyTasks
+);
+
+// VIEW ONE TASK
+router.get(
+    "/tasks/:taskId",
+    ...mentorAuth,
+    getTaskById
+);
+
+// UPDATE TASK
+router.patch(
+    "/tasks/:taskId",
+    ...mentorAuth,
+    updateTask
+);
+
+// PUBLISH DRAFT TASK
+router.patch(
+    "/tasks/:taskId/publish",
+    ...mentorAuth,
+    publishTask
+);
+
+// DELETE TASK
+router.delete(
+    "/tasks/:taskId",
+    ...mentorAuth,
+    deleteTask
+);
+
+// GET STUDENT SUBMISSIONS FOR A TASK
+router.get(
+    "/tasks/:taskId/submissions",
+    ...mentorAuth,
+    getTaskSubmissions
 );
 
 // REVIEW A STUDENT SUBMISSION
 router.patch(
     "/submissions/:submissionId/review",
-    authMiddleware,
-    roleMiddleware("mentor"),
+    ...mentorAuth,
     reviewSubmission
 );
 
