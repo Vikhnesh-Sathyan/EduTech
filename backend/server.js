@@ -668,10 +668,9 @@ app.use(
 
 // STUDENT CODE TO LOGIC
 app.use(
-    "/api/student/advanced/code-to-logic",
+    "/api/student/advanced/code-logic",
     studentCodeToLogicRoutes
 );
-
 
 
 

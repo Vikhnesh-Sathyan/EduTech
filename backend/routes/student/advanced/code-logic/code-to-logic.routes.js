@@ -5,6 +5,7 @@ const router = express.Router();
 // CODE TO LOGIC STUDENT CONTROLLER
 const {
     getAvailableTasks,
+    getTaskDetails
 } = require(
     "../../../../controllers/student/advanced/code-logic/student-code-logic.controller"
 );
@@ -34,6 +35,14 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getAvailableTasks
+);
+
+// GET ONE TASK'S DETAILS
+router.get(
+    "/tasks/:taskId",
+    authMiddleware,
+    roleMiddleware("student"),
+    getTaskDetails
 );
 
 // SUBMIT AN EXPLANATION FOR A TASK
