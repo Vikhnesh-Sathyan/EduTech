@@ -1,11 +1,14 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import {
   CodeLogicService,
   CodeLogicLanguage,
   CodeLogicConcept,
-  CodeLogicProblemPayload
+  CodeLogicProblemPayload,
+  CodeLogicAssessmentQuestion
 } from '../../../../../services/mentor/advanced/code-logic/code-logic.service';
 
 interface ProblemForm {
@@ -40,6 +43,7 @@ interface ContentForm {
   examples: ExampleItem[];
   algorithmSteps: string[];
   predictionQuestions: PredictionQuestion[];
+  assessmentQuestions: CodeLogicAssessmentQuestion[];
   flowData: unknown;
 }
 
@@ -77,7 +81,7 @@ export class CodeLogicEdit implements OnInit {
     dueDate: ''
   });
 
-  // Problem content (examples, code, steps, questions)
+  // Problem content
   content = signal<ContentForm>({
     inputDescription: '',
     outputDescription: '',
@@ -89,6 +93,9 @@ export class CodeLogicEdit implements OnInit {
     algorithmSteps: [''],
     predictionQuestions: [
       { question: '', expected_answer: '', marks: 2 }
+    ],
+    assessmentQuestions: [
+      { question: '', expected_answer: '', marks: 5 }
     ],
     flowData: null
   });
@@ -172,17 +179,27 @@ export class CodeLogicEdit implements OnInit {
           outputDescription: item.output_description ?? '',
           starterCode: item.starter_code ?? '',
           solutionCode: item.solution_code ?? '',
-          examples: this.parseArray<ExampleItem>(item.examples, [
-            { input: '', output: '', explanation: '' }
-          ]),
+
+          examples: this.parseArray<ExampleItem>(
+            item.examples,
+            [{ input: '', output: '', explanation: '' }]
+          ),
+
           algorithmSteps: this.parseArray<string>(
             item.algorithm_steps,
             ['']
           ),
+
           predictionQuestions: this.parseArray<PredictionQuestion>(
             item.prediction_questions,
             [{ question: '', expected_answer: '', marks: 2 }]
           ),
+
+          assessmentQuestions: this.parseArray<CodeLogicAssessmentQuestion>(
+            item.assessment_questions,
+            [{ question: '', expected_answer: '', marks: 5 }]
+          ),
+
           flowData: this.parseJSON(item.flow_data)
         });
 
@@ -199,12 +216,13 @@ export class CodeLogicEdit implements OnInit {
 
   private parseArray<T>(value: unknown, fallback: T[]): T[] {
     if (Array.isArray(value)) {
-      return value.length ? value : fallback;
+      return value.length ? value as T[] : fallback;
     }
 
     if (typeof value === 'string') {
       try {
         const parsed: unknown = JSON.parse(value);
+
         return Array.isArray(parsed) && parsed.length
           ? parsed as T[]
           : fallback;
@@ -247,22 +265,26 @@ export class CodeLogicEdit implements OnInit {
     return normalized.slice(0, 10);
   }
 
-  // ---------- Update helpers (used by the HTML inputs) ----------
+  // ---------- Update helpers ----------
 
-  // Update ONE field of the problem (title, description, difficulty...)
   updateProblem<K extends keyof ProblemForm>(
     field: K,
     value: ProblemForm[K]
   ): void {
-    this.problem.update(current => ({ ...current, [field]: value }));
+    this.problem.update(current => ({
+      ...current,
+      [field]: value
+    }));
   }
 
-  // Update ONE simple field of the content (starterCode, solutionCode...)
   updateContent<K extends keyof ContentForm>(
     field: K,
     value: ContentForm[K]
   ): void {
-    this.content.update(current => ({ ...current, [field]: value }));
+    this.content.update(current => ({
+      ...current,
+      [field]: value
+    }));
   }
 
   // ---------- Examples ----------
@@ -368,6 +390,44 @@ export class CodeLogicEdit implements OnInit {
     }));
   }
 
+  // ---------- Assessment questions ----------
+
+  addAssessmentQuestion(): void {
+    this.content.update(current => ({
+      ...current,
+      assessmentQuestions: [
+        ...current.assessmentQuestions,
+        { question: '', expected_answer: '', marks: 5 }
+      ]
+    }));
+  }
+
+  updateAssessmentQuestion<K extends keyof CodeLogicAssessmentQuestion>(
+    index: number,
+    field: K,
+    value: CodeLogicAssessmentQuestion[K]
+  ): void {
+    this.content.update(current => ({
+      ...current,
+      assessmentQuestions: current.assessmentQuestions.map((question, i) =>
+        i === index ? { ...question, [field]: value } : question
+      )
+    }));
+  }
+
+  removeAssessmentQuestion(index: number): void {
+    if (this.content().assessmentQuestions.length <= 1) {
+      return;
+    }
+
+    this.content.update(current => ({
+      ...current,
+      assessmentQuestions: current.assessmentQuestions.filter(
+        (_, i) => i !== index
+      )
+    }));
+  }
+
   // ---------- Save / cancel ----------
 
   saveChanges(): void {
@@ -417,7 +477,7 @@ export class CodeLogicEdit implements OnInit {
         question =>
           question.question.trim() &&
           question.expected_answer.trim() &&
-          question.marks > 0
+          Number(question.marks) > 0
       );
 
       if (!validQuestions) {
@@ -426,6 +486,58 @@ export class CodeLogicEdit implements OnInit {
         );
         return;
       }
+    }
+
+    const validAssessmentQuestions =
+      content.assessmentQuestions
+        .filter(question => question.question.trim())
+        .map(question => ({
+          question: question.question.trim(),
+          expected_answer: question.expected_answer.trim(),
+          marks: Number(question.marks)
+        }));
+
+    const invalidAssessmentAnswer =
+      content.assessmentQuestions.some(
+        question =>
+          question.question.trim() &&
+          !question.expected_answer.trim()
+      );
+
+    if (invalidAssessmentAnswer) {
+      this.errorMessage.set(
+        'Enter the expected answer for every assessment question.'
+      );
+      return;
+    }
+
+    const invalidAssessmentMarks =
+      content.assessmentQuestions.some(
+        question =>
+          question.question.trim() &&
+          (
+            !Number.isInteger(Number(question.marks)) ||
+            Number(question.marks) <= 0
+          )
+      );
+
+    if (invalidAssessmentMarks) {
+      this.errorMessage.set(
+        'Each assessment question must have a positive whole-number mark.'
+      );
+      return;
+    }
+
+    const assessmentTotal = validAssessmentQuestions.reduce(
+      (total, question) => total + question.marks,
+      0
+    );
+
+    if (assessmentTotal > problem.maxMarks) {
+      this.errorMessage.set(
+        `Assessment total (${assessmentTotal}) cannot exceed the problem's maximum marks (${problem.maxMarks}).`
+      );
+      return;
     }
 
     const payload: CodeLogicProblemPayload = {
@@ -440,21 +552,29 @@ export class CodeLogicEdit implements OnInit {
       dueDate: problem.dueDate
         ? problem.dueDate.replace('T', ' ') + ':00'
         : null,
+
       content: {
         inputDescription: content.inputDescription,
         outputDescription: content.outputDescription,
+
         examples: content.examples.filter(
           example => example.input.trim() || example.output.trim()
         ),
+
         starterCode: content.starterCode,
         solutionCode: content.solutionCode,
+
         algorithmSteps: content.algorithmSteps.filter(
           step => step.trim()
         ),
+
         flowData: content.flowData,
+
         predictionQuestions: content.predictionQuestions.filter(
           question => question.question.trim()
-        )
+        ),
+
+        assessmentQuestions: validAssessmentQuestions
       }
     };
 

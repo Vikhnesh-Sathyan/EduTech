@@ -564,10 +564,32 @@
       </div>
     </section>
 
-    <!-- SECTION 7: SCHEDULE -->
+
+<!-- SECTION 07: ASSESSMENT QUESTIONS -->
+<section class="form-card assessment-section">
+  <div class="section-heading">
+    <div class="section-icon icon-violet">07</div>
+
+    <div>
+      <h2>Assessment Questions</h2>
+      <p>
+        Create assessed questions, provide expected answers,
+        and assign marks to each question.
+      </p>
+    </div>
+  </div>
+
+  <app-code-logic-questions
+    [initialQuestions]="assessmentQuestions"
+    (questionsChange)="onAssessmentQuestionsChange($event)"
+  />
+</section>
+
+
+    <!-- SECTION 8: SCHEDULE -->
     <section class="form-card">
       <div class="section-heading">
-        <div class="section-icon icon-slate">07</div>
+        <div class="section-icon icon-slate">08</div>
 
         <div>
           <h2>Schedule</h2>

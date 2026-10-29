@@ -1,0 +1,114 @@
+
+<section class="questions-section">
+
+  <header class="section-header">
+    <div>
+      <span class="section-eyebrow">ASSESSMENT</span>
+      <h2>Assessment Questions</h2>
+      <p>
+        Add questions that students must answer to complete
+        this assessment.
+      </p>
+    </div>
+
+    <div class="total-marks">
+      <span>Total Marks</span>
+      <strong>{{ totalMarks() }}</strong>
+    </div>
+  </header>
+
+  <div class="question-list">
+
+    @for (question of questions(); track $index; let i = $index) {
+      <article class="question-card">
+
+        <div class="question-card-header">
+          <div class="question-heading">
+            <span class="question-number">{{ i + 1 }}</span>
+
+            <div>
+              <h3>Question {{ i + 1 }}</h3>
+              <p>Configure the question and its marks.</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="remove-button"
+            (click)="removeQuestion(i)"
+            [disabled]="questions().length === 1"
+            [attr.aria-label]="'Remove question ' + (i + 1)"
+          >
+            Remove
+          </button>
+        </div>
+
+        <div class="form-field">
+          <label [for]="'assessment-question-' + i">
+            Question <span class="required">*</span>
+          </label>
+
+          <textarea
+            [id]="'assessment-question-' + i"
+            rows="3"
+            [ngModel]="question.question"
+            (ngModelChange)="updateQuestion(i, 'question', $event)"
+            [name]="'assessmentQuestion' + i"
+            placeholder="Enter the question students must answer"
+          ></textarea>
+        </div>
+
+        <div class="form-field">
+          <label [for]="'assessment-answer-' + i">
+            Expected Answer <span class="required">*</span>
+          </label>
+
+          <textarea
+            [id]="'assessment-answer-' + i"
+            rows="3"
+            [ngModel]="question.expected_answer"
+            (ngModelChange)="updateQuestion(i, 'expected_answer', $event)"
+            [name]="'assessmentAnswer' + i"
+            placeholder="Enter the expected answer for evaluation"
+          ></textarea>
+
+          <small>This answer is for evaluation and must not be exposed to students.</small>
+        </div>
+
+        <div class="form-field marks-field">
+          <label [for]="'assessment-marks-' + i">
+            Marks <span class="required">*</span>
+          </label>
+
+          <input
+  [id]="'assessment-marks-' + i"
+  type="number"
+  min="1"
+  step="1"
+  required
+  [ngModel]="question.marks"
+  (ngModelChange)="updateQuestion(i, 'marks', $event)"
+  [name]="'assessmentMarks' + i"
+/>
+        </div>
+
+      </article>
+    }
+
+  </div>
+
+  <button
+    type="button"
+    class="add-question-button"
+    (click)="addQuestion()"
+  >
+    <span aria-hidden="true">+</span>
+    Add Assessment Question
+  </button>
+
+  <p class="assessment-note">
+    The total marks are calculated automatically from the marks
+    assigned to each question.
+  </p>
+
+</section>

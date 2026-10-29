@@ -1,0 +1,407 @@
+
+<div class="details-page">
+
+  <!-- Loading -->
+  @if (loading()) {
+    <section class="state-card">
+      <div class="loading-spinner"></div>
+      <h2>Preparing your learning space</h2>
+      <p>Loading problem details...</p>
+    </section>
+  }
+
+  <!-- Error -->
+  @else if (errorMessage()) {
+    <section class="state-card error-state">
+      <div class="state-icon">!</div>
+      <h2>Unable to load problem</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="loadProblem(+(route.snapshot.paramMap.get('id') || 0))">
+        Try Again
+      </button>
+    </section>
+  }
+
+  <!-- Problem -->
+  @else if (problem(); as item) {
+    <header class="problem-header">
+      <a routerLink="/student/advanced/code-logic" class="back-link">
+        <span aria-hidden="true">←</span>
+        Back to Problems
+      </a>
+
+      <span class="eyebrow">ADVANCED LEARNING / LOGIC TO CODE</span>
+
+      <div class="title-row">
+        <div>
+          <h1>{{ item.title }}</h1>
+          <p class="problem-description">{{ item.description }}</p>
+        </div>
+
+        <span class="difficulty-badge" [class]="item.difficulty">
+          {{ item.difficulty | titlecase }}
+        </span>
+      </div>
+
+      <div class="problem-meta">
+        <span class="meta-item">
+          <span aria-hidden="true">⌘</span>
+          {{ item.language_name || 'Programming Practice' }}
+        </span>
+
+        <span class="meta-item">
+          <span aria-hidden="true">✦</span>
+          {{ item.max_marks }} marks
+        </span>
+
+        <span class="mode-badge">
+          {{ getModeLabel(item.mode) }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Horizontal Step Navigation -->
+    <section class="learning-card">
+
+      <div class="learning-heading">
+        <div>
+          <span class="eyebrow">YOUR LEARNING JOURNEY</span>
+          <h2>Build your solution step by step</h2>
+        </div>
+
+        <span class="step-count">
+          Step {{ activeStep() + 1 }} of {{ steps.length }}
+        </span>
+      </div>
+
+      <nav class="step-tabs" aria-label="Learning steps">
+        @for (step of steps; track step.number; let i = $index) {
+          <button
+            type="button"
+            class="step-tab"
+            [class.active]="activeStep() === i"
+            [attr.aria-current]="activeStep() === i ? 'step' : null"
+            (click)="goToStep(i)">
+
+            <span class="step-number">{{ step.number }}</span>
+            <span class="step-label">{{ step.label }}</span>
+          </button>
+        }
+      </nav>
+
+      <div class="step-progress">
+        <div
+          class="step-progress-fill"
+          [style.width]="((activeStep() + 1) / steps.length * 100) + '%'">
+        </div>
+      </div>
+
+      <!-- STEP 1: UNDERSTAND -->
+      @if (activeStep() === 0) {
+        <section class="step-content">
+          <span class="content-eyebrow">STEP 01 · UNDERSTAND</span>
+          <h2>Understand the problem</h2>
+
+          <p class="step-intro">
+            Before writing code, understand what the problem asks you to do.
+          </p>
+
+          <div class="concept-card">
+            <span class="concept-icon">🎯</span>
+            <div>
+              <h3>Your goal</h3>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+
+          <div class="understanding-grid">
+            <article class="understanding-card">
+              <span class="card-label">INPUT</span>
+              <h3>What information do you have?</h3>
+              <p>
+                {{ item.input_description || 'Identify the values or data given in the problem.' }}
+              </p>
+            </article>
+
+            <article class="understanding-card">
+              <span class="card-label">EXPECTED OUTPUT</span>
+              <h3>What should the program produce?</h3>
+              <p>
+                {{ item.output_description || 'Determine the expected result after solving the problem.' }}
+              </p>
+            </article>
+          </div>
+
+         
+@if (getParsedContent(item.examples).length > 0) {
+  <div class="examples-section">
+    <h3>Example</h3>
+
+    @for (example of getParsedContent(item.examples); track $index) {
+      <div class="example-card">
+
+        <div class="example-field">
+          <span class="example-label">INPUT</span>
+          <p>{{ $any(example).input || 'No input' }}</p>
+        </div>
+
+        <div class="example-field">
+          <span class="example-label">OUTPUT</span>
+          <pre>{{ $any(example).output || 'No output provided' }}</pre>
+        </div>
+
+        @if ($any(example).explanation) {
+          <div class="example-field">
+            <span class="example-label">EXPLANATION</span>
+            <p>{{ $any(example).explanation }}</p>
+          </div>
+        }
+
+      </div>
+    }
+  </div>
+}
+
+        </section>
+      }
+
+      <!-- STEP 2: THINK -->
+@if (activeStep() === 1) {
+  <section class="step-content">
+    <span class="content-eyebrow">STEP 02 · THINK</span>
+    <h2>Think through the logic</h2>
+
+    <p class="step-intro">
+      Plan how to solve the problem before arranging steps or writing code.
+    </p>
+
+    <div class="concept-card">
+      <span class="concept-icon">🧠</span>
+      <div>
+        <h3>Think about the solution</h3>
+        <p>
+          What operation or decision will help you reach the expected output?
+          Consider the inputs, the conditions, and the result.
+        </p>
+      </div>
+    </div>
+
+    @if (getParsedContent(item.prediction_questions).length > 0) {
+      <div class="question-list">
+        <h3>Think and predict</h3>
+
+        @for (
+          question of getParsedContent(item.prediction_questions);
+          track $index
+        ) {
+          <article class="question-card">
+            <div class="question-number">{{ $index + 1 }}</div>
+
+            <div class="question-body">
+              <p class="question-text">
+                {{ $any(question).question || question }}
+              </p>
+
+              @if ($any(question).marks != null) {
+                <span class="question-marks">
+                  {{ $any(question).marks }} marks
+                </span>
+              }
+
+              <label
+                class="answer-label"
+                [attr.for]="'prediction-' + $index"
+              >
+                Your answer
+              </label>
+
+              <textarea
+                [id]="'prediction-' + $index"
+                class="answer-input"
+                rows="3"
+                placeholder="Type your answer here..."
+                [value]="predictionAnswers()[$index] || ''"
+                [disabled]="!attemptStarted() || submitting()"
+                (input)="
+                  setPredictionAnswer(
+                    $index,
+                    $any($event.target).value
+                  )
+                "
+              ></textarea>
+            </div>
+          </article>
+        }
+
+        @if (!attemptStarted() && !submissionResult()) {
+          <button
+            type="button"
+            class="submit-button"
+            (click)="startStudentAttempt(item.id)"
+          >
+            Start Attempt
+          </button>
+        }
+
+        @if (submissionError()) {
+          <div class="submission-error" role="alert">
+            {{ submissionError() }}
+          </div>
+        }
+
+        @if (submissionMessage()) {
+          <div class="submission-success" role="status">
+            {{ submissionMessage() }}
+          </div>
+        }
+
+        @if (submissionResult(); as result) {
+          <div class="submission-result">
+            <h3>Attempt Submitted</h3>
+            <p>Score: {{ result.score }} / {{ result.maxMarks }}</p>
+            <p>Status: {{ result.status }}</p>
+          </div>
+        }
+
+        <button
+          type="button"
+          class="submit-button"
+          (click)="submitPredictionAnswers()"
+          [disabled]="
+            !attemptStarted() ||
+            submitting() ||
+            !!submissionResult()
+          "
+        >
+          {{ submitting() ? 'Submitting...' : 'Submit Answers' }}
+        </button>
+      </div>
+    } @else {
+      <div class="reflection-card">
+        <h3>Before moving forward, ask yourself:</h3>
+        <ul>
+          <li>What is the first thing the program should do?</li>
+          <li>Do I need a condition, a loop, or a calculation?</li>
+          <li>How can I verify that my answer is correct?</li>
+        </ul>
+      </div>
+    }
+  </section>
+}
+
+      <!-- STEP 3: ARRANGE -->
+      @if (activeStep() === 2) {
+        <section class="step-content">
+          <span class="content-eyebrow">STEP 03 · ARRANGE</span>
+          <h2>Organize the algorithm</h2>
+
+          <p class="step-intro">
+            Put the solution into a clear sequence of logical steps.
+          </p>
+
+          @if (getParsedContent(item.algorithm_steps).length > 0) {
+            <div class="algorithm-list">
+              @for (step of getParsedContent(item.algorithm_steps); track $index) {
+                <article class="algorithm-item">
+                  <span class="algorithm-number">{{ $index + 1 }}</span>
+                  <p>{{ step | json }}</p>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="reflection-card">
+              <h3>Your algorithm checklist</h3>
+              <ol>
+                <li>Identify the input values.</li>
+                <li>Decide the operation or condition required.</li>
+                <li>Determine the order of execution.</li>
+                <li>Check how the final output is produced.</li>
+              </ol>
+            </div>
+          }
+
+          <div class="tip-card">
+            <span aria-hidden="true">💡</span>
+            <p>
+              A good algorithm explains the solution clearly, even before
+              you translate it into a programming language.
+            </p>
+          </div>
+        </section>
+      }
+
+      <!-- STEP 4: CODE -->
+      @if (activeStep() === 3) {
+        <section class="step-content">
+          <span class="content-eyebrow">STEP 04 · CODE</span>
+          <h2>Turn your logic into code</h2>
+
+          <p class="step-intro">
+            You have understood the problem and planned the solution.
+            Now you are ready to start coding.
+          </p>
+
+          <div class="code-editor-placeholder">
+            <div class="editor-topbar">
+              <div class="editor-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <span>{{ item.language_name || 'Your code' }}</span>
+            </div>
+
+            <pre>{{ item.starter_code || '// Write your solution here\n// Start with the input values\n// Implement your algorithm\n// Produce the expected output' }}</pre>
+          </div>
+
+          <div class="tip-card">
+            <span aria-hidden="true">🚀</span>
+            <p>
+              Start with a simple solution. Test it against the example
+              and check whether the output matches your expectation.
+            </p>
+          </div>
+
+          <p class="coming-soon-note">
+            Code editing and submission will be connected in the next step.
+          </p>
+        </section>
+      }
+
+      <!-- Previous / Next -->
+      <footer class="step-footer">
+        <button
+          type="button"
+          class="secondary-button"
+          [disabled]="isFirstStep()"
+          (click)="previousStep()">
+          <span aria-hidden="true">←</span>
+          Previous Step
+        </button>
+
+        @if (!isLastStep()) {
+          <button
+            type="button"
+            class="primary-button"
+            (click)="nextStep()">
+            Next Step
+            <span aria-hidden="true">→</span>
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="primary-button"
+            (click)="goToStep(0)">
+            <span aria-hidden="true">↻</span>
+            Review Steps
+          </button>
+        }
+      </footer>
+    </section>
+  }
+</div>

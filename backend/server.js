@@ -228,10 +228,11 @@ const studentCodeShuffleRoutes = require(
     "./routes/student/advanced/code-shuffle/codeShuffleStudentRoutes"
 );
 
-//STUDENT CODE-LOGIC
-const studentCodeLogicRoutes = require(
-    "./routes/student/advanced/code-logic/codeLogicRoutes"
+// STUDENT CODE TO LOGIC
+const studentCodeToLogicRoutes = require(
+    "./routes/student/advanced/code-logic/code-to-logic.routes"
 );
+
 
 
 // =====================================================
@@ -262,11 +263,10 @@ const mentorCodeShuffleRoutes = require(
     "./routes/mentor/advanced/code-shuffle/codeShuffleRoutes"
 );
 
-//MENOT CODE-LOGIC
-const mentorCodeLogicRoutes = require(
-    "./routes/mentor/advanced/code-logic/codeLogicRoutes"
+// MENTOR CODE TO LOGIC
+const mentorCodeToLogicRoutes = require(
+    "./routes/mentor/advanced/code-logic/code-to-logic.routes"
 );
-
 
 
 // =====================================================
@@ -400,10 +400,12 @@ app.use(
     mentorCodeShuffleRoutes
 );
 
-//MENTOR CODE-LOGIC
+// MENTOR CODE TO LOGIC
 app.use(
-    "/api/mentor/advanced/code-logic",
-     mentorCodeLogicRoutes);
+    "/api/mentor/advanced/code-to-logic",
+    mentorCodeToLogicRoutes
+);
+
     
 // =====================================================
 // ADMIN ROUTES
@@ -664,12 +666,13 @@ app.use(
     studentCodeShuffleRoutes
 );
 
-//STUDENT CODE_LOGIC
-
+// STUDENT CODE TO LOGIC
 app.use(
-    "/api/student/advanced/code-logic",
-    studentCodeLogicRoutes
+    "/api/student/advanced/code-to-logic",
+    studentCodeToLogicRoutes
 );
+
+
 
 
 // =====================================================

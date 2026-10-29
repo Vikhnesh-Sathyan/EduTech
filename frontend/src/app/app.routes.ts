@@ -101,7 +101,9 @@ import {
 
 //STUDENT CODE-LOGIC
 import { StudentCodeLogicList } from './features/student/advanced/code-logic/code-logic-list/code-logic-list';
-
+import {
+  StudentCodeLogicDetails
+} from './features/student/advanced/code-logic/code-logic-details/code-logic-details';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -438,9 +440,11 @@ export const routes: Routes = [
       {
         path: 'student/advanced/code-logic',
         component: StudentCodeLogicList
+      },
+      {
+        path: 'student/advanced/code-logic/:id',
+        component: StudentCodeLogicDetails
       }
-
-
 
     ]
   },

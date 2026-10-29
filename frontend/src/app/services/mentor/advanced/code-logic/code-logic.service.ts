@@ -47,6 +47,12 @@ export interface CodeLogicPredictionQuestion {
   marks: number;
 }
 
+export interface CodeLogicAssessmentQuestion {
+  question: string;
+  expected_answer: string;
+  marks: number;
+}
+
 export interface CodeLogicContent {
   inputDescription: string;
   outputDescription: string;
@@ -56,7 +62,9 @@ export interface CodeLogicContent {
   algorithmSteps: string[];
   flowData: unknown;
   predictionQuestions: CodeLogicPredictionQuestion[];
+  assessmentQuestions: CodeLogicAssessmentQuestion[];
 }
+
 
 export interface CodeLogicProblemPayload {
   title: string;
