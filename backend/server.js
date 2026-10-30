@@ -233,8 +233,6 @@ const studentCodeToLogicRoutes = require(
     "./routes/student/advanced/code-logic/code-to-logic.routes"
 );
 
-
-
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -267,6 +265,13 @@ const mentorCodeShuffleRoutes = require(
 const mentorCodeToLogicRoutes = require(
     "./routes/mentor/advanced/code-logic/code-to-logic.routes"
 );
+
+// MENTOR LOGIC TO CODE
+const mentorLogicToCodeRoutes = require(
+    "./routes/mentor/advanced/logic-to-code/problem.routes"
+);
+
+
 
 
 // =====================================================
@@ -404,6 +409,12 @@ app.use(
 app.use(
     "/api/mentor/advanced/code-to-logic",
     mentorCodeToLogicRoutes
+);
+
+// MENTOR LOGIC TO CODE
+app.use(
+    "/api/mentor/logic-to-code/problems",
+    mentorLogicToCodeRoutes
 );
 
     
