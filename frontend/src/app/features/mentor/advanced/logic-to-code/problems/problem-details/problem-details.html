@@ -1,0 +1,154 @@
+<div class="details-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+      <button class="back-button" (click)="goBack()">
+        ← Manage Problems
+      </button>
+
+      <h1>Problem Details</h1>
+
+      <p>View your coding challenge information and settings.</p>
+    </div>
+
+  </div>
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading problem details...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div
+    class="state-card error-state"
+    *ngIf="!loading() && errorMessage()"
+  >
+    <h3>Unable to load problem</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button
+      class="retry-button"
+      (click)="retryLoad()"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <!-- PROBLEM DETAILS -->
+  <div
+    class="details-content"
+    *ngIf="!loading() && problem() as p"
+  >
+
+    <!-- MAIN INFORMATION -->
+    <div class="details-card">
+
+      <div class="card-top">
+
+        <span class="problem-id">
+          Problem #{{ p.id }}
+        </span>
+
+        <span
+          class="status-badge"
+          [ngClass]="'status-' + p.status"
+        >
+          {{ getStatusLabel(p.status) }}
+        </span>
+
+      </div>
+
+      <h2>{{ p.title }}</h2>
+
+      <!-- SUBJECT -->
+      <div class="subject-section" *ngIf="p.subject_name">
+
+        <span class="section-label">Academic Subject</span>
+
+        <span class="subject-badge">
+          {{ p.subject_name }}
+        </span>
+
+      </div>
+
+      <div class="description-section">
+
+        <h3>Problem Description</h3>
+
+        <p>{{ p.description }}</p>
+
+      </div>
+
+    </div>
+
+    <!-- PROBLEM SETTINGS -->
+    <div class="details-card">
+
+      <h3>Problem Settings</h3>
+
+      <div class="settings-grid">
+
+        <div class="setting-item">
+
+          <span>Difficulty</span>
+
+          <strong
+            class="difficulty-badge"
+            [ngClass]="'difficulty-' + p.difficulty"
+          >
+            {{ getDifficultyLabel(p.difficulty) }}
+          </strong>
+
+        </div>
+
+        <div class="setting-item">
+
+          <span>Solution Unlock</span>
+
+          <strong>
+            {{ p.solution_unlock.replaceAll('_', ' ') | titlecase }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TIMESTAMPS -->
+    <div class="details-card">
+
+      <h3>Activity Information</h3>
+
+      <div class="settings-grid">
+
+        <div class="setting-item">
+
+          <span>Created On</span>
+
+          <strong>
+            {{ p.created_at | date:'medium' }}
+          </strong>
+
+        </div>
+
+        <div class="setting-item">
+
+          <span>Last Updated</span>
+
+          <strong>
+            {{ p.updated_at | date:'medium' }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

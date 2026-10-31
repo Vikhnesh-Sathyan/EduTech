@@ -187,6 +187,7 @@ import { TaskEditComponent } from './features/mentor/advanced/code-to-logic/task
 import { LogicToCodeDashboard } from './features/mentor/advanced/logic-to-code/dashboard/logic-to-code-dashboard/logic-to-code-dashboard';
 import { ProblemList } from './features/mentor/advanced/logic-to-code/problems/problem-list/problem-list';
 import { CreateProblem } from './features/mentor/advanced/logic-to-code/problems/create-problem/create-problem';
+import { ProblemDetails } from './features/mentor/advanced/logic-to-code/problems/problem-details/problem-details';
 
 export const routes: Routes = [
 
@@ -715,7 +716,12 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/problems/create',
         component: CreateProblem
-      }
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/problems/:problemId',
+        component: ProblemDetails
+      },
+
 
     ]
   },
