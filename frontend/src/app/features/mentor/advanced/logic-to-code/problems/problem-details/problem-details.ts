@@ -7,10 +7,13 @@ import {
   LogicToCodeProblem
 } from '../../../../../../services/mentor/advanced/logic-to-code/logic-to-code.service';
 
+import { ConfirmModalComponent } from '../../../../../../shared/confirm-modal/confirm-modal';
+import { ToastService } from '../../../../../../services/toast.service';
+
 @Component({
   selector: 'app-problem-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ConfirmModalComponent],
   templateUrl: './problem-details.html',
   styleUrl: './problem-details.css',
 })
@@ -19,11 +22,15 @@ export class ProblemDetails implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private logicToCodeService = inject(LogicToCodeService);
-
+  private toast = inject(ToastService);
+  
   problem = signal<LogicToCodeProblem | null>(null);
 
   loading = signal(true);
   errorMessage = signal('');
+
+  showDeleteModal = signal(false);
+  deleting = signal(false);
 
   ngOnInit(): void {
     const problemId = Number(this.route.snapshot.paramMap.get('problemId'));
@@ -100,5 +107,43 @@ retryLoad(): void {
     problemId,
     'edit'
   ]);
+}
+
+openDeleteModal(): void {
+  this.showDeleteModal.set(true);
+}
+
+cancelDelete(): void {
+  this.showDeleteModal.set(false);
+}
+
+confirmDelete(): void {
+  const problemId = this.problem()?.id;
+
+  if (!problemId || this.deleting()) {
+    return;
+  }
+
+  this.deleting.set(true);
+
+  this.logicToCodeService.deleteProblem(problemId).subscribe({
+    next: (response) => {
+      this.showDeleteModal.set(false);
+      this.deleting.set(false);
+
+      // Return to Manage Problems after deletion
+      this.router.navigate([
+        '/mentor/advanced/logic-to-code/problems'
+      ]);
+    },
+    error: (error) => {
+      this.deleting.set(false);
+
+      // Show error using your existing toast service
+      this.toast.error(
+        error.error?.message || 'Unable to delete problem.'
+      );
+    }
+  });
 }
 }
