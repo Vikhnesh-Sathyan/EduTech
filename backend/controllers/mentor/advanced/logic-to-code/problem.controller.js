@@ -165,7 +165,11 @@ const getProblemById = async (req, res) => {
 };
 
 
+
 const updateProblem = async (req, res) => {
+    const connection = await db.getConnection();
+    let transactionStarted = false;
+
     try {
         const mentorId = req.user.id;
         const problemId = Number(req.params.problemId);
@@ -177,7 +181,6 @@ const updateProblem = async (req, res) => {
             solution_unlock
         } = req.body;
 
-        // Validate problem ID
         if (!Number.isInteger(problemId) || problemId <= 0) {
             return res.status(400).json({
                 success: false,
@@ -185,7 +188,6 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Check whether at least one field is provided
         if (
             title === undefined &&
             description === undefined &&
@@ -198,7 +200,6 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Validate title
         if (
             title !== undefined &&
             (typeof title !== "string" || !title.trim())
@@ -209,7 +210,6 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Validate description
         if (
             description !== undefined &&
             (typeof description !== "string" || !description.trim())
@@ -220,7 +220,6 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Validate difficulty
         const allowedDifficulties = ["easy", "medium", "hard"];
 
         if (
@@ -233,7 +232,6 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Validate solution unlock option
         const allowedUnlockOptions = [
             "after_attempt",
             "after_completion",
@@ -250,15 +248,22 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Check mentor ownership
-        const [existingProblems] = await db.query(
+        await connection.beginTransaction();
+        transactionStarted = true;
+
+        // Lock problem row and verify mentor ownership
+        const [existingProblems] = await connection.query(
             `SELECT id
              FROM logic_to_code_problems
-             WHERE id = ? AND mentor_id = ?`,
+             WHERE id = ? AND mentor_id = ?
+             FOR UPDATE`,
             [problemId, mentorId]
         );
 
         if (existingProblems.length === 0) {
+            await connection.rollback();
+            transactionStarted = false;
+
             return res.status(404).json({
                 success: false,
                 message: "Problem not found."
@@ -291,7 +296,7 @@ const updateProblem = async (req, res) => {
 
         values.push(problemId, mentorId);
 
-        await db.query(
+        await connection.query(
             `UPDATE logic_to_code_problems
              SET ${updates.join(", ")}
              WHERE id = ? AND mentor_id = ?`,
@@ -299,12 +304,15 @@ const updateProblem = async (req, res) => {
         );
 
         // Fetch updated problem
-        const [updatedProblems] = await db.query(
+        const [updatedProblems] = await connection.query(
             `SELECT *
              FROM logic_to_code_problems
              WHERE id = ? AND mentor_id = ?`,
             [problemId, mentorId]
         );
+
+        await connection.commit();
+        transactionStarted = false;
 
         return res.status(200).json({
             success: true,
@@ -313,12 +321,19 @@ const updateProblem = async (req, res) => {
         });
 
     } catch (error) {
+        if (transactionStarted) {
+            await connection.rollback();
+        }
+
         console.error("Update Problem Error:", error);
 
         return res.status(500).json({
             success: false,
             message: "Internal server error."
         });
+
+    } finally {
+        connection.release();
     }
 };
 
@@ -327,5 +342,6 @@ module.exports = {
     createProblem,
     getMentorProblems,
     getProblemById,
-    updateProblem
+    updateProblem,
 };
+

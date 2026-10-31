@@ -1,26 +1,29 @@
-// =====================================================
-// IMPORT EXPRESS
-// =====================================================
 
 const express = require("express");
 const router = express.Router();
 
 // =====================================================
-// IMPORT MIDDLEWARE
+// 1. AUTHENTICATION & AUTHORIZATION MIDDLEWARE
 // =====================================================
 
 const authMiddleware = require("../../../../middleware/authMiddleware");
 const roleMiddleware = require("../../../../middleware/roleMiddleware");
 
 // =====================================================
-// IMPORT PROBLEM CONTROLLERS
+// 2. IMPORT MENTOR CONTROLLERS
 // =====================================================
 
+// Dashboard
+const {
+    getMentorProblemDashboard
+} = require("../../../../controllers/mentor/advanced/logic-to-code/problem-dashboard.controller");
+
+// Problem Management
 const {
     createProblem,
     getMentorProblems,
     getProblemById,
-    updateProblem
+    updateProblem,
 } = require("../../../../controllers/mentor/advanced/logic-to-code/problem.controller");
 
 const {
@@ -31,10 +34,7 @@ const {
     updateProblemStatus
 } = require("../../../../controllers/mentor/advanced/logic-to-code/problem-status.controller");
 
-// =====================================================
-// IMPORT LEARNING SUPPORT CONTROLLERS
-// =====================================================
-
+// Problem Learning Resources
 const {
     addProblemSteps,
     getProblemSteps
@@ -57,6 +57,7 @@ const {
     deleteProblemMistake
 } = require("../../../../controllers/mentor/advanced/logic-to-code/problem-mistakes.controller");
 
+// Test Cases
 const {
     addTestCase,
     getTestCases,
@@ -64,6 +65,7 @@ const {
     deleteTestCase
 } = require("../../../../controllers/mentor/advanced/logic-to-code/problem-test-cases.controller");
 
+// Reference Solutions
 const {
     addProblemSolution,
     getProblemSolutions
@@ -77,18 +79,7 @@ const {
     deleteProblemSolution
 } = require("../../../../controllers/mentor/advanced/logic-to-code/problem-solutions-delete.controller");
 
-// =====================================================
-// IMPORT DASHBOARD CONTROLLER
-// =====================================================
-
-const {
-    getMentorProblemDashboard
-} = require("../../../../controllers/mentor/advanced/logic-to-code/problem-dashboard.controller");
-
-// =====================================================
-// IMPORT SUBMISSION CONTROLLERS
-// =====================================================
-
+// Student Submissions
 const {
     getMentorSubmissions
 } = require("../../../../controllers/mentor/advanced/logic-to-code/submissions-list.controller");
@@ -101,10 +92,7 @@ const {
     updateSubmissionFeedback
 } = require("../../../../controllers/mentor/advanced/logic-to-code/submission-feedback.controller");
 
-// =====================================================
-// IMPORT DISCUSSION CONTROLLERS
-// =====================================================
-
+// Problem Discussions
 const {
     getMentorProblemDiscussions
 } = require("../../../../controllers/mentor/advanced/logic-to-code/discussion-list.controller");
@@ -117,10 +105,7 @@ const {
     deleteDiscussion
 } = require("../../../../controllers/mentor/advanced/logic-to-code/discussion-delete.controller");
 
-// =====================================================
-// IMPORT DISCUSSION REPORT CONTROLLERS
-// =====================================================
-
+// Discussion Reports
 const {
     getMentorDiscussionReports
 } = require("../../../../controllers/mentor/advanced/logic-to-code/discussion-reports-list.controller");
@@ -129,216 +114,191 @@ const {
     reviewDiscussionReport
 } = require("../../../../controllers/mentor/advanced/logic-to-code/discussion-report-review.controller");
 
+// =====================================================
+// 3. APPLY AUTHENTICATION & MENTOR ROLE CHECK
+// =====================================================
 
-// =====================================================
-// APPLY MENTOR AUTHENTICATION TO ALL ROUTES
-// =====================================================
+// Every route below requires a valid login.
+// Only users with the mentor role can access these routes.
 
 router.use(authMiddleware);
 router.use(roleMiddleware("mentor"));
 
-
 // =====================================================
-// 1. DASHBOARD ROUTES
+// 4. MENTOR DASHBOARD
 // =====================================================
 
+// Get dashboard statistics and problem activity.
 router.get("/dashboard", getMentorProblemDashboard);
 
-
 // =====================================================
-// 2. SUBMISSION ROUTES
+// 5. STUDENT SUBMISSION MANAGEMENT
 // =====================================================
 
+// Get submissions for the mentor's problems.
 router.get("/submissions", getMentorSubmissions);
 
-router.get(
-    "/submissions/:submissionId",
-    getMentorSubmissionDetails
-);
+// Get details of one student submission.
+router.get("/submissions/:submissionId", getMentorSubmissionDetails);
 
+// Add or update feedback for a submission.
 router.patch(
     "/submissions/:submissionId/feedback",
     updateSubmissionFeedback
 );
 
-
 // =====================================================
-// 3. DISCUSSION REPORT ROUTES
+// 6. DISCUSSION REPORT MANAGEMENT
 // =====================================================
 
-router.get(
-    "/discussion-reports",
-    getMentorDiscussionReports
-);
+// View reports submitted by students.
+router.get("/discussion-reports", getMentorDiscussionReports);
 
+// Review a reported discussion.
 router.patch(
     "/discussion-reports/:reportId/review",
     reviewDiscussionReport
 );
 
-
 // =====================================================
-// 4. PROBLEM CRUD ROUTES
+// 7. PROBLEM MANAGEMENT (CRUD)
 // =====================================================
 
+// Create a new Logic to Code problem.
 router.post("/", createProblem);
 
+// Get all problems created by the logged-in mentor.
 router.get("/", getMentorProblems);
 
+// Get details of one problem.
 router.get("/:problemId", getProblemById);
 
+// Update an existing problem.
 router.put("/:problemId", updateProblem);
 
+// Delete a problem.
 router.delete("/:problemId", deleteProblem);
 
-router.patch(
-    "/:problemId/status",
-    updateProblemStatus
-);
-
+// Change problem status (draft, published, archived).
+router.patch("/:problemId/status", updateProblemStatus);
 
 // =====================================================
-// 5. PROBLEM STEPS ROUTES
+// 8. PROBLEM STEP MANAGEMENT
 // =====================================================
 
-router.post(
-    "/:problemId/steps",
-    addProblemSteps
-);
+// Add or save step-by-step guidance for a problem.
+router.post("/:problemId/steps", addProblemSteps);
 
-router.get(
-    "/:problemId/steps",
-    getProblemSteps
-);
-
+// Get steps for a problem.
+router.get("/:problemId/steps", getProblemSteps);
 
 // =====================================================
-// 6. PROBLEM SUPPORT ROUTES
+// 9. PROBLEM SUPPORT CODE MANAGEMENT
 // =====================================================
 
-router.post(
-    "/:problemId/support",
-    saveProblemSupport
-);
+// Save starter code and other problem support information.
+router.post("/:problemId/support", saveProblemSupport);
 
-router.get(
-    "/:problemId/support",
-    getProblemSupport
-);
-
+// Get saved problem support information.
+router.get("/:problemId/support", getProblemSupport);
 
 // =====================================================
-// 7. PROBLEM HINTS ROUTES
+// 10. PROBLEM HINT MANAGEMENT
 // =====================================================
 
-router.post(
-    "/:problemId/hints",
-    saveProblemHints
-);
+// Save hints for a problem.
+router.post("/:problemId/hints", saveProblemHints);
 
-router.get(
-    "/:problemId/hints",
-    getProblemHints
-);
-
+// Get hints for a problem.
+router.get("/:problemId/hints", getProblemHints);
 
 // =====================================================
-// 8. COMMON MISTAKES ROUTES
+// 11. COMMON MISTAKE MANAGEMENT
 // =====================================================
 
-router.post(
-    "/:problemId/mistakes",
-    addProblemMistake
-);
+// Add a common mistake.
+router.post("/:problemId/mistakes", addProblemMistake);
 
-router.get(
-    "/:problemId/mistakes",
-    getProblemMistakes
-);
+// Get all common mistakes for a problem.
+router.get("/:problemId/mistakes", getProblemMistakes);
 
+// Update a common mistake.
 router.put(
     "/:problemId/mistakes/:mistakeId",
     updateProblemMistake
 );
 
+// Delete a common mistake.
 router.delete(
     "/:problemId/mistakes/:mistakeId",
     deleteProblemMistake
 );
 
-
 // =====================================================
-// 9. TEST CASE ROUTES
+// 12. TEST CASE MANAGEMENT
 // =====================================================
 
-router.post(
-    "/:problemId/test-cases",
-    addTestCase
-);
+// Add a test case to a problem.
+router.post("/:problemId/test-cases", addTestCase);
 
-router.get(
-    "/:problemId/test-cases",
-    getTestCases
-);
+// Get test cases for a problem.
+router.get("/:problemId/test-cases", getTestCases);
 
+// Update an existing test case.
 router.put(
     "/:problemId/test-cases/:testCaseId",
     updateTestCase
 );
 
+// Delete a test case.
 router.delete(
     "/:problemId/test-cases/:testCaseId",
     deleteTestCase
 );
 
-
 // =====================================================
-// 10. REFERENCE SOLUTION ROUTES
+// 13. REFERENCE SOLUTION MANAGEMENT
 // =====================================================
 
-router.post(
-    "/:problemId/solutions",
-    addProblemSolution
-);
+// Add a reference solution.
+router.post("/:problemId/solutions", addProblemSolution);
 
-router.get(
-    "/:problemId/solutions",
-    getProblemSolutions
-);
+// Get reference solutions for a problem.
+router.get("/:problemId/solutions", getProblemSolutions);
 
+// Update a reference solution.
 router.put(
     "/:problemId/solutions/:solutionId",
     updateProblemSolution
 );
 
+// Delete a reference solution.
 router.delete(
     "/:problemId/solutions/:solutionId",
     deleteProblemSolution
 );
 
-
 // =====================================================
-// 11. PROBLEM DISCUSSION ROUTES
+// 14. PROBLEM DISCUSSION MANAGEMENT
 // =====================================================
 
-router.get(
-    "/:problemId/discussions",
-    getMentorProblemDiscussions
-);
+// Get discussions and replies for a problem.
+router.get("/:problemId/discussions", getMentorProblemDiscussions);
 
+// Reply to a student's discussion.
 router.post(
     "/:problemId/discussions/:discussionId/replies",
     replyToDiscussion
 );
 
+// Delete a discussion or reply.
 router.delete(
     "/:problemId/discussions/:discussionId",
     deleteDiscussion
 );
 
-
 // =====================================================
-// EXPORT ROUTER
+// 15. EXPORT ROUTER
 // =====================================================
 
 module.exports = router;

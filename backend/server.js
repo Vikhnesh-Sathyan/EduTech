@@ -233,6 +233,11 @@ const studentCodeToLogicRoutes = require(
     "./routes/student/advanced/code-logic/code-to-logic.routes"
 );
 
+// STUDENT LOGIC TO CODE
+const studentLogicToCodeRoutes = require(
+    "./routes/student/advanced/logic-to-code/problem.routes"
+);
+
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -683,7 +688,11 @@ app.use(
     studentCodeToLogicRoutes
 );
 
-
+// STUDENT LOGIC TO CODE
+app.use(
+    "/api/student/logic-to-code",
+    studentLogicToCodeRoutes
+);
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
