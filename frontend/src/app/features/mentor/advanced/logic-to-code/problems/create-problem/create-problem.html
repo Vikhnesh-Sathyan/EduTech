@@ -1,0 +1,264 @@
+
+<div class="create-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <button class="back-button" type="button" (click)="cancel()">
+        ← Manage Problems
+      </button>
+
+      <h1>Create New Problem</h1>
+
+      <p>
+        Design a new Logic to Code challenge for your students.
+      </p>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="form-container">
+
+    <div class="form-heading">
+      <div>
+        <h2>Problem Information</h2>
+        <p>Enter the academic details and basic information of your challenge.</p>
+      </div>
+      <span class="form-label">NEW CHALLENGE</span>
+    </div>
+
+    <form (ngSubmit)="createProblem()">
+
+      <!-- ================================= -->
+      <!-- ACADEMIC INFORMATION -->
+      <!-- ================================= -->
+
+      <div class="academic-section">
+
+        <h3>Academic Information</h3>
+        <p>Select the academic program and subject for this problem.</p>
+
+        <!-- Education Program -->
+        <div class="form-group">
+          <label for="program">Education Program <span>*</span></label>
+
+          <select
+            id="program"
+            name="program"
+            [ngModel]="selectedProgramId()"
+            (ngModelChange)="onProgramChange($event ? +$event : null)"
+            [disabled]="loadingPrograms()"
+            required
+          >
+            <option [ngValue]="null">
+              {{ loadingPrograms() ? 'Loading programs...' : 'Select Education Program' }}
+            </option>
+
+            <option
+              *ngFor="let program of programs()"
+              [ngValue]="program.id"
+            >
+              {{ program.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Department -->
+        <div class="form-group">
+          <label for="department">Department <span>*</span></label>
+
+          <select
+            id="department"
+            name="department"
+            [ngModel]="selectedDepartmentId()"
+            (ngModelChange)="onDepartmentChange($event ? +$event : null)"
+            [disabled]="!selectedProgramId() || loadingDepartments()"
+            required
+          >
+            <option [ngValue]="null">
+              {{ loadingDepartments() ? 'Loading departments...' : 'Select Department' }}
+            </option>
+
+            <option
+              *ngFor="let department of departments()"
+              [ngValue]="department.id"
+            >
+              {{ department.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Academic Year -->
+        <div class="form-group">
+          <label for="academicYear">Academic Year <span>*</span></label>
+
+          <select
+            id="academicYear"
+            name="academicYear"
+            [ngModel]="selectedYearId()"
+            (ngModelChange)="onYearChange($event ? +$event : null)"
+            [disabled]="!selectedDepartmentId() || loadingYears()"
+            required
+          >
+            <option [ngValue]="null">
+              {{ loadingYears() ? 'Loading academic years...' : 'Select Academic Year' }}
+            </option>
+
+            <option
+              *ngFor="let year of educationYears()"
+              [ngValue]="year.id"
+            >
+              {{ year.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+          <label for="subject">Subject <span>*</span></label>
+
+          <select
+            id="subject"
+            name="subject"
+            [ngModel]="selectedSubjectId()"
+            (ngModelChange)="onSubjectChange($event ? +$event : null)"
+            [disabled]="!selectedYearId() || loadingSubjects()"
+            required
+          >
+            <option [ngValue]="null">
+              {{ loadingSubjects() ? 'Loading subjects...' : 'Select Subject' }}
+            </option>
+
+            <option
+              *ngFor="let subject of subjects()"
+              [ngValue]="subject.id"
+            >
+              {{ subject.name }}
+            </option>
+          </select>
+
+          <small>
+            The selected subject will be linked to this problem.
+          </small>
+        </div>
+
+      </div>
+
+      <!-- ================================= -->
+      <!-- PROBLEM DETAILS -->
+      <!-- ================================= -->
+
+      <div class="form-group">
+        <label for="title">Problem Title <span>*</span></label>
+
+        <input
+          id="title"
+          type="text"
+          name="title"
+          placeholder="Example: Find the Largest Number"
+          [ngModel]="title()"
+          (ngModelChange)="title.set($event)"
+          required
+          maxlength="200"
+        />
+
+        <small>Enter a clear and meaningful problem title.</small>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">
+          Problem Description <span>*</span>
+        </label>
+
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Explain the problem that students need to solve..."
+          rows="7"
+          [ngModel]="description()"
+          (ngModelChange)="description.set($event)"
+          required
+        ></textarea>
+
+        <small>
+          Describe the problem clearly so students understand the task.
+        </small>
+      </div>
+
+      <!-- Difficulty -->
+      <div class="form-group">
+        <label for="difficulty">Difficulty Level</label>
+
+        <select
+          id="difficulty"
+          name="difficulty"
+          [ngModel]="difficulty()"
+          (ngModelChange)="difficulty.set($event)"
+        >
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        <small>Select the expected difficulty of the challenge.</small>
+      </div>
+
+      <!-- Solution Unlock -->
+      <div class="form-group">
+        <label for="solutionUnlock">Solution Unlock Option</label>
+
+        <select
+          id="solutionUnlock"
+          name="solutionUnlock"
+          [ngModel]="solutionUnlock()"
+          (ngModelChange)="solutionUnlock.set($event)"
+        >
+          <option value="after_attempt">After First Attempt</option>
+          <option value="after_completion">After Completion</option>
+          <option value="mentor_only">Mentor Only</option>
+        </select>
+
+        <small>
+          Decide when students are allowed to access the solution.
+        </small>
+      </div>
+
+      <!-- Error Message -->
+      <div class="message error-message" *ngIf="errorMessage()">
+        {{ errorMessage() }}
+      </div>
+
+      <!-- Success Message -->
+      <div class="message success-message" *ngIf="successMessage()">
+        {{ successMessage() }}
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancel()"
+          [disabled]="loading()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="loading()"
+        >
+          <span *ngIf="!loading()">Create Problem →</span>
+          <span *ngIf="loading()">Creating...</span>
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

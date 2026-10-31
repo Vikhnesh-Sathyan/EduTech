@@ -1,0 +1,194 @@
+
+<div class="problems-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <button class="back-button" (click)="goToDashboard()">
+        ← Dashboard
+      </button>
+
+      <h1>Manage Problems</h1>
+
+      <p>
+        Create, organize and manage your Logic to Code challenges.
+      </p>
+
+    </div>
+
+    <button class="create-button" (click)="createProblem()">
+      + Create Problem
+    </button>
+
+  </div>
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="loading()">
+
+    <div class="loader"></div>
+
+    <p>Loading problems...</p>
+
+  </div>
+
+  <!-- ERROR -->
+  <div
+    class="state-card error-state"
+    *ngIf="!loading() && errorMessage()"
+  >
+
+    <h3>Unable to load problems</h3>
+
+    <p>{{ errorMessage() }}</p>
+
+    <button class="retry-button" (click)="loadProblems()">
+      Try Again
+    </button>
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div
+    class="empty-state"
+    *ngIf="!loading() && !errorMessage() && problems().length === 0"
+  >
+
+    <div class="empty-icon">⌨</div>
+
+    <h2>No Problems Created Yet</h2>
+
+    <p>
+      Start building coding challenges for your students.
+    </p>
+
+    <button
+      class="create-button"
+      (click)="createProblem()"
+    >
+      + Create Your First Problem
+    </button>
+
+  </div>
+
+  <!-- PROBLEM LIST -->
+  <div
+    class="problems-content"
+    *ngIf="!loading() && !errorMessage() && problems().length > 0"
+  >
+
+    <!-- SUMMARY -->
+    <div class="problem-summary">
+
+      <div class="summary-card">
+
+        <span>Total Problems</span>
+
+        <h2>{{ problems().length }}</h2>
+
+      </div>
+
+      <div class="summary-card">
+
+        <span>Published</span>
+
+        <h2>{{ publishedCount() }}</h2>
+
+      </div>
+
+      <div class="summary-card">
+
+        <span>Drafts</span>
+
+        <h2>{{ draftCount() }}</h2>
+
+      </div>
+
+      <div class="summary-card">
+
+        <span>Archived</span>
+
+        <h2>{{ archivedCount() }}</h2>
+
+      </div>
+
+    </div>
+
+    <!-- PROBLEM CARDS -->
+    <div class="problem-grid">
+
+      <div
+        class="problem-card"
+        *ngFor="let problem of problems()"
+      >
+
+        <!-- CARD TOP -->
+        <div class="card-top">
+
+          <span class="problem-id">
+            Problem #{{ problem.id }}
+          </span>
+
+          <span
+            class="status-badge"
+            [ngClass]="'status-' + problem.status"
+          >
+            {{ getStatusLabel(problem.status) }}
+          </span>
+
+        </div>
+
+        <!-- PROBLEM DETAILS -->
+       <!-- PROBLEM DETAILS -->
+<h3>{{ problem.title }}</h3>
+
+<!-- SUBJECT NAME -->
+<div class="problem-subject" *ngIf="problem.subject_name">
+  <span class="subject-label">Subject</span>
+  <span class="subject-name">{{ problem.subject_name }}</span>
+</div>
+
+<p class="problem-description">
+  {{ problem.description }}
+</p>
+        <!-- PROBLEM META -->
+        <div class="problem-meta">
+
+          <span
+            class="difficulty-badge"
+            [ngClass]="'difficulty-' + problem.difficulty"
+          >
+            {{ getDifficultyLabel(problem.difficulty) }}
+          </span>
+
+          <span class="created-date">
+            Created {{ problem.created_at | date:'mediumDate' }}
+          </span>
+
+        </div>
+
+        <!-- CARD FOOTER -->
+        <div class="card-footer">
+
+          <span class="solution-info">
+            Solution:
+            {{ problem.solution_unlock.replace('_', ' ') }}
+          </span>
+
+          <button
+            class="view-button"
+            (click)="viewProblem(problem.id)"
+          >
+            View Details →
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

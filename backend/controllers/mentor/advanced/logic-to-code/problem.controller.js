@@ -3,18 +3,40 @@
 const db = require("../../../../config/db");
 
 // Create a new Logic to Code problem
+
+// Create a new Logic to Code problem
 const createProblem = async (req, res) => {
     try {
         const mentorId = req.user.id;
 
         const {
+            subject_id,
             title,
             description,
             difficulty,
             solution_unlock
         } = req.body;
 
-        // Validate required fields
+        // -----------------------------------------
+        // 1. VALIDATE SUBJECT ID
+        // -----------------------------------------
+
+        const subjectId = Number(subject_id);
+
+        if (
+            !Number.isInteger(subjectId) ||
+            subjectId <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "A valid subject is required."
+            });
+        }
+
+        // -----------------------------------------
+        // 2. VALIDATE REQUIRED FIELDS
+        // -----------------------------------------
+
         if (
             !title ||
             typeof title !== "string" ||
@@ -29,8 +51,15 @@ const createProblem = async (req, res) => {
             });
         }
 
-        // Validate difficulty
-        const allowedDifficulties = ["easy", "medium", "hard"];
+        // -----------------------------------------
+        // 3. VALIDATE DIFFICULTY
+        // -----------------------------------------
+
+        const allowedDifficulties = [
+            "easy",
+            "medium",
+            "hard"
+        ];
 
         if (
             difficulty &&
@@ -42,7 +71,10 @@ const createProblem = async (req, res) => {
             });
         }
 
-        // Validate solution unlock option
+        // -----------------------------------------
+        // 4. VALIDATE SOLUTION UNLOCK OPTION
+        // -----------------------------------------
+
         const allowedUnlockOptions = [
             "after_attempt",
             "after_completion",
@@ -59,12 +91,42 @@ const createProblem = async (req, res) => {
             });
         }
 
+        // -----------------------------------------
+        // 5. CHECK SUBJECT EXISTS AND IS ACTIVE
+        // -----------------------------------------
+
+        const [subjects] = await db.query(
+            `SELECT id
+             FROM subjects
+             WHERE id = ? AND status = 'active'`,
+            [subjectId]
+        );
+
+        if (subjects.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Selected subject not found or inactive."
+            });
+        }
+
+        // -----------------------------------------
+        // 6. INSERT PROBLEM
+        // -----------------------------------------
+
         const [result] = await db.query(
             `INSERT INTO logic_to_code_problems
-            (mentor_id, title, description, difficulty, solution_unlock)
-            VALUES (?, ?, ?, ?, ?)`,
+            (
+                mentor_id,
+                subject_id,
+                title,
+                description,
+                difficulty,
+                solution_unlock
+            )
+            VALUES (?, ?, ?, ?, ?, ?)`,
             [
                 mentorId,
+                subjectId,
                 title.trim(),
                 description.trim(),
                 difficulty || "easy",
@@ -88,18 +150,22 @@ const createProblem = async (req, res) => {
     }
 };
 
-//Retrieves all problems created by the logged-in mentor.
 
+//Retrieves all problems created by the logged-in mentor.
 
 const getMentorProblems = async (req, res) => {
     try {
         const mentorId = req.user.id;
 
         const [problems] = await db.query(
-            `SELECT *
-             FROM logic_to_code_problems
-             WHERE mentor_id = ?
-             ORDER BY created_at DESC`,
+            `SELECT
+                p.*,
+                s.name AS subject_name
+             FROM logic_to_code_problems p
+             LEFT JOIN subjects s
+                ON p.subject_id = s.id
+             WHERE p.mentor_id = ?
+             ORDER BY p.created_at DESC`,
             [mentorId]
         );
 
@@ -118,6 +184,7 @@ const getMentorProblems = async (req, res) => {
         });
     }
 };
+
 
 //Retrieves one specific problem using its ID.
 

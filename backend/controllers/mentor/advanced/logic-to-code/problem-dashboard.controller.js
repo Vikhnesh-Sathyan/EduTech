@@ -15,9 +15,9 @@ const getMentorProblemDashboard = async (req, res) => {
         const [problemStats] = await db.query(
             `SELECT
                 COUNT(*) AS totalProblems,
-                SUM(status = 'published') AS publishedProblems,
-                SUM(status = 'draft') AS draftProblems,
-                SUM(status = 'archived') AS archivedProblems
+                COALESCE(SUM(status = 'published'), 0) AS publishedProblems,
+                COALESCE(SUM(status = 'draft'), 0) AS draftProblems,
+                COALESCE(SUM(status = 'archived'), 0) AS archivedProblems
              FROM logic_to_code_problems
              WHERE mentor_id = ?`,
             [mentorId]

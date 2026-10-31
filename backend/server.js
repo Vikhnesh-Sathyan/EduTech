@@ -418,7 +418,7 @@ app.use(
 
 // MENTOR LOGIC TO CODE
 app.use(
-    "/api/mentor/logic-to-code/problems",
+    "/api/mentor/advanced/logic-to-code",
     mentorLogicToCodeRoutes
 );
 

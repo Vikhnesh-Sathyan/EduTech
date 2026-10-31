@@ -1,0 +1,281 @@
+
+<div class="logic-dashboard">
+
+  <!-- PAGE HEADER -->
+  <section class="dashboard-header">
+    <div class="header-content">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        MENTOR WORKSPACE
+      </div>
+
+      <h1>Logic to Code</h1>
+
+      <p>
+        Manage coding challenges, track student progress
+        and guide learners through problem solving.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        class="btn-secondary"
+        type="button"
+        (click)="openProblems()">
+        <span>Manage Problems</span>
+      </button>
+
+      <button
+        class="btn-primary"
+        type="button"
+        (click)="createProblem()">
+        <span class="plus-icon">+</span>
+        Create Problem
+      </button>
+    </div>
+  </section>
+
+
+  <!-- QUICK NAVIGATION -->
+  <section class="quick-actions">
+
+    <button class="action-card" (click)="openProblems()">
+      <span class="action-icon purple">▤</span>
+      <span class="action-text">
+        <strong>Problems</strong>
+        <small>Manage challenges</small>
+      </span>
+      <span class="action-arrow">→</span>
+    </button>
+
+    <button class="action-card" (click)="openSubmissions()">
+      <span class="action-icon blue">⌨</span>
+      <span class="action-text">
+        <strong>Submissions</strong>
+        <small>Review student attempts</small>
+      </span>
+      <span class="action-arrow">→</span>
+    </button>
+
+    <button class="action-card" (click)="openDiscussions()">
+      <span class="action-icon orange">☰</span>
+      <span class="action-text">
+        <strong>Discussions</strong>
+        <small>Answer student doubts</small>
+      </span>
+      <span class="action-arrow">→</span>
+    </button>
+
+    <button class="action-card" (click)="openReports()">
+      <span class="action-icon green">⚑</span>
+      <span class="action-text">
+        <strong>Reports</strong>
+        <small>Review reported content</small>
+      </span>
+      <span class="action-arrow">→</span>
+    </button>
+
+  </section>
+
+
+  <!-- LOADING STATE -->
+  <div class="state-container" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+
+  <!-- ERROR STATE -->
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <div class="error-icon">!</div>
+
+    <div>
+      <strong>Unable to load dashboard</strong>
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+    <button type="button" (click)="loadDashboard()">
+      Retry
+    </button>
+  </div>
+
+
+  <!-- DASHBOARD CONTENT -->
+  <ng-container *ngIf="!loading() && !errorMessage() && statistics() as stats">
+
+    <!-- STATISTICS HEADER -->
+    <section class="section-heading">
+      <div>
+        <h2>Performance Overview</h2>
+        <p>Monitor your problems and student engagement.</p>
+      </div>
+    </section>
+
+
+    <!-- STATISTICS GRID -->
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Total Problems</span>
+          <span class="stat-icon purple">▤</span>
+        </div>
+        <h3>{{ stats.totalProblems }}</h3>
+        <span class="stat-description">All created problems</span>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Published</span>
+          <span class="stat-icon green">✓</span>
+        </div>
+        <h3>{{ stats.publishedProblems }}</h3>
+        <span class="stat-description">Available to students</span>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Draft Problems</span>
+          <span class="stat-icon orange">✎</span>
+        </div>
+        <h3>{{ stats.draftProblems }}</h3>
+        <span class="stat-description">Waiting to be published</span>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Archived</span>
+          <span class="stat-icon gray">▣</span>
+        </div>
+        <h3>{{ stats.archivedProblems }}</h3>
+        <span class="stat-description">Archived problems</span>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Total Attempts</span>
+          <span class="stat-icon blue">⌨</span>
+        </div>
+        <h3>{{ stats.totalAttempts }}</h3>
+        <span class="stat-description">Student submissions</span>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Completed Problems</span>
+          <span class="stat-icon green">✓</span>
+        </div>
+        <h3>{{ stats.completedProblems }}</h3>
+        <span class="stat-description">Distinct student completions</span>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Pending Doubts</span>
+          <span class="stat-icon orange">?</span>
+        </div>
+        <h3>{{ stats.pendingDoubts }}</h3>
+        <span class="stat-description">Questions awaiting mentor reply</span>
+      </article>
+
+    </section>
+
+
+    <!-- RECENT SUBMISSIONS -->
+    <section class="recent-section">
+
+      <div class="section-heading recent-heading">
+        <div>
+          <h2>Recent Submissions</h2>
+          <p>Latest coding attempts from your students.</p>
+        </div>
+
+        <button
+          type="button"
+          class="view-all-btn"
+          (click)="openSubmissions()">
+          View all →
+        </button>
+      </div>
+
+
+      <!-- SUBMISSION TABLE -->
+      <div class="table-wrapper" *ngIf="recentSubmissions().length > 0">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Problem</th>
+              <th>Language</th>
+              <th>Test Cases</th>
+              <th>Status</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let submission of recentSubmissions()">
+
+              <td>
+                <div class="student-cell">
+                  <span class="student-avatar">
+                    {{ submission.student_name.charAt(0) || '?' }}
+                  </span>
+
+                  <strong>{{ submission.student_name }}</strong>
+                </div>
+              </td>
+
+              <td>
+                <button
+                  type="button"
+                  class="problem-link"
+                  (click)="viewProblem(submission.problem_id)">
+                  {{ submission.problem_title }}
+                </button>
+              </td>
+
+              <td>
+                <span class="language-tag">
+                  {{ submission.language }}
+                </span>
+              </td>
+
+              <td>
+                {{ submission.passed_test_cases }}
+                /
+                {{ submission.total_test_cases }}
+              </td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="submission.execution_status">
+                  {{ submission.execution_status | titlecase }}
+                </span>
+              </td>
+
+              <td>
+                {{ submission.submitted_at | date:'medium' }}
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+
+      <!-- EMPTY SUBMISSIONS -->
+      <div class="empty-state" *ngIf="recentSubmissions().length === 0">
+        <div class="empty-icon">⌨</div>
+        <h3>No submissions yet</h3>
+        <p>Student submissions will appear here when they start solving your problems.</p>
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

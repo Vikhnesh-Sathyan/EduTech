@@ -183,6 +183,11 @@ import { TaskSubmissionsComponent } from './features/mentor/advanced/code-to-log
 import { TaskDetailsComponent } from './features/mentor/advanced/code-to-logic/task-details/task-details';
 import { TaskEditComponent } from './features/mentor/advanced/code-to-logic/task-edit/task-edit';
 
+// MENTOR LOGIC TO CODE
+import { LogicToCodeDashboard } from './features/mentor/advanced/logic-to-code/dashboard/logic-to-code-dashboard/logic-to-code-dashboard';
+import { ProblemList } from './features/mentor/advanced/logic-to-code/problems/problem-list/problem-list';
+import { CreateProblem } from './features/mentor/advanced/logic-to-code/problems/create-problem/create-problem';
+
 export const routes: Routes = [
 
   // Public routes
@@ -688,6 +693,28 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/code-to-logic/tasks/:taskId/submissions',
         component: TaskSubmissionsComponent
+      },
+
+      // =====================================================
+      // MENTOR LOGIC TO CODE
+      // =====================================================
+
+      {
+        path: 'mentor/advanced/logic-to-code',
+        redirectTo: 'mentor/advanced/logic-to-code/dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/dashboard',
+        component: LogicToCodeDashboard
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/problems',
+        component: ProblemList
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/problems/create',
+        component: CreateProblem
       }
 
     ]
