@@ -339,3 +339,11 @@
   }
 
 }
+
+.problem-statement {
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.9;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
