@@ -108,6 +108,27 @@ export interface CreateLogicToCodeProblemResponse {
 }
 
 // =====================================================
+// UPDATE LOGIC TO CODE PROBLEM MODEL
+// =====================================================
+
+export interface UpdateLogicToCodeProblem {
+  subject_id: number;
+  title: string;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  solution_unlock:
+    | 'after_attempt'
+    | 'after_completion'
+    | 'mentor_only';
+}
+
+export interface UpdateLogicToCodeProblemResponse {
+  success: boolean;
+  message: string;
+  problem: LogicToCodeProblem;
+}
+
+// =====================================================
 // LOGIC TO CODE SERVICE
 // =====================================================
 
@@ -155,6 +176,20 @@ createProblem(
 ): Observable<CreateLogicToCodeProblemResponse> {
   return this.http.post<CreateLogicToCodeProblemResponse>(
     this.apiUrl,
+    data
+  );
+}
+
+// =====================================================
+// UPDATE EXISTING PROBLEM
+// =====================================================
+
+updateProblem(
+  problemId: number,
+  data: UpdateLogicToCodeProblem
+): Observable<UpdateLogicToCodeProblemResponse> {
+  return this.http.put<UpdateLogicToCodeProblemResponse>(
+    `${this.apiUrl}/${problemId}`,
     data
   );
 }

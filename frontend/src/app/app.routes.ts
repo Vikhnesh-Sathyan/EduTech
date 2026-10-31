@@ -188,6 +188,7 @@ import { LogicToCodeDashboard } from './features/mentor/advanced/logic-to-code/d
 import { ProblemList } from './features/mentor/advanced/logic-to-code/problems/problem-list/problem-list';
 import { CreateProblem } from './features/mentor/advanced/logic-to-code/problems/create-problem/create-problem';
 import { ProblemDetails } from './features/mentor/advanced/logic-to-code/problems/problem-details/problem-details';
+import { EditProblem } from './features/mentor/advanced/logic-to-code/problems/edit-problem/edit-problem';
 
 export const routes: Routes = [
 
@@ -720,6 +721,10 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/problems/:problemId',
         component: ProblemDetails
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/problems/:problemId/edit',
+        component: EditProblem
       },
 
 

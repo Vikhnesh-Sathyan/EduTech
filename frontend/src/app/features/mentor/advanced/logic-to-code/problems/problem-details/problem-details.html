@@ -59,6 +59,37 @@
           {{ getStatusLabel(p.status) }}
         </span>
 
+        <!-- PUBLISH -->
+<button
+  type="button"
+  class="icon-button publish-button"
+  title="Publish Problem"
+  aria-label="Publish Problem"
+>
+  <span>↗</span>
+</button>
+
+<!-- EDIT -->
+<button
+  type="button"
+  class="icon-button edit-button"
+  title="Edit Problem"
+  aria-label="Edit Problem"
+  (click)="editProblem(p.id)"
+>
+  <span>✎</span>
+</button>
+
+<!-- DELETE -->
+<button
+  type="button"
+  class="icon-button delete-button"
+  title="Delete Problem"
+  aria-label="Delete Problem"
+>
+  <span>🗑</span>
+</button>
+
       </div>
 
       <h2>{{ p.title }}</h2>

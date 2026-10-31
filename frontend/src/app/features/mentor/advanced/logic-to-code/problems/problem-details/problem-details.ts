@@ -94,4 +94,11 @@ retryLoad(): void {
     return status.charAt(0).toUpperCase() + status.slice(1);
   }
 
+  editProblem(problemId: number): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code/problems',
+    problemId,
+    'edit'
+  ]);
+}
 }

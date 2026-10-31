@@ -188,6 +188,10 @@ const getMentorProblems = async (req, res) => {
 
 //Retrieves one specific problem using its ID.
 
+// =====================================================
+// GET ONE PROBLEM BY ID
+// =====================================================
+
 
 const getProblemById = async (req, res) => {
     try {
@@ -202,13 +206,39 @@ const getProblemById = async (req, res) => {
             });
         }
 
+        const sql = `
+            SELECT
+                p.*,
+                s.name AS subject_name,
+                s.education_year_id AS education_year_id,
+                ey.department_id AS department_id,
+                d.education_program_id AS program_id
+
+            FROM logic_to_code_problems p
+
+            INNER JOIN subjects s
+                ON s.id = p.subject_id
+
+            INNER JOIN education_years ey
+                ON ey.id = s.education_year_id
+
+            INNER JOIN departments d
+                ON d.id = ey.department_id
+
+            INNER JOIN education_programs ep
+                ON ep.id = d.education_program_id
+
+            WHERE p.id = ?
+            AND p.mentor_id = ?
+        `;
+
+        // Execute SQL query
         const [problems] = await db.query(
-            `SELECT *
-             FROM logic_to_code_problems
-             WHERE id = ? AND mentor_id = ?`,
+            sql,
             [problemId, mentorId]
         );
 
+        // Check whether problem exists
         if (problems.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -233,20 +263,31 @@ const getProblemById = async (req, res) => {
 
 
 
+// =====================================================
+// UPDATE PROBLEM
+// =====================================================
+
 const updateProblem = async (req, res) => {
+
     const connection = await db.getConnection();
     let transactionStarted = false;
 
     try {
+
         const mentorId = req.user.id;
         const problemId = Number(req.params.problemId);
 
         const {
+            subject_id,
             title,
             description,
             difficulty,
             solution_unlock
         } = req.body;
+
+        // ---------------------------------------------
+        // 1. VALIDATE PROBLEM ID
+        // ---------------------------------------------
 
         if (!Number.isInteger(problemId) || problemId <= 0) {
             return res.status(400).json({
@@ -255,7 +296,12 @@ const updateProblem = async (req, res) => {
             });
         }
 
+        // ---------------------------------------------
+        // 2. CHECK WHETHER ANY FIELD WAS PROVIDED
+        // ---------------------------------------------
+
         if (
+            subject_id === undefined &&
             title === undefined &&
             description === undefined &&
             difficulty === undefined &&
@@ -267,6 +313,28 @@ const updateProblem = async (req, res) => {
             });
         }
 
+        // ---------------------------------------------
+        // 3. VALIDATE SUBJECT
+        // ---------------------------------------------
+
+        let subjectId;
+
+        if (subject_id !== undefined) {
+
+            subjectId = Number(subject_id);
+
+            if (!Number.isInteger(subjectId) || subjectId <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid subject ID."
+                });
+            }
+        }
+
+        // ---------------------------------------------
+        // 4. VALIDATE TITLE
+        // ---------------------------------------------
+
         if (
             title !== undefined &&
             (typeof title !== "string" || !title.trim())
@@ -276,6 +344,10 @@ const updateProblem = async (req, res) => {
                 message: "Title cannot be empty."
             });
         }
+
+        // ---------------------------------------------
+        // 5. VALIDATE DESCRIPTION
+        // ---------------------------------------------
 
         if (
             description !== undefined &&
@@ -287,7 +359,15 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        const allowedDifficulties = ["easy", "medium", "hard"];
+        // ---------------------------------------------
+        // 6. VALIDATE DIFFICULTY
+        // ---------------------------------------------
+
+        const allowedDifficulties = [
+            "easy",
+            "medium",
+            "hard"
+        ];
 
         if (
             difficulty !== undefined &&
@@ -298,6 +378,10 @@ const updateProblem = async (req, res) => {
                 message: "Invalid difficulty level."
             });
         }
+
+        // ---------------------------------------------
+        // 7. VALIDATE SOLUTION UNLOCK
+        // ---------------------------------------------
 
         const allowedUnlockOptions = [
             "after_attempt",
@@ -315,10 +399,17 @@ const updateProblem = async (req, res) => {
             });
         }
 
+        // ---------------------------------------------
+        // 8. START TRANSACTION
+        // ---------------------------------------------
+
         await connection.beginTransaction();
         transactionStarted = true;
 
-        // Lock problem row and verify mentor ownership
+        // ---------------------------------------------
+        // 9. VERIFY PROBLEM OWNERSHIP
+        // ---------------------------------------------
+
         const [existingProblems] = await connection.query(
             `SELECT id
              FROM logic_to_code_problems
@@ -328,6 +419,7 @@ const updateProblem = async (req, res) => {
         );
 
         if (existingProblems.length === 0) {
+
             await connection.rollback();
             transactionStarted = false;
 
@@ -337,9 +429,42 @@ const updateProblem = async (req, res) => {
             });
         }
 
-        // Build update query using allowed fields only
+        // ---------------------------------------------
+        // 10. VERIFY SUBJECT IS ACTIVE
+        // ---------------------------------------------
+
+        if (subject_id !== undefined) {
+
+            const [subjects] = await connection.query(
+                `SELECT id
+                 FROM subjects
+                 WHERE id = ? AND status = 'active'`,
+                [subjectId]
+            );
+
+            if (subjects.length === 0) {
+
+                await connection.rollback();
+                transactionStarted = false;
+
+                return res.status(404).json({
+                    success: false,
+                    message: "Selected subject not found or inactive."
+                });
+            }
+        }
+
+        // ---------------------------------------------
+        // 11. BUILD UPDATE QUERY
+        // ---------------------------------------------
+
         const updates = [];
         const values = [];
+
+        if (subject_id !== undefined) {
+            updates.push("subject_id = ?");
+            values.push(subjectId);
+        }
 
         if (title !== undefined) {
             updates.push("title = ?");
@@ -370,13 +495,24 @@ const updateProblem = async (req, res) => {
             values
         );
 
-        // Fetch updated problem
+        // ---------------------------------------------
+        // 12. FETCH UPDATED PROBLEM
+        // ---------------------------------------------
+
         const [updatedProblems] = await connection.query(
-            `SELECT *
-             FROM logic_to_code_problems
-             WHERE id = ? AND mentor_id = ?`,
+            `SELECT
+                p.*,
+                s.name AS subject_name
+             FROM logic_to_code_problems p
+             LEFT JOIN subjects s
+                ON p.subject_id = s.id
+             WHERE p.id = ? AND p.mentor_id = ?`,
             [problemId, mentorId]
         );
+
+        // ---------------------------------------------
+        // 13. COMMIT TRANSACTION
+        // ---------------------------------------------
 
         await connection.commit();
         transactionStarted = false;
@@ -388,6 +524,7 @@ const updateProblem = async (req, res) => {
         });
 
     } catch (error) {
+
         if (transactionStarted) {
             await connection.rollback();
         }
@@ -400,9 +537,12 @@ const updateProblem = async (req, res) => {
         });
 
     } finally {
+
         connection.release();
+
     }
 };
+
 
 
 module.exports = {

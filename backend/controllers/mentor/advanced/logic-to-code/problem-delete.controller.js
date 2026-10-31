@@ -1,4 +1,3 @@
-
 const db = require("../../../../config/db");
 
 // Delete a Logic to Code problem
