@@ -1,0 +1,163 @@
+
+<div class="create-page">
+
+  <!-- HEADER -->
+  <section class="page-header">
+    <div>
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        MENTOR WORKSPACE
+      </div>
+
+      <h1>Create Test Case</h1>
+
+      <p>
+        Define an input scenario and its expected output for this problem.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="cancel()">
+      <span>←</span>
+      Back to Test Cases
+    </button>
+  </section>
+
+  <!-- FORM CARD -->
+  <section class="form-card">
+
+    <div class="form-heading">
+      <div class="form-icon">＋</div>
+
+      <div>
+        <h2>Test Case Details</h2>
+        <p>Enter the input and expected output below.</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="saveTestCase()" #testCaseForm="ngForm">
+
+      <!-- INPUT -->
+      <div class="form-group">
+        <label for="testInput">
+          Test Input
+          <span class="required">*</span>
+        </label>
+
+        <p class="field-description">
+          Provide the input values that will be passed to the program.
+        </p>
+
+        <textarea
+          id="testInput"
+          name="testInput"
+          [(ngModel)]="testInput"
+          placeholder="Example:&#10;10 20 30"
+          rows="6"
+          required>
+        </textarea>
+      </div>
+
+      <!-- EXPECTED OUTPUT -->
+      <div class="form-group">
+        <label for="expectedOutput">
+          Expected Output
+          <span class="required">*</span>
+        </label>
+
+        <p class="field-description">
+          Enter the exact output expected when the program runs.
+        </p>
+
+        <textarea
+          id="expectedOutput"
+          name="expectedOutput"
+          [(ngModel)]="expectedOutput"
+          placeholder="Example:&#10;30"
+          rows="5"
+          required>
+        </textarea>
+      </div>
+
+      <!-- VISIBILITY -->
+      <div class="form-group visibility-group">
+        <label>Test Case Visibility</label>
+
+        <p class="field-description">
+          Choose whether students can view this test case.
+        </p>
+
+        <div class="visibility-options">
+
+          <label
+            class="visibility-option"
+            [class.selected]="visibility === 'public'">
+
+            <input
+              type="radio"
+              name="visibility"
+              value="public"
+              [(ngModel)]="visibility">
+
+            <span class="option-content">
+              <span class="option-title">Public</span>
+              <span class="option-description">
+                Students can view this test case.
+              </span>
+            </span>
+
+            <span class="radio-indicator"></span>
+          </label>
+
+          <label
+            class="visibility-option"
+            [class.selected]="visibility === 'hidden'">
+
+            <input
+              type="radio"
+              name="visibility"
+              value="hidden"
+              [(ngModel)]="visibility">
+
+            <span class="option-content">
+              <span class="option-title">Hidden</span>
+              <span class="option-description">
+                Keep this test case private for evaluation.
+              </span>
+            </span>
+
+            <span class="radio-indicator"></span>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancel()"
+          [disabled]="isSaving()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSaving() || !testCaseForm.valid">
+
+          <span *ngIf="!isSaving()">＋ Create Test Case</span>
+          <span *ngIf="isSaving()">Creating...</span>
+
+        </button>
+
+      </div>
+
+    </form>
+  </section>
+
+</div>

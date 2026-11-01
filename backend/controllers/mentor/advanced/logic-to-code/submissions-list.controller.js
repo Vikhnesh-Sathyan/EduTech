@@ -89,7 +89,14 @@ const getMentorSubmissions = async (req, res) => {
             values.push(language);
         }
 
-        if (search && search.trim()) {
+        if (search !== undefined && typeof search !== "string") {
+    return res.status(400).json({
+        success: false,
+        message: "Invalid search value"
+    });
+}
+
+if (search && search.trim()) {
             conditions.push(
                 "(p.title LIKE ? OR u.name LIKE ?)"
             );
@@ -116,7 +123,10 @@ const getMentorSubmissions = async (req, res) => {
             values
         );
 
-        const totalSubmissions = countResult[0].totalSubmissions;
+        const totalSubmissions = Number(
+        countResult[0].totalSubmissions || 0
+        );
+
 
         const offset = (parsedPage - 1) * parsedLimit;
 

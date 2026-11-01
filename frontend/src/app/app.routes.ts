@@ -190,6 +190,12 @@ import { CreateProblem } from './features/mentor/advanced/logic-to-code/problems
 import { ProblemDetails } from './features/mentor/advanced/logic-to-code/problems/problem-details/problem-details';
 import { EditProblem } from './features/mentor/advanced/logic-to-code/problems/edit-problem/edit-problem';
 
+//TEST CASES
+
+import { TestCaseList } from './features/mentor/advanced/logic-to-code/test-cases/test-case-list/test-case-list';
+
+import { TestCaseCreate } from './features/mentor/advanced/logic-to-code/test-cases/test-case-create/test-case-create';
+
 export const routes: Routes = [
 
   // Public routes
@@ -726,6 +732,14 @@ export const routes: Routes = [
         path: 'mentor/advanced/logic-to-code/problems/:problemId/edit',
         component: EditProblem
       },
+      {  
+        path: 'mentor/advanced/logic-to-code/:problemId/test-cases',
+        component: TestCaseList
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/:problemId/test-cases/create',
+        component: TestCaseCreate
+      }
 
 
     ]

@@ -116,4 +116,12 @@ export class ProblemList implements OnInit {
     return difficulty.charAt(0).toUpperCase() +
       difficulty.slice(1);
   }
+
+  manageTestCases(problemId: number): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code',
+    problemId,
+    'test-cases'
+  ]);
+}
 }

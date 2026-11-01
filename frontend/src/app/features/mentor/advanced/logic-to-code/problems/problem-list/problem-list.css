@@ -425,3 +425,28 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.test-case-button {
+  padding: 9px 13px;
+  border: 1px solid #d8d5ff;
+  border-radius: 8px;
+  background: #f3f1ff;
+  color: #635bdb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.test-case-button:hover {
+  background: #635bdb;
+  color: #ffffff;
+  border-color: #635bdb;
+}

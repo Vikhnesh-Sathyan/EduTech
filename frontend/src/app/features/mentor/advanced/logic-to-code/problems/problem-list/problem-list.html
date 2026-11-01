@@ -169,21 +169,35 @@
         </div>
 
         <!-- CARD FOOTER -->
-        <div class="card-footer">
+       <!-- CARD FOOTER -->
+<div class="card-footer">
 
-          <span class="solution-info">
-            Solution:
-            {{ problem.solution_unlock.replace('_', ' ') }}
-          </span>
+  <span class="solution-info">
+    Solution:
+    {{ problem.solution_unlock.replace('_', ' ') }}
+  </span>
 
-          <button
-            class="view-button"
-            (click)="viewProblem(problem.id)"
-          >
-            View Details →
-          </button>
+  <div class="card-actions">
 
-        </div>
+    <button
+      type="button"
+      class="test-case-button"
+      (click)="manageTestCases(problem.id)"
+    >
+      Manage Test Cases →
+    </button>
+
+    <button
+      type="button"
+      class="view-button"
+      (click)="viewProblem(problem.id)"
+    >
+      View Details →
+    </button>
+
+  </div>
+
+</div>
 
       </div>
 

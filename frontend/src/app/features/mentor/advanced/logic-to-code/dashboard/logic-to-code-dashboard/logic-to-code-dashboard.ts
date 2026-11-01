@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 import {
-  LogicToCodeService,
-  LogicToCodeStatistics,
+  LogicToCodeDashboardService,
+  LogicToCodeDashboardStatistics,
   LogicToCodeRecentSubmission
-} from '../../../../../../services/mentor/advanced/logic-to-code/logic-to-code.service';
+} from '../../../../../../services/mentor/advanced/logic-to-code/logic-to-code-dashboard.service';
 
 @Component({
   selector: 'app-logic-to-code-dashboard',
@@ -20,11 +20,11 @@ import {
 })
 export class LogicToCodeDashboard implements OnInit {
 
-  private logicToCodeService = inject(LogicToCodeService);
+  private dashboardService = inject(LogicToCodeDashboardService);
   private router = inject(Router);
 
   // DASHBOARD DATA
-  statistics = signal<LogicToCodeStatistics | null>(null);
+  statistics = signal<LogicToCodeDashboardStatistics | null>(null);
 
   recentSubmissions = signal<LogicToCodeRecentSubmission[]>([]);
 
@@ -37,40 +37,38 @@ export class LogicToCodeDashboard implements OnInit {
   }
 
   // LOAD DASHBOARD DATA
-  loadDashboard(): void {
-    this.loading.set(true);
-    this.errorMessage.set('');
+loadDashboard(): void {
+  this.loading.set(true);
+  this.errorMessage.set('');
 
-    this.logicToCodeService.getDashboard().subscribe({
+  this.dashboardService.getDashboard().subscribe({
 
-      next: (response) => {
+    next: (response) => {
+      this.statistics.set(response.statistics ?? null);
 
-        this.statistics.set(response.statistics ?? null);
+      this.recentSubmissions.set(
+        response.recentSubmissions ?? []
+      );
 
-        this.recentSubmissions.set(
-          response.recentSubmissions ?? []
-        );
+      this.loading.set(false);
+    },
 
-        this.loading.set(false);
-      },
+    error: (error) => {
+      console.error(
+        'Failed to load Logic to Code dashboard:',
+        error
+      );
 
-      error: (error) => {
+      this.errorMessage.set(
+        error.error?.message ||
+        'Unable to load dashboard. Please try again.'
+      );
 
-        console.error(
-          'Failed to load Logic to Code dashboard:',
-          error
-        );
+      this.loading.set(false);
+    }
 
-        this.errorMessage.set(
-          error.error?.message ||
-          'Unable to load dashboard. Please try again.'
-        );
-
-        this.loading.set(false);
-      }
-
-    });
-  }
+  });
+}
 
   // NAVIGATION METHODS
 

@@ -105,10 +105,16 @@ const getMentorProblemDashboard = async (req, res) => {
             message: "Mentor dashboard loaded successfully",
 
             statistics: {
-                ...problemStats[0],
-                ...submissionStats[0],
-                ...doubtStats[0]
-            },
+    totalProblems: Number(problemStats[0].totalProblems),
+    publishedProblems: Number(problemStats[0].publishedProblems),
+    draftProblems: Number(problemStats[0].draftProblems),
+    archivedProblems: Number(problemStats[0].archivedProblems),
+
+    totalAttempts: Number(submissionStats[0].totalAttempts),
+    completedProblems: Number(submissionStats[0].completedProblems),
+
+    pendingDoubts: Number(doubtStats[0].pendingDoubts)
+},
 
             recentSubmissions
         });

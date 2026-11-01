@@ -1,3 +1,4 @@
+
 const db = require("../../../../config/db");
 
 const {
@@ -8,9 +9,8 @@ const {
 // ADD TEST CASE
 // ==========================================
 
-
 const addTestCase = async (req, res) => {
-    const connection = await db.getConnection();
+    let connection;
     let transactionStarted = false;
 
     try {
@@ -23,6 +23,7 @@ const addTestCase = async (req, res) => {
             visibility
         } = req.body;
 
+        // Validate problem ID
         if (!Number.isInteger(problemId) || problemId <= 0) {
             return res.status(400).json({
                 success: false,
@@ -30,6 +31,7 @@ const addTestCase = async (req, res) => {
             });
         }
 
+        // Validate test case data
         if (
             typeof test_input !== "string" ||
             typeof expected_output !== "string"
@@ -43,7 +45,7 @@ const addTestCase = async (req, res) => {
         const allowedVisibility = ["public", "hidden"];
 
         if (
-            visibility &&
+            visibility !== undefined &&
             !allowedVisibility.includes(visibility)
         ) {
             return res.status(400).json({
@@ -52,10 +54,12 @@ const addTestCase = async (req, res) => {
             });
         }
 
+        connection = await db.getConnection();
+
         await connection.beginTransaction();
         transactionStarted = true;
 
-        // Check whether modification is allowed
+        // Check modification access and lock the problem row
         const access = await checkTestCaseModificationAccess(
             connection,
             problemId,
@@ -90,7 +94,7 @@ const addTestCase = async (req, res) => {
                 numberResult.nextNumber,
                 test_input,
                 expected_output,
-                visibility || "public"
+                visibility ?? "public"
             ]
         );
 
@@ -105,8 +109,12 @@ const addTestCase = async (req, res) => {
         });
 
     } catch (error) {
-        if (transactionStarted) {
-            await connection.rollback();
+        if (transactionStarted && connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error("Add Test Case Rollback Error:", rollbackError);
+            }
         }
 
         console.error("Add Test Case Error:", error);
@@ -117,7 +125,9 @@ const addTestCase = async (req, res) => {
         });
 
     } finally {
-        connection.release();
+        if (connection) {
+            connection.release();
+        }
     }
 };
 
@@ -138,6 +148,7 @@ const getTestCases = async (req, res) => {
             });
         }
 
+        // Verify problem ownership
         const [problems] = await db.query(
             `SELECT id
              FROM logic_to_code_problems
@@ -152,6 +163,7 @@ const getTestCases = async (req, res) => {
             });
         }
 
+        // Fetch test cases
         const [testCases] = await db.query(
             `SELECT id, problem_id, case_number,
                     test_input, expected_output, visibility
@@ -177,13 +189,13 @@ const getTestCases = async (req, res) => {
     }
 };
 
+
 // ==========================================
 // UPDATE TEST CASE
 // ==========================================
 
-
 const updateTestCase = async (req, res) => {
-    const connection = await db.getConnection();
+    let connection;
     let transactionStarted = false;
 
     try {
@@ -195,8 +207,9 @@ const updateTestCase = async (req, res) => {
             test_input,
             expected_output,
             visibility
-        } = req.body;
+        } = req.body || {};
 
+        // Validate IDs
         if (
             !Number.isInteger(problemId) ||
             problemId <= 0 ||
@@ -209,6 +222,7 @@ const updateTestCase = async (req, res) => {
             });
         }
 
+        // Validate test case data
         if (
             typeof test_input !== "string" ||
             typeof expected_output !== "string"
@@ -222,7 +236,7 @@ const updateTestCase = async (req, res) => {
         const allowedVisibility = ["public", "hidden"];
 
         if (
-            visibility &&
+            visibility !== undefined &&
             !allowedVisibility.includes(visibility)
         ) {
             return res.status(400).json({
@@ -230,6 +244,8 @@ const updateTestCase = async (req, res) => {
                 message: "Invalid test case visibility."
             });
         }
+
+        connection = await db.getConnection();
 
         await connection.beginTransaction();
         transactionStarted = true;
@@ -252,16 +268,17 @@ const updateTestCase = async (req, res) => {
         }
 
         // Update test case
+        // COALESCE preserves existing visibility when omitted
         const [result] = await connection.query(
             `UPDATE logic_to_code_test_cases
              SET test_input = ?,
                  expected_output = ?,
-                 visibility = ?
+                 visibility = COALESCE(?, visibility)
              WHERE id = ? AND problem_id = ?`,
             [
                 test_input,
                 expected_output,
-                visibility || "public",
+                visibility ?? null,
                 testCaseId,
                 problemId
             ]
@@ -286,8 +303,12 @@ const updateTestCase = async (req, res) => {
         });
 
     } catch (error) {
-        if (transactionStarted) {
-            await connection.rollback();
+        if (transactionStarted && connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error("Update Test Case Rollback Error:", rollbackError);
+            }
         }
 
         console.error("Update Test Case Error:", error);
@@ -298,7 +319,9 @@ const updateTestCase = async (req, res) => {
         });
 
     } finally {
-        connection.release();
+        if (connection) {
+            connection.release();
+        }
     }
 };
 
@@ -307,9 +330,8 @@ const updateTestCase = async (req, res) => {
 // DELETE TEST CASE
 // ==========================================
 
-
 const deleteTestCase = async (req, res) => {
-    const connection = await db.getConnection();
+    let connection;
     let transactionStarted = false;
 
     try {
@@ -317,6 +339,7 @@ const deleteTestCase = async (req, res) => {
         const problemId = Number(req.params.problemId);
         const testCaseId = Number(req.params.testCaseId);
 
+        // Validate IDs
         if (
             !Number.isInteger(problemId) ||
             problemId <= 0 ||
@@ -328,6 +351,8 @@ const deleteTestCase = async (req, res) => {
                 message: "Invalid problem or test case ID."
             });
         }
+
+        connection = await db.getConnection();
 
         await connection.beginTransaction();
         transactionStarted = true;
@@ -375,8 +400,12 @@ const deleteTestCase = async (req, res) => {
         });
 
     } catch (error) {
-        if (transactionStarted) {
-            await connection.rollback();
+        if (transactionStarted && connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error("Delete Test Case Rollback Error:", rollbackError);
+            }
         }
 
         console.error("Delete Test Case Error:", error);
@@ -387,7 +416,9 @@ const deleteTestCase = async (req, res) => {
         });
 
     } finally {
-        connection.release();
+        if (connection) {
+            connection.release();
+        }
     }
 };
 

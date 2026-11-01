@@ -129,6 +129,50 @@ export interface UpdateLogicToCodeProblemResponse {
 }
 
 // =====================================================
+// LOGIC TO CODE TEST CASE MODELS
+// =====================================================
+
+export interface LogicToCodeTestCase {
+  id: number;
+  problem_id: number;
+  case_number: number;
+  test_input: string;
+  expected_output: string;
+  visibility: 'public' | 'hidden';
+}
+
+// =====================================================
+// TEST CASE LIST RESPONSE
+// =====================================================
+
+export interface LogicToCodeTestCasesResponse {
+  success: boolean;
+  totalTestCases: number;
+  testCases: LogicToCodeTestCase[];
+}
+
+// =====================================================
+// CREATE TEST CASE MODEL
+// =====================================================
+
+export interface CreateLogicToCodeTestCase {
+  test_input: string;
+  expected_output: string;
+  visibility: 'public' | 'hidden';
+}
+
+// =====================================================
+// TEST CASE ACTION RESPONSE
+// =====================================================
+
+export interface LogicToCodeTestCaseActionResponse {
+  success: boolean;
+  message: string;
+  testCaseId?: number;
+  caseNumber?: number;
+}
+
+// =====================================================
 // LOGIC TO CODE SERVICE
 // =====================================================
 
@@ -197,6 +241,52 @@ updateProblem(
 deleteProblem(problemId: number): Observable<{ success: boolean; message: string }> {
   return this.http.delete<{ success: boolean; message: string }>(
     `${this.apiUrl}/${problemId}`
+  );
+}
+
+// =====================================================
+// TEST CASE MANAGEMENT
+// =====================================================
+
+// GET TEST CASES
+getTestCases(
+  problemId: number
+): Observable<LogicToCodeTestCasesResponse> {
+  return this.http.get<LogicToCodeTestCasesResponse>(
+    `${this.apiUrl}/${problemId}/test-cases`
+  );
+}
+
+// ADD TEST CASE
+addTestCase(
+  problemId: number,
+  data: CreateLogicToCodeTestCase
+): Observable<LogicToCodeTestCaseActionResponse> {
+  return this.http.post<LogicToCodeTestCaseActionResponse>(
+    `${this.apiUrl}/${problemId}/test-cases`,
+    data
+  );
+}
+
+// UPDATE TEST CASE
+updateTestCase(
+  problemId: number,
+  testCaseId: number,
+  data: CreateLogicToCodeTestCase
+): Observable<LogicToCodeTestCaseActionResponse> {
+  return this.http.put<LogicToCodeTestCaseActionResponse>(
+    `${this.apiUrl}/${problemId}/test-cases/${testCaseId}`,
+    data
+  );
+}
+
+// DELETE TEST CASE
+deleteTestCase(
+  problemId: number,
+  testCaseId: number
+): Observable<LogicToCodeTestCaseActionResponse> {
+  return this.http.delete<LogicToCodeTestCaseActionResponse>(
+    `${this.apiUrl}/${problemId}/test-cases/${testCaseId}`
   );
 }
 

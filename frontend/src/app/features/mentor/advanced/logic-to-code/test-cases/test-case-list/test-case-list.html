@@ -1,0 +1,196 @@
+
+<div class="test-case-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="header-content">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        MENTOR WORKSPACE
+      </div>
+
+      <h1>Test Cases</h1>
+
+      <p>
+        Manage input scenarios and expected outputs for this coding problem.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="goBack()">
+        <span>←</span>
+        Back to Problems
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="addTestCase()">
+        <span>＋</span>
+        Add Test Case
+      </button>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="summary-card">
+    <div class="summary-icon">⌘</div>
+
+    <div class="summary-content">
+      <span class="summary-label">TOTAL TEST CASES</span>
+      <h2>{{ testCases().length }}</h2>
+      <p>Configured test scenarios</p>
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="isLoading()">
+    <div class="loader"></div>
+    <p>Loading test cases...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state-card error-state" *ngIf="!isLoading() && errorMessage()">
+    <span class="state-icon">!</span>
+    <h3>Unable to load test cases</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button class="btn btn-secondary" (click)="loadTestCases()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div
+    class="state-card empty-state"
+    *ngIf="!isLoading() && !errorMessage() && testCases().length === 0">
+
+    <div class="empty-icon">⌘</div>
+
+    <h3>No test cases yet</h3>
+
+    <p>
+      Add your first test case to define the expected behaviour
+      of this coding problem.
+    </p>
+
+    <button class="btn btn-primary" (click)="addTestCase()">
+      ＋ Create First Test Case
+    </button>
+  </div>
+
+  <!-- TEST CASE LIST -->
+  <section
+    class="test-case-section"
+    *ngIf="!isLoading() && !errorMessage() && testCases().length > 0">
+
+    <div class="section-heading">
+      <div>
+        <h2>All Test Cases</h2>
+        <p>Review and manage your problem's test scenarios.</p>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-secondary refresh-btn"
+        (click)="loadTestCases()">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <div class="test-case-list">
+
+      <article
+        class="test-case-card"
+        *ngFor="let testCase of testCases()">
+
+        <div class="test-case-top">
+          <div class="case-heading">
+            <span class="case-number">
+              {{ testCase.case_number }}
+            </span>
+
+            <div>
+              <h3>Test Case {{ testCase.case_number }}</h3>
+              <span class="case-id">ID: {{ testCase.id }}</span>
+            </div>
+          </div>
+
+          <span
+            class="visibility-badge"
+            [class.public-badge]="testCase.visibility === 'public'"
+            [class.hidden-badge]="testCase.visibility === 'hidden'">
+
+            <span class="visibility-dot"></span>
+            {{ testCase.visibility }}
+          </span>
+        </div>
+
+        <div class="case-content">
+
+          <div class="code-panel">
+            <div class="code-panel-header">
+              <span>INPUT</span>
+              <span class="code-indicator">IN</span>
+            </div>
+
+            <pre>{{ testCase.test_input }}</pre>
+          </div>
+
+          <div class="code-panel output-panel">
+            <div class="code-panel-header">
+              <span>EXPECTED OUTPUT</span>
+              <span class="code-indicator">OUT</span>
+            </div>
+
+            <pre>{{ testCase.expected_output }}</pre>
+          </div>
+
+        </div>
+
+        <div class="case-footer">
+          <span class="case-status">
+            <span class="status-dot"></span>
+            Configured
+          </span>
+
+          <div class="case-actions">
+            <button
+              type="button"
+              class="action-btn edit-action"
+              title="Edit Test Case"
+              (click)="editTestCase(testCase.id)">
+              Edit
+            </button>
+
+            <button
+              type="button"
+              class="action-btn delete-action"
+              title="Delete Test Case"
+              (click)="deleteTestCase(testCase.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+
+      </article>
+
+    </div>
+  </section>
+
+
+<!-- CONFIRM DELETE MODAL -->
+<app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Test Case"
+  message="Are you sure you want to delete this test case? This action cannot be undone."
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmDeleteTestCase()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>
+</div>
