@@ -1,0 +1,193 @@
+
+<div class="problem-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div>
+      <span class="eyebrow">PRACTICE • THINK • SOLVE</span>
+      <h1>Logic to Code</h1>
+      <p>
+        Turn your problem-solving logic into working code.
+        Choose a challenge and start practising.
+      </p>
+    </div>
+
+    <div class="header-icon">💻</div>
+  </section>
+
+  <!-- SEARCH AND FILTER -->
+  <section class="filter-section">
+
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+
+      <input
+        type="text"
+        placeholder="Search problems by title..."
+        [ngModel]="search()"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </div>
+
+    <div class="difficulty-filter">
+      <label for="difficulty">Difficulty</label>
+
+      <select
+        id="difficulty"
+        [ngModel]="selectedDifficulty()"
+        (ngModelChange)="onDifficultyChange($event)"
+      >
+        <option value="">All Levels</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+    </div>
+
+  </section>
+
+  <!-- PROBLEM SUMMARY -->
+  <section class="problem-summary">
+    <div>
+      <h2>Available Problems</h2>
+      <p>
+        Explore programming challenges and improve your skills.
+      </p>
+    </div>
+
+    <span class="problem-count">
+      {{ totalProblems() }} Problems
+    </span>
+  </section>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading programming problems...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <span class="error-icon">!</span>
+    <h3>Unable to load problems</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" (click)="loadProblems()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div
+    class="empty-state"
+    *ngIf="!loading() && !errorMessage() && problems().length === 0"
+  >
+    <div class="empty-icon">📭</div>
+
+    <h3>No Problems Found</h3>
+
+    <p>
+      No published problems match your current search or filter.
+    </p>
+
+    <button
+      type="button"
+      (click)="onSearchChange(''); onDifficultyChange('')"
+    >
+      Clear Filters
+    </button>
+  </div>
+
+  <!-- PROBLEM LIST -->
+  <section
+    class="problem-grid"
+    *ngIf="!loading() && !errorMessage() && problems().length > 0"
+  >
+
+    <article
+      class="problem-card"
+      *ngFor="let problem of problems()"
+    >
+
+      <div class="card-top">
+        <span
+          class="difficulty-badge"
+          [ngClass]="getDifficultyClass(problem.difficulty)"
+        >
+          {{ problem.difficulty | titlecase }}
+        </span>
+
+        <span class="problem-id">
+          #{{ problem.id }}
+        </span>
+      </div>
+
+      <div class="card-content">
+
+        <h3>{{ problem.title }}</h3>
+
+        <p class="problem-description">
+          {{ problem.description }}
+        </p>
+
+      </div>
+
+      <div class="card-meta">
+
+        <div class="meta-item">
+          <span>👨‍🏫</span>
+          <span>{{ problem.mentor_name }}</span>
+        </div>
+
+        <div class="meta-item">
+          <span>📅</span>
+          <span>{{ formatDate(problem.created_at) }}</span>
+        </div>
+
+      </div>
+
+      <div class="card-footer">
+
+        <span class="practice-label">
+          Coding Challenge
+        </span>
+
+        <span class="card-arrow">→</span>
+
+      </div>
+
+    </article>
+
+  </section>
+
+  <!-- PAGINATION -->
+  <section
+    class="pagination-section"
+    *ngIf="!loading() && !errorMessage() && totalPages() > 1"
+  >
+
+    <button
+      type="button"
+      class="pagination-btn"
+      [disabled]="currentPage() === 1"
+      (click)="goToPage(currentPage() - 1)"
+    >
+      ← Previous
+    </button>
+
+    <div class="page-indicator">
+      Page {{ currentPage() }} of {{ totalPages() }}
+    </div>
+
+    <button
+      type="button"
+      class="pagination-btn"
+      [disabled]="currentPage() === totalPages()"
+      (click)="goToPage(currentPage() + 1)"
+    >
+      Next →
+    </button>
+
+  </section>
+
+</div>

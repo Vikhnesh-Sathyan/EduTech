@@ -370,6 +370,28 @@ deleteProblem(problemId: number): Observable<{ success: boolean; message: string
 }
 
 // =====================================================
+// UPDATE PROBLEM STATUS
+// =====================================================
+
+updateProblemStatus(
+  problemId: number,
+  status: 'draft' | 'published' | 'archived'
+): Observable<{
+  success: boolean;
+  message: string;
+  status: string;
+}> {
+  return this.http.patch<{
+    success: boolean;
+    message: string;
+    status: string;
+  }>(
+    `${this.apiUrl}/${problemId}/status`,
+    { status }
+  );
+}
+
+// =====================================================
 // TEST CASE MANAGEMENT
 // =====================================================
 

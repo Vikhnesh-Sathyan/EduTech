@@ -28,6 +28,57 @@ export class ProblemList implements OnInit {
   loading = signal<boolean>(true);
   errorMessage = signal<string>('');
 
+  // STATUS UPDATE STATE
+statusUpdating = signal<number | null>(null);
+
+actionMessage = signal<string>('');
+actionMessageType = signal<'success' | 'error'>('success');
+
+  // ==========================================
+// SEARCH AND FILTER STATE
+// ==========================================
+
+searchTerm = signal<string>('');
+
+selectedDifficulty = signal<string>('all');
+
+selectedStatus = signal<string>('all');
+
+// ==========================================
+// FILTERED PROBLEMS
+// ==========================================
+
+filteredProblems = computed(() => {
+
+  const search = this.searchTerm().toLowerCase().trim();
+
+  const difficulty = this.selectedDifficulty();
+
+  const status = this.selectedStatus();
+
+  return this.problems().filter(problem => {
+
+    const matchesSearch =
+      problem.title.toLowerCase().includes(search);
+
+    const matchesDifficulty =
+      difficulty === 'all' ||
+      problem.difficulty === difficulty;
+
+    const matchesStatus =
+      status === 'all' ||
+      problem.status === status;
+
+    return (
+      matchesSearch &&
+      matchesDifficulty &&
+      matchesStatus
+    );
+
+  });
+
+});
+
   // ==========================================
   // PROBLEM SUMMARY COUNTS
   // ==========================================
@@ -76,6 +127,51 @@ export class ProblemList implements OnInit {
       }
     });
   }
+
+  // ==========================================
+// UPDATE PROBLEM STATUS
+// ==========================================
+
+changeProblemStatus(
+  problemId: number,
+  status: 'draft' | 'published' | 'archived'
+): void {
+
+  this.statusUpdating.set(problemId);
+  this.actionMessage.set('');
+
+  this.logicToCodeService
+    .updateProblemStatus(problemId, status)
+    .subscribe({
+
+      next: (response) => {
+
+        this.actionMessage.set(response.message);
+        this.actionMessageType.set('success');
+
+        this.statusUpdating.set(null);
+
+        this.loadProblems();
+
+      },
+
+      error: (error) => {
+
+        console.error('Update Problem Status Error:', error);
+
+        this.actionMessage.set(
+          error.error?.message || 'Unable to update problem status.'
+        );
+
+        this.actionMessageType.set('error');
+
+        this.statusUpdating.set(null);
+
+      }
+
+    });
+
+}
 
   // ==========================================
   // NAVIGATION

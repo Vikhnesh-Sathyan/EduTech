@@ -1,0 +1,204 @@
+
+<div class="dashboard-container">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">ADVANCED LEARNING</span>
+      <h1>Logic to Code</h1>
+      <p>Track your coding practice, progress and recent submissions.</p>
+    </div>
+
+    <button
+  class="explore-button"
+  (click)="goToProblems()"
+>
+  <span>Explore Problems</span>
+  <span>→</span>
+</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state-card error-state" *ngIf="!loading() && errorMessage()">
+    <h3>Unable to load dashboard</h3>
+    <p>{{ errorMessage() }}</p>
+    <button type="button" (click)="loadDashboard()">Try Again</button>
+  </div>
+
+  <ng-container *ngIf="!loading() && !errorMessage() && statistics() as stats">
+
+    <!-- STATISTICS -->
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon purple">⌘</div>
+        <div>
+          <span>Attempted Problems</span>
+          <h2>{{ stats.attemptedProblems }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">✓</div>
+        <div>
+          <span>Completed Problems</span>
+          <h2>{{ stats.completedProblems }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">↗</div>
+        <div>
+          <span>Total Submissions</span>
+          <h2>{{ stats.totalSubmissions }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">★</div>
+        <div>
+          <span>Bookmarked Problems</span>
+          <h2>{{ stats.totalBookmarks }}</h2>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ADDITIONAL STATISTICS -->
+    <section class="secondary-stats">
+
+      <div class="secondary-stat">
+        <span>Accepted Submissions</span>
+        <strong>{{ stats.acceptedSubmissions }}</strong>
+      </div>
+
+      <div class="secondary-stat">
+        <span>Pending Feedback</span>
+        <strong>{{ stats.pendingFeedback }}</strong>
+      </div>
+
+    </section>
+
+    <!-- DIFFICULTY PROGRESS -->
+    <section class="content-card">
+      <div class="section-heading">
+        <div>
+          <h2>Difficulty Progress</h2>
+          <p>See how you're performing at each level.</p>
+        </div>
+      </div>
+
+      <div class="empty-state"
+           *ngIf="difficultyProgress().length === 0">
+        No difficulty progress available yet.
+      </div>
+
+      <div class="difficulty-list"
+           *ngIf="difficultyProgress().length > 0">
+
+        <div class="difficulty-item"
+             *ngFor="let progress of difficultyProgress()">
+
+          <div class="difficulty-info">
+            <strong>{{ progress.difficulty | titlecase }}</strong>
+            <span>
+              {{ progress.completed }} / {{ progress.attempted }} completed
+            </span>
+          </div>
+
+          <div class="progress-track">
+            <div class="progress-fill"
+                 [class.easy]="progress.difficulty === 'easy'"
+                 [class.medium]="progress.difficulty === 'medium'"
+                 [class.hard]="progress.difficulty === 'hard'"
+                 [style.width.%]="getProgressPercentage(progress)">
+            </div>
+          </div>
+
+          <span class="progress-percentage">
+            {{ getProgressPercentage(progress) }}%
+          </span>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RECENT SUBMISSIONS -->
+    <section class="content-card">
+      <div class="section-heading">
+        <div>
+          <h2>Recent Submissions</h2>
+          <p>Your latest coding attempts.</p>
+        </div>
+      </div>
+
+      <div class="empty-state"
+           *ngIf="recentSubmissions().length === 0">
+        <h3>No submissions yet</h3>
+        <p>Start solving problems to see your activity here.</p>
+      </div>
+
+      <div class="table-wrapper"
+           *ngIf="recentSubmissions().length > 0">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Problem</th>
+              <th>Difficulty</th>
+              <th>Language</th>
+              <th>Test Cases</th>
+              <th>Status</th>
+              <th>Submitted On</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let submission of recentSubmissions()">
+
+              <td class="problem-name">
+                {{ submission.problem_title }}
+              </td>
+
+              <td>
+                <span class="difficulty-badge"
+                      [class.easy]="submission.difficulty === 'easy'"
+                      [class.medium]="submission.difficulty === 'medium'"
+                      [class.hard]="submission.difficulty === 'hard'">
+                  {{ submission.difficulty | titlecase }}
+                </span>
+              </td>
+
+              <td>{{ submission.language | uppercase }}</td>
+
+              <td>
+                {{ submission.passed_test_cases }} /
+                {{ submission.total_test_cases }}
+              </td>
+
+              <td>
+                <span class="status-badge"
+                      [ngClass]="submission.execution_status">
+                  {{ getStatusLabel(submission.execution_status) }}
+                </span>
+              </td>
+
+              <td>{{ formatDate(submission.submitted_at) }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </section>
+
+  </ng-container>
+
+</div>

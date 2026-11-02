@@ -1,0 +1,200 @@
+
+<div class="submission-details-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="back-button" (click)="goBack()">
+        ← Back to Submissions
+      </button>
+
+      <div class="heading-content">
+        <span class="eyebrow">MENTOR WORKSPACE</span>
+        <h1>Submission Details</h1>
+        <p>Review student code, execution results and provide feedback.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading submission details...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <span>!</span>
+    <h3>Unable to load submission</h3>
+    <p>{{ errorMessage() }}</p>
+    <button (click)="goBack()">Back to Submissions</button>
+  </div>
+
+  <!-- SUBMISSION CONTENT -->
+  <ng-container *ngIf="!loading() && submission() as item">
+
+    <!-- STUDENT AND PROBLEM INFORMATION -->
+    <section class="overview-grid">
+
+      <div class="info-card">
+        <span class="card-label">STUDENT INFORMATION</span>
+        <h2>{{ item.student_name }}</h2>
+        <p>{{ item.student_email }}</p>
+        <span class="sub-info">Student ID: #{{ item.student_id }}</span>
+      </div>
+
+      <div class="info-card">
+        <span class="card-label">PROBLEM INFORMATION</span>
+        <h2>{{ item.problem_title }}</h2>
+        <div class="problem-meta">
+          <span class="difficulty-badge"
+                [ngClass]="item.difficulty">
+            {{ item.difficulty }}
+          </span>
+          <span>Problem #{{ item.problem_id }}</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="card-label">SUBMISSION INFORMATION</span>
+        <h2>#{{ item.submission_number }}</h2>
+        <p>{{ item.language | titlecase }}</p>
+        <span class="sub-info">
+          {{ item.submitted_at | date:'medium' }}
+        </span>
+      </div>
+
+    </section>
+
+    <!-- EXECUTION SUMMARY -->
+    <section class="execution-section">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CODE EXECUTION</span>
+          <h2>Execution Summary</h2>
+        </div>
+
+        <span class="status-badge"
+              [ngClass]="item.execution_status">
+          {{ item.execution_status.replaceAll('_', ' ') | titlecase }}
+        </span>
+      </div>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <span>Passed Test Cases</span>
+          <strong>
+            {{ item.passed_test_cases }} /
+            {{ item.total_test_cases }}
+          </strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Execution Time</span>
+          <strong>{{ item.execution_time_ms ?? 0 }} ms</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Memory Used</span>
+          <strong>{{ item.memory_used_kb ?? 0 }} KB</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Review Status</span>
+          <strong>{{ item.review_status | titlecase }}</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SOURCE CODE -->
+    <section class="code-section">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">STUDENT WORK</span>
+          <h2>Submitted Source Code</h2>
+        </div>
+
+        <span class="language-label">
+          {{ item.language | uppercase }}
+        </span>
+      </div>
+
+      <pre class="code-block"><code>{{ item.source_code }}</code></pre>
+
+    </section>
+
+    <!-- EXECUTION ERROR -->
+    <section class="error-details"
+             *ngIf="item.error_message">
+
+      <h3>Execution Error</h3>
+      <pre>{{ item.error_message }}</pre>
+
+    </section>
+
+    <!-- TEST RESULTS -->
+    <section class="test-results-section"
+             *ngIf="item.test_results">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">TEST CASE ANALYSIS</span>
+          <h2>Test Results</h2>
+        </div>
+      </div>
+
+      <pre class="test-results-code">{{ item.test_results | json }}</pre>
+
+    </section>
+
+    <!-- MENTOR FEEDBACK -->
+    <section class="feedback-section">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">MENTOR REVIEW</span>
+          <h2>Student Feedback</h2>
+          <p>Share suggestions to help the student improve.</p>
+        </div>
+
+        <span class="review-badge"
+              [class.reviewed]="item.review_status === 'reviewed'">
+          {{ item.review_status | titlecase }}
+        </span>
+      </div>
+
+      <label for="mentorFeedback">Your Feedback</label>
+
+      <textarea
+        id="mentorFeedback"
+        rows="7"
+        placeholder="Write your feedback about the student's code, logic, mistakes and improvements..."
+        [value]="mentorFeedback()"
+        (input)="onFeedbackChange($any($event.target).value)">
+      </textarea>
+
+      <p class="feedback-message"
+         *ngIf="feedbackMessage()"
+         [class.success]="item.review_status === 'reviewed'">
+        {{ feedbackMessage() }}
+      </p>
+
+      <div class="feedback-actions">
+        <button
+          class="save-button"
+          (click)="saveFeedback()"
+          [disabled]="savingFeedback()">
+          {{ savingFeedback() ? 'Saving...' : 'Save Feedback' }}
+        </button>
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

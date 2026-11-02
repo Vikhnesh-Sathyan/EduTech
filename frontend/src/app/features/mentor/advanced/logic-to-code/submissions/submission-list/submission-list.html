@@ -1,0 +1,258 @@
+
+<div class="submissions-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+
+    <div class="header-content">
+
+      <button class="back-button" (click)="goToDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        MENTOR WORKSPACE
+      </div>
+
+      <h1>Student Submissions</h1>
+
+      <p>
+        Review coding attempts, monitor execution results
+        and track your students' progress.
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="summary-card">
+
+    <div class="summary-icon">📄</div>
+
+    <div>
+      <span>Total Submissions</span>
+      <h2>{{ totalSubmissions() }}</h2>
+    </div>
+
+  </section>
+
+  <!-- FILTER SECTION -->
+  <section class="filters-section">
+
+    <div class="filter-header">
+      <div>
+        <h2>All Submissions</h2>
+        <p>Search and filter student coding attempts.</p>
+      </div>
+    </div>
+
+    <div class="filters">
+
+      <!-- SEARCH -->
+      <div class="search-box">
+        <span>⌕</span>
+
+        <input
+          type="text"
+          placeholder="Search student or problem..."
+          [value]="search()"
+          (input)="onSearchChange($any($event.target).value)"
+        />
+      </div>
+
+      <!-- STATUS FILTER -->
+      <select
+        [value]="selectedStatus()"
+        (change)="onStatusChange($any($event.target).value)"
+      >
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="running">Running</option>
+        <option value="accepted">Accepted</option>
+        <option value="wrong_answer">Wrong Answer</option>
+        <option value="compilation_error">Compilation Error</option>
+        <option value="runtime_error">Runtime Error</option>
+        <option value="time_limit_exceeded">Time Limit Exceeded</option>
+        <option value="memory_limit_exceeded">Memory Limit Exceeded</option>
+        <option value="internal_error">Internal Error</option>
+      </select>
+
+      <!-- LANGUAGE FILTER -->
+      <select
+        [value]="selectedLanguage()"
+        (change)="onLanguageChange($any($event.target).value)"
+      >
+        <option value="">All Languages</option>
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+      </select>
+
+    </div>
+
+  </section>
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading student submissions...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state-card error-state" *ngIf="!loading() && errorMessage()">
+    <span>⚠️</span>
+    <h3>Unable to load submissions</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button (click)="loadSubmissions()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- SUBMISSIONS TABLE -->
+  <section
+    class="table-section"
+    *ngIf="!loading() && !errorMessage()"
+  >
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>STUDENT</th>
+            <th>PROBLEM</th>
+            <th>LANGUAGE</th>
+            <th>TEST CASES</th>
+            <th>EXECUTION STATUS</th>
+            <th>SUBMITTED</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let submission of submissions()">
+
+            <!-- STUDENT -->
+            <td>
+              <div class="student-info">
+                <div class="student-avatar">
+                  {{ submission.student_name.charAt(0).toUpperCase() }}
+                </div>
+
+                <span>{{ submission.student_name }}</span>
+              </div>
+            </td>
+
+            <!-- PROBLEM -->
+            <td>
+              <span class="problem-title">
+                {{ submission.problem_title }}
+              </span>
+            </td>
+
+            <!-- LANGUAGE -->
+            <td>
+              <span class="language-badge">
+                {{ submission.language }}
+              </span>
+            </td>
+
+            <!-- TEST CASES -->
+            <td>
+              <span class="test-case-count">
+                {{ submission.passed_test_cases }}
+                /
+                {{ submission.total_test_cases }}
+              </span>
+            </td>
+
+            <!-- EXECUTION STATUS -->
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="submission.execution_status"
+              >
+                {{ submission.execution_status.replace('_', ' ') }}
+              </span>
+            </td>
+
+            <!-- DATE -->
+            <td>
+              <span class="date-text">
+                {{ submission.submitted_at | date:'medium' }}
+              </span>
+            </td>
+
+            <!-- ACTION -->
+            <td>
+              <button
+                class="view-button"
+                (click)="viewSubmission(submission.id)"
+              >
+                View →
+              </button>
+            </td>
+
+          </tr>
+
+          <!-- EMPTY STATE -->
+          <tr *ngIf="submissions().length === 0">
+
+            <td colspan="7">
+
+              <div class="empty-state">
+                <div class="empty-icon">📭</div>
+
+                <h3>No submissions found</h3>
+
+                <p>
+                  Student submissions will appear here
+                  when they start solving your problems.
+                </p>
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+
+      <span>
+        Page {{ currentPage() }} of {{ totalPages() }}
+      </span>
+
+      <div class="pagination-actions">
+
+        <button
+          (click)="previousPage()"
+          [disabled]="currentPage() <= 1"
+        >
+          ← Previous
+        </button>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage() >= totalPages()"
+        >
+          Next →
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

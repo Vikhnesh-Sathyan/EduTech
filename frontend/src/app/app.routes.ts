@@ -104,6 +104,15 @@ import { StudentCodeToLogicTaskListComponent } from '././features/student/advanc
 import { StudentCodeToLogicTaskDetailsComponent } from './features/student/advanced/code-logic/task-details/task-details';
 import { StudentCodeToLogicSubmissionsComponent } from './features/student/advanced/code-logic/submissions/submissions';
 
+// STUDENT LOGIC TO CODE
+import { Dashboard } from './features/student/advanced/logic-to-code/dashboard/dashboard';
+
+import { ProblemList as StudentLogicToCodeProblemList }
+from './features/student/advanced/logic-to-code/problem-list/problem-list';
+
+
+
+
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
@@ -189,22 +198,21 @@ import { ProblemList } from './features/mentor/advanced/logic-to-code/problems/p
 import { CreateProblem } from './features/mentor/advanced/logic-to-code/problems/create-problem/create-problem';
 import { ProblemDetails } from './features/mentor/advanced/logic-to-code/problems/problem-details/problem-details';
 import { EditProblem } from './features/mentor/advanced/logic-to-code/problems/edit-problem/edit-problem';
-
 //TEST CASES
 import { TestCaseList } from './features/mentor/advanced/logic-to-code/test-cases/test-case-list/test-case-list';
 import { TestCaseCreate } from './features/mentor/advanced/logic-to-code/test-cases/test-case-create/test-case-create';
 import { TestCaseEdit } from './features/mentor/advanced/logic-to-code/test-cases/test-case-edit/test-case-edit';
-
 //Reference Solutions
 import { SolutionList } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-list/solution-list';
 import { SolutionCreate } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-create/solution-create';
 import { SolutionEdit } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-edit/solution-edit';
-
 //HINTS
 import { HintManagement } from './features/mentor/advanced/logic-to-code/hints/hint-management/hint-management';
-
+//MISTAKES
 import { MistakeManagement } from './features/mentor/advanced/logic-to-code/common-mistakes/mistake-management/mistake-management';
-
+// MENTOR SUBMISSIONS
+import { SubmissionList } from './features/mentor/advanced/logic-to-code/submissions/submission-list/submission-list';
+import { SubmissionDetails } from './features/mentor/advanced/logic-to-code/submissions/submission-details/submission-details';
 
 export const routes: Routes = [
 
@@ -471,8 +479,17 @@ export const routes: Routes = [
       {
         path: 'student/advanced/code-to-logic/submissions',
         component: StudentCodeToLogicSubmissionsComponent
+      },
+
+      //STUDENT LOGIC TO CODE
+      {
+      path: 'student/advanced/logic-to-code',
+      component: Dashboard
+      },
+      {
+        path: 'student/advanced/logic-to-code/problems',
+        component: StudentLogicToCodeProblemList
       }
-     
 
     ]
   },
@@ -582,8 +599,6 @@ export const routes: Routes = [
         path: 'cheatsheet',
       component: AdminCheatsheetComponent
       },
-
-      
       // Admin Skill Swap
       {
         path: 'skillswap/manage-skills',
@@ -725,6 +740,14 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/dashboard',
         component: LogicToCodeDashboard
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/submissions',
+        component: SubmissionList
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/submissions/:submissionId',
+        component: SubmissionDetails
       },
       {
         path: 'mentor/advanced/logic-to-code/problems',

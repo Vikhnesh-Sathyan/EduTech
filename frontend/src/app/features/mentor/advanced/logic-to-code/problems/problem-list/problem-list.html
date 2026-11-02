@@ -3,7 +3,6 @@
 
   <!-- PAGE HEADER -->
   <div class="page-header">
-
     <div class="header-content">
 
       <button class="back-button" (click)="goToDashboard()">
@@ -21,16 +20,12 @@
     <button class="create-button" (click)="createProblem()">
       + Create Problem
     </button>
-
   </div>
 
   <!-- LOADING -->
   <div class="state-card" *ngIf="loading()">
-
     <div class="loader"></div>
-
     <p>Loading problems...</p>
-
   </div>
 
   <!-- ERROR -->
@@ -38,15 +33,12 @@
     class="state-card error-state"
     *ngIf="!loading() && errorMessage()"
   >
-
     <h3>Unable to load problems</h3>
-
     <p>{{ errorMessage() }}</p>
 
     <button class="retry-button" (click)="loadProblems()">
       Try Again
     </button>
-
   </div>
 
   <!-- EMPTY STATE -->
@@ -54,7 +46,6 @@
     class="empty-state"
     *ngIf="!loading() && !errorMessage() && problems().length === 0"
   >
-
     <div class="empty-icon">⌨</div>
 
     <h2>No Problems Created Yet</h2>
@@ -69,7 +60,6 @@
     >
       + Create Your First Problem
     </button>
-
   </div>
 
   <!-- PROBLEM LIST -->
@@ -82,45 +72,98 @@
     <div class="problem-summary">
 
       <div class="summary-card">
-
         <span>Total Problems</span>
-
         <h2>{{ problems().length }}</h2>
-
       </div>
 
       <div class="summary-card">
-
         <span>Published</span>
-
         <h2>{{ publishedCount() }}</h2>
-
       </div>
 
       <div class="summary-card">
-
         <span>Drafts</span>
-
         <h2>{{ draftCount() }}</h2>
-
       </div>
 
       <div class="summary-card">
-
         <span>Archived</span>
-
         <h2>{{ archivedCount() }}</h2>
-
       </div>
 
     </div>
 
+    <!-- SEARCH AND FILTERS -->
+    <div class="problem-filters">
+
+      <!-- SEARCH -->
+      <div class="search-box">
+        <span>⌕</span>
+
+        <input
+          type="text"
+          placeholder="Search problems by title..."
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+        />
+      </div>
+
+      <!-- DIFFICULTY FILTER -->
+      <select
+        [value]="selectedDifficulty()"
+        (change)="selectedDifficulty.set($any($event.target).value)"
+      >
+        <option value="all">All Difficulties</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+
+      <!-- STATUS FILTER -->
+      <select
+        [value]="selectedStatus()"
+        (change)="selectedStatus.set($any($event.target).value)"
+      >
+        <option value="all">All Statuses</option>
+        <option value="draft">Draft</option>
+        <option value="published">Published</option>
+        <option value="archived">Archived</option>
+      </select>
+
+    </div>
+
+    
+<!-- STATUS ACTION FEEDBACK -->
+<div
+  class="action-message"
+  *ngIf="actionMessage()"
+  [ngClass]="'message-' + actionMessageType()"
+>
+  {{ actionMessage() }}
+</div>
+
+
+    <!-- NO FILTER RESULTS -->
+    <div
+      class="empty-filter-state"
+      *ngIf="filteredProblems().length === 0"
+    >
+      <h3>No matching problems found</h3>
+
+      <p>
+        Try changing your search term or filters.
+      </p>
+    </div>
+
     <!-- PROBLEM CARDS -->
-    <div class="problem-grid">
+    <div
+      class="problem-grid"
+      *ngIf="filteredProblems().length > 0"
+    >
 
       <div
         class="problem-card"
-        *ngFor="let problem of problems()"
+        *ngFor="let problem of filteredProblems()"
       >
 
         <!-- CARD TOP -->
@@ -140,18 +183,23 @@
         </div>
 
         <!-- PROBLEM DETAILS -->
-       <!-- PROBLEM DETAILS -->
-<h3>{{ problem.title }}</h3>
+        <h3>{{ problem.title }}</h3>
 
-<!-- SUBJECT NAME -->
-<div class="problem-subject" *ngIf="problem.subject_name">
-  <span class="subject-label">Subject</span>
-  <span class="subject-name">{{ problem.subject_name }}</span>
-</div>
+        <!-- SUBJECT NAME -->
+        <div
+          class="problem-subject"
+          *ngIf="problem.subject_name"
+        >
+          <span class="subject-label">Subject</span>
+          <span class="subject-name">
+            {{ problem.subject_name }}
+          </span>
+        </div>
 
-<p class="problem-description">
-  {{ problem.description }}
-</p>
+        <p class="problem-description">
+          {{ problem.description }}
+        </p>
+
         <!-- PROBLEM META -->
         <div class="problem-meta">
 
@@ -169,56 +217,106 @@
         </div>
 
         <!-- CARD FOOTER -->
-       <!-- CARD FOOTER -->
-<div class="card-footer">
+        <div class="card-footer">
 
-  <span class="solution-info">
-    Solution:
-    {{ problem.solution_unlock.replace('_', ' ') }}
-  </span>
+          <span class="solution-info">
+            Solution:
+            {{ problem.solution_unlock.replace('_', ' ') }}
+          </span>
 
- <div class="card-actions">
+          <div class="card-actions">
 
-  <button
-    type="button"
-    class="test-case-button"
-    (click)="manageTestCases(problem.id)"
-  >
-    Manage Test Cases →
-  </button>
+            <button
+              type="button"
+              class="test-case-button"
+              (click)="manageTestCases(problem.id)"
+            >
+              Manage Test Cases →
+            </button>
 
-  <button
-    type="button"
-    class="solution-button"
-    (click)="manageSolutions(problem.id)"
-  >
-    Manage Solutions →
-  </button>
+            <button
+              type="button"
+              class="solution-button"
+              (click)="manageSolutions(problem.id)"
+            >
+              Manage Solutions →
+            </button>
 
-  <button
-    type="button"
-    class="view-button"
-    (click)="viewProblem(problem.id)"
-  >
-    View Details →
-  </button>
+            <button
+              type="button"
+              class="view-button"
+              (click)="viewProblem(problem.id)"
+            >
+              View Details →
+            </button>
 
-  <button
-  type="button"
-  class="hint-button"
-  (click)="manageHints(problem.id)">
-  Manage Hints →
-</button>
+            <button
+              type="button"
+              class="hint-button"
+              (click)="manageHints(problem.id)"
+            >
+              Manage Hints →
+            </button>
 
+            <button
+              type="button"
+              class="mistakes-button"
+              (click)="manageMistakes(problem.id)"
+            >
+              Common Mistakes →
+            </button>
+
+            
+<!-- STATUS MANAGEMENT BUTTONS -->
+
+<!-- DRAFT: PUBLISH -->
 <button
+  *ngIf="problem.status === 'draft'"
   type="button"
-  class="mistakes-button"
-  (click)="manageMistakes(problem.id)"
+  class="publish-button"
+  [disabled]="statusUpdating() === problem.id"
+  (click)="changeProblemStatus(problem.id, 'published')"
 >
-  Common Mistakes →
+  {{ statusUpdating() === problem.id ? 'Updating...' : 'Publish Problem' }}
 </button>
 
-</div>
+<!-- PUBLISHED: MOVE TO DRAFT -->
+<button
+  *ngIf="problem.status === 'published'"
+  type="button"
+  class="draft-button"
+  [disabled]="statusUpdating() === problem.id"
+  (click)="changeProblemStatus(problem.id, 'draft')"
+>
+  {{ statusUpdating() === problem.id ? 'Updating...' : 'Move to Draft' }}
+</button>
+
+<!-- ARCHIVE: DRAFT OR PUBLISHED -->
+<button
+  *ngIf="problem.status !== 'archived'"
+  type="button"
+  class="archive-button"
+  [disabled]="statusUpdating() === problem.id"
+  (click)="changeProblemStatus(problem.id, 'archived')"
+>
+  {{ statusUpdating() === problem.id ? 'Updating...' : 'Archive' }}
+</button>
+
+<!-- ARCHIVED: RESTORE -->
+<button
+  *ngIf="problem.status === 'archived'"
+  type="button"
+  class="draft-button"
+  [disabled]="statusUpdating() === problem.id"
+  (click)="changeProblemStatus(problem.id, 'draft')"
+>
+  {{ statusUpdating() === problem.id ? 'Updating...' : 'Restore to Draft' }}
+</button>
+
+
+          </div>
+
+        </div>
 
       </div>
 

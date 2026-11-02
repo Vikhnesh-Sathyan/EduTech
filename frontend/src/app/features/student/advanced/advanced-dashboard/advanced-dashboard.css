@@ -803,3 +803,102 @@
     border-radius: 10px;
   }
 }
+
+
+
+/* =====================================================
+   LOGIC TO CODE ENTRY
+===================================================== */
+
+.logic-to-code-section {
+  margin-top: 24px;
+}
+
+.logic-to-code-card {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #f0e3d0;
+  border-left: 5px solid #c8792c;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(91, 70, 50, 0.05);
+}
+
+.logic-to-code-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(91, 70, 50, 0.12);
+  background: #fffaf2;
+}
+
+.logic-to-code-icon {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4d9a0;
+  border-radius: 15px;
+  font-size: 27px;
+}
+
+.logic-to-code-content {
+  flex: 1;
+}
+
+.logic-to-code-eyebrow {
+  color: #c8792c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.logic-to-code-content h2 {
+  color: #5b4632;
+  font-size: 21px;
+  font-weight: 800;
+  margin: 7px 0;
+}
+
+.logic-to-code-content p {
+  color: #8c7864;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.logic-to-code-arrow {
+  color: #c8792c;
+  font-size: 26px;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.logic-to-code-card:hover .logic-to-code-arrow {
+  transform: translateX(5px);
+}
+
+@media (max-width: 600px) {
+  .logic-to-code-card {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .logic-to-code-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+  }
+
+  .logic-to-code-content h2 {
+    font-size: 18px;
+  }
+
+  .logic-to-code-content p {
+    font-size: 12px;
+  }
+}
