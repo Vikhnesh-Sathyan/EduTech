@@ -216,10 +216,51 @@ export interface LogicToCodeSolutionActionResponse {
   solutionId?: number;
 }
 
+
+
+// =====================================================
+// LOGIC TO CODE HINT MODELS
+// =====================================================
+
+export interface LogicToCodeHint {
+  id: number;
+  problem_id: number;
+  hint_number: number;
+  hint_content: string;
+}
+
+// =====================================================
+// HINT LIST RESPONSE
+// =====================================================
+
+export interface LogicToCodeHintsResponse {
+  success: boolean;
+  totalHints: number;
+  hints: LogicToCodeHint[];
+}
+
+// =====================================================
+// SAVE PROBLEM HINTS
+// =====================================================
+
+export interface SaveLogicToCodeHints {
+  hints: string[];
+}
+
+// =====================================================
+// HINT ACTION RESPONSE
+// =====================================================
+
+export interface LogicToCodeHintActionResponse {
+  success: boolean;
+  message: string;
+  totalHints?: number;
+}
+
+
 // =====================================================
 // LOGIC TO CODE SERVICE
 // =====================================================
-
 @Injectable({
   providedIn: 'root'
 })
@@ -377,6 +418,30 @@ deleteSolution(
 ): Observable<LogicToCodeSolutionActionResponse> {
   return this.http.delete<LogicToCodeSolutionActionResponse>(
     `${this.apiUrl}/${problemId}/solutions/${solutionId}`
+  );
+}
+
+// =====================================================
+// HINT MANAGEMENT
+// =====================================================
+
+// GET PROBLEM HINTS
+getHints(
+  problemId: number
+): Observable<LogicToCodeHintsResponse> {
+  return this.http.get<LogicToCodeHintsResponse>(
+    `${this.apiUrl}/${problemId}/hints`
+  );
+}
+
+// SAVE ALL PROBLEM HINTS
+saveHints(
+  problemId: number,
+  data: SaveLogicToCodeHints
+): Observable<LogicToCodeHintActionResponse> {
+  return this.http.post<LogicToCodeHintActionResponse>(
+    `${this.apiUrl}/${problemId}/hints`,
+    data
   );
 }
 

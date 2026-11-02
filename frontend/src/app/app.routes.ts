@@ -200,6 +200,11 @@ import { SolutionList } from './features/mentor/advanced/logic-to-code/reference
 import { SolutionCreate } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-create/solution-create';
 import { SolutionEdit } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-edit/solution-edit';
 
+//HINTS
+import { HintManagement } from './features/mentor/advanced/logic-to-code/hints/hint-management/hint-management';
+
+
+
 export const routes: Routes = [
 
   // Public routes
@@ -763,7 +768,11 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/:problemId/solutions/:solutionId/edit',
         component: SolutionEdit
-      }   
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/:problemId/hints',
+        component: HintManagement
+      }
 
     ]
   },

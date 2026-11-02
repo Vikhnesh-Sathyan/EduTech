@@ -469,3 +469,23 @@
   border-color: #c4b5fd;
   transform: translateY(-1px);
 }
+
+
+/* MANAGE HINTS BUTTON */
+.hint-button {
+  padding: 9px 14px;
+  border: 1px solid #fde68a;
+  border-radius: 9px;
+  background: #fffbeb;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hint-button:hover {
+  border-color: #fcd34d;
+  background: #fef3c7;
+  transform: translateY(-1px);
+}

@@ -1,0 +1,178 @@
+
+<div class="hints-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <button class="back-button" type="button" (click)="goBack()">
+        <span>←</span> Back to Problems
+      </button>
+
+      <div class="heading">
+        <span class="eyebrow">PROBLEM MANAGEMENT</span>
+        <h1>Manage Hints</h1>
+        <p>
+          Create helpful clues to guide students through the problem
+          without revealing the complete solution.
+        </p>
+      </div>
+    </div>
+
+    <div class="header-icon">💡</div>
+  </div>
+
+  <!-- HINT SUMMARY -->
+  <div class="summary-card">
+    <div class="summary-icon">✦</div>
+    <div>
+      <span class="summary-label">TOTAL HINTS</span>
+      <strong>{{ hints().length }}</strong>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading()">
+    <div class="loader"></div>
+    <p>Loading problem hints...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading()">
+
+    <!-- HINT EDITOR -->
+    <div class="editor-card">
+
+      <div class="editor-header">
+        <div>
+          <h2>Hint Sequence</h2>
+          <p>
+            Add hints in the order students should receive them.
+            You can rearrange the sequence anytime.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="add-button"
+          (click)="addHint()">
+          <span>+</span> Add Hint
+        </button>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" *ngIf="hints().length === 0">
+        <div class="empty-icon">💡</div>
+        <h3>No hints added yet</h3>
+        <p>
+          Start by adding your first hint to guide students
+          toward solving this problem.
+        </p>
+
+        <button
+          type="button"
+          class="empty-add-button"
+          (click)="addHint()">
+          + Create First Hint
+        </button>
+      </div>
+
+      <!-- HINT LIST -->
+      <div class="hint-list" *ngIf="hints().length > 0">
+
+        <div
+            class="hint-item"
+            *ngFor="let hint of hints(); let i = index">
+
+          <div class="hint-number">
+            {{ i + 1 }}
+          </div>
+
+          <div class="hint-content">
+            <label [for]="'hint-' + i">
+              Hint {{ i + 1 }}
+            </label>
+
+            <textarea
+              [id]="'hint-' + i"
+              rows="3"
+              maxlength="1000"
+              placeholder="Write a helpful clue for the student..."
+              [ngModel]="hint"
+              (ngModelChange)="updateHint(i, $event)">
+            </textarea>
+
+            <span class="character-count">
+              {{ hint.length }} / 1000 characters
+            </span>
+          </div>
+
+          <div class="hint-actions">
+
+            <button
+              type="button"
+              class="move-button"
+              title="Move up"
+              [disabled]="i === 0"
+              (click)="moveHintUp(i)">
+              ↑
+            </button>
+
+            <button
+              type="button"
+              class="move-button"
+              title="Move down"
+              [disabled]="i === hints().length - 1"
+              (click)="moveHintDown(i)">
+              ↓
+            </button>
+
+            <button
+              type="button"
+              class="remove-button"
+              title="Remove hint"
+              (click)="removeHint(i)">
+              ✕
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- EDITOR FOOTER -->
+      <div class="editor-footer">
+        <p>
+          <span>ⓘ</span>
+          Saving will replace the existing hint sequence for this problem.
+        </p>
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="isSaving() || hints().length === 0"
+          (click)="saveHints()">
+
+          <span *ngIf="!isSaving()">Save All Hints</span>
+          <span *ngIf="isSaving()">Saving...</span>
+
+        </button>
+      </div>
+
+    </div>
+
+    <!-- GUIDANCE CARD -->
+    <div class="guidance-card">
+      <div class="guidance-icon">🎯</div>
+
+      <div>
+        <h3>Writing effective hints</h3>
+        <p>
+          Start with a small conceptual clue. Make the next hint
+          more specific, and avoid giving away the complete code.
+        </p>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

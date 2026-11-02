@@ -133,4 +133,13 @@ manageSolutions(problemId: number): void {
     'solutions'
   ]);
 }
+
+// NAVIGATE TO HINT MANAGEMENT
+manageHints(problemId: number): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code',
+    problemId,
+    'hints'
+  ]);
+}
 }
