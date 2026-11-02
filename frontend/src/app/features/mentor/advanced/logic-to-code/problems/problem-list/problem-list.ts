@@ -142,4 +142,11 @@ manageHints(problemId: number): void {
     'hints'
   ]);
 }
+manageMistakes(problemId: number): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code',
+    problemId,
+    'mistakes'
+  ]);
+}
 }

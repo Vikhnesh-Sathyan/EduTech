@@ -203,6 +203,7 @@ import { SolutionEdit } from './features/mentor/advanced/logic-to-code/reference
 //HINTS
 import { HintManagement } from './features/mentor/advanced/logic-to-code/hints/hint-management/hint-management';
 
+import { MistakeManagement } from './features/mentor/advanced/logic-to-code/common-mistakes/mistake-management/mistake-management';
 
 
 export const routes: Routes = [
@@ -772,7 +773,11 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/:problemId/hints',
         component: HintManagement
-      }
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/:problemId/mistakes',
+        component: MistakeManagement
+      }   
 
     ]
   },

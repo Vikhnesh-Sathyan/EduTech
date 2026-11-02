@@ -216,8 +216,6 @@ export interface LogicToCodeSolutionActionResponse {
   solutionId?: number;
 }
 
-
-
 // =====================================================
 // LOGIC TO CODE HINT MODELS
 // =====================================================
@@ -255,6 +253,48 @@ export interface LogicToCodeHintActionResponse {
   success: boolean;
   message: string;
   totalHints?: number;
+}
+
+
+// =====================================================
+// COMMON MISTAKES MODEL
+// =====================================================
+
+export interface LogicToCodeMistake {
+  id: number;
+  problem_id: number;
+  mistake_title: string;
+  mistake_description: string;
+  created_at: string;
+}
+
+// =====================================================
+// COMMON MISTAKES LIST RESPONSE
+// =====================================================
+
+export interface LogicToCodeMistakesResponse {
+  success: boolean;
+  totalMistakes: number;
+  mistakes: LogicToCodeMistake[];
+}
+
+// =====================================================
+// CREATE / UPDATE MISTAKE
+// =====================================================
+
+export interface SaveLogicToCodeMistake {
+  mistake_title: string;
+  mistake_description: string;
+}
+
+// =====================================================
+// MISTAKE ACTION RESPONSE
+// =====================================================
+
+export interface LogicToCodeMistakeActionResponse {
+  success: boolean;
+  message: string;
+  mistakeId?: number;
 }
 
 
@@ -444,5 +484,53 @@ saveHints(
     data
   );
 }
+
+
+// =====================================================
+// COMMON MISTAKES MANAGEMENT
+// =====================================================
+
+// GET ALL PROBLEM MISTAKES
+getMistakes(
+  problemId: number
+): Observable<LogicToCodeMistakesResponse> {
+  return this.http.get<LogicToCodeMistakesResponse>(
+    `${this.apiUrl}/${problemId}/mistakes`
+  );
+}
+
+// ADD COMMON MISTAKE
+addMistake(
+  problemId: number,
+  data: SaveLogicToCodeMistake
+): Observable<LogicToCodeMistakeActionResponse> {
+  return this.http.post<LogicToCodeMistakeActionResponse>(
+    `${this.apiUrl}/${problemId}/mistakes`,
+    data
+  );
+}
+
+// UPDATE COMMON MISTAKE
+updateMistake(
+  problemId: number,
+  mistakeId: number,
+  data: SaveLogicToCodeMistake
+): Observable<LogicToCodeMistakeActionResponse> {
+  return this.http.put<LogicToCodeMistakeActionResponse>(
+    `${this.apiUrl}/${problemId}/mistakes/${mistakeId}`,
+    data
+  );
+}
+
+// DELETE COMMON MISTAKE
+deleteMistake(
+  problemId: number,
+  mistakeId: number
+): Observable<LogicToCodeMistakeActionResponse> {
+  return this.http.delete<LogicToCodeMistakeActionResponse>(
+    `${this.apiUrl}/${problemId}/mistakes/${mistakeId}`
+  );
+}
+
 
 }

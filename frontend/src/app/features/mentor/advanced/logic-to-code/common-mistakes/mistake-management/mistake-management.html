@@ -1,0 +1,237 @@
+
+<div class="mistakes-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()">
+        ← Back to Problems
+      </button>
+
+      <span class="eyebrow">PROBLEM MANAGEMENT</span>
+
+      <h1>Common Mistakes</h1>
+
+      <p>
+        Help students recognize frequent errors and understand
+        how to avoid them while solving problems.
+      </p>
+
+    </div>
+
+    <div class="header-icon">⚠️</div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-card">
+    <div class="summary-icon">✦</div>
+
+    <div>
+      <span class="summary-label">TOTAL MISTAKES</span>
+      <strong>{{ mistakes().length }}</strong>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading()">
+    <div class="loader"></div>
+    <p>Loading common mistakes...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading()">
+
+    <div class="content-layout">
+
+      <!-- MISTAKE FORM -->
+      <section class="form-card">
+
+        <div class="section-header">
+          <div>
+            <h2>
+              {{ isEditing() ? 'Edit Mistake' : 'Add New Mistake' }}
+            </h2>
+
+            <p>
+              {{ isEditing()
+                ? 'Update the mistake details below.'
+                : 'Explain a common error students should avoid.' }}
+            </p>
+          </div>
+
+          <span class="form-icon">✏️</span>
+        </div>
+
+        <div class="form-body">
+
+          <div class="form-group">
+            <label for="mistakeTitle">
+              Mistake Title
+            </label>
+
+            <input
+              id="mistakeTitle"
+              type="text"
+              maxlength="200"
+              placeholder="Example: Not initializing the largest value"
+              [ngModel]="mistakeTitle()"
+              (ngModelChange)="updateTitle($event)">
+          </div>
+
+          <div class="form-group">
+            <label for="mistakeDescription">
+              Mistake Description
+            </label>
+
+            <textarea
+              id="mistakeDescription"
+              rows="5"
+              maxlength="2000"
+              placeholder="Explain what students commonly do wrong and why it causes a problem..."
+              [ngModel]="mistakeDescription()"
+              (ngModelChange)="updateDescription($event)">
+            </textarea>
+
+            <span class="character-count">
+              {{ mistakeDescription().length }} / 2000 characters
+            </span>
+          </div>
+
+          <div class="form-actions">
+
+            <button
+              *ngIf="isEditing()"
+              type="button"
+              class="cancel-button"
+              (click)="resetForm()">
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="save-button"
+              [disabled]="isSaving()"
+              (click)="saveMistake()">
+
+              {{ isSaving()
+                ? 'Saving...'
+                : (isEditing() ? 'Update Mistake' : 'Add Mistake') }}
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- MISTAKES LIST -->
+      <section class="mistakes-section">
+
+        <div class="list-header">
+          <div>
+            <h2>Existing Mistakes</h2>
+            <p>Review and manage the mistakes for this problem.</p>
+          </div>
+
+          <span class="count-badge">
+            {{ mistakes().length }}
+          </span>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div
+          class="empty-state"
+          *ngIf="mistakes().length === 0">
+
+          <div class="empty-icon">📝</div>
+
+          <h3>No common mistakes yet</h3>
+
+          <p>
+            Add your first common mistake to help students
+            learn from typical errors.
+          </p>
+
+        </div>
+
+        <!-- MISTAKE CARDS -->
+        <div
+          class="mistake-list"
+          *ngIf="mistakes().length > 0">
+
+          <article
+            class="mistake-card"
+            *ngFor="let mistake of mistakes()">
+
+            <div class="mistake-card-header">
+
+              <div class="mistake-title-group">
+                <span class="mistake-icon">⚠</span>
+
+                <h3>{{ mistake.mistake_title }}</h3>
+              </div>
+
+              <span class="mistake-id">
+                #{{ mistake.id }}
+              </span>
+
+            </div>
+
+            <p class="mistake-description">
+              {{ mistake.mistake_description }}
+            </p>
+
+            <div class="mistake-footer">
+
+              <span class="created-date">
+                Added:
+                {{ mistake.created_at | date:'mediumDate' }}
+              </span>
+
+              <div class="card-actions">
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="editMistake(mistake)">
+                  Edit
+                </button>
+
+               <button
+  type="button"
+  class="delete-button"
+  (click)="openDeleteModal(mistake.id)"
+>
+  Delete
+</button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </ng-container>
+
+  <app-confirm-modal
+  [visible]="showDeleteModal()"
+  title="Delete Common Mistake?"
+  message="Are you sure you want to delete this mistake? This action cannot be undone."
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmDeleteMistake()"
+  (cancelled)="closeDeleteModal()"
+></app-confirm-modal>
+
+</div>

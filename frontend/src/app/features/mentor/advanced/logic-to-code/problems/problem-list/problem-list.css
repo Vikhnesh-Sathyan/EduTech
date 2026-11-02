@@ -489,3 +489,38 @@
   background: #fef3c7;
   transform: translateY(-1px);
 }
+
+/* COMMON MISTAKES BUTTON */
+
+.mistakes-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 13px;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mistakes-button:hover {
+  border-color: #fdba74;
+  background: #ffedd5;
+  color: #9a3412;
+  transform: translateY(-1px);
+}
+
+.mistakes-button:active {
+  transform: translateY(0);
+}
+
+.mistakes-button:focus-visible {
+  outline: 3px solid rgba(234, 88, 12, 0.2);
+  outline-offset: 2px;
+}
