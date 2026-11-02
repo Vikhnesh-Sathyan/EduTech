@@ -124,4 +124,13 @@ export class ProblemList implements OnInit {
     'test-cases'
   ]);
 }
+
+// MANAGE REFERENCE SOLUTIONS
+manageSolutions(problemId: number): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code',
+    problemId,
+    'solutions'
+  ]);
+}
 }

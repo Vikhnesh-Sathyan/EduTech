@@ -195,6 +195,11 @@ import { TestCaseList } from './features/mentor/advanced/logic-to-code/test-case
 import { TestCaseCreate } from './features/mentor/advanced/logic-to-code/test-cases/test-case-create/test-case-create';
 import { TestCaseEdit } from './features/mentor/advanced/logic-to-code/test-cases/test-case-edit/test-case-edit';
 
+//Reference Solutions
+import { SolutionList } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-list/solution-list';
+import { SolutionCreate } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-create/solution-create';
+import { SolutionEdit } from './features/mentor/advanced/logic-to-code/reference-solutions/solution-edit/solution-edit';
+
 export const routes: Routes = [
 
   // Public routes
@@ -742,8 +747,23 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/:problemId/test-cases/:testCaseId/edit',
         component: TestCaseEdit
-      }
+      },
+      // ==========================================
+      // LOGIC TO CODE - REFERENCE SOLUTIONS
+      // ==========================================
 
+      {
+        path: 'mentor/advanced/logic-to-code/:problemId/solutions',
+        component: SolutionList
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/:problemId/solutions/create',
+        component: SolutionCreate
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/:problemId/solutions/:solutionId/edit',
+        component: SolutionEdit
+      }   
 
     ]
   },

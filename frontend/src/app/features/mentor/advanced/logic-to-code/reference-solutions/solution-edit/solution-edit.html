@@ -1,0 +1,222 @@
+
+<div class="edit-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+
+    <div>
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        MENTOR WORKSPACE
+      </div>
+
+      <h1>Edit Reference Solution</h1>
+
+      <p>
+        Update the programming language, solution code
+        and explanation for this problem.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="cancel()">
+      ← Back to Solutions
+    </button>
+
+  </section>
+
+  <!-- LOADING STATE -->
+  <div class="state-card" *ngIf="isLoading()">
+
+    <div class="loader"></div>
+
+    <p>Loading reference solution...</p>
+
+  </div>
+
+  <!-- LOAD ERROR STATE -->
+  <div
+    class="state-card error-state"
+    *ngIf="!isLoading() && hasLoadError()">
+
+    <div class="error-icon">!</div>
+
+    <h2>Unable to Load Solution</h2>
+
+    <p>
+      The requested reference solution could not be loaded.
+    </p>
+
+    <button
+      type="button"
+      class="cancel-button"
+      (click)="goBack()">
+      Back to Solutions
+    </button>
+
+  </div>
+
+  <!-- EDIT FORM -->
+  <section
+    class="form-card"
+    *ngIf="!isLoading() && !hasLoadError()">
+
+    <div class="form-heading">
+      <h2>Solution Details</h2>
+      <p>Modify the existing reference solution.</p>
+    </div>
+
+    <form
+      (ngSubmit)="updateSolution()"
+      #solutionForm="ngForm">
+
+      <!-- PROGRAMMING LANGUAGE -->
+      <div class="form-group">
+
+        <label>Programming Language <span>*</span></label>
+
+        <div class="language-options">
+
+          <label
+            class="language-option"
+            [class.selected]="language === 'python'">
+
+            <input
+              type="radio"
+              name="language"
+              value="python"
+              [(ngModel)]="language"
+              required>
+
+            <span class="language-symbol python-symbol">Py</span>
+
+            <span class="language-details">
+              <strong>Python</strong>
+              <small>Python 3</small>
+            </span>
+
+          </label>
+
+          <label
+            class="language-option"
+            [class.selected]="language === 'javascript'">
+
+            <input
+              type="radio"
+              name="language"
+              value="javascript"
+              [(ngModel)]="language"
+              required>
+
+            <span class="language-symbol javascript-symbol">JS</span>
+
+            <span class="language-details">
+              <strong>JavaScript</strong>
+              <small>ES6+</small>
+            </span>
+
+          </label>
+
+          <label
+            class="language-option"
+            [class.selected]="language === 'java'">
+
+            <input
+              type="radio"
+              name="language"
+              value="java"
+              [(ngModel)]="language"
+              required>
+
+            <span class="language-symbol java-symbol">Ja</span>
+
+            <span class="language-details">
+              <strong>Java</strong>
+              <small>Java 8+</small>
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- SOLUTION CODE -->
+      <div class="form-group">
+
+        <label for="solutionCode">
+          Solution Code <span>*</span>
+        </label>
+
+        <div class="editor-header">
+          <span>CODE EDITOR</span>
+          <span>{{ language | uppercase }}</span>
+        </div>
+
+        <textarea
+          id="solutionCode"
+          name="solutionCode"
+          [(ngModel)]="solutionCode"
+          placeholder="Write your complete solution code here..."
+          rows="14"
+          spellcheck="false"
+          required>
+        </textarea>
+
+        <small class="field-hint">
+          Update the complete working solution for this language.
+        </small>
+
+      </div>
+
+      <!-- SOLUTION EXPLANATION -->
+      <div class="form-group">
+
+        <label for="solutionExplanation">
+          Solution Explanation
+          <span class="optional-label">(Optional)</span>
+        </label>
+
+        <textarea
+          id="solutionExplanation"
+          name="solutionExplanation"
+          [(ngModel)]="solutionExplanation"
+          placeholder="Explain the approach, important steps, and logic behind this solution..."
+          rows="5">
+        </textarea>
+
+        <small class="field-hint">
+          Explain how the solution works so students can understand the approach.
+        </small>
+
+      </div>
+
+      <!-- FORM ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancel()"
+          [disabled]="isSaving()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="isSaving() || !solutionForm.valid || !solutionCode.trim()">
+
+          {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>

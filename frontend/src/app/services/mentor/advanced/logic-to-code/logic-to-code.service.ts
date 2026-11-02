@@ -173,6 +173,50 @@ export interface LogicToCodeTestCaseActionResponse {
 }
 
 // =====================================================
+// REFERENCE SOLUTION MODELS
+// =====================================================
+
+export interface LogicToCodeSolution {
+  id: number;
+  problem_id: number;
+  language: 'python' | 'javascript' | 'java';
+  solution_code: string;
+  solution_explanation: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// =====================================================
+// SOLUTION LIST RESPONSE
+// =====================================================
+
+export interface LogicToCodeSolutionsResponse {
+  success: boolean;
+  totalSolutions: number;
+  solutions: LogicToCodeSolution[];
+}
+
+// =====================================================
+// CREATE / UPDATE SOLUTION
+// =====================================================
+
+export interface CreateLogicToCodeSolution {
+  language: 'python' | 'javascript' | 'java';
+  solution_code: string;
+  solution_explanation?: string;
+}
+
+// =====================================================
+// SOLUTION ACTION RESPONSE
+// =====================================================
+
+export interface LogicToCodeSolutionActionResponse {
+  success: boolean;
+  message: string;
+  solutionId?: number;
+}
+
+// =====================================================
 // LOGIC TO CODE SERVICE
 // =====================================================
 
@@ -287,6 +331,52 @@ deleteTestCase(
 ): Observable<LogicToCodeTestCaseActionResponse> {
   return this.http.delete<LogicToCodeTestCaseActionResponse>(
     `${this.apiUrl}/${problemId}/test-cases/${testCaseId}`
+  );
+}
+
+// =====================================================
+// REFERENCE SOLUTION MANAGEMENT
+// =====================================================
+
+// GET ALL REFERENCE SOLUTIONS
+getSolutions(
+  problemId: number
+): Observable<LogicToCodeSolutionsResponse> {
+  return this.http.get<LogicToCodeSolutionsResponse>(
+    `${this.apiUrl}/${problemId}/solutions`
+  );
+}
+
+// ADD REFERENCE SOLUTION
+addSolution(
+  problemId: number,
+  data: CreateLogicToCodeSolution
+): Observable<LogicToCodeSolutionActionResponse> {
+  return this.http.post<LogicToCodeSolutionActionResponse>(
+    `${this.apiUrl}/${problemId}/solutions`,
+    data
+  );
+}
+
+// UPDATE REFERENCE SOLUTION
+updateSolution(
+  problemId: number,
+  solutionId: number,
+  data: CreateLogicToCodeSolution
+): Observable<LogicToCodeSolutionActionResponse> {
+  return this.http.put<LogicToCodeSolutionActionResponse>(
+    `${this.apiUrl}/${problemId}/solutions/${solutionId}`,
+    data
+  );
+}
+
+// DELETE REFERENCE SOLUTION
+deleteSolution(
+  problemId: number,
+  solutionId: number
+): Observable<LogicToCodeSolutionActionResponse> {
+  return this.http.delete<LogicToCodeSolutionActionResponse>(
+    `${this.apiUrl}/${problemId}/solutions/${solutionId}`
   );
 }
 

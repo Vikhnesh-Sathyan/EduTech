@@ -1,0 +1,167 @@
+
+<div class="solution-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+
+    <div class="header-content">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        MENTOR WORKSPACE
+      </div>
+
+      <h1>Reference Solutions</h1>
+
+      <p>
+        Manage Python, JavaScript and Java solutions
+        for this coding problem.
+      </p>
+
+      <div class="solution-count">
+        <span>{{ solutions().length }}</span>
+        <span>Solutions Available</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()">
+        ← Back to Problems
+      </button>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="addSolution()"
+        [disabled]="solutions().length >= 3">
+        + Add Solution
+      </button>
+    </div>
+
+  </section>
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="isLoading()">
+    <div class="loader"></div>
+    <p>Loading reference solutions...</p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div
+    class="state-card empty-state"
+    *ngIf="!isLoading() && solutions().length === 0">
+
+    <div class="empty-icon">⌘</div>
+
+    <h2>No Reference Solutions Yet</h2>
+
+    <p>
+      Add a Python, JavaScript or Java solution
+      to help students understand the problem.
+    </p>
+
+    <button
+      type="button"
+      class="add-button"
+      (click)="addSolution()">
+      + Add First Solution
+    </button>
+
+  </div>
+
+  <!-- SOLUTION CARDS -->
+  <section
+    class="solution-grid"
+    *ngIf="!isLoading() && solutions().length > 0">
+
+    <article
+      class="solution-card"
+      *ngFor="let solution of solutions()">
+
+      <div class="card-header">
+
+        <div class="language-info">
+          <div
+            class="language-icon"
+            [ngClass]="solution.language">
+            {{ solution.language === 'python' ? 'Py' :
+               solution.language === 'javascript' ? 'JS' : 'Ja' }}
+          </div>
+
+          <div>
+            <h2>{{ solution.language | titlecase }}</h2>
+            <span class="language-label">Reference Solution</span>
+          </div>
+        </div>
+
+        <span class="status-badge">
+          Available
+        </span>
+
+      </div>
+
+      <div class="code-preview">
+        <div class="code-toolbar">
+          <span>CODE PREVIEW</span>
+          <span>{{ solution.language }}</span>
+        </div>
+
+        <pre><code>{{ solution.solution_code }}</code></pre>
+      </div>
+
+      <div
+        class="explanation"
+        *ngIf="solution.solution_explanation">
+
+        <h3>Solution Explanation</h3>
+
+        <p>{{ solution.solution_explanation }}</p>
+
+      </div>
+
+      <div class="card-footer">
+
+        <span class="updated-date">
+          Updated:
+          {{ solution.updated_at | date:'mediumDate' }}
+        </span>
+
+        <div class="card-actions">
+
+          <button
+            type="button"
+            class="edit-button"
+            (click)="editSolution(solution.id)">
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="delete-button"
+            (click)="deleteSolution(solution.id)">
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  </section>
+
+  <!-- DELETE CONFIRMATION -->
+  <app-confirm-modal
+    [visible]="showDeleteModal()"
+    title="Delete Reference Solution"
+    message="Are you sure you want to delete this reference solution? This action cannot be undone."
+    confirmText="Delete Solution"
+    cancelText="Cancel"
+    [danger]="true"
+    (confirmed)="confirmDeleteSolution()"
+    (cancelled)="cancelDelete()">
+  </app-confirm-modal>
+
+</div>
