@@ -1,0 +1,59 @@
+
+<div class="edit-discussion-card">
+
+  <!-- HEADER -->
+  <div class="edit-header">
+    <div class="edit-icon">✏️</div>
+
+    <div>
+      <h3>Edit Discussion</h3>
+      <p>Update your discussion or reply.</p>
+    </div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="edit-editor">
+
+    <textarea
+      [ngModel]="content()"
+      (ngModelChange)="content.set($event)"
+      placeholder="Update your discussion..."
+      rows="4"
+      maxlength="5000"
+      [disabled]="saving()">
+    </textarea>
+
+    <div class="edit-footer">
+
+      <span class="character-count">
+        {{ content().length }} / 5000 characters
+      </span>
+
+      <div class="edit-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancel()"
+          [disabled]="saving()">
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          (click)="saveDiscussion()"
+          [disabled]="saving() || !content().trim()">
+
+          <span *ngIf="!saving()">Save Changes</span>
+          <span *ngIf="saving()">Saving...</span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

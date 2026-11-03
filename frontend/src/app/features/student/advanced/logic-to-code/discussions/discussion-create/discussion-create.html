@@ -1,0 +1,52 @@
+
+<div class="create-discussion-card">
+
+  <!-- HEADER -->
+  <div class="create-header">
+    <div class="create-icon">✍️</div>
+
+    <div>
+      <h3>Start a Discussion</h3>
+      <p>Share your thoughts or ask the community a question.</p>
+    </div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="discussion-editor">
+
+    <textarea
+      [ngModel]="content()"
+      (ngModelChange)="content.set($event)"
+      placeholder="What would you like to discuss?"
+      rows="4"
+      maxlength="5000"
+      [disabled]="submitting()">
+    </textarea>
+
+    <div class="editor-footer">
+      <span>{{ content().length }} / 5000 characters</span>
+
+      <button
+        type="button"
+        (click)="createDiscussion()"
+        [disabled]="submitting() || !content().trim()">
+
+        <span *ngIf="!submitting()">Post Discussion</span>
+        <span *ngIf="submitting()">Posting...</span>
+
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ERROR -->
+  <div class="message error-message" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="message success-message" *ngIf="successMessage()">
+    {{ successMessage() }}
+  </div>
+
+</div>

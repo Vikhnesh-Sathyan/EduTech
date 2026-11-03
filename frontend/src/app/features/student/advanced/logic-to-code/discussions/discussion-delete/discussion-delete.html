@@ -1,0 +1,21 @@
+
+<button
+  type="button"
+  class="delete-discussion-button"
+  (click)="openDeleteModal()"
+  [disabled]="deleting()">
+
+  <span>Delete</span>
+
+</button>
+
+<app-confirm-modal
+  [visible]="modalVisible()"
+  title="Delete Discussion"
+  message="Are you sure you want to delete this discussion? All nested replies will also be deleted. This action cannot be undone."
+  confirmText="Delete"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>

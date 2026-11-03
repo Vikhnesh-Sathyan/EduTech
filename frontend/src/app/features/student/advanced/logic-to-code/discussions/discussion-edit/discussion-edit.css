@@ -1,0 +1,169 @@
+
+/* =====================================================
+   EDIT DISCUSSION CARD
+===================================================== */
+
+.edit-discussion-card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e9dfd3;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(91, 70, 50, 0.05);
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.edit-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.edit-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: #f4d9a0;
+  font-size: 19px;
+}
+
+.edit-header h3 {
+  margin: 0 0 5px;
+  color: #5b4632;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.edit-header p {
+  margin: 0;
+  color: #998b7d;
+  font-size: 12px;
+}
+
+/* =====================================================
+   TEXT EDITOR
+===================================================== */
+
+.edit-editor textarea {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  padding: 14px;
+  resize: vertical;
+  border: 1px solid #e8dfd5;
+  border-radius: 10px;
+  outline: none;
+  background: #fdfcfb;
+  color: #4a392c;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edit-editor textarea::placeholder {
+  color: #afa295;
+}
+
+.edit-editor textarea:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.1);
+}
+
+.edit-editor textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.edit-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.character-count {
+  color: #a29587;
+  font-size: 11px;
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.edit-actions button {
+  padding: 10px 17px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cancel-button {
+  border: 1px solid #e5dbd0;
+  background: #ffffff;
+  color: #76685b;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: #f5f1ec;
+}
+
+.save-button {
+  border: none;
+  background: #5b4632;
+  color: #ffffff;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #795b3e;
+}
+
+.edit-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 550px) {
+
+  .edit-discussion-card {
+    padding: 16px;
+  }
+
+  .edit-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .edit-actions {
+    width: 100%;
+  }
+
+  .edit-actions button {
+    flex: 1;
+  }
+
+}

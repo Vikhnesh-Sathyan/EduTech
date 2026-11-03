@@ -1,0 +1,52 @@
+
+<div class="reply-editor">
+
+  <!-- REPLY INPUT -->
+  <textarea
+    [ngModel]="content()"
+    (ngModelChange)="content.set($event)"
+    placeholder="Write your reply..."
+    rows="3"
+    maxlength="2000"
+    [disabled]="submitting()">
+  </textarea>
+
+  <!-- FOOTER -->
+  <div class="reply-footer">
+
+    <span class="character-count">
+      {{ content().length }} / 2000
+    </span>
+
+    <button
+      type="button"
+      (click)="createReply()"
+      [disabled]="submitting() || !content().trim()">
+
+      <span *ngIf="!submitting()">Post Reply</span>
+
+      <span *ngIf="submitting()">Posting...</span>
+
+    </button>
+
+  </div>
+
+  <!-- ERROR -->
+  <div
+    class="reply-message error-message"
+    *ngIf="errorMessage()">
+
+    {{ errorMessage() }}
+
+  </div>
+
+  <!-- SUCCESS -->
+  <div
+    class="reply-message success-message"
+    *ngIf="successMessage()">
+
+    {{ successMessage() }}
+
+  </div>
+
+</div>

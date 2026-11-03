@@ -1,0 +1,130 @@
+
+/* =====================================================
+   REPLY EDITOR
+===================================================== */
+
+.reply-editor {
+  margin-top: 14px;
+  padding: 15px;
+  background: #faf8f5;
+  border: 1px solid #eee6dc;
+  border-radius: 12px;
+}
+
+/* =====================================================
+   TEXTAREA
+===================================================== */
+
+.reply-editor textarea {
+  display: block;
+  width: 100%;
+  min-height: 75px;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid #e8dfd5;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: #4a392c;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reply-editor textarea::placeholder {
+  color: #afa295;
+}
+
+.reply-editor textarea:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.09);
+}
+
+.reply-editor textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   REPLY FOOTER
+===================================================== */
+
+.reply-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.character-count {
+  color: #a29587;
+  font-size: 11px;
+}
+
+.reply-footer button {
+  padding: 9px 17px;
+  border: none;
+  border-radius: 8px;
+  background: #c8792c;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.reply-footer button:hover:not(:disabled) {
+  background: #a96120;
+}
+
+.reply-footer button:disabled {
+  background: #c8bfb5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   SUCCESS AND ERROR MESSAGES
+===================================================== */
+
+.reply-message {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.error-message {
+  background: #fff0ed;
+  color: #a34b3f;
+  border: 1px solid #f2d0c9;
+}
+
+.success-message {
+  background: #edf8ef;
+  color: #347448;
+  border: 1px solid #d1ead6;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 500px) {
+
+  .reply-editor {
+    padding: 11px;
+  }
+
+  .reply-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .reply-footer button {
+    width: 100%;
+  }
+
+}

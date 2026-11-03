@@ -110,6 +110,7 @@ import { ProblemList as StudentLogicToCodeProblemList } from './features/student
 import { ProblemDetails as StudentLogicToCodeProblemDetails} from './features/student/advanced/logic-to-code/problems/problem-details/problem-details';
 import { CodingWorkspace } from './features/student/advanced/logic-to-code/coding-workspace/coding-workspace/coding-workspace';
 import { SubmissionDetailsComponent } from './features/student/advanced/logic-to-code/submission/submission-details/submission-details';
+import { DiscussionList } from './features/student/advanced/logic-to-code/discussions/discussion-list/discussion-list';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -493,6 +494,10 @@ export const routes: Routes = [
       {
         path: 'student/advanced/logic-to-code/problems/:problemId',
         component: StudentLogicToCodeProblemDetails
+      },
+      {
+         path: 'student/advanced/logic-to-code/problems/:problemId/discussions',
+        component: DiscussionList
       },
       {
         path: 'student/advanced/logic-to-code/problems/:problemId/workspace',

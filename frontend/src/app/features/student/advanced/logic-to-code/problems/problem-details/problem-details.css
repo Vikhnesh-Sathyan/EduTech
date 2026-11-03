@@ -485,3 +485,32 @@
   outline: 3px solid #f4d9a0;
   outline-offset: 3px;
 }
+
+.problem-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.discussion-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 22px;
+  border: 1px solid #5b4632;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #5b4632;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.discussion-button:hover {
+  background: #5b4632;
+  color: #ffffff;
+  transform: translateY(-2px);
+}

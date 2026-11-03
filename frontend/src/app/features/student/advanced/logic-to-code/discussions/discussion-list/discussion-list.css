@@ -1,0 +1,503 @@
+
+/* =====================================================
+   DISCUSSION PAGE
+===================================================== */
+
+.discussion-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px;
+  color: #30271f;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.discussion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  display: inline-block;
+  color: #c8792c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 9px;
+}
+
+.discussion-header h2 {
+  margin: 0;
+  color: #5b4632;
+  font-size: 28px;
+  font-weight: 750;
+}
+
+.discussion-header p {
+  margin: 8px 0 0;
+  color: #827568;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.discussion-count {
+  flex-shrink: 0;
+  padding: 10px 17px;
+  border: 1px solid #eadfce;
+  border-radius: 30px;
+  background: #fffaf1;
+  color: #5b4632;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   CREATE DISCUSSION SECTION
+===================================================== */
+
+.create-discussion-section {
+  margin-bottom: 26px;
+}
+
+/* =====================================================
+   DISCUSSION LIST
+===================================================== */
+
+.discussion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.discussion-card {
+  padding: 23px;
+  border: 1px solid #eee5d9;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(91, 70, 50, 0.045);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.discussion-card:hover {
+  border-color: #dfc9a9;
+  box-shadow: 0 8px 24px rgba(91, 70, 50, 0.075);
+}
+
+/* =====================================================
+   STUDENT INFORMATION
+===================================================== */
+
+.discussion-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f4d9a0;
+  color: #5b4632;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.user-details {
+  min-width: 0;
+}
+
+.user-details h4 {
+  margin: 0 0 4px;
+  color: #3e3025;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.user-details span {
+  color: #958779;
+  font-size: 12px;
+}
+
+.discussion-date {
+  margin-left: auto;
+  color: #a1968a;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   DISCUSSION CONTENT
+===================================================== */
+
+.discussion-content {
+  margin: 18px 0 16px;
+  padding-left: 55px;
+}
+
+.discussion-content p {
+  margin: 0;
+  color: #55483c;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.edited-label {
+  display: inline-block;
+  margin-top: 8px;
+  color: #a18c70;
+  font-size: 11px;
+  font-style: italic;
+}
+
+/* =====================================================
+   DISCUSSION ACTIONS
+===================================================== */
+
+.discussion-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 55px;
+}
+
+.owner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reply-button,
+.edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 13px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reply-button {
+  color: #9a642d;
+}
+
+.reply-button:hover {
+  border-color: #f0dfc4;
+  background: #fff8eb;
+  color: #5b4632;
+}
+
+.edit-button {
+  color: #5b4632;
+}
+
+.edit-button:hover {
+  border-color: #e6d8c5;
+  background: #faf5ed;
+}
+
+/* =====================================================
+   EDIT AND REPLY AREAS
+===================================================== */
+
+.discussion-edit-area,
+.discussion-reply-area {
+  margin: 18px 0 0 55px;
+  padding: 17px;
+  border: 1px solid #eee3d3;
+  border-radius: 12px;
+  background: #fffcf7;
+}
+
+.cancel-reply-button {
+  margin-top: 10px;
+  padding: 7px 12px;
+  border: 1px solid #e5d8c8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #766451;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-reply-button:hover {
+  background: #f5eee4;
+  color: #5b4632;
+}
+
+/* =====================================================
+   NESTED REPLIES
+===================================================== */
+
+.discussion-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 22px 0 0 55px;
+  padding-left: 20px;
+  border-left: 3px solid #f0dfc4;
+}
+
+.reply-card {
+  padding: 17px;
+  border: 1px solid #f0e8dc;
+  border-radius: 12px;
+  background: #fdfbf7;
+}
+
+.reply-avatar {
+  width: 36px;
+  height: 36px;
+  background: #f7e9ce;
+  font-size: 14px;
+}
+
+.reply-card .discussion-content {
+  margin-top: 13px;
+  margin-bottom: 12px;
+  padding-left: 48px;
+}
+
+.reply-card .discussion-actions {
+  padding-left: 48px;
+}
+
+.reply-card .discussion-edit-area,
+.reply-card .discussion-reply-area {
+  margin-left: 48px;
+}
+
+/* =====================================================
+   LOADING AND ERROR STATES
+===================================================== */
+
+.discussion-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: 30px;
+  border: 1px solid #eee5d9;
+  border-radius: 15px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.discussion-state p {
+  margin-top: 14px;
+  color: #827568;
+  font-size: 14px;
+}
+
+.loader {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #f0e5d5;
+  border-top-color: #c8792c;
+  border-radius: 50%;
+  animation: discussion-spin 0.8s linear infinite;
+}
+
+@keyframes discussion-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-state h3 {
+  margin: 0;
+  color: #a64032;
+  font-size: 17px;
+}
+
+.error-state button {
+  margin-top: 12px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.error-state button:hover {
+  background: #463523;
+}
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.discussion-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 35px 20px;
+  border: 1px dashed #dfd1bd;
+  border-radius: 16px;
+  background: #fffcf7;
+  text-align: center;
+}
+
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: #f4d9a0;
+  font-size: 25px;
+}
+
+.discussion-empty h3 {
+  margin: 0;
+  color: #5b4632;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.discussion-empty p {
+  max-width: 360px;
+  margin: 9px 0 0;
+  color: #938575;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .discussion-page {
+    padding: 18px;
+  }
+
+  .discussion-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .discussion-header h2 {
+    font-size: 24px;
+  }
+
+  .discussion-card {
+    padding: 17px;
+  }
+
+  .discussion-date {
+    font-size: 10px;
+  }
+
+  .discussion-content,
+  .discussion-actions {
+    padding-left: 0;
+  }
+
+  .discussion-replies {
+    margin-left: 12px;
+    padding-left: 12px;
+  }
+
+  .discussion-edit-area,
+  .discussion-reply-area {
+    margin-left: 0;
+  }
+
+  .reply-card .discussion-content,
+  .reply-card .discussion-actions {
+    padding-left: 0;
+  }
+
+  .reply-card .discussion-edit-area,
+  .reply-card .discussion-reply-area {
+    margin-left: 0;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .discussion-page {
+    padding: 12px;
+  }
+
+  .discussion-user {
+    gap: 9px;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .user-details h4 {
+    font-size: 13px;
+  }
+
+  .discussion-date {
+    white-space: normal;
+    text-align: right;
+  }
+
+  .discussion-content p {
+    font-size: 13px;
+  }
+
+  .owner-actions {
+    gap: 4px;
+  }
+
+}
+
+
+.report-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1px solid #ead6d0;
+  border-radius: 8px;
+  background: #fff;
+  color: #a34d3d;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.report-button:hover {
+  background: #fff3ef;
+  border-color: #c8792c;
+  color: #8d382c;
+}

@@ -8,10 +8,12 @@ import {
   StudentLogicToCodeProblemDetailsResponse
 } from '../../../../../../services/student/advanced/logic-to-code/logic-to-code.service';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-student-logic-to-code-problem-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './problem-details.html',
   styleUrl: './problem-details.css'
 })

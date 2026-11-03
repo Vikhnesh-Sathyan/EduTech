@@ -1,0 +1,338 @@
+
+<div class="discussion-page">
+
+  <!-- HEADER -->
+  <div class="discussion-header">
+    <div>
+      <span class="eyebrow">STUDENT COMMUNITY</span>
+      <h2>Discussions</h2>
+      <p>Share your ideas, ask questions and learn together.</p>
+    </div>
+
+    <div class="discussion-count">
+      {{ discussions().length }} Discussions
+    </div>
+  </div>
+
+  <!-- CREATE DISCUSSION -->
+  <div
+    class="create-discussion-section"
+    *ngIf="!loading() && !errorMessage()">
+
+    <app-discussion-create
+      [problemId]="problemId"
+      (discussionCreated)="loadDiscussions()">
+    </app-discussion-create>
+
+  </div>
+
+  <!-- LOADING -->
+  <div class="discussion-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading discussions...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div
+    class="discussion-state error-state"
+    *ngIf="!loading() && errorMessage()">
+
+    <h3>Unable to load discussions</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" (click)="loadDiscussions()">
+      Try Again
+    </button>
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div
+    class="discussion-empty"
+    *ngIf="!loading() && !errorMessage() && discussions().length === 0">
+
+    <div class="empty-icon">💬</div>
+
+    <h3>No discussions yet</h3>
+
+    <p>
+      Be the first to start a discussion about this problem.
+    </p>
+
+  </div>
+
+  <!-- DISCUSSION LIST -->
+  <div
+    class="discussion-list"
+    *ngIf="!loading() && !errorMessage() && discussions().length > 0">
+
+    <article
+      class="discussion-card"
+      *ngFor="let discussion of discussions()">
+
+      <!-- STUDENT INFORMATION -->
+      <div class="discussion-user">
+
+        <div class="user-avatar">
+          {{ discussion.user_name.charAt(0).toUpperCase() || 'S' }}
+        </div>
+
+        <div class="user-details">
+          <h4>{{ discussion.user_name }}</h4>
+
+          <span>
+            {{ discussion.user_role | titlecase }}
+          </span>
+        </div>
+
+        <div class="discussion-date">
+          {{ discussion.created_at | date:'medium' }}
+        </div>
+
+      </div>
+
+      <!-- DISCUSSION CONTENT -->
+      <div class="discussion-content">
+
+        <p>{{ discussion.content }}</p>
+
+        <span
+          class="edited-label"
+          *ngIf="discussion.is_edited">
+          Edited
+        </span>
+
+      </div>
+
+      <!-- DISCUSSION ACTIONS -->
+      <div class="discussion-actions">
+
+        <button
+          type="button"
+          class="reply-button"
+          (click)="openReply(discussion.id)">
+          ↳ Reply
+        </button>
+
+        <!-- OWNER ACTIONS -->
+        <div
+          class="owner-actions"
+          *ngIf="isOwnDiscussion(discussion)">
+
+          <button
+            type="button"
+            class="edit-button"
+            (click)="openEdit(discussion)">
+            Edit
+          </button>
+
+          <app-discussion-delete
+            [discussionId]="discussion.id"
+            (discussionDeleted)="loadDiscussions()">
+          </app-discussion-delete>
+
+        </div>
+
+        <!-- REPORT BUTTON -->
+        <button
+          *ngIf="!isOwnDiscussion(discussion)"
+          type="button"
+          class="report-button"
+          (click)="openReport(discussion.id)">
+
+          <span>⚑</span>
+          <span>Report</span>
+
+        </button>
+
+      </div>
+
+      <!-- REPORT FORM -->
+      <div
+        class="discussion-report-area"
+        *ngIf="reportingDiscussionId() === discussion.id">
+
+        <app-discussion-report
+          [discussionId]="discussion.id"
+          (reportSubmitted)="onReportSubmitted()"
+          (cancelReport)="closeReport()">
+        </app-discussion-report>
+
+      </div>
+
+      <!-- EDIT DISCUSSION -->
+      <div
+        class="discussion-edit-area"
+        *ngIf="editingDiscussionId() === discussion.id">
+
+        <app-discussion-edit
+          [discussionId]="discussion.id"
+          [existingContent]="editingContent()"
+          (discussionUpdated)="closeEdit(); loadDiscussions()"
+          (cancelEdit)="closeEdit()">
+        </app-discussion-edit>
+
+      </div>
+
+      <!-- REPLY EDITOR -->
+      <div
+        class="discussion-reply-area"
+        *ngIf="replyingToId() === discussion.id">
+
+        <app-discussion-reply
+          [problemId]="problemId"
+          [parentId]="discussion.id"
+          (replyCreated)="closeReply(); loadDiscussions()">
+        </app-discussion-reply>
+
+        <button
+          type="button"
+          class="cancel-reply-button"
+          (click)="closeReply()">
+          Cancel Reply
+        </button>
+
+      </div>
+
+      <!-- NESTED REPLIES -->
+      <div
+        class="discussion-replies"
+        *ngIf="discussion.replies?.length">
+
+        <article
+          class="reply-card"
+          *ngFor="let reply of discussion.replies">
+
+          <!-- REPLY USER -->
+          <div class="discussion-user">
+
+            <div class="user-avatar reply-avatar">
+              {{ reply.user_name.charAt(0).toUpperCase() || 'S' }}
+            </div>
+
+            <div class="user-details">
+              <h4>{{ reply.user_name }}</h4>
+
+              <span>
+                {{ reply.user_role | titlecase }}
+              </span>
+            </div>
+
+            <div class="discussion-date">
+              {{ reply.created_at | date:'medium' }}
+            </div>
+
+          </div>
+
+          <!-- REPLY CONTENT -->
+          <div class="discussion-content">
+
+            <p>{{ reply.content }}</p>
+
+            <span
+              class="edited-label"
+              *ngIf="reply.is_edited">
+              Edited
+            </span>
+
+          </div>
+
+          <!-- REPLY ACTIONS -->
+          <div class="discussion-actions">
+
+            <button
+              type="button"
+              class="reply-button"
+              (click)="openReply(reply.id)">
+              ↳ Reply
+            </button>
+
+            <!-- REPLY OWNER ACTIONS -->
+            <div
+              class="owner-actions"
+              *ngIf="isOwnDiscussion(reply)">
+
+              <button
+                type="button"
+                class="edit-button"
+                (click)="openEdit(reply)">
+                Edit
+              </button>
+
+              <app-discussion-delete
+                [discussionId]="reply.id"
+                (discussionDeleted)="loadDiscussions()">
+              </app-discussion-delete>
+
+            </div>
+
+            <!-- REPORT REPLY BUTTON -->
+            <button
+              *ngIf="!isOwnDiscussion(reply)"
+              type="button"
+              class="report-button"
+              (click)="openReport(reply.id)">
+
+              <span>⚑</span>
+              <span>Report</span>
+
+            </button>
+
+          </div>
+
+          <!-- REPORT REPLY FORM -->
+          <div
+            class="discussion-report-area"
+            *ngIf="reportingDiscussionId() === reply.id">
+
+            <app-discussion-report
+              [discussionId]="reply.id"
+              (reportSubmitted)="onReportSubmitted()"
+              (cancelReport)="closeReport()">
+            </app-discussion-report>
+
+          </div>
+
+          <!-- EDIT REPLY -->
+          <div
+            class="discussion-edit-area"
+            *ngIf="editingDiscussionId() === reply.id">
+
+            <app-discussion-edit
+              [discussionId]="reply.id"
+              [existingContent]="editingContent()"
+              (discussionUpdated)="closeEdit(); loadDiscussions()"
+              (cancelEdit)="closeEdit()">
+            </app-discussion-edit>
+
+          </div>
+
+          <!-- REPLY TO REPLY -->
+          <div
+            class="discussion-reply-area"
+            *ngIf="replyingToId() === reply.id">
+
+            <app-discussion-reply
+              [problemId]="problemId"
+              [parentId]="reply.id"
+              (replyCreated)="closeReply(); loadDiscussions()">
+            </app-discussion-reply>
+
+            <button
+              type="button"
+              class="cancel-reply-button"
+              (click)="closeReply()">
+              Cancel Reply
+            </button>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</div>

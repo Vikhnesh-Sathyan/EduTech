@@ -1,0 +1,170 @@
+
+/* =====================================================
+   CREATE DISCUSSION CARD
+===================================================== */
+
+.create-discussion-card {
+  padding: 24px;
+  margin-bottom: 22px;
+  background: #ffffff;
+  border: 1px solid #eee6dc;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(91, 70, 50, 0.04);
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.create-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 20px;
+}
+
+.create-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f4d9a0;
+  font-size: 20px;
+}
+
+.create-header h3 {
+  margin: 0 0 5px;
+  color: #5b4632;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.create-header p {
+  margin: 0;
+  color: #95877a;
+  font-size: 12px;
+}
+
+/* =====================================================
+   EDITOR
+===================================================== */
+
+.discussion-editor textarea {
+  width: 100%;
+  min-height: 115px;
+  padding: 15px;
+  resize: vertical;
+  border: 1px solid #e8dfd5;
+  border-radius: 11px;
+  outline: none;
+  background: #fdfcfb;
+  color: #4a392c;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.discussion-editor textarea::placeholder {
+  color: #b0a396;
+}
+
+.discussion-editor textarea:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.1);
+}
+
+.discussion-editor textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   EDITOR FOOTER
+===================================================== */
+
+.editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 13px;
+}
+
+.editor-footer span {
+  color: #a29587;
+  font-size: 12px;
+}
+
+.editor-footer button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 9px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.editor-footer button:hover:not(:disabled) {
+  background: #795b3e;
+  transform: translateY(-1px);
+}
+
+.editor-footer button:disabled {
+  background: #c8bfb5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   SUCCESS AND ERROR MESSAGES
+===================================================== */
+
+.message {
+  margin-top: 14px;
+  padding: 11px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.error-message {
+  background: #fff0ed;
+  color: #a34b3f;
+  border: 1px solid #f2d0c9;
+}
+
+.success-message {
+  background: #edf8ef;
+  color: #347448;
+  border: 1px solid #d1ead6;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .create-discussion-card {
+    padding: 17px;
+  }
+
+  .create-header {
+    align-items: flex-start;
+  }
+
+  .editor-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .editor-footer button {
+    width: 100%;
+  }
+
+}
