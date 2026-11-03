@@ -258,4 +258,16 @@ manageSteps(problemId: number): void {
   ]);
 }
 
+// ==========================================
+// MANAGE PROBLEM DISCUSSIONS
+// ==========================================
+
+manageDiscussions(problemId: number): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code/problems',
+    problemId,
+    'discussions'
+  ]);
+}
+
 }

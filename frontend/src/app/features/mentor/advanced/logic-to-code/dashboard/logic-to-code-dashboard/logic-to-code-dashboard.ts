@@ -90,17 +90,15 @@ loadDashboard(): void {
     ]);
   }
 
-  openDiscussions(): void {
-    this.router.navigate([
-      '/mentor/advanced/logic-to-code/discussions'
-    ]);
-  }
+openDiscussions(): void {
+  this.openProblems();
+}
 
-  openReports(): void {
-    this.router.navigate([
-      '/mentor/advanced/logic-to-code/reports'
-    ]);
-  }
+ openReports(): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code/discussion-reports'
+  ]);
+}
 
   viewProblem(problemId: number): void {
     this.router.navigate([

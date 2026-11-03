@@ -1,0 +1,334 @@
+
+<div class="reports-page">
+
+  <!-- HEADER -->
+  <div class="reports-header">
+    <div>
+      <span class="eyebrow">STUDENT COMMUNITY</span>
+      <h2>Discussion Reports</h2>
+      <p>Review reported discussions and manage community safety.</p>
+    </div>
+
+    <div class="total-count">
+      <span>{{ totalReports() }}</span>
+      <small>Total Reports</small>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-section">
+    <button
+      type="button"
+      [class.active]="selectedStatus() === ''"
+      (click)="changeStatus('')">
+      All Reports
+    </button>
+
+    <button
+      type="button"
+      [class.active]="selectedStatus() === 'pending'"
+      (click)="changeStatus('pending')">
+      Pending
+    </button>
+
+    <button
+      type="button"
+      [class.active]="selectedStatus() === 'action_taken'"
+      (click)="changeStatus('action_taken')">
+      Action Taken
+    </button>
+
+    <button
+      type="button"
+      [class.active]="selectedStatus() === 'dismissed'"
+      (click)="changeStatus('dismissed')">
+      Dismissed
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading discussion reports...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @if (!loading() && errorMessage()) {
+    <div class="state-card error-state">
+      <p>{{ errorMessage() }}</p>
+
+      <button type="button" (click)="loadReports()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  <!-- EMPTY -->
+  @if (!loading() && !errorMessage() && reports().length === 0) {
+    <div class="state-card empty-state">
+      <div class="empty-icon">✓</div>
+      <h3>No Reports Found</h3>
+      <p>There are no discussion reports in this category.</p>
+    </div>
+  }
+
+  <!-- REPORT LIST -->
+  @if (!loading() && reports().length > 0) {
+
+    <div class="reports-list">
+
+      @for (report of reports(); track report.report_id) {
+
+        <div class="report-card">
+
+          <!-- CARD HEADER -->
+          <div class="report-top">
+
+            <div>
+              <span class="report-id">
+                REPORT #{{ report.report_id }}
+              </span>
+
+              <h3>{{ report.problem_title }}</h3>
+            </div>
+
+            <span
+              class="status-badge"
+              [class.pending]="report.status === 'pending'"
+              [class.action-taken]="report.status === 'action_taken'"
+              [class.dismissed]="report.status === 'dismissed'">
+
+              {{ report.status.replace('_', ' ') }}
+
+            </span>
+
+          </div>
+
+          <!-- REPORT DETAILS -->
+          <div class="report-details">
+
+            <div class="detail-item">
+              <span>Reported By</span>
+              <strong>{{ report.reporter_name }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Discussion Author</span>
+              <strong>{{ report.discussion_author_name }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Reason</span>
+              <strong>{{ report.reason.replace('_', ' ') }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Reported On</span>
+              <strong>{{ report.reported_at | date:'medium' }}</strong>
+            </div>
+
+          </div>
+
+          <!-- REPORTED CONTENT -->
+          <div class="content-section">
+            <span class="section-label">Reported Discussion</span>
+            <p>{{ report.discussion_content }}</p>
+
+            @if (report.is_deleted) {
+              <small class="deleted-note">
+                This discussion has already been deleted.
+              </small>
+            }
+          </div>
+
+          <!-- REPORT DESCRIPTION -->
+          @if (report.description) {
+            <div class="description-section">
+              <span class="section-label">Report Description</span>
+              <p>{{ report.description }}</p>
+            </div>
+          }
+
+          <!-- REVIEW INFORMATION -->
+          @if (report.status !== 'pending') {
+            <div class="review-info">
+              <span>
+                Reviewed by:
+                <strong>{{ report.reviewer_name || 'Mentor' }}</strong>
+              </span>
+
+              @if (report.reviewed_at) {
+                <span>
+                  {{ report.reviewed_at | date:'medium' }}
+                </span>
+              }
+            </div>
+          }
+
+          <!-- ACTIONS -->
+          @if (report.status === 'pending') {
+
+            <div class="report-actions">
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="openReview(report.report_id, 'action_taken')">
+
+                Take Action
+              </button>
+
+              <button
+                type="button"
+                class="dismiss-button"
+                (click)="openReview(report.report_id, 'dismissed')">
+
+                Dismiss Report
+              </button>
+
+            </div>
+
+          }
+
+          <!-- DELETE REPORTED DISCUSSION -->
+@if (!report.is_deleted) {
+
+  <div class="delete-discussion-section">
+
+    <button
+      type="button"
+      class="delete-discussion-button"
+      [disabled]="deletingDiscussionId() !== null"
+      (click)="openDeleteConfirmation(report.report_id)">
+
+      <span>🗑</span>
+      Delete Discussion
+    </button>
+
+  </div>
+
+}
+
+<!-- DELETE CONFIRMATION -->
+@if (confirmingDeleteReportId() === report.report_id) {
+
+  <div class="delete-confirmation">
+
+    <h4>Delete this discussion?</h4>
+
+    <p>
+      This will remove the reported discussion and its nested replies.
+      The report record will remain available.
+    </p>
+
+    <div class="confirmation-actions">
+
+      <button
+        type="button"
+        class="confirm-delete-button"
+        [disabled]="deletingDiscussionId() === report.report_id"
+        (click)="confirmDelete(report)">
+
+        {{ deletingDiscussionId() === report.report_id
+          ? 'Deleting...'
+          : 'Yes, Delete'
+        }}
+
+      </button>
+
+      <button
+        type="button"
+        class="cancel-button"
+        [disabled]="deletingDiscussionId() === report.report_id"
+        (click)="cancelDelete()">
+
+        Cancel
+
+      </button>
+
+    </div>
+
+  </div>
+
+}
+
+          <!-- REVIEW CONFIRMATION -->
+          @if (reviewingReportId() === report.report_id) {
+
+            <div class="review-confirmation">
+
+              <p>
+                Are you sure you want to
+                <strong>
+                  {{ pendingReviewStatus() === 'action_taken'
+                    ? 'take action on'
+                    : 'dismiss'
+                  }}
+                </strong>
+                this report?
+              </p>
+
+              <div class="confirmation-actions">
+
+                <button
+                  type="button"
+                  class="confirm-button"
+                  (click)="confirmReview()">
+
+                  Confirm
+                </button>
+
+                <button
+                  type="button"
+                  class="cancel-button"
+                  (click)="cancelReview()">
+
+                  Cancel
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- PAGINATION -->
+    @if (totalPages() > 1) {
+
+      <div class="pagination">
+
+        <button
+          type="button"
+          [disabled]="currentPage() <= 1 || loading()"
+          (click)="previousPage()">
+
+          ← Previous
+        </button>
+
+        <span>
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+
+        <button
+          type="button"
+          [disabled]="currentPage() >= totalPages() || loading()"
+          (click)="nextPage()">
+
+          Next →
+        </button>
+
+      </div>
+
+    }
+
+  }
+
+</div>

@@ -1,0 +1,215 @@
+
+<div class="discussion-page">
+
+  <!-- HEADER -->
+  <div class="discussion-header">
+    <div>
+      <span class="eyebrow">MENTOR WORKSPACE</span>
+      <h2>Problem Discussions</h2>
+      <p>{{ problemTitle() }}</p>
+    </div>
+
+    <div class="discussion-count">
+      {{ discussions().length }} Discussions
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading discussions...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @if (!loading() && errorMessage()) {
+    <div class="error-card">
+      {{ errorMessage() }}
+      <button (click)="loadDiscussions()">Try Again</button>
+    </div>
+  }
+
+  <!-- EMPTY -->
+  @if (!loading() && !errorMessage() && discussions().length === 0) {
+    <div class="state-card empty-state">
+      <div class="empty-icon">💬</div>
+      <h3>No discussions yet</h3>
+      <p>Student questions and discussions will appear here.</p>
+    </div>
+  }
+
+  <!-- DISCUSSIONS -->
+  @if (!loading() && discussions().length > 0) {
+
+    <div class="discussion-list">
+
+      @for (discussion of discussions(); track discussion.id) {
+
+        <div class="discussion-card">
+
+          <!-- STUDENT INFORMATION -->
+          <div class="discussion-top">
+
+            <div class="student-info">
+              <div class="avatar">
+                {{ discussion.user_name.charAt(0).toUpperCase() }}
+              </div>
+
+              <div>
+                <h4>{{ discussion.user_name }}</h4>
+                <span>{{ discussion.user_role }}</span>
+              </div>
+            </div>
+
+            <span class="discussion-date">
+              {{ discussion.created_at | date:'medium' }}
+            </span>
+
+          </div>
+
+          <!-- CONTENT -->
+          <div class="discussion-content">
+            {{ discussion.content }}
+          </div>
+
+          @if (discussion.is_edited) {
+            <span class="edited-label">Edited</span>
+          }
+
+          <!-- ACTIONS -->
+          <div class="discussion-actions">
+
+            <button
+              class="reply-button"
+              (click)="openReply(discussion.id)">
+              Reply
+            </button>
+
+            <button
+              class="delete-button"
+              (click)="openDelete(discussion.id)">
+              Delete
+            </button>
+
+          </div>
+
+          <!-- REPLY FORM -->
+          @if (replyingToId() === discussion.id) {
+            <div class="reply-form">
+
+              <textarea
+                [value]="replyContent()"
+                (input)="replyContent.set($any($event.target).value)"
+                placeholder="Write your reply..."
+                rows="3">
+              </textarea>
+
+              <div class="reply-form-actions">
+                <button
+                  class="cancel-button"
+                  (click)="closeReply()">
+                  Cancel
+                </button>
+
+                <button
+                  class="submit-button"
+                  [disabled]="submittingReply()"
+                  (click)="submitReply(discussion.id)">
+                  {{ submittingReply() ? 'Sending...' : 'Send Reply' }}
+                </button>
+              </div>
+
+            </div>
+          }
+
+          <!-- DELETE CONFIRMATION -->
+          @if (deletingDiscussionId() === discussion.id) {
+            <div class="delete-confirmation">
+              <p>Delete this discussion and all its replies?</p>
+
+              <button
+                class="cancel-button"
+                (click)="closeDelete()">
+                Cancel
+              </button>
+
+              <button
+                class="confirm-delete-button"
+                (click)="confirmDelete(discussion.id)">
+                Confirm Delete
+              </button>
+            </div>
+          }
+
+          <!-- NESTED REPLIES -->
+          @if (discussion.replies?.length) {
+
+            <div class="replies-section">
+
+              @for (reply of discussion.replies; track reply.id) {
+
+                <div class="reply-card">
+
+                  <div class="reply-user">
+                    <div class="avatar reply-avatar">
+                      {{ reply.user_name.charAt(0).toUpperCase() }}
+                    </div>
+
+                    <div>
+                      <h5>{{ reply.user_name }}</h5>
+                      <span>{{ reply.user_role }}</span>
+                    </div>
+
+                    <span class="reply-date">
+                      {{ reply.created_at | date:'short' }}
+                    </span>
+                  </div>
+
+                  <p>{{ reply.content }}</p>
+
+                  @if (reply.is_edited) {
+                    <span class="edited-label">Edited</span>
+                  }
+
+                  <button
+                    class="delete-button"
+                    (click)="openDelete(reply.id)">
+                    Delete
+                  </button>
+
+                  @if (deletingDiscussionId() === reply.id) {
+                    <div class="delete-confirmation">
+                      <p>Delete this reply and its nested replies?</p>
+
+                      <button
+                        class="cancel-button"
+                        (click)="closeDelete()">
+                        Cancel
+                      </button>
+
+                      <button
+                        class="confirm-delete-button"
+                        (click)="confirmDelete(reply.id)">
+                        Confirm Delete
+                      </button>
+                    </div>
+                  }
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

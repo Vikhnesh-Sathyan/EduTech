@@ -214,7 +214,11 @@ import { SubmissionList } from './features/mentor/advanced/logic-to-code/submiss
 import { SubmissionDetails } from './features/mentor/advanced/logic-to-code/submissions/submission-details/submission-details';
 //PROBLEM STEPS
 import { ProblemSteps } from './features/mentor/advanced/logic-to-code/problems/problem-steps/problem-steps';
-
+// DISCUSSIONS
+import {
+  DiscussionList as MentorDiscussionList
+} from './features/mentor/advanced/logic-to-code/discussions/discussion-list/discussion-list';
+import { DiscussionReports } from './features/mentor/advanced/logic-to-code/discussions/discussion-reports/discussion-reports';
 
 export const routes: Routes = [
 
@@ -777,6 +781,15 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/problems/:problemId/steps',
         component: ProblemSteps
+      },
+      // MENTOR PROBLEM DISCUSSIONS
+      {
+        path: 'mentor/advanced/logic-to-code/problems/:problemId/discussions',
+        component: MentorDiscussionList
+      },
+      {
+        path: 'mentor/advanced/logic-to-code/discussion-reports',
+        component: DiscussionReports
       },
       {
         path: 'mentor/advanced/logic-to-code/problems/:problemId',
