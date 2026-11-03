@@ -1,0 +1,195 @@
+
+<div class="submission-page">
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading submission details...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state-card error-state"
+       *ngIf="!loading() && errorMessage()">
+    <h2>Unable to load submission</h2>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" (click)="goBack()">
+      Back to Submissions
+    </button>
+  </div>
+
+  <!-- SUBMISSION CONTENT -->
+  <ng-container *ngIf="!loading() && submission() as item">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <button class="back-button" type="button" (click)="goBack()">
+        ← Back
+      </button>
+
+      <div>
+        <span class="eyebrow">STUDENT WORKSPACE</span>
+        <h1>Submission Details</h1>
+        <p>Review your submitted code and mentor feedback.</p>
+      </div>
+    </div>
+
+    <!-- PROBLEM INFORMATION -->
+    <section class="info-card">
+      <span class="section-label">PROBLEM INFORMATION</span>
+
+      <h2>{{ item.problem_title }}</h2>
+
+      <div class="info-meta">
+        <span>{{ item.difficulty | titlecase }}</span>
+        <span>Submission #{{ item.submission_number }}</span>
+        <span>{{ item.language | uppercase }}</span>
+      </div>
+    </section>
+
+    <!-- EXECUTION RESULT -->
+    <section class="info-card">
+      <span class="section-label">EXECUTION RESULT</span>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <span>Execution Status</span>
+          <strong>{{ item.execution_status | titlecase }}</strong>
+        </div>
+
+        <div class="result-item">
+          <span>Test Cases Passed</span>
+          <strong>
+            {{ item.passed_test_cases }} /
+            {{ item.total_test_cases }}
+          </strong>
+        </div>
+
+        <div class="result-item">
+          <span>Execution Time</span>
+          <strong>
+            {{ item.execution_time_ms ?? 'N/A' }}
+            <small *ngIf="item.execution_time_ms !== null">ms</small>
+          </strong>
+        </div>
+
+        <div class="result-item">
+          <span>Memory Used</span>
+          <strong>
+            {{ item.memory_used_kb ?? 'N/A' }}
+            <small *ngIf="item.memory_used_kb !== null">KB</small>
+          </strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBMITTED CODE -->
+    <section class="info-card">
+      <span class="section-label">YOUR SUBMITTED CODE</span>
+
+      <pre class="code-block"><code>{{ item.source_code }}</code></pre>
+    </section>
+
+    <!-- TEST CASE RESULTS -->
+    <section class="info-card">
+      <span class="section-label">TEST CASE RESULTS</span>
+
+      <div class="test-list"
+           *ngIf="item.test_results?.length; else noTestResults">
+
+        <div class="test-row" *ngFor="let test of item.test_results">
+          <div>
+            <strong>Test Case {{ test.caseNumber }}</strong>
+            <span>{{ test.visibility | titlecase }}</span>
+          </div>
+
+          <span class="test-status"
+                [class.passed]="test.passed"
+                [class.failed]="!test.passed">
+            {{ test.passed ? 'Passed' : 'Failed' }}
+          </span>
+        </div>
+
+      </div>
+
+      <ng-template #noTestResults>
+        <p class="empty-text">No test results available.</p>
+      </ng-template>
+    </section>
+
+    <!-- MENTOR REVIEW -->
+    <section class="mentor-review-card">
+
+      <div class="review-header">
+        <div>
+          <span class="section-label">MENTOR REVIEW</span>
+          <h2>Feedback on Your Submission</h2>
+        </div>
+
+        <span class="review-status"
+              [class.reviewed]="isReviewed()">
+          {{ isReviewed() ? 'Reviewed' : 'Pending Review' }}
+        </span>
+      </div>
+
+      <!-- REVIEWED -->
+      <ng-container *ngIf="isReviewed(); else pendingReview">
+
+        <!-- STAR RATING -->
+        <div class="rating-section">
+          <h3>Mentor Rating</h3>
+
+          <div class="stars">
+            <span
+              *ngFor="let star of stars"
+              [class.active]="star <= getRating()">
+              ★
+            </span>
+
+            <strong>{{ getRating() }} / 5</strong>
+          </div>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div class="feedback-section">
+          <h3>Mentor Feedback</h3>
+
+          <p *ngIf="item.mentor_feedback">
+            {{ item.mentor_feedback }}
+          </p>
+
+          <p *ngIf="!item.mentor_feedback" class="empty-text">
+            No written feedback was provided.
+          </p>
+        </div>
+
+        <div class="review-date" *ngIf="item.reviewed_at">
+          Reviewed on:
+          {{ item.reviewed_at | date:'medium' }}
+        </div>
+
+      </ng-container>
+
+      <!-- PENDING -->
+      <ng-template #pendingReview>
+        <div class="pending-message">
+          <span class="pending-icon">◷</span>
+          <h3>Waiting for Mentor Review</h3>
+          <p>
+            Your submission has been received.
+            Your mentor will provide feedback and a rating after reviewing it.
+          </p>
+        </div>
+      </ng-template>
+
+    </section>
+
+    <!-- SUBMISSION DATE -->
+    <div class="submission-date">
+      Submitted on:
+      {{ item.submitted_at | date:'medium' }}
+    </div>
+
+  </ng-container>
+
+</div>

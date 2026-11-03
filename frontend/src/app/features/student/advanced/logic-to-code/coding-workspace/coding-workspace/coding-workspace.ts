@@ -2,7 +2,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+
+import { ActivatedRoute, Router } from '@angular/router';
 
 // CHILD COMPONENTS
 import { LearningPanel } from '../components/learning-panel/learning-panel';
@@ -13,7 +14,8 @@ import { ExecutionResults } from '../components/execution-results/execution-resu
 import {
   LogicToCodeService,
   StudentLogicToCodeProblemDetailsResponse,
-  ExecuteStudentSubmissionResponse
+  ExecuteStudentSubmissionResponse,
+  StudentProblemSubmission
 } from '../../../../../../services/student/advanced/logic-to-code/logic-to-code.service';
 
 @Component({
@@ -32,6 +34,7 @@ import {
 export class CodingWorkspace implements OnInit {
 
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private logicToCodeService = inject(LogicToCodeService);
 
   // =====================================================
@@ -71,6 +74,24 @@ export class CodingWorkspace implements OnInit {
   >(null);
 
   executionError = signal<string>('');
+
+  submissionId = signal<number | null>(null);
+
+  // =====================================================
+  // STUDENT SUBMISSION HISTORY
+  // =====================================================
+
+  submissionHistory = signal<StudentProblemSubmission[]>([]);
+
+  historyLoading = signal<boolean>(false);
+
+  historyError = signal<string>('');
+
+  // =====================================================
+// STAR RATING
+// =====================================================
+
+readonly stars = [1, 2, 3, 4, 5];
 
   // =====================================================
   // INITIALIZATION
@@ -126,6 +147,9 @@ export class CodingWorkspace implements OnInit {
 
             this.sourceCode.set('');
 
+            // LOAD PREVIOUS SUBMISSIONS
+            this.loadSubmissionHistory();
+
           } else {
 
             this.errorMessage.set(
@@ -144,6 +168,43 @@ export class CodingWorkspace implements OnInit {
           );
 
           this.loading.set(false);
+        }
+
+      });
+  }
+
+  // =====================================================
+  // LOAD STUDENT SUBMISSION HISTORY
+  // =====================================================
+
+  loadSubmissionHistory(): void {
+
+    if (!this.problemId) {
+      return;
+    }
+
+    this.historyLoading.set(true);
+    this.historyError.set('');
+
+    this.logicToCodeService
+      .getSubmissionHistory(this.problemId)
+      .subscribe({
+
+        next: (response) => {
+
+          this.submissionHistory.set(response.data || []);
+
+          this.historyLoading.set(false);
+        },
+
+        error: (error) => {
+
+          this.historyError.set(
+            error.error?.message ||
+            'Unable to load submission history.'
+          );
+
+          this.historyLoading.set(false);
         }
 
       });
@@ -208,13 +269,15 @@ export class CodingWorkspace implements OnInit {
           return;
         }
 
-        const submissionId =
+        const newSubmissionId =
           createResponse.data.submissionId;
+
+        this.submissionId.set(newSubmissionId);
 
         // STEP 2: EXECUTE SUBMISSION
 
         this.logicToCodeService
-          .executeSubmission(submissionId)
+          .executeSubmission(newSubmissionId)
           .subscribe({
 
             next: (executeResponse) => {
@@ -235,6 +298,9 @@ export class CodingWorkspace implements OnInit {
               }
 
               this.submitting.set(false);
+
+              // REFRESH HISTORY AFTER EXECUTION
+              this.loadSubmissionHistory();
             },
 
             error: (error) => {
@@ -245,6 +311,9 @@ export class CodingWorkspace implements OnInit {
               );
 
               this.submitting.set(false);
+
+              // REFRESH HISTORY EVEN IF EXECUTION FAILS
+              this.loadSubmissionHistory();
             }
 
           });
@@ -262,6 +331,24 @@ export class CodingWorkspace implements OnInit {
       }
 
     });
+  }
+
+  // =====================================================
+  // OPEN SUBMISSION DETAILS
+  // =====================================================
+
+  viewSubmissionDetails(submissionId?: number): void {
+
+    const id = submissionId || this.submissionId();
+
+    if (!id) {
+      return;
+    }
+
+    this.router.navigate([
+      '/student/advanced/logic-to-code/submissions',
+      id
+    ]);
   }
 
 }

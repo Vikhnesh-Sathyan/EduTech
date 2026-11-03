@@ -218,3 +218,398 @@
     padding: 20px;
   }
 }
+
+
+/* =========================================
+   VIEW SUBMISSION DETAILS
+========================================= */
+
+.submission-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding: 16px 0;
+}
+
+.view-submission-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border: none;
+  border-radius: 10px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.view-submission-btn:hover {
+  background: #c8792c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(91, 70, 50, 0.18);
+}
+
+.view-submission-btn:focus-visible {
+  outline: 3px solid #f4d9a0;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .submission-action {
+    justify-content: stretch;
+  }
+
+  .view-submission-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* =====================================================
+   SUBMISSION HISTORY SECTION
+===================================================== */
+
+.submission-history-section {
+  margin-top: 35px;
+  padding: 30px;
+  background: #fffdf9;
+  border: 1px solid #eadfce;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(91, 70, 50, 0.05);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.history-header h2 {
+  margin: 8px 0;
+  color: #5b4632;
+  font-size: 24px;
+  font-weight: 750;
+}
+
+.history-header p {
+  margin: 0;
+  color: #887866;
+  font-size: 14px;
+}
+
+.submission-count {
+  padding: 9px 15px;
+  background: #f4d9a0;
+  color: #5b4632;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   HISTORY STATES
+===================================================== */
+
+.history-state,
+.history-empty {
+  padding: 35px 20px;
+  text-align: center;
+  color: #887866;
+}
+
+.history-state .loader {
+  margin: 0 auto 12px;
+}
+
+.history-empty {
+  background: #faf6ef;
+  border: 1px dashed #dfcdb5;
+  border-radius: 14px;
+}
+
+.empty-icon {
+  margin-bottom: 12px;
+  color: #c8792c;
+  font-size: 35px;
+}
+
+.history-empty h3 {
+  margin: 0 0 8px;
+  color: #5b4632;
+  font-size: 18px;
+}
+
+.history-empty p {
+  margin: 0;
+  color: #887866;
+  font-size: 14px;
+}
+
+/* =====================================================
+   SUBMISSION LIST
+===================================================== */
+
+.submission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.submission-card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #eadfce;
+  border-radius: 15px;
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.submission-card:hover {
+  border-color: #c8792c;
+  box-shadow: 0 7px 20px rgba(91, 70, 50, 0.07);
+}
+
+/* =====================================================
+   SUBMISSION HEADER
+===================================================== */
+
+.submission-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.submission-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.submission-number {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f4d9a0;
+  color: #5b4632;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.submission-title h3 {
+  margin: 0 0 5px;
+  color: #5b4632;
+  font-size: 16px;
+}
+
+.submission-date {
+  color: #998977;
+  font-size: 12px;
+}
+
+/* =====================================================
+   REVIEW STATUS
+===================================================== */
+
+.review-status {
+  padding: 7px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.review-status.reviewed {
+  background: #e7f5e9;
+  color: #287a3e;
+}
+
+.review-status.pending {
+  background: #fff2dc;
+  color: #a56616;
+}
+
+/* =====================================================
+   SUBMISSION INFORMATION
+===================================================== */
+
+.submission-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 17px;
+  background: #faf7f1;
+  border-radius: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.info-item span {
+  color: #998977;
+  font-size: 12px;
+}
+
+.info-item strong {
+  color: #5b4632;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+/* =====================================================
+   MENTOR REVIEW PREVIEW
+===================================================== */
+
+.mentor-review-preview {
+  margin-top: 17px;
+  padding: 17px;
+  background: #fffaf0;
+  border: 1px solid #f0dfbd;
+  border-radius: 12px;
+}
+
+.review-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.review-preview-header strong {
+  color: #5b4632;
+  font-size: 14px;
+}
+
+.history-stars {
+  display: flex;
+  gap: 3px;
+  color: #d6c8b4;
+  font-size: 18px;
+}
+
+.history-stars span.active {
+  color: #c8792c;
+}
+
+.mentor-review-preview p {
+  margin: 0;
+  color: #6e5b47;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.mentor-review-preview .no-feedback {
+  color: #998977;
+  font-style: italic;
+}
+
+/* =====================================================
+   PENDING REVIEW
+===================================================== */
+
+.pending-review {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 17px;
+  padding: 13px 15px;
+  background: #fff7e9;
+  color: #9a681f;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.pending-review span {
+  font-size: 17px;
+}
+
+/* =====================================================
+   SUBMISSION FOOTER
+===================================================== */
+
+.submission-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid #f0e8dc;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .submission-history-section {
+    padding: 20px 15px;
+  }
+
+  .history-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .submission-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .submission-info {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .review-preview-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .submission-info {
+    grid-template-columns: 1fr;
+  }
+
+  .submission-card {
+    padding: 16px;
+  }
+
+  .submission-card-footer {
+    justify-content: stretch;
+  }
+
+  .submission-card-footer .view-submission-btn {
+    width: 100%;
+  }
+
+}
+
+
+.history-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-rating strong {
+  color: #5b4632;
+  font-size: 13px;
+}

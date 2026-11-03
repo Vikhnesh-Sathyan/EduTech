@@ -89,7 +89,7 @@
 
         <div class="stat-card">
           <span>Execution Time</span>
-          <strong>{{ item.execution_time_ms ?? 0 }} ms</strong>
+          <strong>{{ item.execution_time_ms  }} ms</strong>
         </div>
 
         <div class="stat-card">
@@ -131,7 +131,7 @@
     </section>
 
     <!-- TEST RESULTS -->
-    <section class="test-results-section" *ngIf="item.test_results?.length">
+    <section class="test-results-section" *ngIf="item.test_results.length">
 
       <div class="section-heading">
         <div>

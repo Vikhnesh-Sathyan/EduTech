@@ -1,4 +1,3 @@
-
 // =====================================================
 // IMPORT DATABASE
 // =====================================================
@@ -173,7 +172,9 @@ const getStudentSubmissionHistory = async (req, res) => {
 
                 s.error_message,
                 s.mentor_feedback,
+                s.star_rating,
                 s.review_status,
+
 
                 s.submitted_at,
                 s.reviewed_at

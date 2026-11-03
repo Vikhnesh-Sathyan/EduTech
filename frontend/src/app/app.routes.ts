@@ -109,7 +109,7 @@ import { Dashboard } from './features/student/advanced/logic-to-code/dashboard/d
 import { ProblemList as StudentLogicToCodeProblemList } from './features/student/advanced/logic-to-code/problems/problem-list/problem-list';
 import { ProblemDetails as StudentLogicToCodeProblemDetails} from './features/student/advanced/logic-to-code/problems/problem-details/problem-details';
 import { CodingWorkspace } from './features/student/advanced/logic-to-code/coding-workspace/coding-workspace/coding-workspace';
-
+import { SubmissionDetailsComponent } from './features/student/advanced/logic-to-code/submission/submission-details/submission-details';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -211,8 +211,10 @@ import { MistakeManagement } from './features/mentor/advanced/logic-to-code/comm
 // MENTOR SUBMISSIONS
 import { SubmissionList } from './features/mentor/advanced/logic-to-code/submissions/submission-list/submission-list';
 import { SubmissionDetails } from './features/mentor/advanced/logic-to-code/submissions/submission-details/submission-details';
-
+//PROBLEM STEPS
 import { ProblemSteps } from './features/mentor/advanced/logic-to-code/problems/problem-steps/problem-steps';
+
+
 export const routes: Routes = [
 
   // Public routes
@@ -495,6 +497,10 @@ export const routes: Routes = [
       {
         path: 'student/advanced/logic-to-code/problems/:problemId/workspace',
         component: CodingWorkspace
+      },
+      {
+        path: 'student/advanced/logic-to-code/submissions/:submissionId',
+        component: SubmissionDetailsComponent
       }
 
     ]
@@ -764,9 +770,9 @@ export const routes: Routes = [
         component: CreateProblem
       },
       {
-  path: 'mentor/advanced/logic-to-code/problems/:problemId/steps',
-  component: ProblemSteps
-},
+        path: 'mentor/advanced/logic-to-code/problems/:problemId/steps',
+        component: ProblemSteps
+      },
       {
         path: 'mentor/advanced/logic-to-code/problems/:problemId',
         component: ProblemDetails

@@ -45,6 +45,7 @@ const getStudentSubmissionDetails = async (req, res) => {
                 s.error_message,
                 s.test_results,
                 s.mentor_feedback,
+                s.star_rating,
                 s.review_status,
                 s.submitted_at,
                 s.reviewed_at

@@ -221,6 +221,7 @@ export interface StudentSubmissionDetails {
   error_message: string | null;
   test_results: any;
   mentor_feedback: string | null;
+  star_rating: number | null;
   review_status: string;
   submitted_at: string;
   reviewed_at: string | null;
@@ -231,6 +232,43 @@ export interface StudentSubmissionDetailsResponse {
   message: string;
   data: StudentSubmissionDetails;
 }
+
+// =====================================================
+// STUDENT SUBMISSION HISTORY
+// =====================================================
+
+export interface StudentProblemSubmission {
+  id: number;
+  problem_id: number;
+  problem_title: string;
+  difficulty: string;
+  language: string;
+  submission_number: number;
+  execution_status: string;
+  passed_test_cases: number;
+  total_test_cases: number;
+  execution_time_ms: number | null;
+  memory_used_kb: number | null;
+  error_message: string | null;
+  mentor_feedback: string | null;
+  star_rating: number | null;
+  review_status: string;
+  submitted_at: string;
+  reviewed_at: string | null;
+}
+
+export interface StudentProblemSubmissionsResponse {
+  success: boolean;
+  message: string;
+  data: StudentProblemSubmission[];
+  pagination: {
+    currentPage: number;
+    limit: number;
+    totalSubmissions: number;
+    totalPages: number;
+  };
+}
+
 
 // =====================================================
 // STUDENT LOGIC TO CODE SERVICE
@@ -359,5 +397,25 @@ export class LogicToCodeService {
     );
 
   }
+// =====================================================
+// GET STUDENT SUBMISSION HISTORY
+// =====================================================
 
+getSubmissionHistory(
+  problemId?: number,
+  page: number = 1,
+  limit: number = 10
+): Observable<StudentProblemSubmissionsResponse> {
+
+  let params: any = { page, limit };
+
+  if (problemId) {
+    params.problemId = problemId;
+  }
+
+  return this.http.get<StudentProblemSubmissionsResponse>(
+    `${this.apiUrl}/submissions`,
+    { params }
+  );
+}
 }

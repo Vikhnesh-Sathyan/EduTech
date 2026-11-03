@@ -3,11 +3,8 @@
 
   <!-- LOADING -->
   <div class="state-card" *ngIf="loading()">
-
     <div class="loader"></div>
-
     <p>Preparing your coding workspace...</p>
-
   </div>
 
   <!-- ERROR -->
@@ -16,9 +13,7 @@
     *ngIf="!loading() && errorMessage()">
 
     <h2>Unable to load workspace</h2>
-
     <p>{{ errorMessage() }}</p>
-
   </div>
 
   <!-- WORKSPACE -->
@@ -26,7 +21,6 @@
 
     <!-- HEADER -->
     <header class="workspace-header">
-
       <div class="header-content">
 
         <span class="eyebrow">STUDENT WORKSPACE</span>
@@ -38,9 +32,7 @@
           <span
             class="difficulty"
             [ngClass]="details.problem.difficulty.toLowerCase()">
-
             {{ details.problem.difficulty }}
-
           </span>
 
           <span>
@@ -52,9 +44,7 @@
           </span>
 
         </div>
-
       </div>
-
     </header>
 
     <!-- TWO PANEL WORKSPACE -->
@@ -89,9 +79,213 @@
           [executionResult]="executionResult()">
         </app-execution-results>
 
-      </main>
+        <!-- VIEW LATEST SUBMISSION -->
+        <div
+          class="submission-action"
+          *ngIf="submissionId() !== null">
 
+          <button
+            type="button"
+            class="view-submission-btn"
+            (click)="viewSubmissionDetails()">
+
+            View Latest Submission Details →
+
+          </button>
+        </div>
+
+      </main>
     </div>
+
+    <!-- ================================================= -->
+    <!-- STUDENT SUBMISSION HISTORY -->
+    <!-- ================================================= -->
+
+    <section class="submission-history-section">
+
+      <div class="history-header">
+
+        <div>
+          <span class="eyebrow">YOUR PROGRESS</span>
+          <h2>Submission History</h2>
+          <p>Track your previous attempts and mentor reviews.</p>
+        </div>
+
+        <span class="submission-count">
+          {{ submissionHistory().length }} Submissions
+        </span>
+
+      </div>
+
+      <!-- HISTORY LOADING -->
+      <div class="history-state" *ngIf="historyLoading()">
+        <div class="loader"></div>
+        <p>Loading your submissions...</p>
+      </div>
+
+      <!-- HISTORY ERROR -->
+      <div
+        class="history-state error-state"
+        *ngIf="!historyLoading() && historyError()">
+
+        <p>{{ historyError() }}</p>
+
+        <button
+          type="button"
+          class="view-submission-btn"
+          (click)="loadSubmissionHistory()">
+          Try Again
+        </button>
+
+      </div>
+
+      <!-- EMPTY HISTORY -->
+      <div
+        class="history-empty"
+        *ngIf="
+          !historyLoading() &&
+          !historyError() &&
+          submissionHistory().length === 0
+        ">
+
+        <div class="empty-icon">⌘</div>
+
+        <h3>No submissions yet</h3>
+
+        <p>Your submissions for this problem will appear here.</p>
+
+      </div>
+
+      <!-- SUBMISSION LIST -->
+      <div
+        class="submission-list"
+        *ngIf="
+          !historyLoading() &&
+          !historyError() &&
+          submissionHistory().length > 0
+        ">
+
+        <article
+          class="submission-card"
+          *ngFor="let item of submissionHistory()">
+
+          <!-- SUBMISSION TOP -->
+          <div class="submission-card-header">
+
+            <div class="submission-title">
+
+              <span class="submission-number">
+                #{{ item.submission_number }}
+              </span>
+
+              <div>
+                <h3>Submission #{{ item.submission_number }}</h3>
+
+                <span class="submission-date">
+                  {{ item.submitted_at | date:'medium' }}
+                </span>
+              </div>
+
+            </div>
+
+            <span
+              class="review-status"
+              [ngClass]="item.review_status">
+
+              {{ item.review_status === 'reviewed'
+                ? 'Reviewed'
+                : 'Awaiting Review' }}
+
+            </span>
+
+          </div>
+
+          <!-- SUBMISSION INFORMATION -->
+          <div class="submission-info">
+
+            <div class="info-item">
+              <span>Language</span>
+              <strong>{{ item.language }}</strong>
+            </div>
+
+            <div class="info-item">
+              <span>Execution Status</span>
+              <strong>{{ item.execution_status }}</strong>
+            </div>
+
+            <div class="info-item">
+              <span>Test Cases</span>
+              <strong>
+                {{ item.passed_test_cases }}/{{ item.total_test_cases }}
+              </strong>
+            </div>
+
+          </div>
+
+          <!-- MENTOR REVIEW -->
+          <div
+            class="mentor-review-preview"
+            *ngIf="item.review_status === 'reviewed'">
+
+            <div class="review-preview-header">
+              <strong>Mentor Review</strong>
+
+<div
+  class="history-rating"
+  *ngIf="item.star_rating !== null && item.star_rating !== undefined">
+
+  <div class="history-stars">
+    <span
+      *ngFor="let star of stars"
+      [class.active]="star <= (item.star_rating || 0)">
+      ★
+    </span>
+  </div>
+
+  <strong>{{ item.star_rating }} / 5</strong>
+
+</div>
+            </div>
+
+            <p *ngIf="item.mentor_feedback">
+              {{ item.mentor_feedback }}
+            </p>
+
+            <p *ngIf="!item.mentor_feedback" class="no-feedback">
+              Mentor has reviewed this submission.
+            </p>
+
+          </div>
+
+          <!-- PENDING REVIEW -->
+          <div
+            class="pending-review"
+            *ngIf="item.review_status !== 'reviewed'">
+
+            <span>◷</span>
+            Waiting for your mentor's feedback and rating.
+
+          </div>
+
+          <!-- VIEW DETAILS -->
+          <div class="submission-card-footer">
+
+            <button
+              type="button"
+              class="view-submission-btn"
+              (click)="viewSubmissionDetails(item.id)">
+
+              View Full Details →
+
+            </button>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
 
   </ng-container>
 
