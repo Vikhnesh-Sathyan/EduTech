@@ -1,0 +1,204 @@
+
+<div class="bookmarks-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div class="header-content">
+      <span class="eyebrow">MY LEARNING</span>
+
+      <h1>Bookmarked Problems</h1>
+
+      <p>
+        Your saved coding challenges, all in one place.
+        Continue practising whenever you're ready.
+      </p>
+    </div>
+
+    <div class="bookmark-count">
+      <span class="count-number">
+        {{ bookmarks().length }}
+      </span>
+
+      <span class="count-label">
+        Saved Problems
+      </span>
+    </div>
+
+  </div>
+
+  <!-- LOADING STATE -->
+  @if (loading()) {
+
+    <div class="state-container">
+      <div class="loader"></div>
+
+      <h3>Loading bookmarks...</h3>
+
+      <p>
+        Please wait while we fetch your saved problems.
+      </p>
+    </div>
+
+  }
+
+  <!-- ERROR STATE -->
+  @else if (errorMessage()) {
+
+    <div class="state-container error-state">
+
+      <div class="state-icon">!</div>
+
+      <h3>Unable to load bookmarks</h3>
+
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        (click)="loadBookmarks()">
+        Try Again
+      </button>
+
+    </div>
+
+  }
+
+  <!-- EMPTY STATE -->
+  @else if (bookmarks().length === 0) {
+
+    <div class="state-container empty-state">
+
+      <div class="empty-icon">☆</div>
+
+      <h3>No Bookmarks Yet</h3>
+
+      <p>
+        You haven't saved any coding problems yet.
+        Explore problems and bookmark the ones you want
+        to practise later.
+      </p>
+
+      <a routerLink="/student/advanced/logic-to-code/problems">
+        Explore Problems →
+      </a>
+
+    </div>
+
+  }
+
+  <!-- BOOKMARKED PROBLEMS -->
+  @else {
+
+    <div class="bookmarks-section">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Your Saved Problems</h2>
+
+          <p>
+            Pick up where you left off.
+          </p>
+        </div>
+
+        <span class="total-count">
+          {{ bookmarks().length }} Problems
+        </span>
+
+      </div>
+
+      <div class="bookmark-grid">
+
+        @for (problem of bookmarks(); track problem.id) {
+
+          <div class="bookmark-card">
+
+            <!-- CARD HEADER -->
+            <div class="card-header">
+
+              <span
+                class="difficulty"
+                [ngClass]="problem.difficulty.toLowerCase()">
+
+                {{ problem.difficulty }}
+
+              </span>
+
+              <button
+                type="button"
+                class="remove-button"
+                [disabled]="removingBookmarkId() !== null"
+                (click)="removeBookmark(problem)"
+                title="Remove bookmark">
+
+                @if (removingBookmarkId() === problem.id) {
+                  Removing...
+                } @else {
+                  <span>♥</span>
+                }
+
+              </button>
+
+            </div>
+
+            <!-- PROBLEM INFORMATION -->
+            <div class="problem-content">
+
+              <h3>{{ problem.title }}</h3>
+
+              <p class="problem-description">
+                {{ problem.description }}
+              </p>
+
+            </div>
+
+            <!-- CARD FOOTER -->
+            <div class="card-footer">
+
+              <div class="mentor-info">
+
+                <span class="mentor-label">
+                  CREATED BY
+                </span>
+
+                <span class="mentor-name">
+                  {{ problem.mentor_name }}
+                </span>
+
+              </div>
+
+              <span class="bookmark-date">
+                Saved:
+                {{ problem.bookmarked_at | date:'mediumDate' }}
+              </span>
+
+            </div>
+
+            <!-- ACTION -->
+            <div class="card-action">
+
+              <a
+                [routerLink]="[
+                  '/student/advanced/logic-to-code/problems',
+                  problem.id
+                ]">
+
+                View Problem
+
+                <span>→</span>
+
+              </a>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

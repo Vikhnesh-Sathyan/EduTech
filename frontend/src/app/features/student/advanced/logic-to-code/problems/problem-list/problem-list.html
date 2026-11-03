@@ -3,17 +3,32 @@
 
   <!-- PAGE HEADER -->
   <section class="page-header">
-    <div>
-      <span class="eyebrow">PRACTICE • THINK • SOLVE</span>
-      <h1>Logic to Code</h1>
-      <p>
-        Turn your problem-solving logic into working code.
-        Choose a challenge and start practising.
-      </p>
-    </div>
+
+  <div class="header-content">
+    <span class="eyebrow">PRACTICE • THINK • SOLVE</span>
+
+    <h1>Logic to Code</h1>
+
+    <p>
+      Turn your problem-solving logic into working code.
+      Choose a challenge and start practising.
+    </p>
+  </div>
+
+  <div class="header-actions">
+
+    <button
+      type="button"
+      class="bookmarks-page-button"
+      routerLink="/student/advanced/logic-to-code/bookmarks">
+      ♥ My Bookmarks
+    </button>
 
     <div class="header-icon">💻</div>
-  </section>
+
+  </div>
+
+</section>
 
   <!-- SEARCH AND FILTER -->
   <section class="filter-section">
@@ -137,18 +152,41 @@
   role="button"
 >
 
-      <div class="card-top">
-        <span
-          class="difficulty-badge"
-          [ngClass]="getDifficultyClass(problem.difficulty)"
-        >
-          {{ problem.difficulty | titlecase }}
-        </span>
+    
+<div class="card-top">
 
-        <span class="problem-id">
-          #{{ problem.id }}
-        </span>
-      </div>
+  <span
+    class="difficulty-badge"
+    [ngClass]="getDifficultyClass(problem.difficulty)">
+    {{ problem.difficulty | titlecase }}
+  </span>
+
+  <div class="card-top-actions">
+
+    <span class="problem-id">
+      #{{ problem.id }}
+    </span>
+
+    <button
+      type="button"
+      class="bookmark-button"
+      [class.bookmarked]="bookmarkedProblemIds().includes(problem.id)"
+      [attr.aria-label]="bookmarkedProblemIds().includes(problem.id)
+        ? 'Remove bookmark'
+        : 'Add bookmark'"
+      [title]="bookmarkedProblemIds().includes(problem.id)
+        ? 'Remove bookmark'
+        : 'Bookmark problem'"
+      (click)="toggleBookmark($event, problem.id)">
+
+      {{ bookmarkedProblemIds().includes(problem.id) ? '♥' : '♡' }}
+
+    </button>
+
+  </div>
+
+</div>
+
 
       <div class="card-content">
 

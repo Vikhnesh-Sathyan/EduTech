@@ -111,6 +111,7 @@ import { ProblemDetails as StudentLogicToCodeProblemDetails} from './features/st
 import { CodingWorkspace } from './features/student/advanced/logic-to-code/coding-workspace/coding-workspace/coding-workspace';
 import { SubmissionDetailsComponent } from './features/student/advanced/logic-to-code/submission/submission-details/submission-details';
 import { DiscussionList } from './features/student/advanced/logic-to-code/discussions/discussion-list/discussion-list';
+import { Bookmarks } from './features/student/advanced/logic-to-code/bookmarks/bookmarks/bookmarks';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -510,7 +511,11 @@ export const routes: Routes = [
       {
         path: 'student/advanced/logic-to-code/submissions/:submissionId',
         component: SubmissionDetailsComponent
-      }
+      },
+      {
+        path: 'student/advanced/logic-to-code/bookmarks',
+        component: Bookmarks
+      },
 
     ]
   },

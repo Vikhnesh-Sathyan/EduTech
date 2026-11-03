@@ -1,0 +1,460 @@
+
+/* =====================================================
+   BOOKMARKS PAGE
+===================================================== */
+
+.bookmarks-page {
+  padding: 32px;
+  min-height: 100%;
+  background: #faf8f5;
+  color: #3f342b;
+}
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 32px;
+  margin-bottom: 30px;
+  border: 1px solid #eadfce;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fffaf1, #f4e8d5);
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #c8792c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.header-content h1 {
+  margin: 0 0 10px;
+  color: #5b4632;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.header-content p {
+  max-width: 550px;
+  margin: 0;
+  color: #887765;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =====================================================
+   BOOKMARK COUNT
+===================================================== */
+
+.bookmark-count {
+  min-width: 145px;
+  padding: 20px;
+  border: 1px solid #ead5b4;
+  border-radius: 14px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.count-number {
+  display: block;
+  color: #c8792c;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.count-label {
+  display: block;
+  margin-top: 5px;
+  color: #887765;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =====================================================
+   COMMON STATE CONTAINER
+===================================================== */
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 35px;
+  border: 1px solid #eadfce;
+  border-radius: 16px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.state-container h3 {
+  margin: 16px 0 8px;
+  color: #5b4632;
+  font-size: 20px;
+  font-weight: 750;
+}
+
+.state-container p {
+  max-width: 450px;
+  margin: 0;
+  color: #887765;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loader {
+  width: 38px;
+  height: 38px;
+  border: 4px solid #f0e3d2;
+  border-top-color: #c8792c;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   ERROR STATE
+===================================================== */
+
+.state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff0ed;
+  color: #c4493f;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.error-state button {
+  margin-top: 20px;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.error-state button:hover {
+  background: #c8792c;
+}
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-icon {
+  color: #c8792c;
+  font-size: 55px;
+  line-height: 1;
+}
+
+.empty-state a {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 12px 22px;
+  border-radius: 9px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.empty-state a:hover {
+  background: #c8792c;
+}
+
+/* =====================================================
+   BOOKMARKS SECTION
+===================================================== */
+
+.bookmarks-section {
+  margin-top: 20px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  margin: 0 0 6px;
+  color: #5b4632;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #928171;
+  font-size: 13px;
+}
+
+.total-count {
+  padding: 8px 14px;
+  border: 1px solid #ead5b4;
+  border-radius: 20px;
+  background: #fff8ed;
+  color: #a86a2c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   BOOKMARK GRID
+===================================================== */
+
+.bookmark-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* =====================================================
+   BOOKMARK CARD
+===================================================== */
+
+.bookmark-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #eadfce;
+  border-radius: 15px;
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bookmark-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(91, 70, 50, 0.09);
+}
+
+/* =====================================================
+   CARD HEADER
+===================================================== */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.difficulty {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.difficulty.easy {
+  background: #e7f5e9;
+  color: #31834a;
+}
+
+.difficulty.medium {
+  background: #fff1dc;
+  color: #bd781f;
+}
+
+.difficulty.hard {
+  background: #ffebea;
+  color: #c4493f;
+}
+
+.remove-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #f0d7d2;
+  border-radius: 9px;
+  background: #fff5f3;
+  color: #c4493f;
+  font-size: 17px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.remove-button:hover:not(:disabled) {
+  background: #c4493f;
+  color: #ffffff;
+}
+
+.remove-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   PROBLEM CONTENT
+===================================================== */
+
+.problem-content {
+  flex: 1;
+  margin: 20px 0;
+}
+
+.problem-content h3 {
+  margin: 0 0 10px;
+  color: #5b4632;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.problem-description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #887765;
+  font-size: 13px;
+  line-height: 1.7;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* =====================================================
+   CARD FOOTER
+===================================================== */
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 15px 0;
+  border-top: 1px solid #f0e8de;
+}
+
+.mentor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mentor-label {
+  color: #a18d7b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.mentor-name {
+  color: #5b4632;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bookmark-date {
+  color: #a18d7b;
+  font-size: 11px;
+}
+
+/* =====================================================
+   CARD ACTION
+===================================================== */
+
+.card-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.card-action a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #b66d27;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.card-action a:hover {
+  gap: 14px;
+  color: #5b4632;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .bookmark-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .bookmarks-page {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
+  }
+
+  .header-content h1 {
+    font-size: 24px;
+  }
+
+  .bookmark-count {
+    width: 100%;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .bookmark-card {
+    padding: 17px;
+  }
+
+  .card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}

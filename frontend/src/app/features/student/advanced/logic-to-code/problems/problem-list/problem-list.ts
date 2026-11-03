@@ -3,17 +3,24 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { RouterModule } from '@angular/router';
 import {
   LogicToCodeService,
   StudentLogicToCodeProblem,
   StudentLogicToCodeSubject
 } from '../../../../../../services/student/advanced/logic-to-code/logic-to-code.service';
 
+import {
+  ProblemBookmarkService,
+  BookmarkedProblem
+} from '../../../../../../services/student/advanced/logic-to-code/problem-bookmark.service';
+
+import { ToastService } from '../../../../../../services/toast.service';
+
 @Component({
   selector: 'app-student-logic-to-code-problem-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './problem-list.html',
   styleUrl: './problem-list.css'
 })
@@ -21,6 +28,8 @@ export class ProblemList implements OnInit {
 
   private logicToCodeService = inject(LogicToCodeService);
   private router = inject(Router);
+  private bookmarkService = inject(ProblemBookmarkService);
+  private toast = inject(ToastService);
 
   // =====================================================
   // COMPONENT STATE
@@ -42,14 +51,123 @@ export class ProblemList implements OnInit {
   totalProblems = signal<number>(0);
   totalPages = signal<number>(0);
 
+  bookmarkedProblemIds = signal<number[]>([]);
+
   // =====================================================
   // COMPONENT INITIALIZATION
   // =====================================================
 
   ngOnInit(): void {
-    this.loadSubjects();
-    this.loadProblems();
+  this.loadSubjects();
+  this.loadProblems();
+  this.loadBookmarks();
+}
+
+  // =====================================================
+// LOAD STUDENT BOOKMARKS
+// =====================================================
+
+loadBookmarks(): void {
+
+  this.bookmarkService.getBookmarkedProblems().subscribe({
+
+    next: (response) => {
+
+      const ids = (response.data || []).map(
+        (problem: BookmarkedProblem) => problem.id
+      );
+
+      this.bookmarkedProblemIds.set(ids);
+
+    },
+
+    error: (error) => {
+
+      console.error(
+        'Failed to load bookmarks:',
+        error
+      );
+
+    }
+
+  });
+
+}
+
+  // =====================================================
+// TOGGLE PROBLEM BOOKMARK
+// =====================================================
+
+toggleBookmark(
+  event: Event,
+  problemId: number
+): void {
+
+  event.stopPropagation();
+
+  const isBookmarked =
+    this.bookmarkedProblemIds().includes(problemId);
+
+  if (isBookmarked) {
+
+    this.bookmarkService
+      .removeProblemBookmark(problemId)
+      .subscribe({
+
+        next: (response) => {
+
+          this.bookmarkedProblemIds.update(ids =>
+            ids.filter(id => id !== problemId)
+          );
+
+          this.toast.success(
+            response.message || 'Bookmark removed successfully.'
+          );
+
+        },
+
+        error: (error) => {
+
+          this.toast.error(
+            error.error?.message || 'Failed to remove bookmark.'
+          );
+
+        }
+
+      });
+
+  } else {
+
+    this.bookmarkService
+      .addProblemBookmark(problemId)
+      .subscribe({
+
+        next: (response) => {
+
+          this.bookmarkedProblemIds.update(ids => [
+            ...ids,
+            problemId
+          ]);
+
+          this.toast.success(
+            response.message || 'Problem bookmarked successfully.'
+          );
+
+        },
+
+        error: (error) => {
+
+          this.toast.error(
+            error.error?.message || 'Failed to bookmark problem.'
+          );
+
+        }
+
+      });
+
   }
+
+}
 
   // =====================================================
   // LOAD AVAILABLE SUBJECTS

@@ -527,3 +527,66 @@
   border-color: #c8792c;
   box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.12);
 }
+
+/* BOOKMARK BUTTON */
+
+.card-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bookmark-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e8dfd4;
+  border-radius: 50%;
+  background: #fff;
+  color: #8b8177;
+  font-size: 21px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.bookmark-button:hover {
+  background: #fff4ed;
+  border-color: #c8792c;
+  color: #c8792c;
+  transform: scale(1.08);
+}
+
+.bookmark-button.bookmarked {
+  background: #fff0e8;
+  border-color: #c8792c;
+  color: #c8792c;
+}
+
+.bookmark-button:focus-visible {
+  outline: 2px solid #c8792c;
+  outline-offset: 3px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.bookmarks-page-button {
+  padding: 11px 18px;
+  border: 1px solid #c8792c;
+  border-radius: 10px;
+  background: #fff8ef;
+  color: #8b5424;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.bookmarks-page-button:hover {
+  background: #c8792c;
+  color: #fff;
+}
