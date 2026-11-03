@@ -4,6 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+// CHILD COMPONENTS
+import { LearningPanel } from '../components/learning-panel/learning-panel';
+import { CodeEditor } from '../components/code-editor/code-editor';
+import { ExecutionResults } from '../components/execution-results/execution-results';
+
+// SERVICES
 import {
   LogicToCodeService,
   StudentLogicToCodeProblemDetailsResponse,
@@ -13,7 +19,13 @@ import {
 @Component({
   selector: 'app-student-logic-to-code-workspace',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LearningPanel,
+    CodeEditor,
+    ExecutionResults
+  ],
   templateUrl: './coding-workspace.html',
   styleUrl: './coding-workspace.css'
 })
@@ -22,7 +34,9 @@ export class CodingWorkspace implements OnInit {
   private route = inject(ActivatedRoute);
   private logicToCodeService = inject(LogicToCodeService);
 
+  // =====================================================
   // PROBLEM INFORMATION
+  // =====================================================
 
   problemId = 0;
 
@@ -30,13 +44,17 @@ export class CodingWorkspace implements OnInit {
     StudentLogicToCodeProblemDetailsResponse['data'] | null
   >(null);
 
+  // =====================================================
   // EDITOR STATE
+  // =====================================================
 
   selectedLanguage = signal<string>('');
 
   sourceCode = signal<string>('');
 
+  // =====================================================
   // LOADING STATE
+  // =====================================================
 
   loading = signal<boolean>(true);
 
@@ -44,7 +62,9 @@ export class CodingWorkspace implements OnInit {
 
   errorMessage = signal<string>('');
 
+  // =====================================================
   // EXECUTION RESULT
+  // =====================================================
 
   executionResult = signal<
     ExecuteStudentSubmissionResponse['data'] | null
@@ -52,11 +72,17 @@ export class CodingWorkspace implements OnInit {
 
   executionError = signal<string>('');
 
+  // =====================================================
+  // INITIALIZATION
+  // =====================================================
+
   ngOnInit(): void {
     this.loadProblem();
   }
 
+  // =====================================================
   // LOAD PROBLEM DETAILS
+  // =====================================================
 
   loadProblem(): void {
 
@@ -79,45 +105,28 @@ export class CodingWorkspace implements OnInit {
 
         next: (response) => {
 
-        if (response.success) {
+          if (response.success) {
 
-  this.problemDetails.set(response.data);
+            this.problemDetails.set(response.data);
 
-  // GET MENTOR-SELECTED SUBJECT
-// Get programming language directly from backend
+            const language =
+              response.data.problem.programming_language;
 
-const language = response.data.problem.programming_language;
+            if (!language) {
 
-if (!language) {
-  this.errorMessage.set('Programming language is not configured for this subject.');
-  this.loading.set(false);
-  return;
-}
+              this.errorMessage.set(
+                'Programming language is not configured for this subject.'
+              );
 
-// Set the language selected by the mentor
+              this.loading.set(false);
+              return;
+            }
 
-this.selectedLanguage.set(language);
+            this.selectedLanguage.set(language);
 
-// Start with an empty editor
+            this.sourceCode.set('');
 
-this.sourceCode.set('');
-
-  // VALIDATE SUPPORTED LANGUAGE
-  if (!language) {
-    this.errorMessage.set(
-      `Coding language is not supported for subject: ${response.data.problem.subject_name}`
-    );
-
-    this.loading.set(false);
-    return;
-  }
-
-  // SET SELECTED LANGUAGE AUTOMATICALLY
-  this.selectedLanguage.set(language);
-
-// START WITH AN EMPTY CODE EDITOR
-this.sourceCode.set('');
-} else {
+          } else {
 
             this.errorMessage.set(
               response.message || 'Unable to load problem.'
@@ -140,7 +149,9 @@ this.sourceCode.set('');
       });
   }
 
+  // =====================================================
   // CHANGE PROGRAMMING LANGUAGE
+  // =====================================================
 
   onLanguageChange(language: string): void {
 
@@ -151,7 +162,9 @@ this.sourceCode.set('');
     this.executionError.set('');
   }
 
+  // =====================================================
   // SUBMIT AND EXECUTE CODE
+  // =====================================================
 
   submitAndRun(): void {
 
@@ -161,7 +174,9 @@ this.sourceCode.set('');
 
     if (!this.sourceCode().trim()) {
 
-      this.executionError.set('Please write your code first.');
+      this.executionError.set(
+        'Please write your code first.'
+      );
 
       return;
     }

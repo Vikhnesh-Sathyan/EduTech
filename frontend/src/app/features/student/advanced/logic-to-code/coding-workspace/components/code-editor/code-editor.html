@@ -1,0 +1,74 @@
+
+<div class="coding-panel">
+
+  <div class="coding-card">
+
+    <!-- EDITOR TOOLBAR -->
+    <div class="editor-toolbar">
+
+      <div>
+        <h2>Code Editor</h2>
+        <p>Write your solution below.</p>
+      </div>
+
+      <!-- SELECTED LANGUAGE -->
+      <div class="selected-language">
+
+        <span class="language-indicator"></span>
+
+        <span class="language-name">
+          {{ languageLabel }}
+        </span>
+
+        <span class="language-lock">
+          Mentor Selected
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- CODE INPUT -->
+    <div class="editor-container">
+
+      <div class="editor-label">
+        <span>YOUR CODE</span>
+        <span>{{ selectedLanguage | uppercase }}</span>
+      </div>
+
+      <textarea
+        class="code-editor"
+        [ngModel]="sourceCode"
+        (ngModelChange)="sourceCodeChange.emit($event)"
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="off"
+        autocorrect="off"
+        [disabled]="submitting"
+        placeholder="Write your code here...">
+      </textarea>
+
+    </div>
+
+    <!-- EDITOR ACTIONS -->
+    <div class="editor-actions">
+
+      <p>
+        Your code will be checked against the problem's test cases.
+      </p>
+
+      <button
+        type="button"
+        class="run-button"
+        [disabled]="submitting"
+        (click)="runRequested.emit()">
+
+        {{ submitting ? 'Executing...' : '▶ Run & Submit' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

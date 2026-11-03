@@ -1,0 +1,238 @@
+
+/* =====================================================
+   CODING PANEL
+===================================================== */
+
+.coding-panel {
+  min-width: 0;
+}
+
+.coding-card {
+  overflow: hidden;
+  border: 1px solid #e9dfd3;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(91, 70, 50, 0.06);
+}
+
+/* =====================================================
+   EDITOR TOOLBAR
+===================================================== */
+
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px;
+  border-bottom: 1px solid #eee6dc;
+}
+
+.editor-toolbar h2 {
+  margin: 0 0 5px;
+  color: #5b4632;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.editor-toolbar p {
+  margin: 0;
+  color: #928477;
+  font-size: 12px;
+}
+
+/* =====================================================
+   SELECTED LANGUAGE
+===================================================== */
+
+.selected-language {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #e9dfd3;
+  border-radius: 9px;
+  background: #fffaf2;
+  color: #5b4632;
+}
+
+.language-indicator {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #c8792c;
+  box-shadow: 0 0 0 4px rgba(200, 121, 44, 0.12);
+}
+
+.language-name {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.language-lock {
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: #f4d9a0;
+  color: #765025;
+  font-size: 9px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   EDITOR CONTAINER
+===================================================== */
+
+.editor-container {
+  padding: 18px;
+}
+
+.editor-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #a18d79;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.editor-label span:last-child {
+  color: #c8792c;
+}
+
+/* =====================================================
+   CODE EDITOR
+===================================================== */
+
+.code-editor {
+  display: block;
+  width: 100%;
+  min-height: 520px;
+  box-sizing: border-box;
+  padding: 20px;
+  resize: vertical;
+  border: 1px solid #352c25;
+  border-radius: 11px;
+  outline: none;
+  background: #211c18;
+  color: #f4e9d8;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  tab-size: 4;
+  white-space: pre;
+}
+
+.code-editor:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.12);
+}
+
+.code-editor::placeholder {
+  color: #887b70;
+}
+
+.code-editor:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   EDITOR ACTIONS
+===================================================== */
+
+.editor-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 17px 20px;
+  border-top: 1px solid #eee6dc;
+  background: #fffdf9;
+}
+
+.editor-actions p {
+  margin: 0;
+  color: #8a7c6e;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.run-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 9px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.run-button:hover:not(:disabled) {
+  background: #c8792c;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(200, 121, 44, 0.2);
+}
+
+.run-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 1000px) {
+  .editor-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .coding-panel {
+    width: 100%;
+  }
+
+  .editor-toolbar {
+    padding: 18px;
+  }
+
+  .selected-language {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .editor-container {
+    padding: 14px;
+  }
+
+  .code-editor {
+    min-height: 350px;
+    font-size: 12px;
+  }
+
+  .editor-actions {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .run-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .editor-label {
+    font-size: 9px;
+  }
+}

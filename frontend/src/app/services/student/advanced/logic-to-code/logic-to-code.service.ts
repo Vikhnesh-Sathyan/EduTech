@@ -1,4 +1,3 @@
-
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -104,6 +103,13 @@ export interface StudentLogicToCodeSupport {
   starter_code_language: string | null;
 }
 
+export interface StudentLogicToCodeReferenceSolution {
+  id: number;
+  language: string;
+  solution_code: string;
+  solution_explanation: string | null;
+}
+
 export interface StudentLogicToCodeHint {
   id: number;
   hint_number: number;
@@ -130,6 +136,7 @@ export interface StudentLogicToCodeProblemDetailsResponse {
     problem: StudentLogicToCodeProblemDetails;
     steps: StudentLogicToCodeStep[];
     support: StudentLogicToCodeSupport | null;
+    referenceSolution: StudentLogicToCodeReferenceSolution | null;
     hints: StudentLogicToCodeHint[];
     mistakes: StudentLogicToCodeMistake[];
     publicTestCases: StudentLogicToCodePublicTestCase[];

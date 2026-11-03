@@ -1,0 +1,155 @@
+
+/* =====================================================
+   RESULT CARD
+===================================================== */
+
+.result-card {
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid #e9dfd3;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(91, 70, 50, 0.05);
+}
+
+/* =====================================================
+   RESULT HEADER
+===================================================== */
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eee6dc;
+}
+
+.result-label {
+  color: #c8792c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.result-header h2 {
+  margin: 8px 0 0;
+  color: #5b4632;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.result-header h2.accepted {
+  color: #26834d;
+}
+
+.result-header h2.wrong_answer,
+.result-header h2.compilation_error,
+.result-header h2.runtime_error,
+.result-header h2.internal_error {
+  color: #bd493d;
+}
+
+/* =====================================================
+   TEST SCORE
+===================================================== */
+
+.test-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.test-score strong {
+  color: #5b4632;
+  font-size: 24px;
+}
+
+.test-score span {
+  color: #928477;
+  font-size: 11px;
+}
+
+/* =====================================================
+   TEST RESULTS
+===================================================== */
+
+.test-results {
+  padding-top: 18px;
+}
+
+.test-results h3 {
+  margin: 0 0 14px;
+  color: #5b4632;
+  font-size: 14px;
+}
+
+.test-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #eee6dc;
+  border-radius: 8px;
+  color: #625448;
+  font-size: 12px;
+}
+
+.test-status {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.test-status.passed {
+  color: #26834d;
+}
+
+.test-status.failed {
+  color: #bd493d;
+}
+
+/* =====================================================
+   ERROR RESULT
+===================================================== */
+
+.error-result {
+  border-color: #f0d3cf;
+  background: #fff8f7;
+}
+
+.error-result h3 {
+  margin: 0 0 8px;
+  color: #b13d32;
+  font-size: 15px;
+}
+
+.error-result p {
+  margin: 0;
+  color: #8d514a;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .result-card {
+    padding: 17px;
+  }
+
+  .result-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .test-score {
+    align-items: flex-start;
+  }
+
+}

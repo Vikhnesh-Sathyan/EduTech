@@ -1,0 +1,111 @@
+<div class="steps-section">
+
+  <!-- HEADER -->
+  <div class="steps-header">
+    <div>
+      <h3>Manage Logic Steps</h3>
+      <p>
+        View, edit, delete and organize the logical steps
+        students follow before writing code.
+      </p>
+    </div>
+
+    <span class="step-count">
+      {{ steps().length }} Steps
+    </span>
+  </div>
+
+  <!-- STEP LIST -->
+  <div class="steps-list">
+
+    <div
+  class="step-card"
+  *ngFor="let step of steps(); let i = index; trackBy: trackByIndex"
+>
+
+      <div class="step-number">
+        {{ i + 1 }}
+      </div>
+
+      <div class="step-content">
+
+        <label>
+          Step {{ i + 1 }}
+        </label>
+
+      <textarea
+  rows="3"
+  [value]="step"
+  (input)="updateStep(i, $any($event.target).value)"
+  [name]="'step-' + i"
+  placeholder="Example: First, take two numbers as input..."
+></textarea>
+
+
+      </div>
+
+      <div class="step-actions">
+
+        <button
+          type="button"
+          class="move-btn"
+          title="Move up"
+          [disabled]="i === 0"
+          (click)="moveStepUp(i)"
+        >
+          ↑
+        </button>
+
+        <button
+          type="button"
+          class="move-btn"
+          title="Move down"
+          [disabled]="i === steps().length - 1"
+          (click)="moveStepDown(i)"
+        >
+          ↓
+        </button>
+
+        <button
+          type="button"
+          class="remove-btn"
+          title="Delete step"
+          (click)="removeStep(i)"
+        >
+          ✕
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ADD STEP -->
+  <button
+    type="button"
+    class="add-step-btn"
+    (click)="addStep()"
+  >
+    + Add Another Step
+  </button>
+
+  <!-- FOOTER -->
+  <div class="steps-footer">
+
+    <span>
+      {{ steps().length }} steps
+    </span>
+
+    <button
+      type="button"
+      class="save-steps-btn"
+      [disabled]="saving()"
+      (click)="saveSteps()"
+    >
+      {{ saving() ? 'Saving...' : 'Save Changes' }}
+    </button>
+
+  </div>
+
+</div>

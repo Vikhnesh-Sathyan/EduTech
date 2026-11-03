@@ -1,0 +1,71 @@
+
+<!-- EXECUTION ERROR -->
+<div
+  class="error-result result-card"
+  *ngIf="executionError">
+
+  <h3>Execution Error</h3>
+
+  <p>{{ executionError }}</p>
+
+</div>
+
+<!-- EXECUTION RESULTS -->
+<div
+  class="result-card"
+  *ngIf="executionResult as result">
+
+  <!-- RESULT HEADER -->
+  <div class="result-header">
+
+    <div>
+
+      <span class="result-label">
+        EXECUTION RESULT
+      </span>
+
+      <h2 [ngClass]="result.executionStatus.toLowerCase()">
+        {{ result.executionStatus | uppercase }}
+      </h2>
+
+    </div>
+
+    <!-- TEST SCORE -->
+    <div class="test-score">
+
+      <strong>
+        {{ result.passedTestCases }}/{{ result.totalTestCases }}
+      </strong>
+
+      <span>Test Cases Passed</span>
+
+    </div>
+
+  </div>
+
+  <!-- TEST RESULTS -->
+  <div class="test-results">
+
+    <h3>Test Case Results</h3>
+
+    <div
+      class="test-row"
+      *ngFor="let test of result.testResults">
+
+      <span>
+        Test Case {{ test.caseNumber }}
+      </span>
+
+      <span
+        class="test-status"
+        [ngClass]="test.passed ? 'passed' : 'failed'">
+
+        {{ test.passed ? '✓ Passed' : '✕ Failed' }}
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>

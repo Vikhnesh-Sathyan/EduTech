@@ -27,7 +27,10 @@
       <span class="form-label">NEW CHALLENGE</span>
     </div>
 
-    <form (ngSubmit)="createProblem()">
+    <form
+  *ngIf="!createdProblemId()"
+  (ngSubmit)="createProblem()"
+>
 
       <!-- ================================= -->
       <!-- ACADEMIC INFORMATION -->
@@ -258,6 +261,13 @@
       </div>
 
     </form>
+
+      <!-- SEPARATE LOGIC STEPS COMPONENT -->
+<app-problem-steps
+  *ngIf="createdProblemId()"
+  [problemId]="createdProblemId()!"
+  (stepsSaved)="onStepsSaved()"
+></app-problem-steps>
 
   </div>
 

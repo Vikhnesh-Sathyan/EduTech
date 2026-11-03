@@ -1,0 +1,173 @@
+<div class="learning-panel">
+
+  <!-- PROBLEM DESCRIPTION -->
+  <section class="resource-section">
+
+    <div class="section-heading">
+      <span class="section-icon">📘</span>
+      <h2>Problem Description</h2>
+    </div>
+
+    <p class="resource-description">
+      {{ problem.description }}
+    </p>
+
+  </section>
+
+  <!-- LOGIC STEPS -->
+  <section class="resource-section">
+
+    <div class="section-heading">
+      <span class="section-icon">🧩</span>
+      <h2>Logic Steps</h2>
+      <span class="count">{{ steps.length }}</span>
+    </div>
+
+    <div *ngIf="steps.length > 0; else noSteps">
+
+      <div class="step-item" *ngFor="let step of steps">
+
+        <span class="step-number">
+          {{ step.step_number }}
+        </span>
+
+        <p>{{ step.step_description }}</p>
+
+      </div>
+
+    </div>
+
+    <ng-template #noSteps>
+      <p class="empty-message">No logic steps available.</p>
+    </ng-template>
+
+  </section>
+
+  <!-- HINTS -->
+  <section class="resource-section">
+
+    <div class="section-heading">
+      <span class="section-icon">💡</span>
+      <h2>Hints</h2>
+      <span class="count">{{ hints.length }}</span>
+    </div>
+
+    <div *ngIf="hints.length > 0; else noHints">
+
+      <div class="hint-item" *ngFor="let hint of hints">
+
+        <span class="hint-number">
+          Hint {{ hint.hint_number }}
+        </span>
+
+        <p>{{ hint.hint_content }}</p>
+
+      </div>
+
+    </div>
+
+    <ng-template #noHints>
+      <p class="empty-message">No hints available.</p>
+    </ng-template>
+
+  </section>
+
+  <!-- COMMON MISTAKES -->
+  <section class="resource-section">
+
+    <div class="section-heading">
+      <span class="section-icon">⚠️</span>
+      <h2>Common Mistakes</h2>
+      <span class="count">{{ mistakes.length }}</span>
+    </div>
+
+    <div *ngIf="mistakes.length > 0; else noMistakes">
+
+      <div class="mistake-item" *ngFor="let mistake of mistakes">
+
+        <h3>{{ mistake.mistake_title }}</h3>
+
+        <p>{{ mistake.mistake_description }}</p>
+
+      </div>
+
+    </div>
+
+    <ng-template #noMistakes>
+      <p class="empty-message">No common mistakes available.</p>
+    </ng-template>
+
+  </section>
+
+  <!-- REFERENCE SOLUTIONS -->
+  <section class="resource-section">
+
+    <div class="section-heading">
+      <span class="section-icon">💻</span>
+      <h2>Reference Solutions</h2>
+    </div>
+
+    <ng-container *ngIf="referenceSolution as solution; else noReferenceSolution">
+
+      <div class="reference-solution">
+
+        <h3>Mentor's Reference Solution</h3>
+
+        <p *ngIf="solution.solution_explanation">
+          {{ solution.solution_explanation }}
+        </p>
+
+        <div class="reference-language">
+          {{ solution.language | uppercase }}
+        </div>
+
+        <pre class="reference-code">{{ solution.solution_code }}</pre>
+
+      </div>
+
+    </ng-container>
+
+    <ng-template #noReferenceSolution>
+      <p class="empty-message">
+        No reference solution available.
+      </p>
+    </ng-template>
+
+  </section>
+
+  <!-- PUBLIC TEST CASES -->
+  <section class="resource-section">
+
+    <div class="section-heading">
+      <span class="section-icon">🧪</span>
+      <h2>Public Test Cases</h2>
+      <span class="count">{{ publicTestCases.length }}</span>
+    </div>
+
+    <div *ngIf="publicTestCases.length > 0; else noTestCases">
+
+      <div class="test-case-item" *ngFor="let test of publicTestCases">
+
+        <h3>Test Case {{ test.case_number }}</h3>
+
+        <div class="test-case-value">
+          <span>INPUT</span>
+          <pre>{{ test.test_input }}</pre>
+        </div>
+
+        <div class="test-case-value">
+          <span>EXPECTED OUTPUT</span>
+          <pre>{{ test.expected_output }}</pre>
+        </div>
+
+      </div>
+
+    </div>
+
+    <ng-template #noTestCases>
+      <p class="empty-message">No public test cases available.</p>
+    </ng-template>
+
+  </section>
+
+</div>

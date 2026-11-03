@@ -212,6 +212,7 @@ import { MistakeManagement } from './features/mentor/advanced/logic-to-code/comm
 import { SubmissionList } from './features/mentor/advanced/logic-to-code/submissions/submission-list/submission-list';
 import { SubmissionDetails } from './features/mentor/advanced/logic-to-code/submissions/submission-details/submission-details';
 
+import { ProblemSteps } from './features/mentor/advanced/logic-to-code/problems/problem-steps/problem-steps';
 export const routes: Routes = [
 
   // Public routes
@@ -762,6 +763,10 @@ export const routes: Routes = [
         path: 'mentor/advanced/logic-to-code/problems/create',
         component: CreateProblem
       },
+      {
+  path: 'mentor/advanced/logic-to-code/problems/:problemId/steps',
+  component: ProblemSteps
+},
       {
         path: 'mentor/advanced/logic-to-code/problems/:problemId',
         component: ProblemDetails

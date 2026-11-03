@@ -1,0 +1,252 @@
+
+.steps-section {
+  margin-top: 28px;
+  padding: 26px;
+  background: #fffdf9;
+  border: 1px solid #eadfce;
+  border-radius: 16px;
+}
+
+/* HEADER */
+
+.steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.steps-header h3 {
+  margin: 0 0 8px;
+  color: #5b4632;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.steps-header p {
+  margin: 0;
+  color: #857766;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 550px;
+}
+
+.step-count {
+  background: #f4d9a0;
+  color: #5b4632;
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* STEP LIST */
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step-card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 15px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #eadfce;
+  border-radius: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.step-card:focus-within {
+  border-color: #c8792c;
+}
+
+/* NUMBER */
+
+.step-number {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4d9a0;
+  color: #5b4632;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* INPUT */
+
+.step-content {
+  min-width: 0;
+}
+
+.step-content label {
+  display: block;
+  margin-bottom: 8px;
+  color: #5b4632;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.step-content textarea {
+  width: 100%;
+  min-height: 85px;
+  padding: 12px 14px;
+  resize: vertical;
+  border: 1px solid #e5dacb;
+  border-radius: 9px;
+  background: #fffdf9;
+  color: #3f352b;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-content textarea:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.10);
+}
+
+.step-content textarea::placeholder {
+  color: #b3a797;
+}
+
+/* ACTIONS */
+
+.step-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.move-btn,
+.remove-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #eadfce;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #5b4632;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.move-btn:hover:not(:disabled) {
+  background: #f4d9a0;
+  border-color: #d8b66f;
+}
+
+.move-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.remove-btn {
+  color: #c45b45;
+}
+
+.remove-btn:hover {
+  background: #fff0ec;
+  border-color: #e8b7aa;
+}
+
+/* ADD STEP */
+
+.add-step-btn {
+  margin-top: 18px;
+  padding: 11px 16px;
+  background: #fff8eb;
+  border: 1px dashed #c8792c;
+  border-radius: 9px;
+  color: #a65f20;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-step-btn:hover {
+  background: #fdf0d8;
+}
+
+/* FOOTER */
+
+.steps-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #eee4d7;
+}
+
+.steps-footer span {
+  color: #857766;
+  font-size: 12px;
+}
+
+.save-steps-btn {
+  padding: 11px 20px;
+  background: #5b4632;
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.save-steps-btn:hover:not(:disabled) {
+  background: #765b40;
+}
+
+.save-steps-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  .steps-section {
+    padding: 17px;
+  }
+
+  .steps-header {
+    flex-direction: column;
+  }
+
+  .step-card {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .step-actions {
+    grid-column: 2;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .steps-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .save-steps-btn {
+    width: 100%;
+  }
+}

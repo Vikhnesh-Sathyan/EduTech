@@ -245,4 +245,17 @@ manageMistakes(problemId: number): void {
     'mistakes'
   ]);
 }
+
+// NAVIGATE TO LOGIC STEPS MANAGEMENT
+manageSteps(problemId: number): void {
+  console.log('Selected Problem ID:', problemId);
+  console.log('Problem ID type:', typeof problemId);
+
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code/problems',
+    problemId,
+    'steps'
+  ]);
+}
+
 }

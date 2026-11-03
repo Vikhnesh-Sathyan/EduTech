@@ -107,6 +107,47 @@ export interface CreateLogicToCodeProblemResponse {
   problemId: number;
 }
 
+
+// =====================================================
+// LOGIC STEPS MODELS
+// =====================================================
+
+export interface LogicToCodeStep {
+  id: number;
+  problem_id: number;
+  step_number: number;
+  step_description: string;
+}
+
+// =====================================================
+// LOGIC STEPS LIST RESPONSE
+// =====================================================
+
+export interface LogicToCodeStepsResponse {
+  success: boolean;
+  totalSteps: number;
+  steps: LogicToCodeStep[];
+}
+
+// =====================================================
+// SAVE LOGIC STEPS
+// =====================================================
+
+export interface SaveLogicToCodeSteps {
+  steps: string[];
+}
+
+// =====================================================
+// LOGIC STEPS ACTION RESPONSE
+// =====================================================
+
+export interface LogicToCodeStepsActionResponse {
+  success: boolean;
+  message: string;
+  totalSteps?: number;
+}
+
+
 // =====================================================
 // UPDATE LOGIC TO CODE PROBLEM MODEL
 // =====================================================
@@ -348,6 +389,38 @@ createProblem(
     data
   );
 }
+
+
+  // =====================================================
+  // LOGIC STEPS MANAGEMENT
+  // =====================================================
+
+  // GET PROBLEM LOGIC STEPS
+
+  getProblemSteps(
+    problemId: number
+  ): Observable<LogicToCodeStepsResponse> {
+
+    return this.http.get<LogicToCodeStepsResponse>(
+      `${this.apiUrl}/${problemId}/steps`
+    );
+  }
+
+  // SAVE PROBLEM LOGIC STEPS
+
+  addProblemSteps(
+    problemId: number,
+    data: SaveLogicToCodeSteps
+  ): Observable<LogicToCodeStepsActionResponse> {
+
+    return this.http.post<LogicToCodeStepsActionResponse>(
+      `${this.apiUrl}/${problemId}/steps`,
+      data
+    );
+  }
+
+  
+
 
 // =====================================================
 // UPDATE EXISTING PROBLEM

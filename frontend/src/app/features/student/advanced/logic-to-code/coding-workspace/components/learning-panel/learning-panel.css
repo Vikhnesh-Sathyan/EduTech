@@ -1,0 +1,330 @@
+
+/* =====================================================
+   LEARNING PANEL
+===================================================== */
+
+.learning-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #d9c4a9 transparent;
+}
+
+.learning-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.learning-panel::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #d9c4a9;
+}
+
+/* =====================================================
+   RESOURCE SECTION
+===================================================== */
+
+.resource-section {
+  padding: 20px;
+  border: 1px solid #e9dfd3;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(91, 70, 50, 0.04);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+}
+
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #fff5e6;
+  font-size: 16px;
+}
+
+.section-heading h2 {
+  flex: 1;
+  margin: 0;
+  color: #5b4632;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 23px;
+  height: 23px;
+  padding: 0 6px;
+  border-radius: 20px;
+  background: #f4d9a0;
+  color: #765025;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* =====================================================
+   PROBLEM DESCRIPTION
+===================================================== */
+
+.resource-description {
+  margin: 0;
+  color: #786b60;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   LOGIC STEPS
+===================================================== */
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1eae2;
+}
+
+.step-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #f4d9a0;
+  color: #765025;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.step-item p {
+  margin: 3px 0 0;
+  color: #786b60;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* =====================================================
+   HINTS
+===================================================== */
+
+.hint-item {
+  padding: 13px;
+  margin-bottom: 10px;
+  border: 1px solid #f1e2c6;
+  border-radius: 10px;
+  background: #fffbf3;
+}
+
+.hint-item:last-child {
+  margin-bottom: 0;
+}
+
+.hint-number {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: #bd792c;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.hint-item p {
+  margin: 0;
+  color: #786b60;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   COMMON MISTAKES
+===================================================== */
+
+.mistake-item {
+  padding: 13px;
+  margin-bottom: 10px;
+  border: 1px solid #f0dfdb;
+  border-radius: 10px;
+  background: #fff9f8;
+}
+
+.mistake-item:last-child {
+  margin-bottom: 0;
+}
+
+.mistake-item h3 {
+  margin: 0 0 7px;
+  color: #a94c40;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mistake-item p {
+  margin: 0;
+  color: #786b60;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   REFERENCE SOLUTIONS
+===================================================== */
+
+.reference-solution {
+  padding: 13px;
+  border: 1px solid #e9dfd3;
+  border-radius: 10px;
+  background: #fffdf9;
+}
+
+.reference-solution h3 {
+  margin: 0 0 8px;
+  color: #5b4632;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.reference-solution p {
+  margin: 0 0 12px;
+  color: #786b60;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.reference-language {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #f4d9a0;
+  color: #765025;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.reference-code {
+  max-height: 300px;
+  overflow: auto;
+  padding: 13px;
+  margin: 0;
+  border-radius: 8px;
+  background: #211c18;
+  color: #f4e9d8;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: pre;
+}
+
+/* =====================================================
+   PUBLIC TEST CASES
+===================================================== */
+
+.test-case-item {
+  padding: 13px;
+  margin-bottom: 12px;
+  border: 1px solid #e9dfd3;
+  border-radius: 10px;
+  background: #fffdf9;
+}
+
+.test-case-item:last-child {
+  margin-bottom: 0;
+}
+
+.test-case-item h3 {
+  margin: 0 0 12px;
+  color: #5b4632;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.test-case-value {
+  margin-top: 10px;
+}
+
+.test-case-value span {
+  display: block;
+  margin-bottom: 6px;
+  color: #bd792c;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.test-case-value pre {
+  padding: 10px;
+  margin: 0;
+  border-radius: 7px;
+  background: #f5f0e9;
+  color: #514337;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   EMPTY RESOURCE MESSAGE
+===================================================== */
+
+.empty-message {
+  margin: 0;
+  padding: 13px;
+  border-radius: 8px;
+  background: #faf8f4;
+  color: #a18d79;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 1000px) {
+  .resource-section {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .learning-panel {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .section-heading h2 {
+    font-size: 13px;
+  }
+}

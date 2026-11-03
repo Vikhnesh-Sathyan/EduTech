@@ -143,6 +143,31 @@ problem.language_label =
             [parsedProblemId]
         );
 
+        // -------------------------------------------------
+// FETCH MENTOR REFERENCE SOLUTION
+// -------------------------------------------------
+
+const [referenceSolutions] = await db.query(
+    `
+    SELECT
+        id,
+        language,
+        solution_code,
+        solution_explanation
+
+    FROM logic_to_code_solutions
+
+    WHERE problem_id = ?
+    AND language = ?
+
+    LIMIT 1
+    `,
+    [
+        parsedProblemId,
+        problem.programming_language
+    ]
+);
+
 
         // -------------------------------------------------
         // FETCH HINTS
@@ -221,19 +246,21 @@ problem.language_label =
 
             data: {
 
-                problem,
+    problem,
 
-                steps,
+    steps,
 
-                support: supportRows[0] || null,
+    support: supportRows[0] || null,
 
-                hints,
+    referenceSolution: referenceSolutions[0] || null,
 
-                mistakes,
+    hints,
 
-                publicTestCases: testCases
+    mistakes,
 
-            }
+    publicTestCases: testCases
+
+}
 
         });
 

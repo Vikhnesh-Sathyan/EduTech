@@ -14,11 +14,11 @@ import { AdminEducationYear } from '../../../../../../services/admin/admin-educa
 import { AdminSubject } from '../../../../../../services/admin/admin-subjects';
 
 import { ToastService } from '../../../../../../services/toast.service';
-
+import { ProblemSteps } from '../problem-steps/problem-steps';
 @Component({
   selector: 'app-create-problem',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProblemSteps],
   templateUrl: './create-problem.html',
   styleUrl: './create-problem.css'
 })
@@ -80,6 +80,8 @@ export class CreateProblem implements OnInit {
   errorMessage = signal('');
   successMessage = signal('');
 
+  // Newly created problem ID
+createdProblemId = signal<number | null>(null);
   // ==========================================
   // INITIAL LOAD
   // ==========================================
@@ -231,76 +233,79 @@ export class CreateProblem implements OnInit {
   // CREATE PROBLEM
   // ==========================================
 
-  createProblem(): void {
+createProblem(): void {
 
-    this.errorMessage.set('');
-    this.successMessage.set('');
+  this.errorMessage.set('');
+  this.successMessage.set('');
 
-    const subjectId = this.selectedSubjectId();
+  const subjectId = this.selectedSubjectId();
 
-    if (!subjectId) {
-      this.errorMessage.set('Please select an academic subject.');
-      return;
-    }
-
-    const problemData: CreateLogicToCodeProblem = {
-      subject_id: subjectId,
-      title: this.title().trim(),
-      description: this.description().trim(),
-      difficulty: this.difficulty(),
-      solution_unlock: this.solutionUnlock()
-    };
-
-    if (!problemData.title || !problemData.description) {
-      this.errorMessage.set(
-        'Please enter both title and description.'
-      );
-      return;
-    }
-
-    this.loading.set(true);
-
-    this.logicToCodeService.createProblem(problemData).subscribe({
-
-      next: (response) => {
-
-        this.loading.set(false);
-
-        this.successMessage.set(
-          response.message || 'Problem created successfully.'
-        );
-
-        this.toastService.success(
-          response.message || 'Problem created successfully.'
-        );
-
-        setTimeout(() => {
-          this.router.navigate([
-            '/mentor/advanced/logic-to-code/problems'
-          ]);
-        }, 1000);
-
-      },
-
-      error: (error) => {
-
-        console.error('Create Problem Error:', error);
-
-        this.loading.set(false);
-
-        this.errorMessage.set(
-          error.error?.message || 'Unable to create problem.'
-        );
-
-        this.toastService.error(
-          error.error?.message || 'Unable to create problem.'
-        );
-
-      }
-
-    });
+  if (!subjectId) {
+    this.errorMessage.set('Please select an academic subject.');
+    return;
   }
 
+  const problemData: CreateLogicToCodeProblem = {
+    subject_id: subjectId,
+    title: this.title().trim(),
+    description: this.description().trim(),
+    difficulty: this.difficulty(),
+    solution_unlock: this.solutionUnlock()
+  };
+
+  if (!problemData.title || !problemData.description) {
+    this.errorMessage.set(
+      'Please enter both title and description.'
+    );
+    return;
+  }
+
+  this.loading.set(true);
+
+  this.logicToCodeService.createProblem(problemData).subscribe({
+
+    next: (response) => {
+
+      this.loading.set(false);
+
+      // STORE THE NEWLY CREATED PROBLEM ID
+      this.createdProblemId.set(response.problemId);
+
+      this.successMessage.set(
+        response.message || 'Problem created successfully.'
+      );
+
+      this.toastService.success(
+        'Problem created successfully. Now add logic steps.'
+      );
+
+    },
+
+    error: (error) => {
+
+      console.error('Create Problem Error:', error);
+
+      this.loading.set(false);
+
+      this.errorMessage.set(
+        error.error?.message || 'Unable to create problem.'
+      );
+
+      this.toastService.error(
+        error.error?.message || 'Unable to create problem.'
+      );
+
+    }
+
+  });
+}
+
+// NAVIGATE AFTER LOGIC STEPS ARE SAVED
+onStepsSaved(): void {
+  this.router.navigate([
+    '/mentor/advanced/logic-to-code/problems'
+  ]);
+}
   // ==========================================
   // CANCEL CREATION
   // ==========================================
@@ -311,4 +316,5 @@ export class CreateProblem implements OnInit {
     ]);
   }
 
+  
 }
