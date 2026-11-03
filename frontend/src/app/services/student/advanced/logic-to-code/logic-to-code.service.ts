@@ -67,6 +67,142 @@ export interface StudentLogicToCodeProblemsResponse {
   pagination: StudentLogicToCodePagination;
 }
 
+
+// =====================================================
+// STUDENT PROBLEM DETAILS INTERFACES
+// =====================================================
+
+export interface StudentLogicToCodeProblemDetails {
+  id: number;
+  title: string;
+  description: string;
+  difficulty: string;
+  solution_unlock: number;
+  created_at: string;
+  mentor_name: string;
+
+  // Mentor-selected subject
+  subject_id: number;
+  subject_name: string;
+
+  // Programming language for the problem
+  programming_language: string;
+  language_label: string;
+}
+export interface StudentLogicToCodeStep {
+  id: number;
+  step_number: number;
+  step_description: string;
+}
+
+export interface StudentLogicToCodeSupport {
+  sample_code_title: string | null;
+  sample_code_description: string | null;
+  sample_code: string | null;
+  sample_code_language: string | null;
+  starter_code: string | null;
+  starter_code_language: string | null;
+}
+
+export interface StudentLogicToCodeHint {
+  id: number;
+  hint_number: number;
+  hint_content: string;
+}
+
+export interface StudentLogicToCodeMistake {
+  id: number;
+  mistake_title: string;
+  mistake_description: string;
+}
+
+export interface StudentLogicToCodePublicTestCase {
+  id: number;
+  case_number: number;
+  test_input: string;
+  expected_output: string;
+}
+
+export interface StudentLogicToCodeProblemDetailsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    problem: StudentLogicToCodeProblemDetails;
+    steps: StudentLogicToCodeStep[];
+    support: StudentLogicToCodeSupport | null;
+    hints: StudentLogicToCodeHint[];
+    mistakes: StudentLogicToCodeMistake[];
+    publicTestCases: StudentLogicToCodePublicTestCase[];
+  };
+}
+
+// =====================================================
+// CREATE CODE SUBMISSION
+// =====================================================
+
+export interface CreateStudentSubmissionResponse {
+  success: boolean;
+  message: string;
+  data: {
+    submissionId: number;
+    problemId: number;
+    language: string;
+    submissionNumber: number;
+    executionStatus: string;
+  };
+}
+
+// =====================================================
+// EXECUTE CODE SUBMISSION
+// =====================================================
+
+export interface ExecuteStudentSubmissionResponse {
+  success: boolean;
+  message: string;
+  data: {
+    submissionId: number;
+    executionStatus: string;
+    passedTestCases: number;
+    totalTestCases: number;
+    testResults: {
+      caseNumber: number;
+      visibility: string;
+      passed: boolean;
+    }[];
+  };
+}
+
+// =====================================================
+// STUDENT SUBMISSION DETAILS
+// =====================================================
+
+export interface StudentSubmissionDetails {
+  id: number;
+  problem_id: number;
+  problem_title: string;
+  difficulty: string;
+  language: string;
+  source_code: string;
+  submission_number: number;
+  execution_status: string;
+  passed_test_cases: number;
+  total_test_cases: number;
+  execution_time_ms: number | null;
+  memory_used_kb: number | null;
+  error_message: string | null;
+  test_results: any;
+  mentor_feedback: string | null;
+  review_status: string;
+  submitted_at: string;
+  reviewed_at: string | null;
+}
+
+export interface StudentSubmissionDetailsResponse {
+  success: boolean;
+  message: string;
+  data: StudentSubmissionDetails;
+}
+
 // =====================================================
 // STUDENT LOGIC TO CODE SERVICE
 // =====================================================
@@ -111,4 +247,66 @@ export class LogicToCodeService {
   );
 
 }
+
+
+  // =====================================================
+  // GET SINGLE PROBLEM DETAILS
+  // =====================================================
+
+  getProblemDetails(
+    problemId: number
+  ): Observable<StudentLogicToCodeProblemDetailsResponse> {
+
+    return this.http.get<StudentLogicToCodeProblemDetailsResponse>(
+      `${this.apiUrl}/problems/${problemId}`
+    );
+
+  }
+
+  // =====================================================
+// CREATE STUDENT SUBMISSION
+// =====================================================
+
+createSubmission(
+  problemId: number,
+  language: string,
+  source_code: string
+): Observable<CreateStudentSubmissionResponse> {
+
+  return this.http.post<CreateStudentSubmissionResponse>(
+    `${this.apiUrl}/problems/${problemId}/submissions`,
+    {
+      language,
+      source_code
+    }
+  );
+}
+
+// =====================================================
+// EXECUTE STUDENT SUBMISSION
+// =====================================================
+
+executeSubmission(
+  submissionId: number
+): Observable<ExecuteStudentSubmissionResponse> {
+
+  return this.http.post<ExecuteStudentSubmissionResponse>(
+    `${this.apiUrl}/submissions/${submissionId}/execute`,
+    {}
+  );
+}
+
+// =====================================================
+// GET STUDENT SUBMISSION DETAILS
+// =====================================================
+
+getSubmissionDetails(
+  submissionId: number
+): Observable<StudentSubmissionDetailsResponse> {
+
+  return this.http.get<StudentSubmissionDetailsResponse>(
+    `${this.apiUrl}/submissions/${submissionId}`
+  );
+}
+
 }

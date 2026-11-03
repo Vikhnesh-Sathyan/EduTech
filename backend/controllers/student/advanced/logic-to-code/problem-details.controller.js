@@ -1,10 +1,12 @@
-
 // =====================================================
 // IMPORT DATABASE
 // =====================================================
 
 const db = require("../../../../config/db");
 
+const {
+    getLanguageFromSubject
+} = require("../../../../config/logicToCodeProgrammingLanguages");
 
 // =====================================================
 // GET STUDENT PROBLEM DETAILS
@@ -36,28 +38,34 @@ const getStudentProblemDetails = async (req, res) => {
         // -------------------------------------------------
         // FETCH PUBLISHED PROBLEM
         // -------------------------------------------------
+const [problemRows] = await db.query(
+    `
+    SELECT
+        p.id,
+        p.title,
+        p.description,
+        p.difficulty,
+        p.solution_unlock,
+        p.created_at,
 
-        const [problemRows] = await db.query(
-            `
-            SELECT
-                p.id,
-                p.title,
-                p.description,
-                p.difficulty,
-                p.solution_unlock,
-                p.created_at,
-                u.name AS mentor_name
+        p.subject_id,
+        s.name AS subject_name,
 
-            FROM logic_to_code_problems p
+        u.name AS mentor_name
 
-            JOIN users u
-                ON p.mentor_id = u.id
+    FROM logic_to_code_problems p
 
-            WHERE p.id = ?
-            AND p.status = 'published'
-            `,
-            [parsedProblemId]
-        );
+    JOIN users u
+        ON p.mentor_id = u.id
+
+    JOIN subjects s
+        ON p.subject_id = s.id
+
+    WHERE p.id = ?
+    AND p.status = 'published'
+    `,
+    [parsedProblemId]
+);
 
         if (problemRows.length === 0) {
             return res.status(404).json({
@@ -68,6 +76,30 @@ const getStudentProblemDetails = async (req, res) => {
 
         const problem = problemRows[0];
 
+        // -------------------------------------------------
+// GET PROGRAMMING LANGUAGE FROM CENTRAL CONFIG
+// -------------------------------------------------
+
+const languageConfig = getLanguageFromSubject(
+    problem.subject_name
+);
+
+// CHECK SUBJECT SUPPORT
+
+if (!languageConfig) {
+    return res.status(400).json({
+        success: false,
+        message: `No supported programming language configured for subject: ${problem.subject_name}`
+    });
+}
+
+// ADD PROGRAMMING LANGUAGE TO PROBLEM RESPONSE
+
+problem.programming_language =
+    languageConfig.executionLanguage;
+
+problem.language_label =
+    languageConfig.label;
 
         // -------------------------------------------------
         // FETCH LOGIC STEPS

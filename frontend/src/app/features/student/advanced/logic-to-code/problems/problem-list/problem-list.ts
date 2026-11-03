@@ -1,12 +1,12 @@
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import {
   LogicToCodeService,
   StudentLogicToCodeProblem
-} from '../../../../../services/student/advanced/logic-to-code/logic-to-code.service';
+} from '../../../../../../services/student/advanced/logic-to-code/logic-to-code.service';
 
 @Component({
   selector: 'app-student-logic-to-code-problem-list',
@@ -18,6 +18,7 @@ import {
 export class ProblemList implements OnInit {
 
   private logicToCodeService = inject(LogicToCodeService);
+  private router = inject(Router);
 
   // =====================================================
   // COMPONENT STATE
@@ -191,5 +192,18 @@ export class ProblemList implements OnInit {
     });
 
   }
+
+  // =====================================================
+// OPEN PROBLEM DETAILS
+// =====================================================
+
+openProblem(problemId: number): void {
+
+  this.router.navigate([
+    '/student/advanced/logic-to-code/problems',
+    problemId
+  ]);
+
+}
 
 }

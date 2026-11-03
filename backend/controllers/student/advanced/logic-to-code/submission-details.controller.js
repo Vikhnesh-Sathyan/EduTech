@@ -10,6 +10,8 @@ const getStudentSubmissionDetails = async (req, res) => {
         const studentId = req.user.id;
        const submissionId = Number(req.params.submissionId);
 
+// VALIDATE SUBMISSION ID
+
 if (
     !Number.isSafeInteger(submissionId) ||
     submissionId <= 0
@@ -18,12 +20,7 @@ if (
         success: false,
         message: "Valid submission ID is required"
     });
-} {
-            return res.status(400).json({
-                success: false,
-                message: "Valid submission ID is required"
-            });
-        }
+}
 
         // Fetch submission belonging to logged-in student
         const [submissions] = await db.query(

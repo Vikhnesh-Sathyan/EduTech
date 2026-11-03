@@ -1,0 +1,197 @@
+
+<div class="workspace-page">
+
+  <!-- LOADING -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Preparing your coding workspace...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state-card error-state" *ngIf="!loading() && errorMessage()">
+    <h2>Unable to load workspace</h2>
+    <p>{{ errorMessage() }}</p>
+  </div>
+
+  <!-- WORKSPACE -->
+  <ng-container *ngIf="!loading() && problemDetails() as details">
+
+    <!-- HEADER -->
+    <header class="workspace-header">
+
+      <div class="header-content">
+
+        <span class="eyebrow">STUDENT WORKSPACE</span>
+
+        <h1>{{ details.problem.title }}</h1>
+
+        <p>{{ details.problem.description }}</p>
+
+        <div class="problem-meta">
+
+          <span
+            class="difficulty"
+            [ngClass]="details.problem.difficulty.toLowerCase()">
+            {{ details.problem.difficulty }}
+          </span>
+
+          <span>
+            Mentor: {{ details.problem.mentor_name }}
+          </span>
+
+          <span>
+            Subject: {{ details.problem.subject_name }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- CODING AREA -->
+    <section class="coding-card">
+
+      <div class="editor-toolbar">
+
+        <div>
+          <h2>Code Editor</h2>
+          <p>Write your solution below.</p>
+        </div>
+
+        <!-- MENTOR-SELECTED LANGUAGE -->
+        <div class="selected-language">
+
+          <span class="language-indicator"></span>
+
+          <span class="language-name">
+            {{ details.problem.language_label }}
+          </span>
+
+          <span class="language-lock">
+            Mentor Selected
+          </span>
+
+        </div>
+
+      </div>
+
+      <!-- CODE INPUT -->
+      <div class="editor-container">
+
+        <div class="editor-label">
+
+          <span>YOUR CODE</span>
+
+          <span>
+            {{ selectedLanguage() | uppercase }}
+          </span>
+
+        </div>
+
+        <textarea
+          class="code-editor"
+          [ngModel]="sourceCode()"
+          (ngModelChange)="sourceCode.set($event)"
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
+          placeholder="Write your code here...">
+        </textarea>
+
+      </div>
+
+      <!-- ACTION -->
+      <div class="editor-actions">
+
+        <p>
+          Your code will be checked against the problem's test cases.
+        </p>
+
+        <button
+          type="button"
+          class="run-button"
+          [disabled]="submitting()"
+          (click)="submitAndRun()">
+
+          <span *ngIf="!submitting()">▶ Run &amp; Submit</span>
+
+          <span *ngIf="submitting()">Executing...</span>
+
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- EXECUTION ERROR -->
+    <section
+      class="result-card error-result"
+      *ngIf="executionError()">
+
+      <h3>Execution Message</h3>
+
+      <p>{{ executionError() }}</p>
+
+    </section>
+
+    <!-- EXECUTION RESULTS -->
+    <section
+      class="result-card"
+      *ngIf="executionResult() as result">
+
+      <div class="result-header">
+
+        <div>
+
+          <span class="result-label">EXECUTION RESULT</span>
+
+          <h2 [ngClass]="result.executionStatus">
+            {{ result.executionStatus | titlecase }}
+          </h2>
+
+        </div>
+
+        <div class="test-score">
+
+          <strong>
+            {{ result.passedTestCases }}/{{ result.totalTestCases }}
+          </strong>
+
+          <span>Test cases passed</span>
+
+        </div>
+
+      </div>
+
+      <div class="test-results">
+
+        <h3>Test Case Results</h3>
+
+        <div
+          class="test-row"
+          *ngFor="let test of result.testResults">
+
+          <span>
+            Test Case {{ test.caseNumber }}
+          </span>
+
+          <span
+            class="test-status"
+            [class.passed]="test.passed"
+            [class.failed]="!test.passed">
+
+            {{ test.passed ? 'Passed' : 'Failed' }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

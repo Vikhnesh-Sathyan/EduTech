@@ -488,3 +488,11 @@
   }
 
 }
+.problem-card {
+  cursor: pointer;
+}
+
+.problem-card:focus-visible {
+  outline: 3px solid #c8792c;
+  outline-offset: 3px;
+}

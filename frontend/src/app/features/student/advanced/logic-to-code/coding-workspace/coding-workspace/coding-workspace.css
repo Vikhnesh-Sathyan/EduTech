@@ -1,0 +1,506 @@
+/* =====================================================
+   WORKSPACE PAGE
+===================================================== */
+
+.workspace-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #faf8f4;
+  color: #33271e;
+  font-family: inherit;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.workspace-header {
+  max-width: 1200px;
+  margin: 0 auto 28px;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #c8792c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.header-content h1 {
+  margin: 0 0 12px;
+  color: #5b4632;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+}
+
+.header-content p {
+  max-width: 850px;
+  margin: 0;
+  color: #786b60;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.problem-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+  color: #786b60;
+  font-size: 13px;
+}
+
+/* =====================================================
+   DIFFICULTY
+===================================================== */
+
+.difficulty {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #f0e7dc;
+  color: #5b4632;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.difficulty.easy {
+  background: #e5f4e9;
+  color: #267344;
+}
+
+.difficulty.medium {
+  background: #fff0d9;
+  color: #a76513;
+}
+
+.difficulty.hard {
+  background: #fbe5e2;
+  color: #b13d32;
+}
+
+/* =====================================================
+   CODING CARD
+===================================================== */
+
+.coding-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #e9dfd3;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(91, 70, 50, 0.06);
+}
+
+/* =====================================================
+   EDITOR TOOLBAR
+===================================================== */
+
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 26px;
+  border-bottom: 1px solid #eee6dc;
+}
+
+.editor-toolbar h2 {
+  margin: 0 0 5px;
+  color: #5b4632;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.editor-toolbar p {
+  margin: 0;
+  color: #928477;
+  font-size: 13px;
+}
+
+/* =====================================================
+   MENTOR-SELECTED LANGUAGE
+===================================================== */
+
+.selected-language {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 15px;
+  border: 1px solid #e9dfd3;
+  border-radius: 10px;
+  background: #fffaf2;
+  color: #5b4632;
+}
+
+.language-indicator {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #c8792c;
+  box-shadow: 0 0 0 4px rgba(200, 121, 44, 0.12);
+}
+
+.language-name {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.language-lock {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #f4d9a0;
+  color: #765025;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   EDITOR CONTAINER
+===================================================== */
+
+.editor-container {
+  padding: 22px 26px;
+}
+
+.editor-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #a18d79;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.editor-label span:last-child {
+  color: #c8792c;
+}
+
+/* =====================================================
+   CODE EDITOR
+===================================================== */
+
+.code-editor {
+  display: block;
+  width: 100%;
+  min-height: 400px;
+  box-sizing: border-box;
+  padding: 22px;
+  resize: vertical;
+  border: 1px solid #352c25;
+  border-radius: 12px;
+  outline: none;
+  background: #211c18;
+  color: #f4e9d8;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  tab-size: 4;
+  white-space: pre;
+}
+
+.code-editor:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.12);
+}
+
+.code-editor::placeholder {
+  color: #887b70;
+}
+
+/* =====================================================
+   EDITOR ACTIONS
+===================================================== */
+
+.editor-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 26px;
+  border-top: 1px solid #eee6dc;
+  background: #fffdf9;
+}
+
+.editor-actions p {
+  margin: 0;
+  color: #8a7c6e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.run-button {
+  padding: 13px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.run-button:hover:not(:disabled) {
+  background: #c8792c;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(200, 121, 44, 0.2);
+}
+
+.run-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   RESULT CARD
+===================================================== */
+
+.result-card {
+  max-width: 1200px;
+  margin: 26px auto 0;
+  padding: 25px;
+  border: 1px solid #e9dfd3;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(91, 70, 50, 0.05);
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #eee6dc;
+}
+
+.result-label {
+  color: #c8792c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.result-header h2 {
+  margin: 8px 0 0;
+  color: #5b4632;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.result-header h2.accepted {
+  color: #26834d;
+}
+
+.result-header h2.wrong_answer,
+.result-header h2.compilation_error,
+.result-header h2.runtime_error,
+.result-header h2.internal_error {
+  color: #bd493d;
+}
+
+.test-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.test-score strong {
+  color: #5b4632;
+  font-size: 25px;
+}
+
+.test-score span {
+  color: #928477;
+  font-size: 12px;
+}
+
+/* =====================================================
+   TEST RESULTS
+===================================================== */
+
+.test-results {
+  padding-top: 20px;
+}
+
+.test-results h3 {
+  margin: 0 0 16px;
+  color: #5b4632;
+  font-size: 15px;
+}
+
+.test-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 13px 15px;
+  margin-bottom: 9px;
+  border: 1px solid #eee6dc;
+  border-radius: 9px;
+  color: #625448;
+  font-size: 13px;
+}
+
+.test-status {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.test-status.passed {
+  color: #26834d;
+}
+
+.test-status.failed {
+  color: #bd493d;
+}
+
+/* =====================================================
+   ERROR RESULT
+===================================================== */
+
+.error-result {
+  border-color: #f0d3cf;
+  background: #fff8f7;
+}
+
+.error-result h3 {
+  margin: 0 0 8px;
+  color: #b13d32;
+  font-size: 16px;
+}
+
+.error-result p {
+  margin: 0;
+  color: #8d514a;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   LOADING & ERROR STATES
+===================================================== */
+
+.state-card {
+  max-width: 500px;
+  margin: 100px auto;
+  padding: 35px;
+  text-align: center;
+  border: 1px solid #e9dfd3;
+  border-radius: 15px;
+  background: #ffffff;
+}
+
+.state-card p {
+  color: #786b60;
+  font-size: 14px;
+}
+
+.state-card h2 {
+  color: #5b4632;
+}
+
+.error-state {
+  border-color: #f0d3cf;
+}
+
+.error-state p {
+  color: #b13d32;
+}
+
+.loader {
+  width: 35px;
+  height: 35px;
+  margin: 0 auto 15px;
+  border: 3px solid #eee3d5;
+  border-top-color: #c8792c;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .workspace-page {
+    padding: 18px;
+  }
+
+  .editor-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .selected-language {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .editor-container {
+    padding: 16px;
+  }
+
+  .code-editor {
+    min-height: 320px;
+    font-size: 12px;
+  }
+
+  .editor-actions {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .run-button {
+    width: 100%;
+  }
+
+  .result-card {
+    padding: 18px;
+  }
+
+  .result-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .test-score {
+    align-items: flex-start;
+  }
+
+}
+
+@media (max-width: 420px) {
+
+  .problem-meta {
+    gap: 9px;
+  }
+
+  .language-lock {
+    margin-left: auto;
+  }
+
+  .editor-label {
+    font-size: 9px;
+  }
+
+}

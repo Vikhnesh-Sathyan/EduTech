@@ -1,6 +1,10 @@
 
 const db = require("../../../../config/db");
 
+const {
+    getLanguageFromSubject
+} = require("../../../../config/logicToCodeProgrammingLanguages");
+
 // =====================================================
 // CREATE STUDENT CODE SUBMISSION
 // =====================================================
@@ -18,7 +22,7 @@ const createStudentSubmission = async (req, res) => {
 
         const { language, source_code } = req.body;
 
-        // VALIDATE PROBLEM ID
+        // 1. VALIDATE PROBLEM ID
 
         if (
             !Number.isInteger(problemId) ||
@@ -30,22 +34,7 @@ const createStudentSubmission = async (req, res) => {
             });
         }
 
-        // VALIDATE LANGUAGE
-
-        const allowedLanguages = [
-            "python",
-            "javascript",
-            "java"
-        ];
-
-        if (!allowedLanguages.includes(language)) {
-            return res.status(400).json({
-                success: false,
-                message: "Unsupported programming language"
-            });
-        }
-
-        // VALIDATE SOURCE CODE
+        // 2. VALIDATE SOURCE CODE
 
         if (
             typeof source_code !== "string" ||
@@ -64,27 +53,31 @@ const createStudentSubmission = async (req, res) => {
             });
         }
 
-        // START TRANSACTION
+        // 3. START TRANSACTION
 
         await connection.beginTransaction();
 
         transactionStarted = true;
 
-        // CHECK PUBLISHED PROBLEM
+        // 4. GET PUBLISHED PROBLEM AND SUBJECT
 
-       const [problems] = await connection.query(
-    `SELECT id
-     FROM logic_to_code_problems
-     WHERE id = ?
-     AND status = 'published'
-     FOR UPDATE`,
-    [problemId]
-);
+        const [problems] = await connection.query(
+            `SELECT
+                p.id,
+                p.subject_id,
+                s.name AS subject_name
+             FROM logic_to_code_problems p
+             INNER JOIN subjects s
+                ON p.subject_id = s.id
+             WHERE p.id = ?
+             AND p.status = 'published'
+             FOR UPDATE`,
+            [problemId]
+        );
 
         if (problems.length === 0) {
 
             await connection.rollback();
-
             transactionStarted = false;
 
             return res.status(404).json({
@@ -93,7 +86,42 @@ const createStudentSubmission = async (req, res) => {
             });
         }
 
-        // GENERATE NEXT SUBMISSION NUMBER
+        // 5. GET EXPECTED LANGUAGE FROM CENTRAL CONFIGURATION
+
+        const expectedLanguage = getLanguageFromSubject(
+            problems[0].subject_name
+        );
+
+        // 6. CHECK SUBJECT SUPPORT
+
+        if (!expectedLanguage) {
+
+            await connection.rollback();
+            transactionStarted = false;
+
+            return res.status(400).json({
+                success: false,
+                message: `No supported programming language configured for subject: ${problems[0].subject_name}`
+            });
+        }
+
+        // 7. VALIDATE SUBMITTED LANGUAGE
+
+        if (
+            typeof language !== "string" ||
+            language !== expectedLanguage.executionLanguage
+        ) {
+
+            await connection.rollback();
+            transactionStarted = false;
+
+            return res.status(400).json({
+                success: false,
+                message: `This problem requires ${expectedLanguage.label}.`
+            });
+        }
+
+        // 8. GENERATE NEXT SUBMISSION NUMBER
 
         const [previousSubmissions] = await connection.query(
             `SELECT COALESCE(MAX(submission_number), 0) AS lastNumber
@@ -107,7 +135,7 @@ const createStudentSubmission = async (req, res) => {
         const submissionNumber =
             Number(previousSubmissions[0].lastNumber) + 1;
 
-        // INSERT SUBMISSION
+        // 9. INSERT SUBMISSION
 
         const [result] = await connection.query(
             `INSERT INTO logic_to_code_submissions
@@ -131,7 +159,7 @@ const createStudentSubmission = async (req, res) => {
             ]
         );
 
-        // COMMIT TRANSACTION
+        // 10. COMMIT TRANSACTION
 
         await connection.commit();
 
@@ -150,8 +178,6 @@ const createStudentSubmission = async (req, res) => {
         });
 
     } catch (error) {
-
-        // ROLLBACK ONLY IF TRANSACTION STARTED
 
         if (transactionStarted) {
 

@@ -106,11 +106,9 @@ import { StudentCodeToLogicSubmissionsComponent } from './features/student/advan
 
 // STUDENT LOGIC TO CODE
 import { Dashboard } from './features/student/advanced/logic-to-code/dashboard/dashboard';
-
-import { ProblemList as StudentLogicToCodeProblemList }
-from './features/student/advanced/logic-to-code/problem-list/problem-list';
-
-
+import { ProblemList as StudentLogicToCodeProblemList } from './features/student/advanced/logic-to-code/problems/problem-list/problem-list';
+import { ProblemDetails as StudentLogicToCodeProblemDetails} from './features/student/advanced/logic-to-code/problems/problem-details/problem-details';
+import { CodingWorkspace } from './features/student/advanced/logic-to-code/coding-workspace/coding-workspace/coding-workspace';
 
 
 // Admin dashboard
@@ -245,7 +243,7 @@ export const routes: Routes = [
         component: StudentDashboard
       },
 
-            //SKILLSWAP
+        //SKILLSWAP
       {
          path: 'skill-swap',
         component: SkillSwapHome
@@ -339,7 +337,6 @@ export const routes: Routes = [
       },
 
       //CONCEPT COMPARISON 
-
       {
         path: 'advanced-learning/concept-comparisons/:id',
         component: ConceptComparisonDetails,
@@ -483,12 +480,20 @@ export const routes: Routes = [
 
       //STUDENT LOGIC TO CODE
       {
-      path: 'student/advanced/logic-to-code',
-      component: Dashboard
+        path: 'student/advanced/logic-to-code',
+        component: Dashboard
       },
       {
         path: 'student/advanced/logic-to-code/problems',
         component: StudentLogicToCodeProblemList
+      },
+      {
+        path: 'student/advanced/logic-to-code/problems/:problemId',
+        component: StudentLogicToCodeProblemDetails
+      },
+      {
+        path: 'student/advanced/logic-to-code/problems/:problemId/workspace',
+        component: CodingWorkspace
       }
 
     ]

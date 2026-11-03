@@ -104,10 +104,14 @@
     *ngIf="!loading() && !errorMessage() && problems().length > 0"
   >
 
-    <article
-      class="problem-card"
-      *ngFor="let problem of problems()"
-    >
+   <article
+  class="problem-card"
+  *ngFor="let problem of problems()"
+  (click)="openProblem(problem.id)"
+  (keydown.enter)="openProblem(problem.id)"
+  tabindex="0"
+  role="button"
+>
 
       <div class="card-top">
         <span

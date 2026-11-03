@@ -1,0 +1,282 @@
+
+<div class="problem-details-page">
+
+  <!-- LOADING STATE -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading problem details...</p>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div
+    class="error-state"
+    *ngIf="!loading() && errorMessage()"
+  >
+    <div class="error-icon">!</div>
+    <h2>Unable to Load Problem</h2>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" (click)="loadProblemDetails()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- PROBLEM CONTENT -->
+  <ng-container *ngIf="!loading() && problemDetails() as details">
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+
+      <div class="header-content">
+
+        <span class="eyebrow">LOGIC TO CODE • CHALLENGE</span>
+
+        <h1>{{ details.problem.title }}</h1>
+
+        <p>
+          Understand the problem, plan your logic
+          and turn your solution into working code.
+        </p>
+
+      </div>
+
+      <span
+        class="difficulty-badge"
+        [ngClass]="'difficulty-' + details.problem.difficulty.toLowerCase()"
+      >
+        {{ details.problem.difficulty | titlecase }}
+      </span>
+
+    </section>
+
+    <!-- PROBLEM DESCRIPTION -->
+    <section class="content-card">
+
+      <div class="section-heading">
+        <span class="section-icon">📘</span>
+        <div>
+          <h2>Problem Description</h2>
+          <p>Understand what the challenge is asking you to solve.</p>
+        </div>
+      </div>
+
+      <div class="problem-description">
+        {{ details.problem.description }}
+      </div>
+
+      <div class="problem-meta">
+
+        <span>Problem #{{ details.problem.id }}</span>
+
+        <span>👨‍🏫 {{ details.problem.mentor_name }}</span>
+
+        <span>
+          📅 {{ details.problem.created_at | date:'mediumDate' }}
+        </span>
+
+      </div>
+
+      <button
+  type="button"
+  class="start-coding-button"
+  (click)="startCoding()">
+
+  <span>Start Coding</span>
+  <span>→</span>
+
+</button>
+
+    </section>
+
+    <!-- LOGIC STEPS -->
+    <section
+      class="content-card"
+      *ngIf="details.steps.length > 0"
+    >
+
+      <div class="section-heading">
+        <span class="section-icon">🧠</span>
+        <div>
+          <h2>Step-by-Step Logic</h2>
+          <p>Understand the approach before writing your code.</p>
+        </div>
+      </div>
+
+      <div class="logic-steps">
+
+        <div
+          class="logic-step"
+          *ngFor="let step of details.steps"
+        >
+
+          <span class="step-number">
+            {{ step.step_number }}
+          </span>
+
+          <p>{{ step.step_description }}</p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SAMPLE CODE -->
+    <section
+      class="content-card"
+      *ngIf="details.support?.sample_code"
+    >
+
+      <div class="section-heading">
+        <span class="section-icon">💻</span>
+        <div>
+          <h2>
+            {{ details.support?.sample_code_title || 'Sample Code' }}
+          </h2>
+          <p>
+            {{ details.support?.sample_code_description }}
+          </p>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>Sample Code</span>
+          <span>{{ details.support?.sample_code_language }}</span>
+        </div>
+
+        <pre><code>{{ details.support?.sample_code }}</code></pre>
+      </div>
+
+    </section>
+
+    <!-- STARTER CODE -->
+    <section
+      class="content-card"
+      *ngIf="details.support?.starter_code"
+    >
+
+      <div class="section-heading">
+        <span class="section-icon">🚀</span>
+        <div>
+          <h2>Starter Code</h2>
+          <p>Use this code as your starting point.</p>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>Starter Code</span>
+          <span>{{ details.support?.starter_code_language }}</span>
+        </div>
+
+        <pre><code>{{ details.support?.starter_code }}</code></pre>
+      </div>
+
+    </section>
+
+    <!-- PUBLIC TEST CASES -->
+    <section
+      class="content-card"
+      *ngIf="details.publicTestCases.length > 0"
+    >
+
+      <div class="section-heading">
+        <span class="section-icon">🧪</span>
+        <div>
+          <h2>Sample Test Cases</h2>
+          <p>Check the expected output for these examples.</p>
+        </div>
+      </div>
+
+      <div class="test-case-list">
+
+        <div
+          class="test-case"
+          *ngFor="let testCase of details.publicTestCases"
+        >
+
+          <h3>Test Case {{ testCase.case_number }}</h3>
+
+          <div class="test-case-values">
+
+            <div>
+              <label>Input</label>
+              <pre>{{ testCase.test_input }}</pre>
+            </div>
+
+            <div>
+              <label>Expected Output</label>
+              <pre>{{ testCase.expected_output }}</pre>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- HINTS -->
+    <section
+      class="content-card"
+      *ngIf="details.hints.length > 0"
+    >
+
+      <div class="section-heading">
+        <span class="section-icon">💡</span>
+        <div>
+          <h2>Helpful Hints</h2>
+          <p>Use these hints when you need some guidance.</p>
+        </div>
+      </div>
+
+      <div class="hint-list">
+
+        <div
+          class="hint-item"
+          *ngFor="let hint of details.hints"
+        >
+          <span>Hint {{ hint.hint_number }}</span>
+          <p>{{ hint.hint_content }}</p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- COMMON MISTAKES -->
+    <section
+      class="content-card"
+      *ngIf="details.mistakes.length > 0"
+    >
+
+      <div class="section-heading">
+        <span class="section-icon">⚠️</span>
+        <div>
+          <h2>Common Mistakes</h2>
+          <p>Be careful of these common errors while solving.</p>
+        </div>
+      </div>
+
+      <div class="mistake-list">
+
+        <div
+          class="mistake-item"
+          *ngFor="let mistake of details.mistakes"
+        >
+
+          <h3>{{ mistake.mistake_title }}</h3>
+
+          <p>{{ mistake.mistake_description }}</p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>
