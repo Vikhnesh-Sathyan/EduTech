@@ -179,37 +179,47 @@ const executeStudentSubmission = async (req, res) => {
 
             // HANDLE COMPILATION ERROR
 
-            if (
-                executionResult.status === "compilation_error"
-            ) {
-                finalStatus = "compilation_error";
-                errorMessage = "Compilation error in submitted code.";
+ if (executionResult.status === "compilation_error") {
+    finalStatus = "compilation_error";
 
-                testResults.push({
-                    caseNumber: testCase.case_number,
-                    visibility: testCase.visibility,
-                    passed: false
-                });
+    errorMessage =
+        executionResult.output ||
+        "Compilation error while executing submitted code.";
 
-                break;
-            }
+    testResults.push({
+        caseNumber: testCase.case_number,
+        visibility: testCase.visibility,
+        passed: false,
+        input: testCase.test_input,
+        expectedOutput: testCase.expected_output,
+        actualOutput: executionResult.output || "",
+        error: "Compilation error"
+    });
+
+    break;
+}
 
             // HANDLE RUNTIME ERROR
 
-            if (
-                executionResult.status === "runtime_error"
-            ) {
-                finalStatus = "runtime_error";
-                errorMessage = "Runtime error while executing submitted code.";
+           if (executionResult.status === "runtime_error") {
+    finalStatus = "runtime_error";
 
-                testResults.push({
-                    caseNumber: testCase.case_number,
-                    visibility: testCase.visibility,
-                    passed: false
-                });
+    errorMessage =
+        executionResult.output ||
+        "Runtime error while executing submitted code.";
 
-                break;
-            }
+    testResults.push({
+        caseNumber: testCase.case_number,
+        visibility: testCase.visibility,
+        passed: false,
+        input: testCase.test_input,
+        expectedOutput: testCase.expected_output,
+        actualOutput: executionResult.output || "",
+        error: "Runtime error"
+    });
+
+    break;
+}
 
             // COMPARE OUTPUTS
 
@@ -228,10 +238,14 @@ const executeStudentSubmission = async (req, res) => {
             }
 
             testResults.push({
-                caseNumber: testCase.case_number,
-                visibility: testCase.visibility,
-                passed
-            });
+    caseNumber: testCase.case_number,
+    visibility: testCase.visibility,
+    passed,
+
+    input: testCase.test_input,
+    expectedOutput,
+    actualOutput
+});
 
             if (!passed) {
                 finalStatus = "wrong_answer";

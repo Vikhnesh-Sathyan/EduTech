@@ -1,3 +1,4 @@
+
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -43,8 +44,14 @@ export interface StudentLogicToCodeDashboardResponse {
   };
 }
 
+// =====================================================
+// STUDENT PROBLEM INTERFACES
+// =====================================================
+
 export interface StudentLogicToCodeProblem {
   id: number;
+  subject_id: number;
+  subject_name: string;
   title: string;
   description: string;
   difficulty: string;
@@ -66,6 +73,20 @@ export interface StudentLogicToCodeProblemsResponse {
   pagination: StudentLogicToCodePagination;
 }
 
+// =====================================================
+// STUDENT SUBJECT INTERFACE
+// =====================================================
+
+export interface StudentLogicToCodeSubject {
+  id: number;
+  name: string;
+}
+
+export interface StudentLogicToCodeSubjectsResponse {
+  success: boolean;
+  message: string;
+  data: StudentLogicToCodeSubject[];
+}
 
 // =====================================================
 // STUDENT PROBLEM DETAILS INTERFACES
@@ -84,10 +105,11 @@ export interface StudentLogicToCodeProblemDetails {
   subject_id: number;
   subject_name: string;
 
-  // Programming language for the problem
+  // Programming language
   programming_language: string;
   language_label: string;
 }
+
 export interface StudentLogicToCodeStep {
   id: number;
   step_number: number;
@@ -222,39 +244,58 @@ export class LogicToCodeService {
   private http = inject(HttpClient);
 
   private apiUrl =
-  'http://localhost:5000/api/student/logic-to-code';
+    'http://localhost:5000/api/student/logic-to-code';
 
   // =====================================================
   // GET STUDENT DASHBOARD
   // =====================================================
 
   getDashboard(): Observable<StudentLogicToCodeDashboardResponse> {
+
     return this.http.get<StudentLogicToCodeDashboardResponse>(
       `${this.apiUrl}/dashboard`
     );
+
   }
 
+  // =====================================================
+  // GET PUBLISHED PROBLEMS
+  // =====================================================
+
   getProblems(
-  search: string = '',
-  difficulty: string = '',
-  page: number = 1,
-  limit: number = 10
-): Observable<StudentLogicToCodeProblemsResponse> {
+    search: string = '',
+    difficulty: string = '',
+    page: number = 1,
+    limit: number = 10,
+    subjectId: number | string = ''
+  ): Observable<StudentLogicToCodeProblemsResponse> {
 
-  return this.http.get<StudentLogicToCodeProblemsResponse>(
-    `${this.apiUrl}/problems`,
-    {
-      params: {
-        search,
-        difficulty,
-        page,
-        limit
+    return this.http.get<StudentLogicToCodeProblemsResponse>(
+      `${this.apiUrl}/problems`,
+      {
+        params: {
+          search,
+          difficulty,
+          page,
+          limit,
+          subjectId
+        }
       }
-    }
-  );
+    );
 
-}
+  }
 
+  // =====================================================
+  // GET AVAILABLE SUBJECTS
+  // =====================================================
+
+  getAvailableSubjects(): Observable<StudentLogicToCodeSubjectsResponse> {
+
+    return this.http.get<StudentLogicToCodeSubjectsResponse>(
+      `${this.apiUrl}/subjects`
+    );
+
+  }
 
   // =====================================================
   // GET SINGLE PROBLEM DETAILS
@@ -271,49 +312,52 @@ export class LogicToCodeService {
   }
 
   // =====================================================
-// CREATE STUDENT SUBMISSION
-// =====================================================
+  // CREATE STUDENT SUBMISSION
+  // =====================================================
 
-createSubmission(
-  problemId: number,
-  language: string,
-  source_code: string
-): Observable<CreateStudentSubmissionResponse> {
+  createSubmission(
+    problemId: number,
+    language: string,
+    source_code: string
+  ): Observable<CreateStudentSubmissionResponse> {
 
-  return this.http.post<CreateStudentSubmissionResponse>(
-    `${this.apiUrl}/problems/${problemId}/submissions`,
-    {
-      language,
-      source_code
-    }
-  );
-}
+    return this.http.post<CreateStudentSubmissionResponse>(
+      `${this.apiUrl}/problems/${problemId}/submissions`,
+      {
+        language,
+        source_code
+      }
+    );
 
-// =====================================================
-// EXECUTE STUDENT SUBMISSION
-// =====================================================
+  }
 
-executeSubmission(
-  submissionId: number
-): Observable<ExecuteStudentSubmissionResponse> {
+  // =====================================================
+  // EXECUTE STUDENT SUBMISSION
+  // =====================================================
 
-  return this.http.post<ExecuteStudentSubmissionResponse>(
-    `${this.apiUrl}/submissions/${submissionId}/execute`,
-    {}
-  );
-}
+  executeSubmission(
+    submissionId: number
+  ): Observable<ExecuteStudentSubmissionResponse> {
 
-// =====================================================
-// GET STUDENT SUBMISSION DETAILS
-// =====================================================
+    return this.http.post<ExecuteStudentSubmissionResponse>(
+      `${this.apiUrl}/submissions/${submissionId}/execute`,
+      {}
+    );
 
-getSubmissionDetails(
-  submissionId: number
-): Observable<StudentSubmissionDetailsResponse> {
+  }
 
-  return this.http.get<StudentSubmissionDetailsResponse>(
-    `${this.apiUrl}/submissions/${submissionId}`
-  );
-}
+  // =====================================================
+  // GET STUDENT SUBMISSION DETAILS
+  // =====================================================
+
+  getSubmissionDetails(
+    submissionId: number
+  ): Observable<StudentSubmissionDetailsResponse> {
+
+    return this.http.get<StudentSubmissionDetailsResponse>(
+      `${this.apiUrl}/submissions/${submissionId}`
+    );
+
+  }
 
 }

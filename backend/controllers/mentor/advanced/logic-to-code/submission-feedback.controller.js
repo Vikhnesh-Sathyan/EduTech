@@ -1,15 +1,11 @@
 const db = require("../../../../config/db");
 
-// =====================================================
-// ADD OR UPDATE MENTOR FEEDBACK
-// =====================================================
-
 const updateSubmissionFeedback = async (req, res) => {
     try {
         const mentorId = req.user.id;
         const submissionId = Number(req.params.submissionId);
 
-        const { mentor_feedback } = req.body;
+        const { mentor_feedback, star_rating } = req.body;
 
         // ---------------------------------------------
         // VALIDATE SUBMISSION ID
@@ -40,6 +36,21 @@ const updateSubmissionFeedback = async (req, res) => {
         }
 
         // ---------------------------------------------
+        // VALIDATE STAR RATING
+        // ---------------------------------------------
+
+        if (
+            !Number.isInteger(star_rating) ||
+            star_rating < 1 ||
+            star_rating > 5
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Star rating must be between 1 and 5"
+            });
+        }
+
+        // ---------------------------------------------
         // CHECK SUBMISSION OWNERSHIP
         // ---------------------------------------------
 
@@ -62,17 +73,22 @@ const updateSubmissionFeedback = async (req, res) => {
         }
 
         // ---------------------------------------------
-        // SAVE MENTOR FEEDBACK
+        // SAVE FEEDBACK AND STAR RATING
         // ---------------------------------------------
 
         await db.query(
             `UPDATE logic_to_code_submissions
              SET
                 mentor_feedback = ?,
+                star_rating = ?,
                 review_status = 'reviewed',
                 reviewed_at = CURRENT_TIMESTAMP
              WHERE id = ?`,
-            [mentor_feedback.trim(), submissionId]
+            [
+                mentor_feedback.trim(),
+                star_rating,
+                submissionId
+            ]
         );
 
         // ---------------------------------------------
@@ -81,7 +97,7 @@ const updateSubmissionFeedback = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Mentor feedback saved successfully"
+            message: "Mentor feedback and rating saved successfully"
         });
 
     } catch (error) {

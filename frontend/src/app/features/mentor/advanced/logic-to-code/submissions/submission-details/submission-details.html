@@ -1,4 +1,3 @@
-
 <div class="submission-details-page">
 
   <!-- PAGE HEADER -->
@@ -47,8 +46,7 @@
         <span class="card-label">PROBLEM INFORMATION</span>
         <h2>{{ item.problem_title }}</h2>
         <div class="problem-meta">
-          <span class="difficulty-badge"
-                [ngClass]="item.difficulty">
+          <span class="difficulty-badge" [ngClass]="item.difficulty">
             {{ item.difficulty }}
           </span>
           <span>Problem #{{ item.problem_id }}</span>
@@ -75,9 +73,8 @@
           <h2>Execution Summary</h2>
         </div>
 
-        <span class="status-badge"
-              [ngClass]="item.execution_status">
-          {{ item.execution_status.replaceAll('_', ' ') | titlecase }}
+        <span class="status-badge" [ngClass]="item.execution_status">
+          {{ formatStatus(item.execution_status) | titlecase }}
         </span>
       </div>
 
@@ -86,14 +83,13 @@
         <div class="stat-card">
           <span>Passed Test Cases</span>
           <strong>
-            {{ item.passed_test_cases }} /
-            {{ item.total_test_cases }}
+            {{ item.passed_test_cases }} / {{ item.total_test_cases }}
           </strong>
         </div>
 
         <div class="stat-card">
           <span>Execution Time</span>
-          <strong>{{ item.execution_time_ms }} ms</strong>
+          <strong>{{ item.execution_time_ms ?? 0 }} ms</strong>
         </div>
 
         <div class="stat-card">
@@ -129,26 +125,72 @@
     </section>
 
     <!-- EXECUTION ERROR -->
-    <section class="error-details"
-             *ngIf="item.error_message">
-
+    <section class="error-details" *ngIf="item.error_message">
       <h3>Execution Error</h3>
       <pre>{{ item.error_message }}</pre>
-
     </section>
 
     <!-- TEST RESULTS -->
-    <section class="test-results-section"
-             *ngIf="item.test_results">
+    <section class="test-results-section" *ngIf="item.test_results?.length">
 
       <div class="section-heading">
         <div>
           <span class="eyebrow">TEST CASE ANALYSIS</span>
           <h2>Test Results</h2>
+          <p>Detailed comparison of expected and actual outputs.</p>
         </div>
       </div>
 
-      <pre class="test-results-code">{{ item.test_results | json }}</pre>
+      <div class="test-case-list">
+
+        <div class="test-case-card"
+             *ngFor="let test of item.test_results; trackBy: trackByCase">
+
+          <!-- TEST CASE HEADER -->
+          <div class="test-case-header">
+
+            <div>
+              <h3>Test Case {{ test.caseNumber }}</h3>
+
+              <span class="visibility-badge" [ngClass]="test.visibility">
+                {{ test.visibility | titlecase }}
+              </span>
+            </div>
+
+            <span class="test-status"
+                  [class.passed]="test.passed"
+                  [class.failed]="!test.passed">
+              {{ test.passed ? 'Passed' : 'Failed' }}
+            </span>
+
+          </div>
+
+          <!-- INPUT -->
+          <div class="test-detail">
+            <label>Input</label>
+            <pre>{{ test.input }}</pre>
+          </div>
+
+          <!-- EXPECTED OUTPUT -->
+          <div class="test-detail">
+            <label>Expected Output</label>
+            <pre>{{ test.expectedOutput }}</pre>
+          </div>
+
+          <!-- ACTUAL OUTPUT -->
+          <div class="test-detail">
+            <label>Actual Output / Error</label>
+            <pre>{{ test.actualOutput || 'No output available' }}</pre>
+          </div>
+
+          <!-- ERROR TYPE -->
+          <div class="test-error" *ngIf="test.error">
+            {{ test.error }}
+          </div>
+
+        </div>
+
+      </div>
 
     </section>
 
@@ -168,6 +210,31 @@
         </span>
       </div>
 
+      <!-- STAR RATING -->
+      <div class="rating-section">
+
+        <span class="rating-label">Rate Student's Submission</span>
+
+        <div class="star-container">
+          <button
+            type="button"
+            *ngFor="let star of stars"
+            class="star-button"
+            [class.active]="star <= mentorRating()"
+            (click)="setRating(star)"
+            [attr.aria-label]="'Rate ' + star + ' out of 5 stars'">
+            ★
+          </button>
+        </div>
+
+        <p class="rating-hint">
+          {{ mentorRating() === 0
+            ? 'Select a rating from 1 to 5'
+            : mentorRating() + ' out of 5 stars selected' }}
+        </p>
+
+      </div>
+
       <label for="mentorFeedback">Your Feedback</label>
 
       <textarea
@@ -175,12 +242,11 @@
         rows="7"
         placeholder="Write your feedback about the student's code, logic, mistakes and improvements..."
         [value]="mentorFeedback()"
-        (input)="onFeedbackChange($any($event.target).value)">
-      </textarea>
+        (input)="onFeedbackChange($any($event.target).value)"></textarea>
 
       <p class="feedback-message"
          *ngIf="feedbackMessage()"
-         [class.success]="item.review_status === 'reviewed'">
+         [class.success]="feedbackSuccess()">
         {{ feedbackMessage() }}
       </p>
 

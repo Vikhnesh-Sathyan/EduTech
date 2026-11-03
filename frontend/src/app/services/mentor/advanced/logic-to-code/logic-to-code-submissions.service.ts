@@ -44,6 +44,16 @@ export interface MentorSubmissionsResponse {
   submissions: LogicToCodeSubmission[];
 }
 
+export interface LogicToCodeTestResult {
+  caseNumber: number;
+  visibility: string;
+  passed: boolean;
+  input?: string;
+  expectedOutput?: string;
+  actualOutput?: string;
+  error?: string;
+}
+
 export interface LogicToCodeSubmissionDetails
   extends LogicToCodeSubmission {
   difficulty: string;
@@ -52,8 +62,9 @@ export interface LogicToCodeSubmissionDetails
   submission_number: number;
   memory_used_kb: number | null;
   error_message: string | null;
-  test_results: any;
+  test_results: LogicToCodeTestResult[];
   reviewed_at: string | null;
+  star_rating: number | null;
 }
 
 export interface MentorSubmissionDetailsResponse {
@@ -117,11 +128,17 @@ export class LogicToCodeSubmissionsService {
 
 updateFeedback(
   submissionId: number,
-  mentor_feedback: string
+  mentor_feedback: string,
+  star_rating: number
 ): Observable<MentorSubmissionFeedbackResponse> {
+
   return this.http.patch<MentorSubmissionFeedbackResponse>(
     `${this.apiUrl}/submissions/${submissionId}/feedback`,
-    { mentor_feedback }
+    {
+      mentor_feedback,
+      star_rating
+    }
   );
 }
+
 }

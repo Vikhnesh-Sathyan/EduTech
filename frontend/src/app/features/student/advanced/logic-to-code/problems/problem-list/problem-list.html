@@ -29,6 +29,30 @@
       />
     </div>
 
+    <!-- SUBJECT FILTER -->
+<div class="subject-filter">
+
+  <label for="subject">Subject</label>
+
+  <select
+    id="subject"
+    [ngModel]="selectedSubject()"
+    (ngModelChange)="onSubjectChange($event)"
+  >
+
+    <option value="">All Subjects</option>
+
+    <option
+      *ngFor="let subject of subjects()"
+      [value]="subject.id"
+    >
+      {{ subject.name }}
+    </option>
+
+  </select>
+
+</div>
+
     <div class="difficulty-filter">
       <label for="difficulty">Difficulty</label>
 

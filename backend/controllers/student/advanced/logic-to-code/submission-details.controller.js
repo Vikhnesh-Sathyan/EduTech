@@ -8,21 +8,26 @@ const db = require("../../../../config/db");
 const getStudentSubmissionDetails = async (req, res) => {
     try {
         const studentId = req.user.id;
-       const submissionId = Number(req.params.submissionId);
+        const submissionId = Number(req.params.submissionId);
 
-// VALIDATE SUBMISSION ID
+        // -------------------------------------------------
+        // VALIDATE SUBMISSION ID
+        // -------------------------------------------------
 
-if (
-    !Number.isSafeInteger(submissionId) ||
-    submissionId <= 0
-) {
-    return res.status(400).json({
-        success: false,
-        message: "Valid submission ID is required"
-    });
-}
+        if (
+            !Number.isSafeInteger(submissionId) ||
+            submissionId <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Valid submission ID is required"
+            });
+        }
 
-        // Fetch submission belonging to logged-in student
+        // -------------------------------------------------
+        // FETCH STUDENT SUBMISSION
+        // -------------------------------------------------
+
         const [submissions] = await db.query(
             `SELECT
                 s.id,
@@ -54,6 +59,10 @@ if (
             [submissionId, studentId]
         );
 
+        // -------------------------------------------------
+        // CHECK SUBMISSION EXISTS
+        // -------------------------------------------------
+
         if (submissions.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -61,13 +70,55 @@ if (
             });
         }
 
+        const submission = submissions[0];
+
+        // -------------------------------------------------
+        // PARSE TEST RESULTS
+        // -------------------------------------------------
+
+        let testResults = [];
+
+        try {
+            testResults =
+                typeof submission.test_results === "string"
+                    ? JSON.parse(submission.test_results)
+                    : submission.test_results || [];
+
+            if (!Array.isArray(testResults)) {
+                testResults = [];
+            }
+
+        } catch (error) {
+            console.error("Test Results Parsing Error:", error);
+            testResults = [];
+        }
+
+        // -------------------------------------------------
+        // FILTER PRIVATE TEST-CASE DETAILS
+        // -------------------------------------------------
+
+        const safeTestResults = testResults.map((test) => ({
+            caseNumber: test.caseNumber,
+            visibility: test.visibility,
+            passed: test.passed
+        }));
+
+        // -------------------------------------------------
+        // RETURN SAFE STUDENT RESPONSE
+        // -------------------------------------------------
+
         return res.status(200).json({
             success: true,
             message: "Submission details fetched successfully",
-            data: submissions[0]
+
+            data: {
+                ...submission,
+                test_results: safeTestResults
+            }
         });
 
     } catch (error) {
+
         console.error(
             "Get Student Submission Details Error:",
             error

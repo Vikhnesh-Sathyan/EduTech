@@ -20,9 +20,9 @@ const {
 
 // Problems
 const {
-    getPublishedProblems
+    getPublishedProblems,
+    getAvailableSubjects
 } = require("../../../../controllers/student/advanced/logic-to-code/problem-list.controller");
-
 const {
     getStudentProblemDetails
 } = require("../../../../controllers/student/advanced/logic-to-code/problem-details.controller");
@@ -141,6 +141,9 @@ router.get("/dashboard", getStudentDashboard);
 
 // Get all published problems with search and filters.
 router.get("/problems", getPublishedProblems);
+
+// Get subjects that have published problems.
+router.get("/subjects", getAvailableSubjects);
 
 // Get details of one published problem.
 router.get("/problems/:problemId", getStudentProblemDetails);
