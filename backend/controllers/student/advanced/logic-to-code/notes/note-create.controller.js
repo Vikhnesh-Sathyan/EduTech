@@ -17,12 +17,49 @@ const createStudentNote = async (req, res) => {
         const studentId = req.user.id;
 
         const {
+            subject_id,
             problem_id,
             title,
-            note_content,
-            note_type = "other",
-            language = null
+            note_content
         } = req.body;
+
+
+        // -------------------------------------------------
+        // VALIDATE SUBJECT ID
+        // -------------------------------------------------
+
+        const parsedSubjectId = Number(subject_id);
+
+        if (
+            !Number.isInteger(parsedSubjectId) ||
+            parsedSubjectId <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please select a valid subject"
+            });
+        }
+
+
+        // -------------------------------------------------
+        // CHECK SUBJECT EXISTS
+        // -------------------------------------------------
+
+        const [subjects] = await db.query(
+            `
+            SELECT id
+            FROM subjects
+            WHERE id = ?
+            `,
+            [parsedSubjectId]
+        );
+
+        if (subjects.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Selected subject not found"
+            });
+        }
 
 
         // -------------------------------------------------
@@ -41,51 +78,10 @@ const createStudentNote = async (req, res) => {
             });
         }
 
-        if (title.trim().length > 255) {
+        if (title.trim().length > 200) {
             return res.status(400).json({
                 success: false,
-                message: "Title cannot exceed 255 characters"
-            });
-        }
-
-
-        // -------------------------------------------------
-        // VALIDATE NOTE TYPE
-        // -------------------------------------------------
-
-        const allowedNoteTypes = [
-            "theory",
-            "code",
-            "concept",
-            "mistake",
-            "other"
-        ];
-
-        if (!allowedNoteTypes.includes(note_type)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid note type"
-            });
-        }
-
-
-        // -------------------------------------------------
-        // VALIDATE PROGRAMMING LANGUAGE
-        // -------------------------------------------------
-
-        const allowedLanguages = [
-            "python",
-            "javascript",
-            "java"
-        ];
-
-        if (
-            language !== null &&
-            !allowedLanguages.includes(language)
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid programming language"
+                message: "Title cannot exceed 200 characters"
             });
         }
 
@@ -96,7 +92,7 @@ const createStudentNote = async (req, res) => {
 
         let parsedProblemId = null;
 
-        if (problem_id !== undefined && problem_id !== null) {
+        if (problem_id !== undefined && problem_id !== null && problem_id !== "") {
 
             parsedProblemId = Number(problem_id);
 
@@ -110,20 +106,27 @@ const createStudentNote = async (req, res) => {
                 });
             }
 
+
+            // Check problem belongs to selected subject
+
             const [problems] = await db.query(
                 `
                 SELECT id
                 FROM logic_to_code_problems
                 WHERE id = ?
+                AND subject_id = ?
                 AND status = 'published'
                 `,
-                [parsedProblemId]
+                [
+                    parsedProblemId,
+                    parsedSubjectId
+                ]
             );
 
             if (problems.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Published problem not found"
+                    message: "Selected problem does not belong to this subject or is not published"
                 });
             }
 
@@ -139,21 +142,19 @@ const createStudentNote = async (req, res) => {
             INSERT INTO logic_to_code_notes
             (
                 student_id,
+                subject_id,
                 problem_id,
                 title,
-                note_content,
-                note_type,
-                language
+                note_content
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             `,
             [
                 studentId,
+                parsedSubjectId,
                 parsedProblemId,
                 title.trim(),
-                note_content.trim(),
-                note_type,
-                language
+                note_content.trim()
             ]
         );
 

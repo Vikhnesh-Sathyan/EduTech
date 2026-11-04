@@ -1,0 +1,184 @@
+
+<section class="note-edit-page">
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+
+    <div class="loader"></div>
+
+    <p>Loading note...</p>
+
+  </div>
+
+
+  <!-- EDIT FORM -->
+  <ng-container *ngIf="!loading()">
+
+    <!-- HEADER -->
+    <div class="form-header">
+
+      <div>
+        <span class="eyebrow">MY LEARNING NOTES</span>
+
+        <h1>Edit Note</h1>
+
+        <p>Update your subject, related problem and learning notes.</p>
+      </div>
+
+      <button
+        type="button"
+        class="back-btn"
+        (click)="goBack()">
+        ← Back to Note
+      </button>
+
+    </div>
+
+
+    <!-- FORM -->
+    <form
+      class="note-form"
+      #noteForm="ngForm"
+      (ngSubmit)="updateNote()">
+
+
+      <!-- SUBJECT -->
+      <div class="form-group">
+
+        <label for="subject">Subject *</label>
+
+        <select
+          id="subject"
+          name="subject"
+          [(ngModel)]="selectedSubjectId"
+          (ngModelChange)="onSubjectChange()"
+          required>
+
+          <option [ngValue]="null">
+            {{ loadingSubjects() ? 'Loading subjects...' : 'Select Subject' }}
+          </option>
+
+          <option
+            *ngFor="let subject of subjects()"
+            [ngValue]="subject.id">
+            {{ subject.name }}
+          </option>
+
+        </select>
+
+        <span
+          class="field-hint"
+          *ngIf="subjects().length === 0 && !loadingSubjects()">
+          No subjects available.
+        </span>
+
+      </div>
+
+
+      <!-- PROBLEM -->
+      <div class="form-group">
+
+        <label for="problem">Problem / Topic Title</label>
+
+        <select
+          id="problem"
+          name="problem"
+          [(ngModel)]="selectedProblemId"
+          [disabled]="!selectedSubjectId || loadingProblems()">
+
+          <option [ngValue]="null">
+            {{ loadingProblems()
+              ? 'Loading problems...'
+              : !selectedSubjectId
+                ? 'Select a subject first'
+                : 'Select Problem (Optional)' }}
+          </option>
+
+          <option
+            *ngFor="let problem of problems()"
+            [ngValue]="problem.id">
+            {{ problem.title }}
+          </option>
+
+        </select>
+
+        <span class="field-hint">
+          Select a related problem if your note is about a specific Logic to Code problem.
+        </span>
+
+        <span
+          class="field-hint"
+          *ngIf="selectedSubjectId && !loadingProblems() && problems().length === 0">
+          No published problems available for this subject.
+        </span>
+
+      </div>
+
+
+      <!-- NOTE TITLE -->
+      <div class="form-group">
+
+        <label for="title">Note Title *</label>
+
+        <input
+          id="title"
+          type="text"
+          name="title"
+          [(ngModel)]="title"
+          placeholder="Example: Understanding JavaScript Closures"
+          maxlength="200"
+          required />
+
+      </div>
+
+
+      <!-- NOTE CONTENT -->
+      <div class="form-group">
+
+        <label for="note_content">Your Note *</label>
+
+        <textarea
+          id="note_content"
+          name="note_content"
+          [(ngModel)]="note_content"
+          placeholder="Write your explanation, logic, code snippets, important points or mistakes here..."
+          rows="12"
+          required>
+        </textarea>
+
+        <span class="field-hint">
+          Explain what you learned in your own words.
+        </span>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="goBack()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="
+            noteForm.invalid ||
+            saving() ||
+            !selectedSubjectId ||
+            loadingProblems()
+          ">
+          {{ saving() ? 'Updating...' : 'Update Note' }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </ng-container>
+
+</section>

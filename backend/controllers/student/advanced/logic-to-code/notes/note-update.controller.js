@@ -1,7 +1,7 @@
 
-// =====================================================
-// IMPORT DATABASE
-// =====================================================
+ // =====================================================
+ // IMPORT DATABASE
+ // =====================================================
 
 const db = require("../../../../../config/db");
 
@@ -18,10 +18,10 @@ const updateStudentNote = async (req, res) => {
         const noteId = Number(req.params.noteId);
 
         const {
+            subject_id,
+            problem_id,
             title,
-            note_content,
-            note_type,
-            language
+            note_content
         } = req.body;
 
 
@@ -55,17 +55,125 @@ const updateStudentNote = async (req, res) => {
         );
 
         if (notes.length === 0) {
+
             return res.status(404).json({
                 success: false,
                 message: "Note not found"
             });
+
         }
 
         const existingNote = notes[0];
 
 
         // -------------------------------------------------
-        // VALIDATE UPDATED TITLE
+        // VALIDATE SUBJECT ID
+        // -------------------------------------------------
+
+        const updatedSubjectId = subject_id !== undefined
+            ? Number(subject_id)
+            : existingNote.subject_id;
+
+        if (
+            !Number.isInteger(updatedSubjectId) ||
+            updatedSubjectId <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please select a valid subject"
+            });
+        }
+
+
+        // -------------------------------------------------
+        // CHECK SUBJECT EXISTS
+        // -------------------------------------------------
+
+        const [subjects] = await db.query(
+            `
+            SELECT id
+            FROM subjects
+            WHERE id = ?
+            `,
+            [updatedSubjectId]
+        );
+
+        if (subjects.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Selected subject not found"
+            });
+
+        }
+
+
+        // -------------------------------------------------
+        // VALIDATE PROBLEM ID
+        // -------------------------------------------------
+
+        let updatedProblemId = existingNote.problem_id;
+
+        if (problem_id !== undefined) {
+
+            if (
+                problem_id === null ||
+                problem_id === ""
+            ) {
+                updatedProblemId = null;
+            } else {
+
+                updatedProblemId = Number(problem_id);
+
+                if (
+                    !Number.isInteger(updatedProblemId) ||
+                    updatedProblemId <= 0
+                ) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Invalid problem ID"
+                    });
+                }
+
+            }
+
+        }
+
+
+        // -------------------------------------------------
+        // CHECK PROBLEM BELONGS TO SELECTED SUBJECT
+        // -------------------------------------------------
+
+        if (updatedProblemId !== null) {
+
+            const [problems] = await db.query(
+                `
+                SELECT id
+                FROM logic_to_code_problems
+                WHERE id = ?
+                AND subject_id = ?
+                AND status = 'published'
+                `,
+                [
+                    updatedProblemId,
+                    updatedSubjectId
+                ]
+            );
+
+            if (problems.length === 0) {
+
+                return res.status(404).json({
+                    success: false,
+                    message: "Selected problem does not belong to this subject or is not published"
+                });
+
+            }
+
+        }
+
+
+        // -------------------------------------------------
+        // VALIDATE NOTE TITLE
         // -------------------------------------------------
 
         const updatedTitle = title !== undefined
@@ -75,17 +183,17 @@ const updateStudentNote = async (req, res) => {
         if (
             typeof updatedTitle !== "string" ||
             !updatedTitle.trim() ||
-            updatedTitle.trim().length > 255
+            updatedTitle.trim().length > 200
         ) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid note title"
+                message: "Note title is required and cannot exceed 200 characters"
             });
         }
 
 
         // -------------------------------------------------
-        // VALIDATE UPDATED CONTENT
+        // VALIDATE NOTE CONTENT
         // -------------------------------------------------
 
         const updatedContent = note_content !== undefined
@@ -104,55 +212,6 @@ const updateStudentNote = async (req, res) => {
 
 
         // -------------------------------------------------
-        // VALIDATE NOTE TYPE
-        // -------------------------------------------------
-
-        const allowedNoteTypes = [
-            "theory",
-            "code",
-            "concept",
-            "mistake",
-            "other"
-        ];
-
-        const updatedType = note_type !== undefined
-            ? note_type
-            : existingNote.note_type;
-
-        if (!allowedNoteTypes.includes(updatedType)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid note type"
-            });
-        }
-
-
-        // -------------------------------------------------
-        // VALIDATE PROGRAMMING LANGUAGE
-        // -------------------------------------------------
-
-        const allowedLanguages = [
-            "python",
-            "javascript",
-            "java"
-        ];
-
-        const updatedLanguage = language !== undefined
-            ? language
-            : existingNote.language;
-
-        if (
-            updatedLanguage !== null &&
-            !allowedLanguages.includes(updatedLanguage)
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid programming language"
-            });
-        }
-
-
-        // -------------------------------------------------
         // UPDATE NOTE
         // -------------------------------------------------
 
@@ -161,19 +220,19 @@ const updateStudentNote = async (req, res) => {
             UPDATE logic_to_code_notes
 
             SET
+                subject_id = ?,
+                problem_id = ?,
                 title = ?,
-                note_content = ?,
-                note_type = ?,
-                language = ?
+                note_content = ?
 
             WHERE id = ?
             AND student_id = ?
             `,
             [
+                updatedSubjectId,
+                updatedProblemId,
                 updatedTitle.trim(),
                 updatedContent.trim(),
-                updatedType,
-                updatedLanguage,
                 noteId,
                 studentId
             ]

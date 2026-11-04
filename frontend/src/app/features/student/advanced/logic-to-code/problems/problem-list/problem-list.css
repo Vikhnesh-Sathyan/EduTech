@@ -590,3 +590,27 @@
   background: #c8792c;
   color: #fff;
 }
+
+.notes-page-button {
+  padding: 11px 18px;
+  border: 1px solid #e5d9cb;
+  border-radius: 9px;
+  background: #fffdfa;
+  color: #5b4632;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notes-page-button:hover {
+  background: #f4e8d8;
+  border-color: #c8792c;
+  transform: translateY(-2px);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

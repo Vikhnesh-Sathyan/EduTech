@@ -1,0 +1,136 @@
+
+<section class="note-details-page">
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+
+    <div class="loader"></div>
+
+    <p>Loading your note...</p>
+
+  </div>
+
+
+  <!-- NOTE DETAILS -->
+  <ng-container *ngIf="!loading() && note() as currentNote">
+
+    <!-- HEADER -->
+    <div class="details-header">
+
+      <div>
+        <span class="eyebrow">MY LEARNING NOTES</span>
+
+        <h1>Note Details</h1>
+
+        <p>Review your saved learning notes and understanding.</p>
+      </div>
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="back-btn"
+          (click)="goBack()">
+          ← Back to Notes
+        </button>
+
+        <button
+          type="button"
+          class="edit-btn"
+          (click)="editNote()">
+          Edit Note
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- NOTE CARD -->
+    <article class="note-card">
+
+      <!-- NOTE META -->
+      <div class="note-meta">
+
+        <span [class]="'note-type-badge note-type-' + currentNote.note_type">
+          {{ currentNote.note_type | titlecase }}
+        </span>
+
+        <span
+          class="pinned-label"
+          *ngIf="currentNote.is_pinned">
+          📌 Pinned
+        </span>
+
+      </div>
+
+
+      <!-- SUBJECT AND PROBLEM -->
+      <div class="note-information">
+
+        <div class="information-item" *ngIf="currentNote.subject_name">
+
+          <span class="information-label">SUBJECT</span>
+
+          <strong>{{ currentNote.subject_name }}</strong>
+
+        </div>
+
+        <div class="information-item" *ngIf="currentNote.problem_title">
+
+          <span class="information-label">RELATED PROBLEM</span>
+
+          <strong>{{ currentNote.problem_title }}</strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- NOTE TITLE -->
+      <h2>{{ currentNote.title }}</h2>
+
+
+      <!-- NOTE CONTENT -->
+      <div class="note-content">
+        {{ currentNote.note_content }}
+      </div>
+
+
+      <!-- NOTE DATES -->
+      <div class="note-dates">
+
+        <span>
+          Created:
+          {{ currentNote.created_at | date:'medium' }}
+        </span>
+
+        <span>
+          Updated:
+          {{ currentNote.updated_at | date:'medium' }}
+        </span>
+
+      </div>
+
+    </article>
+
+  </ng-container>
+
+
+  <!-- NOTE NOT FOUND -->
+  <div class="empty-state" *ngIf="!loading() && !note()">
+
+    <h2>Note Not Found</h2>
+
+    <p>This note may have been deleted or is unavailable.</p>
+
+    <button
+      type="button"
+      class="back-btn"
+      (click)="goBack()">
+      Back to Notes
+    </button>
+
+  </div>
+
+</section>

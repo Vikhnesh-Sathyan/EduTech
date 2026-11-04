@@ -112,6 +112,11 @@ import { CodingWorkspace } from './features/student/advanced/logic-to-code/codin
 import { SubmissionDetailsComponent } from './features/student/advanced/logic-to-code/submission/submission-details/submission-details';
 import { DiscussionList } from './features/student/advanced/logic-to-code/discussions/discussion-list/discussion-list';
 import { Bookmarks } from './features/student/advanced/logic-to-code/bookmarks/bookmarks/bookmarks';
+import { NoteList } from './features/student/advanced/logic-to-code/notes/note-list/note-list';
+import { NoteCreate } from './features/student/advanced/logic-to-code/notes/note-create/note-create';
+import { NoteDetails } from './features/student/advanced/logic-to-code/notes/note-details/note-details';
+import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
+
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -516,6 +521,23 @@ export const routes: Routes = [
         path: 'student/advanced/logic-to-code/bookmarks',
         component: Bookmarks
       },
+      {
+        path: 'student/advanced/logic-to-code/notes',
+        component: NoteList
+      },
+      {
+        path: 'student/advanced/logic-to-code/notes/create',
+        component: NoteCreate
+      },
+      {
+        path: 'student/advanced/logic-to-code/notes/:noteId/edit',
+        component: NoteEdit
+      },
+      {
+        path: 'student/advanced/logic-to-code/notes/:noteId',
+        component: NoteDetails
+      },
+     
 
     ]
   },

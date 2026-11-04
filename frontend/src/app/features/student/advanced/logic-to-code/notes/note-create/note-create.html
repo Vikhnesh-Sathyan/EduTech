@@ -1,0 +1,160 @@
+
+<section class="note-create-page">
+
+  <!-- HEADER -->
+  <header class="form-header">
+
+    <div>
+      <span class="eyebrow">PERSONAL LEARNING WORKSPACE</span>
+      <h1>Create a New Note</h1>
+      <p>
+        Save your understanding, logic, code explanations and important learning points.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="back-btn"
+      (click)="cancel()">
+      ← Back to Notes
+    </button>
+
+  </header>
+
+  <!-- FORM -->
+  <form
+    class="note-form"
+    (ngSubmit)="createNote()"
+    #noteForm="ngForm">
+
+    <!-- SUBJECT -->
+    <div class="form-group">
+
+      <label for="subject">Subject *</label>
+
+      <select
+        id="subject"
+        name="subject"
+        [(ngModel)]="selectedSubjectId"
+        (ngModelChange)="onSubjectChange()"
+        required>
+
+        <option [ngValue]="null">
+          {{ loadingSubjects() ? 'Loading subjects...' : 'Select Subject' }}
+        </option>
+
+        <option
+          *ngFor="let subject of subjects()"
+          [ngValue]="subject.id">
+          {{ subject.name }}
+        </option>
+
+      </select>
+
+      <span class="field-hint" *ngIf="subjects().length === 0 && !loadingSubjects()">
+        No subjects available.
+      </span>
+
+    </div>
+
+    <!-- PROBLEM TITLE -->
+    <div class="form-group">
+
+      <label for="problem">Problem / Topic Title</label>
+
+      <select
+        id="problem"
+        name="problem"
+        [(ngModel)]="selectedProblemId"
+        [disabled]="!selectedSubjectId || loadingProblems()">
+
+        <option [ngValue]="null">
+          {{
+            loadingProblems()
+              ? 'Loading problems...'
+              : !selectedSubjectId
+                ? 'Select a subject first'
+                : 'Select Problem (Optional)'
+          }}
+        </option>
+
+        <option
+          *ngFor="let problem of problems()"
+          [ngValue]="problem.id">
+          {{ problem.title }}
+        </option>
+
+      </select>
+
+      <span class="field-hint">
+        Select a related problem if your note is about a specific Logic to Code problem.
+      </span>
+
+      <span
+        class="field-hint"
+        *ngIf="selectedSubjectId && !loadingProblems() && problems().length === 0">
+        No published problems available for this subject.
+      </span>
+
+    </div>
+
+    <!-- NOTE TITLE -->
+    <div class="form-group">
+
+      <label for="title">Note Title *</label>
+
+      <input
+        id="title"
+        type="text"
+        name="title"
+        [(ngModel)]="title"
+        placeholder="Example: Understanding JavaScript Closures"
+        maxlength="255"
+        required />
+
+    </div>
+
+    <!-- NOTE CONTENT -->
+    <div class="form-group">
+
+      <label for="note_content">Your Note *</label>
+
+      <textarea
+        id="note_content"
+        name="note_content"
+        [(ngModel)]="note_content"
+        rows="12"
+        placeholder="Write your explanation, logic, code snippets, important points or mistakes here..."
+        required>
+      </textarea>
+
+      <span class="field-hint">
+        Explain what you learned in your own words.
+      </span>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="cancel()">
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="loading() || !noteForm.valid || !selectedSubjectId">
+
+        {{ loading() ? 'Saving...' : 'Save Note' }}
+
+      </button>
+
+    </div>
+
+  </form>
+
+</section>

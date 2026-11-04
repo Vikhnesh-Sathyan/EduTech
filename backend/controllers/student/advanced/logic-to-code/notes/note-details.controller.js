@@ -42,17 +42,25 @@ const getStudentNoteById = async (req, res) => {
             `
             SELECT
                 n.id,
+
+                n.subject_id,
+                s.name AS subject_name,
+
                 n.problem_id,
+                p.title AS problem_title,
+
                 n.title,
                 n.note_content,
                 n.note_type,
                 n.language,
                 n.is_pinned,
                 n.created_at,
-                n.updated_at,
-                p.title AS problem_title
+                n.updated_at
 
             FROM logic_to_code_notes n
+
+            LEFT JOIN subjects s
+                ON n.subject_id = s.id
 
             LEFT JOIN logic_to_code_problems p
                 ON n.problem_id = p.id
