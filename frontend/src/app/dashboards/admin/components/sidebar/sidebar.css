@@ -67,3 +67,64 @@
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+
+
+
+/* CHALLENGE ARENA DROPDOWN */
+
+.dropdown-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle.expanded {
+  background: rgba(156, 175, 136, 0.14);
+  color: #9caf88;
+}
+
+.dropdown-arrow {
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 5px 0 8px 12px;
+  padding-left: 12px;
+  border-left: 2px solid #9caf88;
+}
+
+.dropdown-links a {
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: inherit;
+  font-size: 12px;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.dropdown-links a:hover {
+  background: rgba(156, 175, 136, 0.12);
+  color: #9caf88;
+}
+
+.dropdown-links a.active {
+  background: rgba(156, 175, 136, 0.18);
+  color: #9caf88;
+  font-weight: 700;
+}

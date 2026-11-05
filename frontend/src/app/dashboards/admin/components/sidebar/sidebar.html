@@ -79,6 +79,47 @@
 
     </div>
 
+ 
+<!-- =================================================
+     CHALLENGE ARENA
+================================================== -->
+
+<div class="navigation-group">
+
+  <p>Challenge Arena</p>
+
+  <button
+    type="button"
+    class="dropdown-toggle"
+    (click)="toggleChallengeArena()"
+    [class.expanded]="challengeArenaOpen()"
+  >
+    <span>Challenge Management</span>
+
+    <span class="dropdown-arrow">
+      {{ challengeArenaOpen() ? '⌃' : '⌄' }}
+    </span>
+  </button>
+
+  @if (challengeArenaOpen()) {
+
+    <div class="dropdown-links">
+
+      <a routerLink="/admin/challenge-arena/theory-challenges"
+         routerLinkActive="active">
+        Theory Challenges
+      </a>
+
+      <a routerLink="/admin/challenge-arena/coding-challenges"
+         routerLinkActive="active">
+        Coding Challenges
+      </a>
+
+    </div>
+
+  }
+
+</div>
 
     <!-- =================================================
          PROJECT UNDERSTANDING

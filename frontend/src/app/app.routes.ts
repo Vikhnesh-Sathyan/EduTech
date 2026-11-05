@@ -161,11 +161,13 @@ import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-chea
 import { CodingTypesComponent } from './features/admin/challenge-arena/challenge-types/coding-types/coding-types';
 import { EditCodingTypeComponent } from './features/admin/challenge-arena/challenge-types/coding-types/edit-coding-type/edit-coding-type';
 
+
+
 // Admin THEORY Challenge Arena
 import { TheoryTypes } from './features/admin/challenge-arena/challenge-types/theory-types/theory-types';
 import { EditTheoryType } from './features/admin/challenge-arena/challenge-types/theory-types/edit-theory-type/edit-theory-type';
-
-
+import { CreateTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/create-theory-challenge/create-theory-challenge';
+import { TheoryChallengeList } from './features/admin/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
 
 
 
@@ -680,6 +682,9 @@ export const routes: Routes = [
         path: 'challenge-arena/challenge-types/coding/:typeId/edit',
         component: EditCodingTypeComponent
       },
+
+
+
       // Admin THEORY Challenge Arena
       {
         path: 'challenge-arena/challenge-types/theory',
@@ -688,7 +693,15 @@ export const routes: Routes = [
       {
         path: 'challenge-arena/challenge-types/theory/:typeId/edit',
         component: EditTheoryType
-      } 
+      },
+      {
+        path: 'challenge-arena/theory-challenges',
+        component: TheoryChallengeList
+      },
+      {
+        path: 'challenge-arena/theory-challenges/create',
+        component: CreateTheoryChallenge
+      },
     ]
   },
 

@@ -1,0 +1,92 @@
+<div class="theory-challenges-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <p class="page-label">CHALLENGE ARENA</p>
+      <h1>Theory Challenges</h1>
+      <p class="page-description">
+        Create and manage theory challenges for students.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="create-button"
+      (click)="createChallenge()"
+    >
+      <span>+</span>
+      Create Challenge
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="loading-state">
+      Loading theory challenges...
+    </div>
+  }
+
+  <!-- CHALLENGE LIST -->
+  @else if (challenges().length > 0) {
+    <div class="challenge-grid">
+
+      @for (challenge of challenges(); track challenge.id) {
+        <div class="challenge-card">
+
+          <div class="card-header">
+            <span class="difficulty">
+              {{ challenge.difficulty }}
+            </span>
+
+            <span
+              class="status"
+              [class.published]="challenge.status === 'published'"
+              [class.draft]="challenge.status === 'draft'"
+              [class.archived]="challenge.status === 'archived'"
+            >
+              {{ challenge.status }}
+            </span>
+          </div>
+
+          <h3>{{ challenge.title }}</h3>
+
+          <p class="challenge-type">
+            {{ challenge.challenge_type_name }}
+          </p>
+
+          <p class="subject">
+            {{ challenge.subject_name }}
+          </p>
+
+          <div class="card-footer">
+            <span>
+              Created by {{ challenge.created_by_name }}
+            </span>
+          </div>
+
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- EMPTY STATE -->
+  @else {
+    <div class="empty-state">
+      <h2>No Theory Challenges Yet</h2>
+      <p>
+        Start by creating your first theory challenge.
+      </p>
+
+      <button
+        type="button"
+        class="create-button"
+        (click)="createChallenge()"
+      >
+        Create Your First Challenge
+      </button>
+    </div>
+  }
+
+</div>
