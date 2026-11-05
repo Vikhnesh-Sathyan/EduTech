@@ -29,6 +29,10 @@ const {
     updateTheoryChallengeStatus
 } = require("../../../../controllers/admin/challenges/theory/updateTheoryChallengeStatusController");
 
+const {
+    deleteTheoryChallenge
+} = require("../../../../controllers/admin/challenges/theory/deleteTheoryChallengeController");
+
 
 const router = express.Router();
 
@@ -75,6 +79,14 @@ router.patch(
     authMiddleware,
     roleMiddleware("admin"),
     updateTheoryChallengeStatus
+);
+
+// Delete Theory Challenge
+router.delete(
+    "/:challengeId",
+    authMiddleware,
+    roleMiddleware("admin"),
+    deleteTheoryChallenge
 );
 
 

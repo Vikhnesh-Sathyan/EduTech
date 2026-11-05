@@ -114,4 +114,16 @@ export class TheoryChallengeService {
     );
   }
 
+  // ==========================================
+// DELETE THEORY CHALLENGE
+// ==========================================
+
+deleteTheoryChallenge(
+  challengeId: number
+): Observable<ActionResponse> {
+  return this.http.delete<ActionResponse>(
+    `${this.apiUrl}/${challengeId}`
+  );
+}
+
 }

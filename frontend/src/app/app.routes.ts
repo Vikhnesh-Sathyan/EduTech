@@ -168,7 +168,8 @@ import { TheoryTypes } from './features/admin/challenge-arena/challenge-types/th
 import { EditTheoryType } from './features/admin/challenge-arena/challenge-types/theory-types/edit-theory-type/edit-theory-type';
 import { CreateTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/create-theory-challenge/create-theory-challenge';
 import { TheoryChallengeList } from './features/admin/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
-
+import { ViewTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/view-theory-challenge/view-theory-challenge';
+import { EditTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/edit-theory-challenge/edit-theory-challenge';
 
 
 
@@ -701,6 +702,14 @@ export const routes: Routes = [
       {
         path: 'challenge-arena/theory-challenges/create',
         component: CreateTheoryChallenge
+      },
+      {
+        path: 'challenge-arena/theory-challenges/:challengeId',
+        component: ViewTheoryChallenge
+      },
+      {
+        path: 'challenge-arena/theory-challenges/:challengeId/edit',
+        component: EditTheoryChallenge
       },
     ]
   },
