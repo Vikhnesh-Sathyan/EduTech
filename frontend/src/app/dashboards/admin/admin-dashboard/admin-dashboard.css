@@ -248,6 +248,49 @@
   line-height: 1.4;
 }
 
+/* =====================================================
+   CHALLENGE ARENA CARDS
+===================================================== */
+
+.challenge-arena-card {
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+
+.challenge-arena-card:hover {
+  border-color: #2c3480;
+
+  transform: translateY(-2px);
+}
+
+
+.challenge-arena-card strong {
+  color: #2c3480;
+
+  font-size: 22px;
+}
+
+
+.challenge-link {
+  display: inline-block;
+
+  margin-top: 18px;
+
+  color: #2c3480;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  transition: color 0.2s ease;
+}
+
+
+.challenge-arena-card:hover .challenge-link {
+  color: #000000;
+}
+
 
 /* =====================================================
    RESPONSIVE

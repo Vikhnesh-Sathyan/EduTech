@@ -1,0 +1,476 @@
+
+/* =====================================
+   MAIN PAGE
+===================================== */
+
+.challenge-types-page {
+  padding: 30px;
+  color: #000000;
+  background: #FFFFFF;
+  min-height: 100%;
+}
+
+
+/* =====================================
+   PAGE HEADER
+===================================== */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.page-label {
+  color: #2c3480;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.page-header h1 {
+  color: #000000;
+  font-size: 28px;
+  font-weight: 750;
+  margin: 0 0 8px;
+}
+
+.page-description {
+  color: #000000;
+  opacity: 0.65;
+  font-size: 14px;
+  margin: 0;
+}
+
+
+/* =====================================
+   COMMON CARD
+===================================== */
+
+.content-card {
+  background: #FFFFFF;
+  border: 1px solid #2c3480;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 5px 18px rgba(44, 52, 128, 0.07);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  color: #000000;
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.section-header p {
+  color: #000000;
+  opacity: 0.6;
+  font-size: 13px;
+  margin: 0;
+}
+
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+.primary-button,
+.secondary-button,
+.remove-field-button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 17px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.primary-button {
+  background: #2c3480;
+  color: #FFFFFF;
+}
+
+.primary-button:hover {
+  background: #000000;
+}
+
+.primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background: #FFFFFF;
+  color: #2c3480;
+  border: 1px solid #2c3480;
+}
+
+.secondary-button:hover {
+  background: #2c3480;
+  color: #FFFFFF;
+}
+
+.remove-field-button {
+  background: #FFFFFF;
+  color: #000000;
+  border: 1px solid #000000;
+}
+
+.remove-field-button:hover {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+
+/* =====================================
+   FORM
+===================================== */
+
+.create-form-card {
+  margin-bottom: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: #000000;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.form-group input:not([type="checkbox"]),
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid #2c3480;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #000000;
+  font-size: 13px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 2px rgba(44, 52, 128, 0.12);
+}
+
+.form-group input[readonly] {
+  background: #FFFFFF;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-group small {
+  color: #000000;
+  opacity: 0.6;
+  font-size: 11px;
+}
+
+.form-group input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #2c3480;
+  cursor: pointer;
+}
+
+
+/* =====================================
+   DYNAMIC CONTENT FIELDS
+===================================== */
+
+.schema-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #2c3480;
+}
+
+.schema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.schema-header h3 {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.schema-header p {
+  color: #000000;
+  opacity: 0.6;
+  font-size: 13px;
+  margin: 0;
+}
+
+.schema-field {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto auto;
+  align-items: end;
+  gap: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+  background: #FFFFFF;
+  border: 1px solid #2c3480;
+  border-radius: 10px;
+}
+
+.empty-schema {
+  padding: 22px;
+  text-align: center;
+  color: #000000;
+  opacity: 0.6;
+  background: #FFFFFF;
+  border: 1px dashed #2c3480;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+
+/* =====================================
+   FORM ACTIONS
+===================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #2c3480;
+}
+
+
+/* =====================================
+   CHALLENGE TYPE LIST
+===================================== */
+
+.types-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.type-card {
+  background: #FFFFFF;
+  border: 1px solid #2c3480;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.type-card:hover {
+  box-shadow: 0 7px 20px rgba(44, 52, 128, 0.12);
+  transform: translateY(-2px);
+}
+
+.type-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.type-card-header h3 {
+  color: #000000;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.status {
+  padding: 5px 11px;
+  border: 1px solid #2c3480;
+  border-radius: 20px;
+  color: #2c3480;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status.active {
+  background: #2c3480;
+  color: #FFFFFF;
+}
+
+.status.inactive {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.type-key {
+  color: #2c3480;
+  font-size: 12px;
+  font-weight: 650;
+  margin: 13px 0 8px;
+}
+
+.type-description {
+  color: #000000;
+  opacity: 0.65;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.schema-info {
+  display: inline-block;
+  padding: 7px 11px;
+  background: #FFFFFF;
+  border: 1px solid #2c3480;
+  border-radius: 6px;
+  color: #2c3480;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+
+/* =====================================
+   LOADING AND EMPTY STATES
+===================================== */
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 45px 20px;
+  color: #000000;
+  opacity: 0.65;
+}
+
+.empty-state h3 {
+  color: #000000;
+  font-size: 17px;
+  margin-bottom: 8px;
+  opacity: 1;
+}
+
+.empty-state p {
+  color: #000000;
+  opacity: 0.65;
+  font-size: 13px;
+  margin: 0;
+}
+
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+
+@media (max-width: 900px) {
+
+  .schema-field {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .challenge-types-page {
+    padding: 18px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header h1 {
+    font-size: 23px;
+  }
+
+  .types-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-card {
+    padding: 18px;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .form-grid,
+  .schema-field {
+    grid-template-columns: 1fr;
+  }
+
+  .schema-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-icon-button {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e4ed;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #2c3480;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.edit-icon-button:hover {
+  background: #2c3480;
+  color: #ffffff;
+  border-color: #2c3480;
+}
+

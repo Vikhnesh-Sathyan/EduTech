@@ -1,1 +1,313 @@
-<p>coding-types works!</p>
+
+<div class="challenge-types-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <p class="page-label">CHALLENGE ARENA</p>
+
+      <h1>Coding Challenge Types</h1>
+
+      <p class="page-description">
+        Manage the types of coding challenges available
+        across the platform.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="openCreateForm()"
+    >
+      + Create Challenge Type
+    </button>
+
+  </div>
+
+
+  <!-- CREATE CHALLENGE TYPE FORM -->
+  @if (showForm()) {
+
+    <section class="content-card create-form-card">
+
+      <div class="section-header">
+
+        <div>
+          <h2>Create Coding Challenge Type</h2>
+
+          <p>
+            Define the challenge type and its content fields.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="showForm.set(false)"
+        >
+          Close
+        </button>
+
+      </div>
+
+
+      <!-- BASIC DETAILS -->
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Challenge Type Name</label>
+
+          <input
+  type="text"
+  [(ngModel)]="typeName"
+  (ngModelChange)="generateTypeKey()"
+  placeholder="e.g. Predict Output"
+/>
+
+        </div>
+
+
+        <div class="form-group full-width">
+
+          <label>Description</label>
+
+          <textarea
+            [(ngModel)]="description"
+            rows="3"
+            placeholder="Explain what students will do in this challenge..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+  <button
+    type="button"
+    class="secondary-button"
+    (click)="resetForm(); showForm.set(false)"
+  >
+    Cancel
+  </button>
+
+  <button
+    type="button"
+    class="primary-button"
+    [disabled]="saving()"
+    (click)="saveChallengeType()"
+  >
+    {{ saving() ? 'Saving...' : 'Save Challenge Type' }}
+  </button>
+
+</div>
+      <!-- DYNAMIC CONTENT FIELDS -->
+      <div class="schema-section">
+
+        <div class="schema-header">
+
+          <div>
+            <h3>Challenge Content Fields</h3>
+
+            <p>
+              Define the fields required for this challenge type.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="addContentField()"
+          >
+            + Add Field
+          </button>
+
+        </div>
+
+
+        @for (field of contentSchema; track $index; let i = $index) {
+
+          <div class="schema-field">
+
+            <div class="form-group">
+
+              <label>Field Label</label>
+
+             <input
+  type="text"
+  [(ngModel)]="field.label"
+  (ngModelChange)="generateFieldKey(field)"
+  placeholder="e.g. Code Snippet"
+/>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>Field Type</label>
+
+              <select [(ngModel)]="field.type">
+
+                <option value="text">Text</option>
+                <option value="textarea">Textarea</option>
+                <option value="number">Number</option>
+                <option value="code">Code</option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>Required?</label>
+
+              <input
+                type="checkbox"
+                [(ngModel)]="field.required"
+              />
+
+            </div>
+
+
+            <button
+              type="button"
+              class="remove-field-button"
+              (click)="removeContentField(i)"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        }
+
+
+        @if (contentSchema.length === 0) {
+
+          <p class="empty-schema">
+            No content fields added yet. Click Add Field.
+          </p>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- AVAILABLE CHALLENGE TYPES -->
+  <section class="content-card">
+
+    <div class="section-header">
+
+      <div>
+        <h2>Available Challenge Types</h2>
+
+        <p>
+          Create and manage coding challenge categories.
+        </p>
+      </div>
+
+    </div>
+
+
+    @if (loading()) {
+
+      <div class="loading-state">
+        Loading coding challenge types...
+      </div>
+
+    } @else {
+
+      @if (challengeTypes().length === 0) {
+
+        <div class="empty-state">
+
+          <h3>No Challenge Types Found</h3>
+
+          <p>
+            No coding challenge types are available yet.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="types-grid">
+
+          @for (type of challengeTypes(); track type.id) {
+
+        <div class="type-card">
+
+  <div class="type-card-header">
+
+    <h3>{{ type.name }}</h3>
+
+    <div class="card-actions">
+
+      <span
+        class="status"
+        [class.active]="type.status === 'active'"
+        [class.inactive]="type.status === 'inactive'"
+      >
+        {{ type.status }}
+      </span>
+
+      <button
+        type="button"
+        class="edit-icon-button"
+        title="Edit Challenge Type"
+        aria-label="Edit Challenge Type"
+        (click)="editChallengeType(type.id)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" />
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+  <p class="type-key">
+    {{ type.type_key }}
+  </p>
+
+  <p class="type-description">
+    {{ type.description || 'No description available.' }}
+  </p>
+
+  <div class="schema-info">
+    {{ type.content_schema.length }} content field(s)
+  </div>
+
+</div>
+
+          }
+
+        </div>
+
+      }
+
+    }
+
+  </section>
+
+</div>

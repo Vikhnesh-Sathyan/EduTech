@@ -1,0 +1,201 @@
+
+<div class="edit-coding-type-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <p class="page-label">CHALLENGE ARENA</p>
+
+      <h1>Edit Coding Challenge Type</h1>
+
+      <p class="page-description">
+        Update the challenge type details and content fields.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="goBack()"
+    >
+      Back
+    </button>
+
+  </div>
+
+
+  @if (loading()) {
+
+    <div class="content-card loading-state">
+      Loading challenge type...
+    </div>
+
+  } @else {
+
+    <section class="content-card">
+
+      <!-- BASIC DETAILS -->
+      <div class="section-header">
+
+        <div>
+          <h2>Basic Details</h2>
+
+          <p>
+            Update the challenge type information.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Challenge Type Name</label>
+
+          <input
+            type="text"
+            [(ngModel)]="typeName"
+            placeholder="Enter challenge type name"
+          />
+
+        </div>
+
+
+        <div class="form-group full-width">
+
+          <label>Description</label>
+
+          <textarea
+            [(ngModel)]="description"
+            rows="3"
+            placeholder="Enter challenge type description..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONTENT FIELDS -->
+      <div class="schema-section">
+
+        <div class="schema-header">
+
+          <div>
+            <h2>Challenge Content Fields</h2>
+
+            <p>
+              Manage the fields required for this challenge type.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="addContentField()"
+          >
+            + Add Field
+          </button>
+
+        </div>
+
+
+        @for (field of contentSchema; track $index; let i = $index) {
+
+          <div class="schema-field">
+
+            <div class="form-group">
+
+              <label>Field Label</label>
+
+              <input
+                type="text"
+                [(ngModel)]="field.label"
+                (ngModelChange)="generateFieldKey(field)"
+                placeholder="e.g. Code Snippet"
+              />
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>Field Type</label>
+
+              <select [(ngModel)]="field.type">
+
+                <option value="text">Text</option>
+                <option value="textarea">Textarea</option>
+                <option value="number">Number</option>
+                <option value="code">Code</option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group required-group">
+
+              <label>Required?</label>
+
+              <input
+                type="checkbox"
+                [(ngModel)]="field.required"
+              />
+
+            </div>
+
+
+            <button
+              type="button"
+              class="remove-field-button"
+              (click)="removeContentField(i)"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        }
+
+
+        @if (contentSchema.length === 0) {
+
+          <p class="empty-schema">
+            No content fields available. Click Add Field.
+          </p>
+
+        }
+
+      </div>
+
+
+      <!-- ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="goBack()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="saving()"
+          (click)="saveChanges()"
+        >
+          {{ saving() ? 'Saving...' : 'Save Changes' }}
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+</div>

@@ -6,6 +6,7 @@ import { Component, OnInit, signal } from '@angular/core';
 
 import { Sidebar } from '../components/sidebar/sidebar';
 import { Topbar } from '../components/topbar/topbar';
+import { RouterLink } from '@angular/router';
 
 import { AdminOverview } from '../../../services/admin/admin-overview';
 
@@ -14,7 +15,8 @@ import { AdminOverview } from '../../../services/admin/admin-overview';
   standalone: true,
   imports: [
     Sidebar,
-    Topbar
+    Topbar,
+    RouterLink
   ],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css'

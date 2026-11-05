@@ -117,7 +117,6 @@ import { NoteCreate } from './features/student/advanced/logic-to-code/notes/note
 import { NoteDetails } from './features/student/advanced/logic-to-code/notes/note-details/note-details';
 import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
 
-
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
@@ -157,6 +156,19 @@ import { ProjectSectionContent } from './features/admin/projects/project-section
 import { MentorVerification } from './features/admin/mentors/mentor-verification/mentor-verification';
 // Admin Cheat Sheet
 import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
+
+// Admin CODING Challenge Arena
+import { CodingTypesComponent } from './features/admin/challenge-arena/challenge-types/coding-types/coding-types';
+import { EditCodingTypeComponent } from './features/admin/challenge-arena/challenge-types/coding-types/edit-coding-type/edit-coding-type';
+
+
+
+
+
+
+
+
+
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -657,8 +669,15 @@ export const routes: Routes = [
         path: 'skillswap/skill-suggestions',
         component: SkillSuggestions 
       },
-
-
+      // Admin CODING Challenge Arena
+      {
+        path: 'challenge-arena/challenge-types/coding',
+        component: CodingTypesComponent
+      },
+      {
+        path: 'challenge-arena/challenge-types/coding/:typeId/edit',
+        component: EditCodingTypeComponent
+      }
     ]
   },
 
