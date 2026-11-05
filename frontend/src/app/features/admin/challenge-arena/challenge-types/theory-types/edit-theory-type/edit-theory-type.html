@@ -1,0 +1,199 @@
+
+<section class="edit-type-page">
+
+  <!-- HEADER -->
+  <header class="page-header">
+
+    <div>
+      <p class="page-label">CHALLENGE ARENA</p>
+
+      <h1>Edit Theory Challenge Type</h1>
+
+      <p class="page-description">
+        Update the challenge type details and its content fields.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()"
+    >
+      <span>←</span>
+      Back to Types
+    </button>
+
+  </header>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading challenge type...</p>
+  </div>
+
+  <ng-container *ngIf="!loading()">
+
+    <!-- BASIC DETAILS -->
+    <div class="form-card">
+
+      <div class="section-heading">
+        <div>
+          <h2>Basic Information</h2>
+          <p>Update the name and description of this challenge type.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+
+        <label for="typeName">Challenge Type Name</label>
+
+        <input
+          id="typeName"
+          type="text"
+          [(ngModel)]="typeName"
+          placeholder="Example: Explain the Concept"
+        />
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="description">Description</label>
+
+        <textarea
+          id="description"
+          [(ngModel)]="description"
+          rows="4"
+          placeholder="Describe what this challenge type is about..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENT FIELDS -->
+    <div class="form-card">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Challenge Content Fields</h2>
+          <p>
+            Define the information mentors must provide when creating
+            this type of challenge.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="add-field-button"
+          (click)="addContentField()"
+        >
+          + Add Field
+        </button>
+
+      </div>
+
+      <div
+        class="empty-fields"
+        *ngIf="contentSchema.length === 0"
+      >
+        <p>No content fields added yet.</p>
+        <span>Add at least one field to continue.</span>
+      </div>
+
+      <div
+        class="schema-field"
+        *ngFor="let field of contentSchema; let i = index"
+      >
+
+        <div class="field-top">
+
+          <div class="field-number">
+            FIELD {{ i + 1 }}
+          </div>
+
+          <button
+            type="button"
+            class="remove-field-button"
+            title="Remove field"
+            (click)="removeContentField(i)"
+          >
+            Remove
+          </button>
+
+        </div>
+
+        <div class="field-grid">
+
+          <div class="form-group">
+
+            <label>Field Label</label>
+
+            <input
+              type="text"
+              [(ngModel)]="field.label"
+              (ngModelChange)="generateFieldKey(field)"
+              placeholder="Example: Concept Explanation"
+            />
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Field Type</label>
+
+            <select [(ngModel)]="field.type">
+
+              <option value="text">Text</option>
+              <option value="textarea">Textarea</option>
+              <option value="number">Number</option>
+              <option value="code">Code</option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <label class="required-option">
+
+          <input
+            type="checkbox"
+            [(ngModel)]="field.required"
+          />
+
+          <span>Required field</span>
+
+        </label>
+
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="goBack()"
+        [disabled]="saving()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="save-button"
+        (click)="updateChallengeType()"
+        [disabled]="saving()"
+      >
+        {{ saving() ? 'Saving Changes...' : 'Save Changes' }}
+      </button>
+
+    </div>
+
+  </ng-container>
+
+</section>

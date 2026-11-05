@@ -1,0 +1,399 @@
+
+:host {
+  display: block;
+  --sage-green: #9caf88;
+  --concrete-grey: #a7a7a7;
+  --burnt-amber: #cc5500;
+  --dark: #252525;
+  --light-bg: #f7f8f5;
+  --border: #e5e7e2;
+}
+
+.challenge-types-page {
+  padding: 30px;
+  background: var(--light-bg);
+  min-height: 100vh;
+  color: var(--dark);
+}
+
+/* HEADER */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.page-label {
+  color: var(--burnt-amber);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.page-description {
+  color: #777;
+  margin-top: 9px;
+  font-size: 14px;
+}
+
+/* CARDS */
+
+.content-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 19px;
+  margin: 0 0 7px;
+}
+
+.section-header p {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* BUTTONS */
+
+.primary-button,
+.secondary-button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 17px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.primary-button {
+  background: var(--sage-green);
+  color: #fff;
+}
+
+.primary-button:hover {
+  background: #849b70;
+}
+
+.secondary-button {
+  background: #eeeeec;
+  color: #555;
+  border: 1px solid #dededb;
+}
+
+.secondary-button:hover {
+  background: #e2e2df;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* FORM */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input:not([type="checkbox"]),
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #dededb;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--sage-green);
+  box-shadow: 0 0 0 3px rgba(156, 175, 136, 0.15);
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+/* CONTENT SCHEMA */
+
+.schema-section {
+  border-top: 1px solid var(--border);
+  margin-top: 28px;
+  padding-top: 24px;
+}
+
+.schema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.schema-header h3 {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+
+.schema-header p {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.schema-field {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 0.6fr auto;
+  align-items: end;
+  gap: 15px;
+  background: #fafbf9;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 17px;
+  margin-bottom: 13px;
+}
+
+.schema-field input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--sage-green);
+  cursor: pointer;
+}
+
+.remove-field-button {
+  background: #fff2eb;
+  color: var(--burnt-amber);
+  border: 1px solid #f0d1bf;
+  border-radius: 7px;
+  padding: 10px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-field-button:hover {
+  background: var(--burnt-amber);
+  color: #fff;
+}
+
+.empty-schema {
+  color: var(--concrete-grey);
+  font-size: 13px;
+  text-align: center;
+  padding: 22px;
+}
+
+/* TYPE GRID */
+
+.types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.type-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  background: #fff;
+  transition: 0.2s ease;
+}
+
+.type-card:hover {
+  border-color: var(--sage-green);
+  transform: translateY(-2px);
+}
+
+.type-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.type-card-header h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.status {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border-radius: 20px;
+}
+
+.status.active {
+  background: #edf2e8;
+  color: #607b4e;
+}
+
+.status.inactive {
+  background: #eeeeee;
+  color: #777;
+}
+
+.type-key {
+  color: var(--concrete-grey);
+  font-size: 11px;
+  margin: 12px 0;
+}
+
+.type-description {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  min-height: 42px;
+}
+
+.schema-info {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f0f3ec;
+  color: #71845f;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* STATES */
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--concrete-grey);
+  font-size: 14px;
+}
+
+.empty-state h3 {
+  color: #444;
+  margin-bottom: 8px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .challenge-types-page {
+    padding: 18px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .schema-field {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header,
+  .schema-header {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 23px;
+  }
+
+  .content-card {
+    padding: 17px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+/* CARD HEADER ACTIONS */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* EDIT ICON BUTTON */
+.edit-icon-button {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cc5500;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #cc5500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-icon-button:hover {
+  background: #cc5500;
+  color: #ffffff;
+  transform: translateY(-2px);
+}

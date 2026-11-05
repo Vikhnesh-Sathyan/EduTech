@@ -161,7 +161,9 @@ import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-chea
 import { CodingTypesComponent } from './features/admin/challenge-arena/challenge-types/coding-types/coding-types';
 import { EditCodingTypeComponent } from './features/admin/challenge-arena/challenge-types/coding-types/edit-coding-type/edit-coding-type';
 
-
+// Admin THEORY Challenge Arena
+import { TheoryTypes } from './features/admin/challenge-arena/challenge-types/theory-types/theory-types';
+import { EditTheoryType } from './features/admin/challenge-arena/challenge-types/theory-types/edit-theory-type/edit-theory-type';
 
 
 
@@ -677,7 +679,16 @@ export const routes: Routes = [
       {
         path: 'challenge-arena/challenge-types/coding/:typeId/edit',
         component: EditCodingTypeComponent
-      }
+      },
+      // Admin THEORY Challenge Arena
+      {
+        path: 'challenge-arena/challenge-types/theory',
+        component: TheoryTypes
+      },
+      {
+        path: 'challenge-arena/challenge-types/theory/:typeId/edit',
+        component: EditTheoryType
+      } 
     ]
   },
 
