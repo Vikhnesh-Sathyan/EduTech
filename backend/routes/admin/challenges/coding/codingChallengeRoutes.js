@@ -28,6 +28,10 @@ const {
     updateCodingChallengeStatus
 } = require("../../../../controllers/admin/challenges/coding/updateCodingChallengeStatusController");
 
+const {
+    deleteCodingChallenge
+} = require("../../../../controllers/admin/challenges/coding/deleteCodingChallenge");
+
 
 const router = express.Router();
 
@@ -74,6 +78,13 @@ router.patch(
     authMiddleware,
     roleMiddleware("admin"),
     updateCodingChallengeStatus
+);
+
+router.delete(
+    "/:challengeId",
+    authMiddleware,
+    roleMiddleware("admin"),
+    deleteCodingChallenge
 );
 
 

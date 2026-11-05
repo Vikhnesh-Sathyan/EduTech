@@ -1,0 +1,234 @@
+
+<div class="coding-challenges-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+      <p class="page-label">CHALLENGE ARENA</p>
+
+      <h1>Coding Challenges</h1>
+
+      <p class="page-description">
+        Create and manage coding challenges for students.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="create-button"
+      (click)="createChallenge()"
+    >
+      <span>+</span>
+      Create Challenge
+    </button>
+
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+
+    <div class="loading-state">
+      Loading coding challenges...
+    </div>
+
+  }
+
+  <!-- CHALLENGE LIST -->
+  @else if (challenges().length > 0) {
+
+    <div class="challenge-grid">
+
+      @for (challenge of challenges(); track challenge.id) {
+
+        <div class="challenge-card">
+
+          <!-- CARD HEADER -->
+          <div class="card-header">
+
+            <span class="difficulty">
+              {{ challenge.difficulty }}
+            </span>
+
+            <div class="card-actions">
+
+              <span
+                class="status"
+                [class.published]="challenge.status === 'published'"
+                [class.draft]="challenge.status === 'draft'"
+                [class.archived]="challenge.status === 'archived'"
+              >
+                {{ challenge.status }}
+              </span>
+
+              <!-- ACTION DROPDOWN -->
+              <div class="action-dropdown">
+
+                <button
+                  type="button"
+                  class="action-button"
+                  [class.active]="openMenuId() === challenge.id"
+                  (click)="toggleMenu($event, challenge.id)"
+                  aria-label="Challenge actions"
+                >
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
+
+                @if (openMenuId() === challenge.id) {
+
+                  <div
+                    class="action-menu"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    <button
+                      type="button"
+                      class="menu-item"
+                      (click)="viewChallenge(challenge.id)"
+                    >
+                      <span class="menu-icon">↗</span>
+                      <span>View Challenge</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="menu-item"
+                      (click)="editChallenge(challenge.id)"
+                    >
+                      <span class="menu-icon">✎</span>
+                      <span>Edit Challenge</span>
+                    </button>
+
+                  </div>
+
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- CARD CONTENT -->
+          <h3>{{ challenge.title }}</h3>
+
+          <p class="challenge-type">
+            {{ challenge.challenge_type_name }}
+          </p>
+
+          <p class="subject">
+            {{ challenge.subject_name }}
+          </p>
+
+          <!-- PUBLISH BUTTON -->
+          @if (challenge.status === 'draft') {
+
+            <button
+              type="button"
+              class="publish-challenge-button"
+              [disabled]="publishingId() === challenge.id"
+              (click)="publishChallenge(challenge.id)"
+            >
+              <span class="publish-icon">🚀</span>
+
+              {{ publishingId() === challenge.id
+                ? 'Publishing...'
+                : 'Publish Challenge' }}
+            </button>
+
+          }
+
+          <!-- UNPUBLISH BUTTON -->
+          @if (challenge.status === 'published') {
+
+            <button
+              type="button"
+              class="unpublish-challenge-button"
+              [disabled]="unpublishingId() === challenge.id"
+              (click)="unpublishChallenge(challenge.id)"
+            >
+              {{ unpublishingId() === challenge.id
+                ? 'Unpublishing...'
+                : 'Unpublish Challenge' }}
+            </button>
+
+          }
+
+       <!-- CARD FOOTER -->
+<div class="card-footer">
+
+  <span>
+    Created by {{ challenge.created_by_name }}
+  </span>
+
+  <!-- DELETE ICON -->
+<button
+  type="button"
+  class="delete-challenge-button"
+  title="Delete Challenge"
+  aria-label="Delete Coding Challenge"
+  (click)="deleteComponent.openDeleteModal(challenge.id)"
+>
+  🗑
+</button>
+
+</div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+  <!-- EMPTY STATE -->
+  @else {
+
+    <div class="empty-state">
+
+      <h2>No Coding Challenges Yet</h2>
+
+      <p>
+        Start by creating your first coding challenge.
+      </p>
+
+      <button
+        type="button"
+        class="create-button"
+        (click)="createChallenge()"
+      >
+        Create Your First Challenge
+      </button>
+
+    </div>
+
+  }
+
+  <!-- PUBLISH / UNPUBLISH MODAL -->
+  <app-confirm-modal
+    [visible]="showPublishModal()"
+    [title]="publishAction() === 'publish'
+      ? 'Publish Coding Challenge'
+      : 'Unpublish Coding Challenge'"
+    [message]="publishAction() === 'publish'
+      ? 'Are you sure you want to publish this challenge? Students will be able to access it.'
+      : 'Are you sure you want to unpublish this challenge? It will become a draft and students will no longer be able to access it.'"
+    [confirmText]="publishAction() === 'publish'
+      ? 'Publish Challenge'
+      : 'Unpublish Challenge'"
+    cancelText="Cancel"
+    [danger]="false"
+    (confirmed)="confirmPublishChallenge()"
+    (cancelled)="closePublishModal()"
+  />
+
+<!-- DELETE CODING CHALLENGE MODAL -->
+<app-delete-coding-challenge
+  #deleteComponent
+  (deleted)="onChallengeDeleted()"
+/>
+
+</div>

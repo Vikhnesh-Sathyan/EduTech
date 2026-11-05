@@ -20,8 +20,7 @@ export class Sidebar {
 
   conceptComparisonOpen = false;
 
-  
-codeShuffleExpanded = false;
+  codeShuffleExpanded = false;
 
 toggleCodeShuffle(): void {
   this.codeShuffleExpanded = !this.codeShuffleExpanded;

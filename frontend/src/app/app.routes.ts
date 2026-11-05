@@ -160,6 +160,10 @@ import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-chea
 // Admin CODING Challenge Arena
 import { CodingTypesComponent } from './features/admin/challenge-arena/challenge-types/coding-types/coding-types';
 import { EditCodingTypeComponent } from './features/admin/challenge-arena/challenge-types/coding-types/edit-coding-type/edit-coding-type';
+import { CodingChallengeList } from './features/admin/challenge-arena/coding-challenges/coding-challenge-list/coding-challenge-list';
+import { CreateCodingChallenge } from './features/admin/challenge-arena/coding-challenges/create-coding-challenge/create-coding-challenge';
+import { ViewCodingChallenge } from './features/admin/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
+import { EditCodingChallenge } from './features/admin/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
 
 
 
@@ -683,6 +687,27 @@ export const routes: Routes = [
         path: 'challenge-arena/challenge-types/coding/:typeId/edit',
         component: EditCodingTypeComponent
       },
+      {
+        path: 'challenge-arena/coding-challenges',
+        component: CodingChallengeList
+      },
+      {
+        path: 'challenge-arena/coding-challenges/create',
+        component: CreateCodingChallenge
+      },
+      {
+        path: 'challenge-arena/coding-challenges/:challengeId/edit',
+        component: EditCodingChallenge
+      },
+      {
+        path: 'challenge-arena/coding-challenges/:challengeId',
+        component: ViewCodingChallenge
+      },
+    
+
+
+
+
 
 
 

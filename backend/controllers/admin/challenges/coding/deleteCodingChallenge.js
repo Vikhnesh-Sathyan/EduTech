@@ -1,0 +1,104 @@
+const db = require("../../../../config/db");
+
+// ==========================================
+// DELETE CODING CHALLENGE
+// ==========================================
+
+const deleteCodingChallenge = async (req, res) => {
+
+    let connection;
+
+    try {
+
+        const { challengeId } = req.params;
+
+        // Validate challenge ID
+        if (!challengeId || isNaN(Number(challengeId))) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid challenge ID"
+            });
+        }
+
+        connection = await db.getConnection();
+
+        await connection.beginTransaction();
+
+        // Check whether challenge exists and lock its row
+        const [challenges] = await connection.query(
+            `SELECT id, title
+             FROM coding_challenges
+             WHERE id = ?
+             FOR UPDATE`,
+            [challengeId]
+        );
+
+        if (challenges.length === 0) {
+
+            await connection.rollback();
+
+            return res.status(404).json({
+                success: false,
+                message: "Coding challenge not found"
+            });
+        }
+
+        // Check student attempt history
+        const [attempts] = await connection.query(
+            `SELECT id
+             FROM coding_challenge_attempts
+             WHERE challenge_id = ?
+             LIMIT 1`,
+            [challengeId]
+        );
+
+        // Protect student history
+        if (attempts.length > 0) {
+
+            await connection.rollback();
+
+            return res.status(409).json({
+                success: false,
+                message: "This coding challenge has student attempts and cannot be deleted. Archive it instead."
+            });
+        }
+
+        // Delete challenge
+        await connection.query(
+            `DELETE FROM coding_challenges
+             WHERE id = ?`,
+            [challengeId]
+        );
+
+        await connection.commit();
+
+        return res.status(200).json({
+            success: true,
+            message: "Coding challenge deleted successfully"
+        });
+
+    } catch (error) {
+
+        if (connection) {
+            await connection.rollback();
+        }
+
+        console.error("Delete Coding Challenge Error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to delete coding challenge"
+        });
+
+    } finally {
+
+        if (connection) {
+            connection.release();
+        }
+
+    }
+};
+
+module.exports = {
+    deleteCodingChallenge
+};

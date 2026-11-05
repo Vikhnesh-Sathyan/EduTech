@@ -1,0 +1,403 @@
+
+<div class="create-challenge-page">
+
+  <!-- HEADER -->
+  <header class="page-header">
+
+    <div>
+      <span class="eyebrow">CHALLENGE ARENA / CODING</span>
+
+      <h1>Edit Coding Challenge</h1>
+
+      <p>
+        Update the coding challenge details and content.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()"
+    >
+      <span>←</span>
+      Back to Challenges
+    </button>
+
+  </header>
+
+
+  <!-- LOADING -->
+  @if (loading()) {
+
+    <div class="loading-state">
+      Loading coding challenge details...
+    </div>
+
+  } @else {
+
+    <!-- SUCCESS MESSAGE -->
+    @if (message) {
+      <div class="alert success-alert">
+        {{ message }}
+      </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+    @if (errorMessage) {
+      <div class="alert error-alert">
+        {{ errorMessage }}
+      </div>
+    }
+
+
+    <form
+      [formGroup]="challengeForm"
+      (ngSubmit)="onSubmit()"
+      class="challenge-form"
+    >
+
+      <!-- ACADEMIC DETAILS -->
+      <section class="form-section">
+
+        <div class="section-heading">
+          <div class="section-number">01</div>
+
+          <div>
+            <h2>Academic Details</h2>
+            <p>Update the academic subject for this challenge.</p>
+          </div>
+        </div>
+
+
+        <div class="form-grid">
+
+          <!-- PROGRAM -->
+          <div class="form-field">
+
+            <label>Education Program <span>*</span></label>
+
+            <select
+              formControlName="education_program_id"
+              (change)="onProgramChange()"
+            >
+              <option [ngValue]="null">Select Program</option>
+
+              @for (program of programs(); track program.id) {
+                <option [ngValue]="program.id">
+                  {{ program.name }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+
+          <!-- DEPARTMENT -->
+          <div class="form-field">
+
+            <label>Department <span>*</span></label>
+
+            <select
+              formControlName="department_id"
+              (change)="onDepartmentChange()"
+              [disabled]="departments().length === 0"
+            >
+              <option [ngValue]="null">Select Department</option>
+
+              @for (department of departments(); track department.id) {
+                <option [ngValue]="department.id">
+                  {{ department.name }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+
+          <!-- YEAR -->
+          <div class="form-field">
+
+            <label>Education Year <span>*</span></label>
+
+            <select
+              formControlName="education_year_id"
+              (change)="onYearChange()"
+              [disabled]="years().length === 0"
+            >
+              <option [ngValue]="null">Select Year</option>
+
+              @for (year of years(); track year.id) {
+                <option [ngValue]="year.id">
+                  {{ year.name }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+
+          <!-- SUBJECT -->
+          <div class="form-field">
+
+            <label>Subject <span>*</span></label>
+
+            <select
+              formControlName="subject_id"
+              [disabled]="subjects().length === 0"
+            >
+              <option [ngValue]="null">Select Subject</option>
+
+              @for (subject of subjects(); track subject.id) {
+                <option [ngValue]="subject.id">
+                  {{ subject.name }}
+                </option>
+              }
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CHALLENGE INFORMATION -->
+      <section class="form-section">
+
+        <div class="section-heading">
+          <div class="section-number">02</div>
+
+          <div>
+            <h2>Challenge Information</h2>
+            <p>Update the challenge title, type and difficulty.</p>
+          </div>
+        </div>
+
+
+        <div class="form-grid">
+
+          <!-- TITLE -->
+          <div class="form-field full-width">
+
+            <label>Challenge Title <span>*</span></label>
+
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="Enter challenge title"
+            />
+
+            @if (
+              challengeForm.get('title')?.touched &&
+              challengeForm.get('title')?.invalid
+            ) {
+              <small class="field-error">
+                Please enter a valid challenge title.
+              </small>
+            }
+
+          </div>
+
+
+          <!-- CHALLENGE TYPE -->
+          <div class="form-field">
+
+            <label>Challenge Type <span>*</span></label>
+
+            <select
+              formControlName="challenge_type_id"
+              (change)="onChallengeTypeChange()"
+            >
+
+              <option [ngValue]="null">Select Challenge Type</option>
+
+              @for (type of challengeTypes(); track type.id) {
+                <option [ngValue]="type.id">
+                  {{ type.name }}
+                </option>
+              }
+
+            </select>
+
+            @if (challengeTypes().length === 0) {
+              <small class="field-hint">
+                No active coding challenge types available.
+              </small>
+            }
+
+          </div>
+
+
+          <!-- DIFFICULTY -->
+          <div class="form-field">
+
+            <label>Difficulty <span>*</span></label>
+
+            <select formControlName="difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+
+          </div>
+
+
+          <!-- INSTRUCTIONS -->
+          <div class="form-field full-width">
+
+            <label>Student Instructions <span>*</span></label>
+
+            <textarea
+              formControlName="instructions"
+              rows="4"
+              placeholder="Explain clearly what the student needs to do..."
+            ></textarea>
+
+            <small class="field-hint">
+              Write clear instructions that help students understand the coding task.
+            </small>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- DYNAMIC CONTENT -->
+      <section class="form-section">
+
+        <div class="section-heading">
+          <div class="section-number">03</div>
+
+          <div>
+            <h2>Challenge Content</h2>
+            <p>
+              Update the fields generated from the selected coding type.
+            </p>
+          </div>
+        </div>
+
+
+        @if (contentSchema().length > 0) {
+
+          <div class="dynamic-fields" formGroupName="challenge_content">
+
+            @for (field of contentSchema(); track field.key) {
+
+              <div class="form-field dynamic-field">
+
+                <label>
+                  {{ field.label }}
+
+                  @if (field.required) {
+                    <span>*</span>
+                  }
+                </label>
+
+
+                @if (field.type === 'textarea' || field.type === 'code') {
+
+                  <textarea
+                    [formControlName]="field.key"
+                    [rows]="field.type === 'code' ? 10 : 4"
+                    [class.code-input]="field.type === 'code'"
+                    [placeholder]="'Enter ' + field.label"
+                  ></textarea>
+
+                } @else if (field.type === 'number') {
+
+                  <input
+                    type="number"
+                    [formControlName]="field.key"
+                    [placeholder]="'Enter ' + field.label"
+                  />
+
+                } @else {
+
+                  <input
+                    type="text"
+                    [formControlName]="field.key"
+                    [placeholder]="'Enter ' + field.label"
+                  />
+
+                }
+
+
+                @if (
+                  challengeForm.get('challenge_content.' + field.key)?.touched &&
+                  challengeForm.get('challenge_content.' + field.key)?.invalid
+                ) {
+                  <small class="field-error">
+                    {{ field.label }} is required or invalid.
+                  </small>
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="empty-content">
+
+            <div class="empty-icon">✦</div>
+
+            <h3>Dynamic fields will appear here</h3>
+
+            <p>
+              Select a Coding Challenge Type to load its content fields.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+
+      <!-- FORM ACTIONS -->
+      <footer class="form-footer">
+
+        <div class="footer-note">
+          <span class="draft-indicator"></span>
+          Update your coding challenge details.
+        </div>
+
+        <div class="footer-actions">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="goBack()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="save-button"
+            [disabled]="saving()"
+          >
+
+            @if (saving()) {
+              Updating...
+            } @else {
+              <span>✓</span>
+              Update Challenge
+            }
+
+          </button>
+
+        </div>
+
+      </footer>
+
+    </form>
+
+  }
+
+</div>

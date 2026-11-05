@@ -1,0 +1,12 @@
+<app-confirm-modal
+  [visible]="visible()"
+  title="Delete Coding Challenge"
+  message="Are you sure you want to delete this coding challenge? This action cannot be undone."
+  confirmText="Delete Challenge"
+  cancelText="Cancel"
+  [danger]="true"
+  (confirmed)="deleteChallenge()"
+  (cancelled)="closeDeleteModal()"
+>
+</app-confirm-modal>
+```
