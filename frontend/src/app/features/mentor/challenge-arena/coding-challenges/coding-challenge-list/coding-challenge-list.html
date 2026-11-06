@@ -61,6 +61,12 @@
                   >
                     View Challenge
                   </button>
+                  <button
+  type="button"
+  (click)="viewSubmissions(challenge.id)"
+>
+  View Submissions
+</button>
 
                   @if (challenge.status === 'draft') {
                     <button

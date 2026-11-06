@@ -1,0 +1,140 @@
+
+<div class="history-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div>
+      <span class="page-label">CHALLENGE ARENA / CODING</span>
+      <h1>My Submissions</h1>
+      <p>Track your previous attempts and review mentor feedback.</p>
+    </div>
+
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Back to Challenges
+    </button>
+  </section>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading your submissions...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <h3>Unable to load submissions</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" (click)="loadHistory()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- EMPTY -->
+  <div
+    class="empty-state"
+    *ngIf="!loading() && !errorMessage() && submissions().length === 0"
+  >
+    <div class="empty-icon">
+      <i class="fas fa-history"></i>
+    </div>
+
+    <h3>No submissions yet</h3>
+    <p>Your previous coding challenge attempts will appear here.</p>
+
+    <button type="button" (click)="goBack()">
+      Explore Challenges
+    </button>
+  </div>
+
+  <!-- SUBMISSION HISTORY -->
+  <section
+    class="history-content"
+    *ngIf="!loading() && !errorMessage() && submissions().length > 0"
+  >
+
+    <div class="section-heading">
+      <div>
+        <h2>Submission History</h2>
+        <p>{{ submissions().length }} submission(s) found</p>
+      </div>
+    </div>
+
+    <div class="submission-list">
+
+      <article
+        class="submission-card"
+        *ngFor="let submission of submissions()"
+      >
+
+        <div class="submission-top">
+
+          <div class="challenge-info">
+            <span class="challenge-type">
+              {{ submission.challenge_type_name }}
+            </span>
+
+            <h3>{{ submission.challenge_title }}</h3>
+
+            <p>{{ submission.subject_name }}</p>
+          </div>
+
+          <span
+            class="review-status"
+            [ngClass]="submission.review_status"
+          >
+            {{ submission.review_status | titlecase }}
+          </span>
+
+        </div>
+
+        <div class="submission-meta">
+
+          <div>
+            <span>Attempt</span>
+            <strong>#{{ submission.attempt_number }}</strong>
+          </div>
+
+          <div>
+            <span>Difficulty</span>
+            <strong>{{ submission.difficulty }}</strong>
+          </div>
+
+          <div>
+            <span>Submitted</span>
+            <strong>
+              {{ submission.submitted_at | date:'mediumDate' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Mentor</span>
+            <strong>{{ submission.created_by_name || 'Mentor' }}</strong>
+          </div>
+
+        </div>
+
+        <div class="submission-feedback" *ngIf="submission.feedback">
+          <span>Mentor Feedback</span>
+          <p>{{ submission.feedback }}</p>
+        </div>
+
+        <div class="submission-footer">
+          <button
+            type="button"
+            class="view-result-btn"
+            (click)="viewResult(submission.attempt_id)"
+          >
+            View Result
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</div>

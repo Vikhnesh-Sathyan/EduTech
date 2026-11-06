@@ -1,0 +1,166 @@
+
+<div class="result-page">
+
+  <div class="page-header">
+    <div>
+      <span class="page-label">CHALLENGE ARENA / RESULTS</span>
+      <h1>Submission Result</h1>
+      <p>Check your coding challenge submission and mentor feedback.</p>
+    </div>
+
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Back to Challenges
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading your submission result...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <h3>Unable to load result</h3>
+    <p>{{ errorMessage() }}</p>
+  </div>
+
+  <!-- RESULT -->
+  <ng-container *ngIf="!loading() && attempt() as item">
+
+    <!-- CHALLENGE DETAILS -->
+    <section class="result-card">
+
+      <div class="challenge-heading">
+        <div>
+          <span class="challenge-type">
+            {{ item.challenge_type_name }}
+          </span>
+
+          <h2>{{ item.challenge_title }}</h2>
+
+          <p>{{ item.subject_name }}</p>
+        </div>
+
+        <span
+          class="difficulty"
+          [ngClass]="item.difficulty.toLowerCase()">
+          {{ item.difficulty }}
+        </span>
+      </div>
+
+      <div class="attempt-meta">
+
+        <div>
+          <span>Attempt Number</span>
+          <strong>#{{ item.attempt_number }}</strong>
+        </div>
+
+        <div>
+          <span>Submitted On</span>
+          <strong>{{ item.submitted_at | date:'medium' }}</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- REVIEW STATUS -->
+    <section class="status-card">
+
+      <div class="status-icon"
+        [ngClass]="item.review_status">
+
+        <i
+          class="fas"
+          [ngClass]="{
+            'fa-clock': item.review_status === 'pending',
+            'fa-check': item.review_status === 'correct',
+            'fa-times': item.review_status === 'incorrect'
+          }">
+        </i>
+
+      </div>
+
+      <div class="status-content">
+
+        <span class="status-label">MENTOR REVIEW STATUS</span>
+
+        <h2 [ngClass]="item.review_status">
+
+          <ng-container [ngSwitch]="item.review_status">
+
+            <span *ngSwitchCase="'pending'">
+              Waiting for Review
+            </span>
+
+            <span *ngSwitchCase="'correct'">
+              Correct Submission
+            </span>
+
+            <span *ngSwitchCase="'incorrect'">
+              Needs Improvement
+            </span>
+
+          </ng-container>
+
+        </h2>
+
+        <p>{{ item.reviewMessage }}</p>
+
+      </div>
+
+    </section>
+
+    <!-- MENTOR FEEDBACK -->
+    <section class="feedback-card">
+
+      <div class="section-heading">
+        <div>
+          <h3>Mentor Feedback</h3>
+          <p>Feedback provided by your mentor.</p>
+        </div>
+      </div>
+
+      <div class="feedback-content" *ngIf="item.feedback; else noFeedback">
+        {{ item.feedback }}
+      </div>
+
+      <ng-template #noFeedback>
+        <div class="no-feedback">
+          <i class="fas fa-hourglass-half"></i>
+          <p>
+            Your mentor has not provided feedback yet.
+            Please check again later.
+          </p>
+        </div>
+      </ng-template>
+
+      <div class="review-date" *ngIf="item.reviewed_at">
+        Reviewed on: {{ item.reviewed_at | date:'medium' }}
+      </div>
+
+    </section>
+
+    <!-- SUBMITTED ANSWER -->
+    <section class="submitted-answer-card">
+
+      <div class="section-heading">
+        <div>
+          <h3>Your Submitted Answer</h3>
+          <p>Review the answer you submitted.</p>
+        </div>
+      </div>
+
+      <pre>{{ item.submitted_content | json }}</pre>
+
+    </section>
+
+    <button type="button" class="back-bottom-btn" (click)="goBack()">
+      Back to Coding Challenges
+    </button>
+
+  </ng-container>
+
+</div>

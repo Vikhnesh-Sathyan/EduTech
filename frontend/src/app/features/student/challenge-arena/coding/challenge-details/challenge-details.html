@@ -18,9 +18,7 @@
 
     <section class="page-header">
       <span class="page-label">CHALLENGE ARENA / CODING</span>
-
       <h1>{{ item.title }}</h1>
-
       <p>
         Understand the problem carefully and prepare your solution.
       </p>
@@ -30,14 +28,13 @@
     <section class="challenge-info-card">
 
       <div class="challenge-meta">
-
         <span class="challenge-type">
           {{ item.challenge_type_name }}
         </span>
 
         <span
           class="difficulty"
-          [ngClass]="item.difficulty?.toLowerCase()"
+          [ngClass]="item.difficulty.toLowerCase()"
         >
           {{ item.difficulty }}
         </span>
@@ -45,136 +42,229 @@
         <span class="subject">
           {{ item.subject_name }}
         </span>
-
       </div>
 
+      <!-- INSTRUCTIONS -->
       <div class="challenge-section">
         <h2>Challenge Instructions</h2>
         <p>{{ item.instructions }}</p>
       </div>
 
-      <!-- BUG FINDER CONTENT -->
+      <!-- BUG FINDER -->
       <ng-container *ngIf="item.challenge_type_key === 'bug_finder'">
 
         <div class="challenge-section">
           <h2>Problem Description</h2>
-          <p>{{ item.challenge_content?.bug_description }}</p>
+          <p>{{ item.challenge_content.bug_description }}</p>
         </div>
 
         <div class="challenge-section">
           <h2>Expected Behavior</h2>
-          <p>{{ item.challenge_content?.expected_behavior }}</p>
+          <p>{{ item.challenge_content.expected_behavior }}</p>
         </div>
 
         <div class="challenge-section">
           <h2>Code to Debug</h2>
+          <pre><code>{{ item.challenge_content.code_snippet }}</code></pre>
+        </div>
 
-          <pre><code>{{ item.challenge_content?.code_snippet }}</code></pre>
+        <!-- STUDENT CORRECTED CODE -->
+        <div class="challenge-section answer-section">
+          <h2>Your Corrected Code</h2>
+
+          <textarea
+            rows="10"
+            spellcheck="false"
+            placeholder="Write your corrected code here..."
+            [value]="correctedCode()"
+            (input)="correctedCode.set($any($event.target).value)"
+          ></textarea>
+
+          <h2>Explain Your Correction</h2>
+
+          <textarea
+            rows="4"
+            placeholder="Explain what was wrong and how you fixed it..."
+            [value]="explanation()"
+            (input)="explanation.set($any($event.target).value)"
+          ></textarea>
         </div>
 
       </ng-container>
 
-      <!-- PREDICT OUTPUT CONTENT -->
+      <!-- PREDICT OUTPUT -->
       <ng-container *ngIf="item.challenge_type_key === 'predict_output'">
 
         <div class="challenge-section">
           <h2>Code Snippet</h2>
+          <pre><code>{{ item.challenge_content.code_snippet }}</code></pre>
+        </div>
 
-          <pre><code>{{ item.challenge_content?.code_snippet }}</code></pre>
+        <!-- STUDENT PREDICTION -->
+        <div class="challenge-section answer-section">
+          <h2>Your Predicted Output</h2>
+
+          <textarea
+            rows="5"
+            placeholder="Enter what you think the output will be..."
+            [value]="predictedOutput()"
+            (input)="predictedOutput.set($any($event.target).value)"
+          ></textarea>
         </div>
 
       </ng-container>
 
-      <!-- SQL QUERY CONTENT -->
+      <!-- SQL QUERY CHALLENGE -->
       <ng-container *ngIf="item.challenge_type_key === 'sql_query_challenge'">
-<div class="challenge-section">
-  <h2>Database Schema</h2>
 
-  <div class="schema-card" *ngFor="let table of schemaTables()">
+        <!-- DATABASE SCHEMA -->
+        <div class="challenge-section">
+          <h2>Database Schema</h2>
 
-    <!-- TABLE HEADER -->
-    <div class="schema-header">
-      <div class="schema-title">
-        <i class="fas fa-table"></i>
-        <div>
-          <h3>{{ table.name }}</h3>
-          <p>Database Table</p>
-        </div>
-      </div>
+          <div
+            class="schema-card"
+            *ngFor="let table of schemaTables()"
+          >
 
-      <span class="record-count">
-        {{ table.rows.length }} Records
-      </span>
-    </div>
+            <!-- TABLE HEADER -->
+            <div class="schema-header">
+              <div class="schema-title">
+                <i class="fas fa-table"></i>
 
-    <!-- COLUMN STRUCTURE -->
-    <h4>Table Structure</h4>
+                <div>
+                  <h3>{{ table.name }}</h3>
+                  <p>Database Table</p>
+                </div>
+              </div>
 
-    <div class="schema-table-wrapper">
-      <table class="schema-table">
-        <thead>
-          <tr>
-            <th>Column</th>
-            <th>Data Type</th>
-            <th>Key</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let column of table.columns">
-            <td>{{ column.name }}</td>
-            <td>{{ column.dataType }}</td>
-            <td>
-              <span *ngIf="column.isPrimaryKey" class="primary-key">
-                PRIMARY KEY
+              <span class="record-count">
+                {{ table.rows.length }} Records
               </span>
-              <span *ngIf="!column.isPrimaryKey">—</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+            </div>
 
-    <!-- SAMPLE RECORDS -->
-    <h4>Sample Records</h4>
+            <!-- COLUMN STRUCTURE -->
+            <h4>Table Structure</h4>
 
-    <div class="schema-table-wrapper" *ngIf="table.rows.length > 0">
-      <table class="schema-table">
-        <thead>
-          <tr>
-            <th *ngFor="let column of table.columns">
-              {{ column.name }}
-            </th>
-          </tr>
-        </thead>
+            <div class="schema-table-wrapper">
+              <table class="schema-table">
+                <thead>
+                  <tr>
+                    <th>Column</th>
+                    <th>Data Type</th>
+                    <th>Key</th>
+                  </tr>
+                </thead>
 
-        <tbody>
-          <tr *ngFor="let record of table.rows">
-            <td *ngFor="let column of table.columns">
-              {{ record[column.name] ?? 'NULL' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <tbody>
+                  <tr *ngFor="let column of table.columns">
+                    <td>{{ column.name }}</td>
+                    <td>{{ column.dataType }}</td>
 
-    <p *ngIf="table.rows.length === 0" class="no-records">
-      No sample records available.
-    </p>
+                    <td>
+                      <span
+                        *ngIf="column.isPrimaryKey"
+                        class="primary-key"
+                      >
+                        PRIMARY KEY
+                      </span>
 
-  </div>
+                      <span *ngIf="!column.isPrimaryKey">
+                        —
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-  <p *ngIf="schemaTables().length === 0" class="no-records">
-    No database schema available for this challenge.
-  </p>
-</div>
+            <!-- SAMPLE RECORDS -->
+            <h4>Sample Records</h4>
 
+            <div
+              class="schema-table-wrapper"
+              *ngIf="table.rows.length > 0"
+            >
+              <table class="schema-table">
+                <thead>
+                  <tr>
+                    <th *ngFor="let column of table.columns">
+                      {{ column.name }}
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let record of table.rows">
+                    <td *ngFor="let column of table.columns">
+                      {{ record[column.name] ?? 'NULL' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p
+              *ngIf="table.rows.length === 0"
+              class="no-records"
+            >
+              No sample records available.
+            </p>
+
+          </div>
+
+          <p
+            *ngIf="schemaTables().length === 0"
+            class="no-records"
+          >
+            No database schema available for this challenge.
+          </p>
+        </div>
+
+        <!-- PROBLEM DESCRIPTION -->
         <div class="challenge-section">
           <h2>Problem Description</h2>
-          <p>{{ item.challenge_content?.problem_description }}</p>
+          <p>{{ item.challenge_content.problem_description }}</p>
         </div>
 
+        <!-- SQL QUERY WORKSPACE -->
+        <app-sql-query-workspace
+          (queryChange)="onSqlQueryChange($event)"
+        ></app-sql-query-workspace>
+
       </ng-container>
+
+      <!-- COMMON STUDENT SUBMISSION -->
+      <div class="submission-section">
+
+        <div class="submission-heading">
+          <h2>Submit Your Solution</h2>
+
+          <p>
+            Your submission will be sent to your mentor for manual review.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="submit-challenge-btn"
+          (click)="submitChallenge()"
+          [disabled]="submitting()"
+        >
+          @if (submitting()) {
+            Submitting...
+          } @else {
+            Submit Challenge
+          }
+        </button>
+
+        <p
+          class="success-message"
+          *ngIf="successMessage()"
+        >
+          {{ successMessage() }}
+        </p>
+
+      </div>
 
     </section>
 

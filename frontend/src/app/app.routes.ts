@@ -120,9 +120,10 @@ import { NoteDetails } from './features/student/advanced/logic-to-code/notes/not
 import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
 
 //Student CODING challenge
-
 import { StudentCodingChallengeList } from './features/student/challenge-arena/coding/challenge-list/challenge-list';
 import { StudentCodingChallengeDetails } from './features/student/challenge-arena/coding/challenge-details/challenge-details';
+import { CodingChallengeResult } from './features/student/challenge-arena/coding/coding-challenge-result/coding-challenge-result';
+import { History } from './features/student/challenge-arena/coding/history/history';
 
 
 // Admin dashboard
@@ -254,7 +255,10 @@ import { CodingChallengeList as MentorCodingChallengeList }from './features/ment
 import { CreateCodingChallenge as MentorCreateCodingChallenge }from './features/mentor/challenge-arena/coding-challenges/create-coding-challenge.ts/create-coding-challenge';
 import { MentorViewCodingChallenge} from './features/mentor/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
 import { EditCodingChallenge as MentorEditCodingChallenge } from './features/mentor/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
-
+import {
+  CodingChallengeSubmissions
+} from './features/mentor/challenge-arena/coding-challenges/coding-challenge-submissions/coding-challenge-submissions';
+import { CodingChallengeReview } from './features/mentor/challenge-arena/coding-challenges/coding-challenge-review/coding-challenge-review';
 
 // MENTOR THEORY CHALLENGE
 import { TheoryChallengeList as MentorTheoryChallengeList  } from './features/mentor/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
@@ -587,10 +591,17 @@ export const routes: Routes = [
         component: StudentCodingChallengeList
       },
       {
+        path: 'student/challenge-arena/coding/history',
+        component: History
+      },
+      {
+        path: 'student/challenge-arena/coding/result/:attemptId',
+        component: CodingChallengeResult
+      },  
+      {
         path: 'student/challenge-arena/coding/:challengeId',
         component: StudentCodingChallengeDetails
       },
-      
 
     ]
   },
@@ -994,6 +1005,14 @@ export const routes: Routes = [
       {
         path: 'mentor/challenge-arena/theory-challenges/:challengeId/edit',
         component: MentorEditTheoryChallenge
+      },
+      {
+        path: 'mentor/challenge-arena/coding-challenges/:challengeId/submissions',
+        component: CodingChallengeSubmissions
+      },
+      {
+        path: 'mentor/challenge-arena/coding-challenges/:challengeId/submissions/:attemptId',
+        component: CodingChallengeReview
       },
       {
         path: 'mentor/challenge-arena/theory-challenges/:challengeId',

@@ -178,25 +178,7 @@
   }
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 768px) {
-  .challenge-details-page {
-    padding: 22px 16px;
-  }
-
-  .page-header h1 {
-    font-size: 26px;
-  }
-
-  .challenge-info-card {
-    padding: 20px;
-  }
-}
-
-/* =====================================
-   DYNAMIC SQL SCHEMA VIEWER
-===================================== */
+/* DYNAMIC SQL SCHEMA VIEWER */
 
 .schema-card {
   margin-top: 22px;
@@ -318,6 +300,133 @@
   font-size: 12px;
 }
 
+/* STUDENT ANSWER SECTION */
+
+.answer-section {
+  padding: 24px;
+  background: #f8faf9;
+  border: 1px solid #e8eeee;
+  border-radius: 14px;
+}
+
+.answer-section h2:not(:first-child) {
+  margin-top: 24px;
+}
+
+.answer-section textarea {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  padding: 16px;
+  box-sizing: border-box;
+  resize: vertical;
+  color: #183638;
+  background: #ffffff;
+  border: 1px solid #dce5e3;
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.7;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.answer-section textarea:focus {
+  border-color: #e86a2b;
+  box-shadow: 0 0 0 3px rgba(244, 91, 11, 0.09);
+}
+
+.answer-section textarea::placeholder {
+  color: #a0adad;
+}
+
+.answer-section textarea[spellcheck="false"] {
+  font-family: Consolas, Monaco, monospace;
+}
+
+/* COMMON SUBMISSION SECTION */
+
+.submission-section {
+  margin-top: 34px;
+  padding: 26px;
+  background: #fff9f5;
+  border: 1px solid #f8e4d7;
+  border-radius: 14px;
+}
+
+.submission-heading h2 {
+  margin: 0 0 8px;
+  color: #183638;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.submission-heading p {
+  margin: 0;
+  color: #718384;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.submit-challenge-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 190px;
+  margin-top: 22px;
+  padding: 13px 22px;
+  color: #ffffff;
+  background: #f45b0b;
+  border: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.submit-challenge-btn:hover:not(:disabled) {
+  background: #dc4c04;
+  transform: translateY(-2px);
+}
+
+.submit-challenge-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  color: #18864b;
+  background: #e8f8ef;
+  border: 1px solid #c9eed8;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .challenge-details-page {
+    padding: 22px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 26px;
+  }
+
+  .challenge-info-card {
+    padding: 20px;
+  }
+
+  .answer-section,
+  .submission-section {
+    padding: 18px;
+  }
+}
+
 @media (max-width: 600px) {
   .schema-card {
     padding: 16px;
@@ -330,5 +439,9 @@
   .schema-table th,
   .schema-table td {
     padding: 11px 12px;
+  }
+
+  .submit-challenge-btn {
+    width: 100%;
   }
 }

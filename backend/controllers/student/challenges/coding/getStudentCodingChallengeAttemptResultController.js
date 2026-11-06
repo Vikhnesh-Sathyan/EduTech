@@ -7,7 +7,6 @@ const db = require("../../../../config/db");
 
 const getStudentCodingChallengeAttemptResult = async (req, res) => {
     try {
-
         const studentId = req.user.id;
         const { attemptId } = req.params;
 
@@ -19,11 +18,10 @@ const getStudentCodingChallengeAttemptResult = async (req, res) => {
                 cca.student_id,
                 cca.attempt_number,
                 cca.submitted_content,
-                cca.score,
-                cca.result_status,
+                cca.result_status AS review_status,
                 cca.feedback,
                 cca.submitted_at,
-                cca.evaluated_at,
+                cca.evaluated_at AS reviewed_at,
 
                 cc.title AS challenge_title,
                 cc.difficulty,
@@ -59,13 +57,35 @@ const getStudentCodingChallengeAttemptResult = async (req, res) => {
             });
         }
 
+        const attempt = attempts[0];
+
+        let reviewMessage;
+
+        switch (attempt.review_status) {
+            case "pending":
+                reviewMessage = "Your submission is waiting for mentor review.";
+                break;
+
+            case "correct":
+                reviewMessage = "Your mentor marked this submission as correct.";
+                break;
+
+            case "incorrect":
+                reviewMessage = "Your mentor marked this submission as incorrect.";
+                break;
+
+            default:
+                reviewMessage = "Review status unavailable.";
+        }
+
         return res.status(200).json({
             success: true,
-            attempt: attempts[0]
+            message: "Submission details loaded successfully",
+            reviewMessage,
+            attempt
         });
 
     } catch (error) {
-
         console.error(
             "Coding Challenge Attempt Result Error:",
             error
@@ -75,7 +95,6 @@ const getStudentCodingChallengeAttemptResult = async (req, res) => {
             success: false,
             message: "Failed to load attempt result"
         });
-
     }
 };
 

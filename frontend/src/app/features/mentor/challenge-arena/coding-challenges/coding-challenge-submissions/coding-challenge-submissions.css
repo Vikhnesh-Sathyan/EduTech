@@ -1,0 +1,409 @@
+
+:host {
+  display: block;
+  min-height: 100%;
+  background: #f5f6fc;
+  color: #25283b;
+}
+
+.submissions-page {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 36px;
+}
+
+/* PAGE HEADER */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.page-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #6957e8;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 1.5px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  color: #171936;
+  font-size: 28px;
+  font-weight: 750;
+}
+
+.page-header p {
+  margin: 0;
+  color: #777b91;
+  font-size: 14px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 17px;
+  border: 1px solid #e2e3ef;
+  border-radius: 9px;
+  background: #fff;
+  color: #45465f;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  border-color: #6957e8;
+  color: #6957e8;
+  background: #f8f7ff;
+}
+
+/* SUMMARY CARD */
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: fit-content;
+  min-width: 230px;
+  margin-bottom: 32px;
+  padding: 20px 24px;
+  border: 1px solid #e8e9f2;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(28, 31, 65, 0.04);
+}
+
+.summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: #eeebff;
+  font-size: 23px;
+}
+
+.summary-card span {
+  color: #85889b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.summary-card h2 {
+  margin: 5px 0 0;
+  color: #20223b;
+  font-size: 25px;
+  font-weight: 750;
+}
+
+/* SECTION HEADING */
+
+.submissions-section {
+  margin-top: 10px;
+}
+
+.section-heading {
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  margin: 0 0 7px;
+  color: #20223b;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #85889b;
+  font-size: 13px;
+}
+
+/* SUBMISSION LIST */
+
+.submission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.submission-card {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.3fr) minmax(180px, 1fr) auto auto;
+  align-items: center;
+  gap: 22px;
+  padding: 22px;
+  border: 1px solid #e8e9f2;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(28, 31, 65, 0.035);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submission-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 25px rgba(28, 31, 65, 0.07);
+}
+
+/* STUDENT INFORMATION */
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.student-avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #eeebff;
+  color: #6957e8;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.student-details {
+  min-width: 0;
+}
+
+.student-details h3 {
+  margin: 0 0 6px;
+  color: #25263c;
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.student-details p {
+  margin: 0;
+  color: #85889b;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+/* SUBMISSION META */
+
+.submission-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta-item span {
+  color: #9295a5;
+  font-size: 11px;
+}
+
+.meta-item strong {
+  color: #45465f;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* REVIEW STATUS */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background: #fff3dc;
+  color: #a86a0a;
+}
+
+.status-badge.correct {
+  background: #e6f6ed;
+  color: #27834e;
+}
+
+.status-badge.incorrect {
+  background: #fde8e8;
+  color: #c33e48;
+}
+
+/* ACTION BUTTONS */
+
+.submission-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.review-btn,
+.view-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.review-btn {
+  background: #6957e8;
+  color: #fff;
+}
+
+.review-btn:hover {
+  background: #5745d4;
+  transform: translateY(-1px);
+}
+
+.view-btn {
+  border: 1px solid #e3e0fb;
+  background: #f3f1ff;
+  color: #6957e8;
+}
+
+.view-btn:hover {
+  background: #e9e5ff;
+}
+
+/* LOADING */
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  gap: 14px;
+  color: #85889b;
+  font-size: 14px;
+}
+
+.loader {
+  width: 35px;
+  height: 35px;
+  border: 3px solid #e5e2fa;
+  border-top-color: #6957e8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: 35px 20px;
+  border: 1px dashed #d9d9e8;
+  border-radius: 16px;
+  background: #fff;
+  text-align: center;
+}
+
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+  background: #eeebff;
+  font-size: 29px;
+}
+
+.empty-state h2 {
+  margin: 0 0 9px;
+  color: #20223b;
+  font-size: 20px;
+}
+
+.empty-state p {
+  max-width: 420px;
+  margin: 0 0 22px;
+  color: #85889b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+  .submission-card {
+    grid-template-columns: minmax(180px, 1fr) minmax(150px, 1fr);
+  }
+
+  .submission-action {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .submissions-page {
+    padding: 22px 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .summary-card {
+    width: auto;
+  }
+
+  .submission-card {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .submission-meta {
+    justify-content: space-between;
+  }
+
+  .submission-action,
+  .review-btn,
+  .view-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .submission-meta {
+    flex-direction: column;
+    gap: 13px;
+  }
+}

@@ -1,0 +1,114 @@
+<div class="review-page">
+
+  <div class="page-header">
+    <div>
+      <span class="page-label">CHALLENGE ARENA</span>
+      <h1>Review Submission</h1>
+      <p>Evaluate the student's answer and provide feedback.</p>
+    </div>
+
+    <button type="button" class="back-btn" (click)="goBack()">
+      ← Back to Submissions
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      Loading submission...
+    </div>
+  } @else if (submission(); as item) {
+
+    <section class="review-section">
+      <div class="section-heading">
+        <h2>Student Details</h2>
+        <p>Submission ID: #{{ item.attempt_id }}</p>
+      </div>
+
+      <div class="student-details">
+        <div>
+          <span>Student Name</span>
+          <strong>{{ item.student_name }}</strong>
+        </div>
+
+        <div>
+          <span>Email</span>
+          <strong>{{ item.student_email }}</strong>
+        </div>
+
+        <div>
+          <span>Attempt Number</span>
+          <strong>{{ item.attempt_number }}</strong>
+        </div>
+
+        <div>
+          <span>Submitted At</span>
+          <strong>{{ item.submitted_at | date:'medium' }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="review-section">
+      <div class="section-heading">
+        <h2>Student's Submission</h2>
+        <p>Review the answer submitted by the student.</p>
+      </div>
+
+      <div class="submission-content">
+        <pre>{{ item.submitted_content | json }}</pre>
+      </div>
+    </section>
+
+    <section class="review-section">
+      <div class="section-heading">
+        <h2>Mentor Evaluation</h2>
+        <p>Select the result and provide clear feedback.</p>
+      </div>
+
+      <div class="review-form">
+
+        <label for="reviewStatus">Review Result</label>
+
+        <select
+          id="reviewStatus"
+          [ngModel]="reviewStatus()"
+          (ngModelChange)="reviewStatus.set($event)"
+        >
+          <option value="correct">Correct</option>
+          <option value="incorrect">Incorrect</option>
+        </select>
+
+        <label for="feedback">Feedback</label>
+
+        <textarea
+          id="feedback"
+          rows="5"
+          placeholder="Write feedback for the student..."
+          [ngModel]="feedback()"
+          (ngModelChange)="feedback.set($event)"
+        ></textarea>
+
+        <button
+  type="button"
+  class="submit-review-btn"
+  (click)="submitReview()"
+  [disabled]="submitting() || item.result_status !== 'pending'"
+>
+  @if (submitting()) {
+    Submitting Review...
+  } @else if (item.result_status !== 'pending') {
+    Already Reviewed
+  } @else {
+    Submit Review
+  }
+</button>
+
+      </div>
+    </section>
+
+  } @else {
+    <div class="empty-state">
+      Submission not found.
+    </div>
+  }
+
+</div>

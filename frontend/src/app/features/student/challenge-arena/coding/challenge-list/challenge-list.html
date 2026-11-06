@@ -1,16 +1,26 @@
 
 <div class="coding-challenge-page">
 
-  <!-- PAGE HEADER -->
-  <section class="page-header">
-    <div>
-      <span class="page-label">CHALLENGE ARENA / CODING</span>
-      <h1>Explore Coding Challenges</h1>
-      <p>
-        Sharpen your coding skills by solving practical programming challenges.
-      </p>
-    </div>
-  </section>
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <div>
+    <span class="page-label">CHALLENGE ARENA / CODING</span>
+    <h1>Explore Coding Challenges</h1>
+    <p>
+      Sharpen your coding skills by solving practical programming challenges.
+    </p>
+  </div>
+
+  <button
+    type="button"
+    class="my-submissions-btn"
+    routerLink="/student/challenge-arena/coding/history"
+  >
+    <i class="fas fa-history"></i>
+    My Submissions
+  </button>
+</section>
+
 
   <!-- CHALLENGE CONTENT -->
   <section class="challenge-content">
@@ -61,7 +71,7 @@
 
           <span
             class="difficulty"
-            [ngClass]="challenge.difficulty?.toLowerCase()"
+            [ngClass]="challenge.difficulty.toLowerCase()"
           >
             {{ challenge.difficulty }}
           </span>

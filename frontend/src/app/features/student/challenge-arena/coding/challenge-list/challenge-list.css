@@ -251,3 +251,52 @@
     padding: 19px;
   }
 }
+
+/* MY SUBMISSIONS BUTTON - RIGHT SIDE */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.my-submissions-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border: 1px solid #f45b0b;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #f45b0b;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.my-submissions-btn:hover {
+  background: #f45b0b;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(244, 91, 11, 0.18);
+  transform: translateY(-2px);
+}
+
+.my-submissions-btn i {
+  font-size: 14px;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-submissions-btn {
+    align-self: flex-end;
+  }
+}

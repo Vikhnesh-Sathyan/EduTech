@@ -1,0 +1,210 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  color: #183638;
+}
+
+.review-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.page-label {
+  color: #159b83;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.page-header h1 {
+  margin: 10px 0 6px;
+  font-size: 30px;
+  font-weight: 750;
+}
+
+.page-header p,
+.section-heading p {
+  color: #718587;
+  margin: 0;
+  font-size: 14px;
+}
+
+.back-btn {
+  padding: 11px 18px;
+  border: 1px solid #dce8e6;
+  border-radius: 9px;
+  background: #fff;
+  color: #315654;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* SECTIONS */
+
+.review-section {
+  background: #fff;
+  border: 1px solid #e4eeec;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 22px;
+}
+
+.section-heading {
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  margin: 0 0 7px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* STUDENT DETAILS */
+
+.student-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.student-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.student-details span {
+  color: #819291;
+  font-size: 12px;
+}
+
+.student-details strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* SUBMISSION */
+
+.submission-content {
+  padding: 20px;
+  border-radius: 10px;
+  background: #f5f8f8;
+  border: 1px solid #e5edeb;
+  overflow-x: auto;
+}
+
+.submission-content pre {
+  margin: 0;
+  color: #254746;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* REVIEW FORM */
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-form label {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 13px 14px;
+  box-sizing: border-box;
+  border: 1px solid #dce7e5;
+  border-radius: 9px;
+  background: #fff;
+  color: #244442;
+  font: inherit;
+  outline: none;
+}
+
+.review-form select:focus,
+.review-form textarea:focus {
+  border-color: #159b83;
+  box-shadow: 0 0 0 3px rgba(21, 155, 131, 0.1);
+}
+
+.review-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submit-review-btn {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 13px 24px;
+  border: none;
+  border-radius: 9px;
+  background: #159b83;
+  color: #fff;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.submit-review-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* STATES */
+
+.loading-state,
+.empty-state {
+  padding: 50px 20px;
+  text-align: center;
+  color: #718587;
+  background: #fff;
+  border: 1px solid #e4eeec;
+  border-radius: 14px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+  .review-page {
+    padding: 18px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .student-details {
+    grid-template-columns: 1fr;
+  }
+
+  .review-section {
+    padding: 18px;
+  }
+
+  .page-header h1 {
+    font-size: 25px;
+  }
+}

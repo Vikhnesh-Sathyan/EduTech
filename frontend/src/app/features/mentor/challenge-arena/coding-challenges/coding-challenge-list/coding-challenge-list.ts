@@ -214,4 +214,16 @@ unpublishChallenge(challengeId: number): void {
 
 }
 
+// View student submissions
+viewSubmissions(challengeId: number): void {
+
+  this.closeMenu();
+
+  this.router.navigate([
+    '/mentor/challenge-arena/coding-challenges',
+    challengeId,
+    'submissions'
+  ]);
+
+}
 }

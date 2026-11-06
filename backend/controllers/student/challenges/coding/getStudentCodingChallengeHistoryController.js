@@ -7,7 +7,6 @@ const db = require("../../../../config/db");
 
 const getStudentCodingChallengeHistory = async (req, res) => {
     try {
-
         const studentId = req.user.id;
 
         const [attempts] = await db.query(
@@ -16,11 +15,10 @@ const getStudentCodingChallengeHistory = async (req, res) => {
                 cca.id AS attempt_id,
                 cca.challenge_id,
                 cca.attempt_number,
-                cca.score,
-                cca.result_status,
+                cca.result_status AS review_status,
                 cca.feedback,
                 cca.submitted_at,
-                cca.evaluated_at,
+                cca.evaluated_at AS reviewed_at,
 
                 cc.title AS challenge_title,
                 cc.difficulty,
@@ -60,7 +58,6 @@ const getStudentCodingChallengeHistory = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error(
             "Student Coding Challenge History Error:",
             error
@@ -70,7 +67,6 @@ const getStudentCodingChallengeHistory = async (req, res) => {
             success: false,
             message: "Failed to load Coding Challenge history"
         });
-
     }
 };
 

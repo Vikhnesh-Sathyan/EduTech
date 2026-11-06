@@ -1,3 +1,4 @@
+
 const express = require("express");
 
 const authMiddleware = require("../../../../middleware/authMiddleware");
@@ -39,8 +40,12 @@ const {
 } = require("../../../../controllers/mentor/challenges/coding/deleteMentorCodingChallengeController");
 
 const {
-    saveCodingChallengeTestCases
-} = require("../../../../controllers/mentor/challenges/coding/saveCodingChallengeTestCasesController");
+    getMentorCodingChallengeSubmissions
+} = require("../../../../controllers/mentor/challenges/coding/getMentorCodingChallengeSubmissionsController");
+
+const {
+    reviewMentorCodingChallengeSubmission
+} = require("../../../../controllers/mentor/challenges/coding/reviewMentorCodingChallengeSubmissionController");
 
 const router = express.Router();
 
@@ -104,12 +109,20 @@ router.patch(
     updateMentorCodingChallengeStatus
 );
 
-router.post(
-    "/:challengeId/test-cases",
+// Get student submissions for a challenge
+router.get(
+    "/:challengeId/submissions",
     authMiddleware,
     roleMiddleware("mentor"),
-    saveCodingChallengeTestCases
+    getMentorCodingChallengeSubmissions
 );
 
+// Review student submission
+router.patch(
+    "/attempts/:attemptId/review",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    reviewMentorCodingChallengeSubmission
+);
 
 module.exports = router;

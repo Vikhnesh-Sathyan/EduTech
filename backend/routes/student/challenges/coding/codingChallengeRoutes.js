@@ -29,12 +29,7 @@ const {
     getStudentCodingChallengeAttemptResult
 } = require("../../../../controllers/student/challenges/coding/getStudentCodingChallengeAttemptResultController");
 
-const {
-    executeStudentCodingChallengeAttempt
-} = require("../../../../controllers/student/challenges/coding/executeStudentCodingChallengeAttemptController");
-
 const router = express.Router();
-
 
 // ==========================================
 // STUDENT CODING CHALLENGE ROUTES
@@ -78,13 +73,6 @@ router.post(
     authMiddleware,
     roleMiddleware("student"),
     submitCodingChallengeAttempt
-);
-
-router.post(
-    "/attempts/:attemptId/execute",
-    authMiddleware,
-    roleMiddleware("student"),
-    executeStudentCodingChallengeAttempt
 );
 
 module.exports = router;

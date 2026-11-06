@@ -4,6 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // ==========================================
+// REVIEW STATUS
+// ==========================================
+
+export type CodingChallengeReviewStatus =
+  | 'pending'
+  | 'correct'
+  | 'incorrect';
+
+// ==========================================
 // CHALLENGE
 // ==========================================
 
@@ -38,22 +47,11 @@ export interface StudentCodingChallengeDetails
 // ==========================================
 
 export interface CodingChallengeSubmission {
+  success: boolean;
+  message: string;
   attemptId: number;
   attemptNumber: number;
-  evaluationStatus: string;
-}
-
-// ==========================================
-// EVALUATION RESULT
-// ==========================================
-
-export interface CodingChallengeEvaluation {
-  attemptId: number;
-  score: number;
-  passedTestCases: number;
-  totalTestCases: number;
-  resultStatus: string;
-  feedback: string;
+  reviewStatus: CodingChallengeReviewStatus;
 }
 
 // ==========================================
@@ -64,17 +62,27 @@ export interface StudentCodingChallengeAttempt {
   attempt_id: number;
   challenge_id: number;
   attempt_number: number;
-  score: number | null;
-  result_status: string;
+  review_status: CodingChallengeReviewStatus;
   feedback: string | null;
   submitted_at: string;
-  evaluated_at: string | null;
+  reviewed_at: string | null;
   challenge_title: string;
   difficulty: string;
   subject_name: string;
   challenge_type_name: string;
   challenge_type_key: string;
   created_by_name: string;
+}
+
+// ==========================================
+// INDIVIDUAL ATTEMPT RESULT
+// ==========================================
+
+export interface StudentCodingChallengeAttemptResult
+  extends StudentCodingChallengeAttempt {
+  student_id: number;
+  submitted_content: Record<string, unknown>;
+  reviewMessage: string;
 }
 
 // ==========================================
@@ -108,38 +116,41 @@ export class StudentCodingChallengeService {
 
   submitChallenge(
     challengeId: number,
-    submitted_content: {
-      source_code: string;
-    }
-  ): Observable<any> {
-    return this.http.post<any>(
+    submitted_content: Record<string, unknown>
+  ): Observable<CodingChallengeSubmission> {
+    return this.http.post<CodingChallengeSubmission>(
       `${this.apiUrl}/${challengeId}/submit`,
       { submitted_content }
     );
   }
 
-  // EXECUTE SUBMITTED ATTEMPT
-
-  executeAttempt(attemptId: number): Observable<any> {
-    return this.http.post<any>(
-      `${this.apiUrl}/attempts/${attemptId}/execute`,
-      {}
-    );
-  }
-
   // GET ATTEMPT HISTORY
 
-  getAttemptHistory(): Observable<any> {
-    return this.http.get<any>(
-      `${this.apiUrl}/history`
-    );
+  getAttemptHistory(): Observable<{
+    success: boolean;
+    count: number;
+    attempts: StudentCodingChallengeAttempt[];
+  }> {
+    return this.http.get<{
+      success: boolean;
+      count: number;
+      attempts: StudentCodingChallengeAttempt[];
+    }>(`${this.apiUrl}/history`);
   }
 
   // GET INDIVIDUAL ATTEMPT RESULT
 
-  getAttemptResult(attemptId: number): Observable<any> {
-    return this.http.get<any>(
-      `${this.apiUrl}/attempts/${attemptId}`
-    );
+  getAttemptResult(attemptId: number): Observable<{
+    success: boolean;
+    message: string;
+    reviewMessage: string;
+    attempt: StudentCodingChallengeAttemptResult;
+  }> {
+    return this.http.get<{
+      success: boolean;
+      message: string;
+      reviewMessage: string;
+      attempt: StudentCodingChallengeAttemptResult;
+    }>(`${this.apiUrl}/attempts/${attemptId}`);
   }
 }

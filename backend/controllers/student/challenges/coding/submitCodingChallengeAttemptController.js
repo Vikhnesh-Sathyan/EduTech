@@ -9,7 +9,6 @@ const submitCodingChallengeAttempt = async (req, res) => {
     let connection;
 
     try {
-
         const studentId = req.user.id;
         const { challengeId } = req.params;
         const { submitted_content } = req.body;
@@ -27,10 +26,9 @@ const submitCodingChallengeAttempt = async (req, res) => {
         }
 
         connection = await db.getConnection();
-
         await connection.beginTransaction();
 
-        // Check challenge visibility and lock its row
+        // Check challenge visibility and access
         const [challenges] = await connection.query(
             `
             SELECT
@@ -53,34 +51,33 @@ const submitCodingChallengeAttempt = async (req, res) => {
                         creator.role = 'mentor'
 
                         AND EXISTS (
-    SELECT 1
+                            SELECT 1
+                            FROM mentor_student_relationships msr
 
-    FROM mentor_student_relationships msr
+                            INNER JOIN student_profiles sp
+                                ON sp.user_id = msr.student_id
 
-    INNER JOIN student_profiles sp
-        ON sp.user_id = msr.student_id
+                            INNER JOIN subjects s
+                                ON s.id = cc.subject_id
 
-    INNER JOIN subjects s
-        ON s.id = cc.subject_id
+                            INNER JOIN education_years ey
+                                ON ey.id = s.education_year_id
 
-    INNER JOIN education_years ey
-        ON ey.id = s.education_year_id
+                            INNER JOIN departments d
+                                ON d.id = ey.department_id
 
-    INNER JOIN departments d
-        ON d.id = ey.department_id
+                            INNER JOIN education_programs ep
+                                ON ep.id = d.education_program_id
 
-    INNER JOIN education_programs ep
-        ON ep.id = d.education_program_id
+                            WHERE msr.mentor_id = cc.created_by
+                              AND msr.student_id = ?
+                              AND msr.status = 'accepted'
+                              AND msr.is_active = TRUE
 
-    WHERE msr.mentor_id = cc.created_by
-      AND msr.student_id = ?
-      AND msr.status = 'accepted'
-      AND msr.is_active = TRUE
-
-      AND sp.education_program_id = ep.id
-      AND sp.department_id = d.id
-      AND sp.education_year_id = ey.id
-)
+                              AND sp.education_program_id = ep.id
+                              AND sp.department_id = d.id
+                              AND sp.education_year_id = ey.id
+                        )
                     )
               )
 
@@ -90,62 +87,34 @@ const submitCodingChallengeAttempt = async (req, res) => {
         );
 
         if (challenges.length === 0) {
-
             await connection.rollback();
 
             return res.status(404).json({
                 success: false,
                 message: "Coding Challenge not found or not available"
             });
-
         }
 
-        // Check whether previous attempt is still pending
-const [pendingAttempts] = await connection.query(
-    `
-    SELECT id
-    FROM coding_challenge_attempts
-    WHERE challenge_id = ?
-      AND student_id = ?
-      AND result_status IN ('pending', 'running')
-    LIMIT 1
-    `,
-    [challengeId, studentId]
-);
-
-if (pendingAttempts.length > 0) {
-
-    await connection.rollback();
-
-    return res.status(409).json({
-        success: false,
-        message: "Your previous attempt is still waiting for evaluation. Please wait before submitting again."
-    });
-
-}
-
-        // Check whether student already completed this challenge
-        const [completedAttempts] = await connection.query(
+        // Prevent another submission while mentor review is pending
+        const [pendingAttempts] = await connection.query(
             `
             SELECT id
             FROM coding_challenge_attempts
             WHERE challenge_id = ?
               AND student_id = ?
-              AND result_status = 'completed'
+              AND result_status = 'pending'
             LIMIT 1
             `,
             [challengeId, studentId]
         );
 
-        if (completedAttempts.length > 0) {
-
+        if (pendingAttempts.length > 0) {
             await connection.rollback();
 
-            return res.status(403).json({
+            return res.status(409).json({
                 success: false,
-                message: "This challenge is already completed. Further attempts are not allowed."
+                message: "Your previous submission is waiting for mentor review."
             });
-
         }
 
         // Get the next attempt number
@@ -164,7 +133,7 @@ if (pendingAttempts.length > 0) {
 
         const attemptNumber = attempts[0].next_attempt_number;
 
-        // Save the submission for evaluation
+        // Save submission for manual mentor review
         const [result] = await connection.query(
             `
             INSERT INTO coding_challenge_attempts
@@ -192,14 +161,13 @@ if (pendingAttempts.length > 0) {
 
         return res.status(201).json({
             success: true,
-            message: "Coding Challenge submitted successfully. Evaluation is pending.",
+            message: "Coding Challenge submitted successfully. Waiting for mentor review.",
             attemptId: result.insertId,
             attemptNumber,
-            evaluationStatus: "pending"
+            reviewStatus: "pending"
         });
 
     } catch (error) {
-
         if (connection) {
             await connection.rollback();
         }
@@ -215,11 +183,9 @@ if (pendingAttempts.length > 0) {
         });
 
     } finally {
-
         if (connection) {
             connection.release();
         }
-
     }
 };
 

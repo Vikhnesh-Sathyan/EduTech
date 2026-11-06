@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -37,9 +38,26 @@ export interface CodingChallengePayload {
   challenge_content: Record<string, any>;
 }
 
-export interface CodingChallengeTestCase {
-  input_data: Record<string, any>;
-  expected_output: any;
+// Student Coding Challenge Submission
+export interface MentorCodingChallengeSubmission {
+  attempt_id: number;
+  challenge_id: number;
+  student_id: number;
+  attempt_number: number;
+  submitted_content: Record<string, any>;
+  result_status: 'pending' | 'correct' | 'incorrect';
+  feedback: string | null;
+  submitted_at: string;
+  evaluated_at: string | null;
+  student_name: string;
+  student_email: string;
+}
+
+// Submissions Response
+export interface MentorCodingChallengeSubmissionsResponse {
+  success: boolean;
+  total: number;
+  submissions: MentorCodingChallengeSubmission[];
 }
 
 @Injectable({
@@ -50,6 +68,9 @@ export class MentorCodingChallengeService {
   private readonly apiUrl =
     'http://localhost:5000/api/mentor/coding-challenges';
 
+ private readonly submissionsApiUrl =
+  'http://localhost:5000/api/mentor/coding-challenges';
+  
   constructor(private readonly http: HttpClient) {}
 
   // Get available challenge types
@@ -115,37 +136,47 @@ export class MentorCodingChallengeService {
   }
 
   // Get academic groups and subjects available to this mentor
-getChallengeAcademics() {
-  return this.http.get<{
-    success: boolean;
-    academics: any[];
-  }>('http://localhost:5000/api/mentor/challenge-academics');
-}
+  getChallengeAcademics() {
+    return this.http.get<{
+      success: boolean;
+      academics: any[];
+    }>('http://localhost:5000/api/mentor/challenge-academics');
+  }
 
-// Delete coding challenge
-deleteCodingChallenge(challengeId: number) {
-  return this.http.delete<{ success: boolean; message: string }>(
-    `${this.apiUrl}/${challengeId}`
-  );
-}
+  // Delete coding challenge
+  deleteCodingChallenge(challengeId: number) {
+    return this.http.delete<{ success: boolean; message: string }>(
+      `${this.apiUrl}/${challengeId}`
+    );
+  }
 
-// Save coding challenge test cases
-saveCodingChallengeTestCases(
-  challengeId: number,
-  testCases: CodingChallengeTestCase[]
+  // Get student submissions for a challenge
+  getChallengeSubmissions(
+    challengeId: number
+  ): Observable<MentorCodingChallengeSubmissionsResponse> {
+    return this.http.get<MentorCodingChallengeSubmissionsResponse>(
+      `${this.submissionsApiUrl}/${challengeId}/submissions`
+    );
+  }
+
+  reviewSubmission(
+  attemptId: number,
+  payload: {
+    result_status: 'correct' | 'incorrect';
+    feedback: string;
+  }
 ): Observable<{
   success: boolean;
-  message: string;
-  total: number;
+  message?: string;
+  reviewStatus?: string;
 }> {
-  return this.http.post<{
+  return this.http.patch<{
     success: boolean;
-    message: string;
-    total: number;
+    message?: string;
+    reviewStatus?: string;
   }>(
-    `${this.apiUrl}/${challengeId}/test-cases`,
-    { test_cases: testCases }
+    `${this.submissionsApiUrl}/attempts/${attemptId}/review`,
+    payload
   );
 }
-
 }
