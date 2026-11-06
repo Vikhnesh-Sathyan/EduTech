@@ -118,6 +118,41 @@ export class MentorTheoryChallengeService {
     }>('http://localhost:5000/api/mentor/challenge-academics');
   }
 
+  // Get mentor theory challenge submissions
+getMentorTheoryChallengeSubmissions(): Observable<{
+  success: boolean;
+  count: number;
+  submissions: any[];
+}> {
+  return this.http.get<{
+    success: boolean;
+    count: number;
+    submissions: any[];
+  }>(`${this.apiUrl}/submissions`);
+}
+
+// ==========================================
+// REVIEW STUDENT THEORY CHALLENGE SUBMISSION
+// ==========================================
+
+reviewTheoryChallengeSubmission(
+  attemptId: number,
+  payload: {
+    criteria: Record<string, {
+      selected: boolean;
+      score?: number;
+      max_score?: number;
+    }>;
+    feedback: string;
+  }
+): Observable<any> {
+
+  return this.http.patch<any>(
+    `${this.apiUrl}/submissions/${attemptId}/review`,
+    payload
+  );
+}
+
   // Delete theory challenge
   deleteTheoryChallenge(challengeId: number) {
     return this.http.delete<{

@@ -1,0 +1,210 @@
+
+<div class="theory-details-page">
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading theory challenge...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="!loading() && errorMessage() && !challenge()">
+    <i class="fas fa-exclamation-circle"></i>
+    <h3>Unable to Load Challenge</h3>
+    <p>{{ errorMessage() }}</p>
+
+    <button type="button" (click)="goBack()">
+      Back to Challenges
+    </button>
+  </div>
+
+  <!-- CHALLENGE DETAILS -->
+  <ng-container *ngIf="!loading() && challenge() as item">
+
+    <!-- HEADER -->
+    <div class="page-header">
+
+      <button
+        type="button"
+        class="back-btn"
+        (click)="goBack()"
+      >
+        <i class="fas fa-arrow-left"></i>
+        Back to Challenges
+      </button>
+
+      <div class="header-content">
+        <span class="page-label">CHALLENGE ARENA / THEORY</span>
+
+        <h1>{{ item.title }}</h1>
+
+        <p>Read the question carefully and write your answer.</p>
+      </div>
+
+      <div class="challenge-badges">
+        <span
+          class="difficulty"
+          [ngClass]="item.difficulty.toLowerCase()"
+        >
+          {{ item.difficulty | titlecase }}
+        </span>
+
+        <span class="type-badge">
+          {{ item.challenge_type_name }}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- CHALLENGE INFORMATION -->
+    <div class="challenge-info">
+
+      <div class="info-item">
+        <i class="fas fa-book"></i>
+        <div>
+          <small>Subject</small>
+          <strong>{{ item.subject_name }}</strong>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <i class="fas fa-user"></i>
+        <div>
+          <small>Created By</small>
+          <strong>{{ item.created_by_name }}</strong>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <i class="fas fa-layer-group"></i>
+        <div>
+          <small>Challenge Source</small>
+          <strong>{{ item.creator_role | titlecase }}</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <section class="content-card instructions-card">
+
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </span>
+
+        <div>
+          <h2>Challenge Instructions</h2>
+          <p>Read the instructions before answering.</p>
+        </div>
+      </div>
+
+      <p class="instructions-text">
+        {{ item.instructions }}
+      </p>
+
+    </section>
+
+    <!-- QUESTION -->
+    <section class="content-card question-card">
+
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="fas fa-circle-question"></i>
+        </span>
+
+        <div>
+          <h2>Your Question</h2>
+          <p>Understand the question and prepare your answer.</p>
+        </div>
+      </div>
+
+      <!-- EXPLAIN THE CONCEPT -->
+      <div
+        class="content-text"
+        *ngIf="item.challenge_type_key === 'explain_the_concept'"
+      >
+        {{ item.challenge_content['question'] }}
+      </div>
+
+      <!-- FACT OR MYTH -->
+      <div
+        class="content-text"
+        *ngIf="item.challenge_type_key === 'fact_or_myth_challenge'"
+      >
+        {{ item.challenge_content['technical_statement'] }}
+      </div>
+
+      <!-- ERROR IN EXPLANATION -->
+      <div
+        class="content-text"
+        *ngIf="item.challenge_type_key === 'error_in_explanation'"
+      >
+        {{ item.challenge_content['given_explanation'] }}
+      </div>
+
+    </section>
+
+    <!-- STUDENT ANSWER -->
+    <section class="content-card answer-card">
+
+      <div class="section-heading">
+        <span class="section-icon answer-icon">
+          <i class="fas fa-pen-to-square"></i>
+        </span>
+
+        <div>
+          <h2>Write Your Answer</h2>
+          <p>Explain your understanding in your own words.</p>
+        </div>
+      </div>
+
+      <textarea
+        class="answer-textarea"
+        placeholder="Write your answer here..."
+        rows="8"
+        [value]="answer()"
+        (input)="onAnswerChange($any($event.target).value)"
+        [disabled]="submitting()"
+      ></textarea>
+
+      <!-- ERROR MESSAGE -->
+      <div class="submission-message error-message" *ngIf="errorMessage() && challenge()">
+        <i class="fas fa-circle-exclamation"></i>
+        {{ errorMessage() }}
+      </div>
+
+      <!-- SUCCESS MESSAGE -->
+      <div class="submission-message success-message" *ngIf="successMessage()">
+        <i class="fas fa-circle-check"></i>
+        {{ successMessage() }}
+      </div>
+
+      <div class="answer-footer">
+
+        <p>
+          <i class="fas fa-info-circle"></i>
+          Your answer will be reviewed by the challenge creator.
+        </p>
+
+        <button
+          type="button"
+          class="submit-answer-btn"
+          (click)="submitAnswer()"
+          [disabled]="submitting()"
+        >
+          <i
+            class="fas"
+            [ngClass]="submitting() ? 'fa-spinner fa-spin' : 'fa-paper-plane'"
+          ></i>
+
+          {{ submitting() ? 'Submitting...' : 'Submit Answer' }}
+        </button>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

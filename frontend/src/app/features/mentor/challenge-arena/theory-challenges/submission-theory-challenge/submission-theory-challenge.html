@@ -1,0 +1,146 @@
+<div class="submission-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <span class="eyebrow">MENTOR WORKSPACE / THEORY CHALLENGES</span>
+      <h1>Student Submissions</h1>
+      <p>Review student answers, evaluate their understanding, and provide feedback.</p>
+    </div>
+
+    <button class="back-btn" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Back to Challenges
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Loading student submissions...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="!loading() && errorMessage()">
+    <i class="fas fa-exclamation-circle"></i>
+    <h3>Unable to Load Submissions</h3>
+    <p>{{ errorMessage() }}</p>
+    <button (click)="loadSubmissions()">Try Again</button>
+  </div>
+
+  <!-- SUBMISSIONS -->
+  <ng-container *ngIf="!loading() && !errorMessage()">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Submissions</span>
+        <h2>{{ submissions().length }}</h2>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Pending Review</span>
+        <h2>
+          {{ submissions().filter(s => s.result_status === 'pending').length }}
+        </h2>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Reviewed</span>
+        <h2>
+          {{ submissions().filter(s => s.result_status === 'reviewed').length }}
+        </h2>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Completed</span>
+        <h2>
+          {{ submissions().filter(s => s.result_status === 'completed').length }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" *ngIf="submissions().length === 0">
+      <div class="empty-icon">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <h3>No Submissions Yet</h3>
+      <p>Student submissions will appear here when they answer your published theory challenges.</p>
+    </div>
+
+    <!-- SUBMISSION LIST -->
+    <div class="submission-list" *ngIf="submissions().length > 0">
+
+      <div class="submission-card" *ngFor="let submission of submissions()">
+
+        <div class="card-top">
+          <div class="student-info">
+            <div class="student-avatar">
+              {{ submission.student_name?.charAt(0) || 'S' }}
+            </div>
+
+            <div>
+              <h3>{{ submission.student_name }}</h3>
+              <p>{{ submission.student_email }}</p>
+            </div>
+          </div>
+
+          <span
+            class="status-badge"
+            [ngClass]="submission.result_status">
+            {{ getStatusLabel(submission.result_status) }}
+          </span>
+        </div>
+
+        <div class="challenge-info">
+          <span class="challenge-label">THEORY CHALLENGE</span>
+          <h2>{{ submission.challenge_title }}</h2>
+          <p>
+            {{ submission.subject_name }}
+            <span>•</span>
+            {{ submission.challenge_type_name }}
+          </p>
+        </div>
+
+        <div class="submission-meta">
+          <div>
+            <i class="fas fa-redo"></i>
+            Attempt {{ submission.attempt_number }}
+          </div>
+
+          <div>
+            <i class="fas fa-calendar"></i>
+            {{ submission.submitted_at | date:'medium' }}
+          </div>
+
+          <div *ngIf="submission.score !== null">
+            <i class="fas fa-star"></i>
+            {{ submission.score }}/10
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span class="score-label" *ngIf="submission.result_status !== 'pending'">
+            Score: {{ submission.score }}/10
+          </span>
+
+          <span class="pending-label" *ngIf="submission.result_status === 'pending'">
+            Waiting for your review
+          </span>
+
+          <button
+            class="review-btn"
+            (click)="reviewSubmission(submission.attempt_id)">
+            <i class="fas fa-clipboard-check"></i>
+            {{ submission.result_status === 'pending' ? 'Review Submission' : 'View Review' }}
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</div>

@@ -26,9 +26,9 @@ const getMentorTheoryChallengeSubmissions = async (req, res) => {
 
                 tc.title AS challenge_title,
                 tc.difficulty,
-
+                tc.challenge_content,
+                tct.type_key,
                 s.name AS subject_name,
-
                 tct.name AS challenge_type_name,
 
                 student.name AS student_name,

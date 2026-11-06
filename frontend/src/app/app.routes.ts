@@ -125,6 +125,11 @@ import { StudentCodingChallengeDetails } from './features/student/challenge-aren
 import { CodingChallengeResult } from './features/student/challenge-arena/coding/coding-challenge-result/coding-challenge-result';
 import { History } from './features/student/challenge-arena/coding/history/history';
 
+// STUDENT THEORY CHALLENGES
+import { TheoryList } from './features/student/challenge-arena/theory/theory-list/theory-list';
+import { TheoryDetails } from './features/student/challenge-arena/theory/theory-details/theory-details';
+import { TheoryHistory } from './features/student/challenge-arena/theory/theory-history/theory-history';
+import { TheoryResult } from './features/student/challenge-arena/theory/theory-result/theory-result';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -262,12 +267,11 @@ import { CodingChallengeReview } from './features/mentor/challenge-arena/coding-
 
 // MENTOR THEORY CHALLENGE
 import { TheoryChallengeList as MentorTheoryChallengeList  } from './features/mentor/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
-
 import { CreateTheoryChallenge as MentorCreateTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/create-theory-challenge/create-theory-challenge';
-
 import { EditTheoryChallenge as MentorEditTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/edit-theory-challenge/edit-theory-challenge';
-
 import { MentorViewTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/view-theory-challenge/view-theory-challenge';
+import { SubmissionTheoryChallengeComponent } from './features/mentor/challenge-arena/theory-challenges/submission-theory-challenge/submission-theory-challenge';
+import { ReviewTheoryChallengeComponent } from './features/mentor/challenge-arena/theory-challenges/review-theory-challenge/review-theory-challenge';
 
 export const routes: Routes = [
 
@@ -602,7 +606,23 @@ export const routes: Routes = [
         path: 'student/challenge-arena/coding/:challengeId',
         component: StudentCodingChallengeDetails
       },
-
+      // STUDENT THEORY CHALLENGES
+      {
+        path: 'student/challenge-arena/theory',
+        component: TheoryList
+      },
+      {
+        path: 'student/challenge-arena/theory/history',
+        component: TheoryHistory
+      },
+      {
+        path: 'student/challenge-arena/theory/result/:attemptId',
+        component: TheoryResult
+      },
+      {
+        path: 'student/challenge-arena/theory/:challengeId',
+        component: TheoryDetails
+      },
     ]
   },
 
@@ -1015,9 +1035,18 @@ export const routes: Routes = [
         component: CodingChallengeReview
       },
       {
+        path: 'mentor/challenge-arena/theory-challenges/submissions',
+        component: SubmissionTheoryChallengeComponent
+      },
+      {
+        path: 'mentor/challenge-arena/theory-challenges/submissions/:attemptId',
+        component: ReviewTheoryChallengeComponent
+      },
+      {
         path: 'mentor/challenge-arena/theory-challenges/:challengeId',
         component: MentorViewTheoryChallenge
       },
+
 
     ]
   },

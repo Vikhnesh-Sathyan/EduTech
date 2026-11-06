@@ -94,6 +94,15 @@ export class TheoryChallengeList implements OnInit {
 
   }
 
+  // Navigate to student submissions
+viewSubmissions(): void {
+
+  this.router.navigate([
+    '/mentor/challenge-arena/theory-challenges/submissions'
+  ]);
+
+}
+
   // Open or close challenge menu
   toggleMenu(event: MouseEvent, challengeId: number): void {
 
