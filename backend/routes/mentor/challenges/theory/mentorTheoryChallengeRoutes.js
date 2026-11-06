@@ -40,6 +40,8 @@ const {
     reviewMentorTheoryChallengeSubmission
 } = require("../../../../controllers/mentor/challenges/theory/reviewMentorTheoryChallengeSubmissionController");
 
+const { deleteMentorTheoryChallenge } = require("../../../../controllers/mentor/challenges/theory/deleteMentorTheoryChallengeController");
+
 // ==========================================
 // MENTOR THEORY CHALLENGE ROUTES
 // ==========================================
@@ -106,6 +108,14 @@ router.patch(
     authMiddleware,
     roleMiddleware("mentor"),
     updateMentorTheoryChallengeStatus
+);
+
+// Delete Theory Challenge
+router.delete(
+    "/:challengeId",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    deleteMentorTheoryChallenge
 );
 
 module.exports = router;

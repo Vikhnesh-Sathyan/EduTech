@@ -242,15 +242,21 @@ import {
 import { DiscussionReports } from './features/mentor/advanced/logic-to-code/discussions/discussion-reports/discussion-reports';
 
 //MENTOR CODING CHALLENGE
-import { CodingChallengeList as MentorCodingChallengeList }
-from './features/mentor/challenge-arena/coding-challenges/coding-challenge-list/coding-challenge-list';
-import { CreateCodingChallenge as MentorCreateCodingChallenge }
-from './features/mentor/challenge-arena/coding-challenges/create-coding-challenge.ts/create-coding-challenge';
-import {
-  MentorViewCodingChallenge
-} from './features/mentor/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
-
+import { CodingChallengeList as MentorCodingChallengeList }from './features/mentor/challenge-arena/coding-challenges/coding-challenge-list/coding-challenge-list';
+import { CreateCodingChallenge as MentorCreateCodingChallenge }from './features/mentor/challenge-arena/coding-challenges/create-coding-challenge.ts/create-coding-challenge';
+import { MentorViewCodingChallenge} from './features/mentor/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
 import { EditCodingChallenge as MentorEditCodingChallenge } from './features/mentor/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
+
+
+// MENTOR THEORY CHALLENGE
+import { TheoryChallengeList as MentorTheoryChallengeList  } from './features/mentor/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
+
+import { CreateTheoryChallenge as MentorCreateTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/create-theory-challenge/create-theory-challenge';
+
+import { EditTheoryChallenge as MentorEditTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/edit-theory-challenge/edit-theory-challenge';
+
+import { MentorViewTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/view-theory-challenge/view-theory-challenge';
+
 export const routes: Routes = [
 
   // Public routes
@@ -959,6 +965,24 @@ export const routes: Routes = [
       {
         path: 'mentor/challenge-arena/coding-challenges',
         component: MentorCodingChallengeList,
+      },
+
+      // MENTOR THEORY CHALLENGE
+      {
+        path: 'mentor/challenge-arena/theory-challenges',
+        component: MentorTheoryChallengeList
+      },
+      {
+        path: 'mentor/challenge-arena/theory-challenges/create',
+        component: MentorCreateTheoryChallenge
+      },
+      {
+        path: 'mentor/challenge-arena/theory-challenges/:challengeId/edit',
+        component: MentorEditTheoryChallenge
+      },
+      {
+        path: 'mentor/challenge-arena/theory-challenges/:challengeId',
+        component: MentorViewTheoryChallenge
       },
 
     ]
