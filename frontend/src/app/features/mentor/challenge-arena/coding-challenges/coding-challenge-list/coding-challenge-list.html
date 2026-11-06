@@ -1,0 +1,206 @@
+<div class="coding-challenges-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Coding Challenges</h1>
+      <p>Create and manage coding challenges for your connected students.</p>
+    </div>
+
+    <button
+      type="button"
+      class="create-btn"
+      (click)="createChallenge()"
+    >
+      <span>+</span>
+      Create Challenge
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loader"></div>
+      <p>Loading coding challenges...</p>
+    </div>
+  }
+
+  <!-- CHALLENGE LIST -->
+  @if (!loading() && challenges().length > 0) {
+
+    <div class="challenge-grid">
+
+      @for (challenge of challenges(); track challenge.id) {
+
+        <div class="challenge-card">
+
+          <!-- CARD HEADER -->
+          <div class="card-header">
+
+            <div class="challenge-icon">
+              <span>⚡</span>
+            </div>
+
+            <div class="menu-wrapper">
+
+              <button
+                type="button"
+                class="menu-btn"
+                (click)="toggleMenu($event, challenge.id)"
+              >
+                ⋮
+              </button>
+
+              @if (openMenuId() === challenge.id) {
+
+                <div class="dropdown-menu">
+
+                  <button
+                    type="button"
+                    (click)="viewChallenge(challenge.id)"
+                  >
+                    View Challenge
+                  </button>
+
+                  @if (challenge.status === 'draft') {
+                    <button
+                      type="button"
+                      (click)="editChallenge(challenge.id)"
+                    >
+                      Edit Challenge
+                    </button>
+                  }
+
+                  <!-- DELETE OPTION -->
+                  <button
+                    type="button"
+                    class="delete-menu-btn"
+                    (click)="
+                      deleteComponent.openDeleteModal(challenge.id);
+                      closeMenu()
+                    "
+                  >
+                    <span>🗑</span>
+                    Delete Challenge
+                  </button>
+
+                </div>
+
+              }
+
+            </div>
+
+          </div>
+
+          <!-- CHALLENGE DETAILS -->
+          <div class="card-content">
+
+            <h3>{{ challenge.title }}</h3>
+
+            <p class="subject-name">
+              {{ challenge.subject_name || 'Subject not available' }}
+            </p>
+
+            <p class="challenge-type">
+              {{ challenge.challenge_type_name || 'Coding Challenge' }}
+            </p>
+
+            <div class="challenge-meta">
+
+              <span
+                class="difficulty"
+                [ngClass]="challenge.difficulty"
+              >
+                {{ challenge.difficulty }}
+              </span>
+
+              <span
+                class="status"
+                [ngClass]="challenge.status"
+              >
+                {{ challenge.status }}
+              </span>
+
+            </div>
+
+          </div>
+
+          <!-- CARD FOOTER -->
+          <div class="card-footer">
+
+            <span class="created-date">
+              {{ challenge.created_at | date:'mediumDate' }}
+            </span>
+
+            <div class="publish-actions">
+
+              @if (challenge.status === 'draft') {
+
+                <button
+                  type="button"
+                  class="publish-btn"
+                  [disabled]="publishingId() === challenge.id"
+                  (click)="publishChallenge(challenge.id)"
+                >
+                  {{ publishingId() === challenge.id ? 'Publishing...' : 'Publish' }}
+                </button>
+
+              }
+
+              @if (challenge.status === 'published') {
+
+                <button
+                  type="button"
+                  class="unpublish-btn"
+                  [disabled]="unpublishingId() === challenge.id"
+                  (click)="unpublishChallenge(challenge.id)"
+                >
+                  {{ unpublishingId() === challenge.id ? 'Unpublishing...' : 'Unpublish' }}
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+  <!-- EMPTY STATE -->
+  @if (!loading() && challenges().length === 0) {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">⚡</div>
+
+      <h2>No Coding Challenges Yet</h2>
+
+      <p>
+        Create your first coding challenge for your connected students.
+      </p>
+
+      <button
+        type="button"
+        class="create-btn"
+        (click)="createChallenge()"
+      >
+        Create Your First Challenge
+      </button>
+
+    </div>
+
+  }
+
+  <!-- DELETE COMPONENT -->
+  <app-mentor-delete-coding-challenge
+    #deleteComponent
+    (deleted)="loadChallenges()"
+  ></app-mentor-delete-coding-challenge>
+
+</div>

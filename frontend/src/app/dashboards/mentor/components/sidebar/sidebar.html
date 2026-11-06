@@ -222,6 +222,51 @@
 
 
 </div>
+
+
+<!-- CHALLENGE ARENA -->
+<div class="sidebar-dropdown">
+
+  <button
+    type="button"
+    class="sidebar-dropdown-toggle"
+    (click)="challengeArenaOpen = !challengeArenaOpen"
+    [class.expanded]="challengeArenaOpen"
+    [attr.aria-expanded]="challengeArenaOpen"
+  >
+    <span class="sidebar-menu-icon">⚡</span>
+    <span class="sidebar-menu-label">Challenge Arena</span>
+    <span class="dropdown-chevron" [class.rotated]="challengeArenaOpen">
+      ▾
+    </span>
+  </button>
+
+  @if (challengeArenaOpen) {
+    <div class="sidebar-submenu">
+
+      <a
+        routerLink="/mentor/challenge-arena/coding-challenges"
+        routerLinkActive="active"
+        class="sidebar-submenu-link"
+      >
+        <span class="submenu-dot"></span>
+        Coding Challenges
+      </a>
+
+      <a
+        routerLink="/mentor/challenge-arena/theory-challenges"
+        routerLinkActive="active"
+        class="sidebar-submenu-link"
+      >
+        <span class="submenu-dot"></span>
+        Theory Challenges
+      </a>
+
+    </div>
+  }
+
+</div>
+
     <!-- Profile -->
     <a routerLink="/mentor-profile" routerLinkActive="active">
       <span class="nav-icon">○</span>

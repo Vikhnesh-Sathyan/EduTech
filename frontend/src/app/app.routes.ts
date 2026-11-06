@@ -165,8 +165,6 @@ import { CreateCodingChallenge } from './features/admin/challenge-arena/coding-c
 import { ViewCodingChallenge } from './features/admin/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
 import { EditCodingChallenge } from './features/admin/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
 
-
-
 // Admin THEORY Challenge Arena
 import { TheoryTypes } from './features/admin/challenge-arena/challenge-types/theory-types/theory-types';
 import { EditTheoryType } from './features/admin/challenge-arena/challenge-types/theory-types/edit-theory-type/edit-theory-type';
@@ -174,10 +172,6 @@ import { CreateTheoryChallenge } from './features/admin/challenge-arena/theory-c
 import { TheoryChallengeList } from './features/admin/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
 import { ViewTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/view-theory-challenge/view-theory-challenge';
 import { EditTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/edit-theory-challenge/edit-theory-challenge';
-
-
-
-
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -247,6 +241,16 @@ import {
 } from './features/mentor/advanced/logic-to-code/discussions/discussion-list/discussion-list';
 import { DiscussionReports } from './features/mentor/advanced/logic-to-code/discussions/discussion-reports/discussion-reports';
 
+//MENTOR CODING CHALLENGE
+import { CodingChallengeList as MentorCodingChallengeList }
+from './features/mentor/challenge-arena/coding-challenges/coding-challenge-list/coding-challenge-list';
+import { CreateCodingChallenge as MentorCreateCodingChallenge }
+from './features/mentor/challenge-arena/coding-challenges/create-coding-challenge.ts/create-coding-challenge';
+import {
+  MentorViewCodingChallenge
+} from './features/mentor/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
+
+import { EditCodingChallenge as MentorEditCodingChallenge } from './features/mentor/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
 export const routes: Routes = [
 
   // Public routes
@@ -938,7 +942,24 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/:problemId/mistakes',
         component: MistakeManagement
-      }   
+      },
+      //MENTOR CODING CHALLENGE
+      {
+        path: 'mentor/challenge-arena/coding-challenges/create',
+        component: MentorCreateCodingChallenge,
+      },
+      {
+        path: 'mentor/challenge-arena/coding-challenges/:challengeId/edit',
+        component: MentorEditCodingChallenge
+      },
+      {
+        path: 'mentor/challenge-arena/coding-challenges/:challengeId',
+        component: MentorViewCodingChallenge,
+      },
+      {
+        path: 'mentor/challenge-arena/coding-challenges',
+        component: MentorCodingChallengeList,
+      },
 
     ]
   },

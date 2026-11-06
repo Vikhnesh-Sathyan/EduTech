@@ -33,6 +33,10 @@ const {
     updateMentorCodingChallengeStatus
 } = require("../../../../controllers/mentor/challenges/coding/updateMentorCodingChallengeStatusController");
 
+// Delete coding challenge
+const {
+    deleteMentorCodingChallenge
+} = require("../../../../controllers/mentor/challenges/coding/deleteMentorCodingChallengeController");
 
 const router = express.Router();
 
@@ -79,6 +83,14 @@ router.put(
     authMiddleware,
     roleMiddleware("mentor"),
     updateMentorCodingChallenge
+);
+
+// Delete coding challenge
+router.delete(
+    "/:challengeId",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    deleteMentorCodingChallenge
 );
 
 // Publish, archive or return to draft

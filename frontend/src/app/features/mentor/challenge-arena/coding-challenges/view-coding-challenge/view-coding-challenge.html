@@ -1,0 +1,120 @@
+
+<div class="view-challenge-page">
+
+  @if (loading()) {
+    <div class="loading-state">
+      Loading challenge details...
+    </div>
+  }
+
+  @else if (challenge(); as item) {
+
+    <!-- HEADER -->
+    <div class="page-header">
+
+      <div>
+        <p class="page-label">MENTOR / CHALLENGE ARENA / CODING</p>
+        <h1>{{ item.title }}</h1>
+        <p class="page-description">
+          View complete coding challenge information.
+        </p>
+      </div>
+
+      <button type="button" class="back-button" (click)="goBack()">
+        ← Back to Challenges
+      </button>
+
+    </div>
+
+    <!-- BASIC INFORMATION -->
+    <section class="details-card">
+
+      <h2>Challenge Information</h2>
+
+      <div class="details-grid">
+
+        <div class="detail-item">
+          <span>Challenge Type</span>
+          <strong>{{ item.challenge_type_name || 'N/A' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Subject</span>
+          <strong>{{ item.subject_name || 'N/A' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Difficulty</span>
+          <strong>{{ item.difficulty || 'N/A' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Status</span>
+          <strong>{{ item.status || 'N/A' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Created By</span>
+          <strong>{{ item.created_by_name || 'You' }}</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- INSTRUCTIONS -->
+    <section class="details-card">
+
+      <h2>Student Instructions</h2>
+
+      <p class="instructions">
+        {{ item.instructions || 'No instructions available.' }}
+      </p>
+
+    </section>
+
+    <!-- DYNAMIC CHALLENGE CONTENT -->
+    <section class="details-card">
+
+      <h2>Challenge Content</h2>
+
+      @if (item.content_schema && item.challenge_content) {
+
+        @for (field of item.content_schema; track field.key) {
+
+          <div class="content-field">
+
+            <label>{{ field.label || field.key }}</label>
+
+            <div class="content-value">
+              {{ item.challenge_content[field.key] || 'Not provided' }}
+            </div>
+
+          </div>
+
+        }
+
+      } @else {
+
+        <p>No challenge content available.</p>
+
+      }
+
+    </section>
+
+  }
+
+  @else {
+
+    <div class="empty-state">
+      <h2>Challenge Not Found</h2>
+      <p>Unable to load the requested coding challenge.</p>
+
+      <button type="button" class="back-button" (click)="goBack()">
+        Back to Challenges
+      </button>
+    </div>
+
+  }
+
+</div>

@@ -15,6 +15,7 @@ import { filter } from 'rxjs';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
+
 export class Sidebar {
   advancedTheoryOpen = false;
 
@@ -22,8 +23,9 @@ export class Sidebar {
 
   codeShuffleExpanded = false;
 
-toggleCodeShuffle(): void {
-  this.codeShuffleExpanded = !this.codeShuffleExpanded;
-}
+  challengeArenaOpen = false;
 
+  toggleCodeShuffle(): void {
+    this.codeShuffleExpanded = !this.codeShuffleExpanded;
+  }
 }

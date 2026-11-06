@@ -317,6 +317,10 @@ const mentorTheoryChallengeRoutes = require(
     "./routes/mentor/challenges/theory/mentorTheoryChallengeRoutes"
 );
 
+const mentorChallengeAcademicsRoutes = require(
+    "./routes/mentor/challenges/mentorChallengeAcademicsRoutes"
+);
+
 // =====================================================
 // CREATE EXPRESS APPLICATION
 // =====================================================
@@ -464,6 +468,12 @@ app.use(
 app.use(
     "/api/mentor/coding-challenges",
     mentorCodingChallengeRoutes
+);
+
+// MENTOR CHALLENGE ACADEMICS
+app.use(
+    "/api/mentor/challenge-academics",
+    mentorChallengeAcademicsRoutes
 );
 
 //MENTOR THEORY CHALLENGE ROUTES
