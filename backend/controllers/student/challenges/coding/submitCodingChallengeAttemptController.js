@@ -107,7 +107,7 @@ const [pendingAttempts] = await connection.query(
     FROM coding_challenge_attempts
     WHERE challenge_id = ?
       AND student_id = ?
-      AND result_status = 'pending'
+      AND result_status IN ('pending', 'running')
     LIMIT 1
     `,
     [challengeId, studentId]

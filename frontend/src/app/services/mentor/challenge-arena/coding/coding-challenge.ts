@@ -37,6 +37,11 @@ export interface CodingChallengePayload {
   challenge_content: Record<string, any>;
 }
 
+export interface CodingChallengeTestCase {
+  input_data: Record<string, any>;
+  expected_output: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -121,6 +126,25 @@ getChallengeAcademics() {
 deleteCodingChallenge(challengeId: number) {
   return this.http.delete<{ success: boolean; message: string }>(
     `${this.apiUrl}/${challengeId}`
+  );
+}
+
+// Save coding challenge test cases
+saveCodingChallengeTestCases(
+  challengeId: number,
+  testCases: CodingChallengeTestCase[]
+): Observable<{
+  success: boolean;
+  message: string;
+  total: number;
+}> {
+  return this.http.post<{
+    success: boolean;
+    message: string;
+    total: number;
+  }>(
+    `${this.apiUrl}/${challengeId}/test-cases`,
+    { test_cases: testCases }
   );
 }
 

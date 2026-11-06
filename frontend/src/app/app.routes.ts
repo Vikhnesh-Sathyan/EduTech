@@ -15,6 +15,8 @@ import { mentorRoleGuard } from './core/guards/mentor-role.guard';
 // Student dashboard
 import { StudentLayout } from './dashboards/student/student-layout/student-layout';
 import { StudentDashboard } from './dashboards/student/student-dashboard/student-dashboard';
+// STUDENT CHALLENGE ARENA
+import { StudentChallengeDashboard } from './features/student/challenge-arena/dashboard/dashboard/dashboard';
 
 //Skillswap
 import { SkillSwapHome } from './features/student/skillswap/skill-swap-home/skill-swap-home';
@@ -116,6 +118,12 @@ import { NoteList } from './features/student/advanced/logic-to-code/notes/note-l
 import { NoteCreate } from './features/student/advanced/logic-to-code/notes/note-create/note-create';
 import { NoteDetails } from './features/student/advanced/logic-to-code/notes/note-details/note-details';
 import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
+
+//Student CODING challenge
+
+import { StudentCodingChallengeList } from './features/student/challenge-arena/coding/challenge-list/challenge-list';
+import { StudentCodingChallengeDetails } from './features/student/challenge-arena/coding/challenge-details/challenge-details';
+
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -282,6 +290,11 @@ export const routes: Routes = [
     component: StudentLayout,
     canActivate: [authGuard],
     children: [
+    
+      {
+        path: 'student/challenge-arena',
+        component: StudentChallengeDashboard
+      },
 
       {
         path: 'student-dashboard',
@@ -568,7 +581,16 @@ export const routes: Routes = [
         path: 'student/advanced/logic-to-code/notes/:noteId',
         component: NoteDetails
       },
-     
+      // STUDENT CODING CHALLENGES
+      {
+        path: 'student/challenge-arena/coding',
+        component: StudentCodingChallengeList
+      },
+      {
+        path: 'student/challenge-arena/coding/:challengeId',
+        component: StudentCodingChallengeDetails
+      },
+      
 
     ]
   },
@@ -713,13 +735,6 @@ export const routes: Routes = [
         path: 'challenge-arena/coding-challenges/:challengeId',
         component: ViewCodingChallenge
       },
-    
-
-
-
-
-
-
 
       // Admin THEORY Challenge Arena
       {

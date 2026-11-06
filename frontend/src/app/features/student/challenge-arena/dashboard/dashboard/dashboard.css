@@ -1,0 +1,93 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.challenge-dashboard {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 28px 32px;
+  box-sizing: border-box;
+}
+
+/* PAGE HEADER */
+
+.dashboard-header {
+  position: relative;
+  overflow: hidden;
+  padding: 42px;
+  border-radius: 24px;
+  background: linear-gradient(120deg, #171c35, #292d52);
+  color: #ffffff;
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+  max-width: 650px;
+}
+
+.page-eyebrow {
+  margin: 0 0 14px;
+  color: #aeb7ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.header-content h1 span {
+  color: #9da8ff;
+}
+
+.header-description {
+  margin: 16px 0 0;
+  color: #c5c8dc;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* DASHBOARD SECTIONS */
+
+.challenge-overview,
+.challenge-categories,
+.challenge-discovery,
+.recent-activity {
+  margin-top: 30px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .challenge-dashboard {
+    padding: 20px;
+  }
+
+  .dashboard-header {
+    padding: 30px 24px;
+    border-radius: 18px;
+  }
+
+  .header-description {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .challenge-dashboard {
+    padding: 14px;
+  }
+
+  .dashboard-header {
+    padding: 26px 20px;
+  }
+}

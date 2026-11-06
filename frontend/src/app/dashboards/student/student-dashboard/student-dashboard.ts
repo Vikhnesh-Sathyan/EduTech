@@ -50,4 +50,8 @@ openStudentRecommendation(): void {
 openSkillSwap(): void {
   this.router.navigate(['/skill-swap']);
 }
+
+openChallengeArena(): void {
+  this.router.navigate(['/student/challenge-arena']);
+}
 }

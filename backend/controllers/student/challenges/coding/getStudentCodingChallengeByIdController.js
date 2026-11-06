@@ -97,10 +97,50 @@ const getStudentCodingChallengeById = async (req, res) => {
             });
         }
 
-        return res.status(200).json({
-            success: true,
-            challenge: challenges[0]
-        });
+       const challenge = challenges[0];
+
+let content = challenge.challenge_content;
+
+// MySQL JSON may be returned as an object or string
+if (typeof content === "string") {
+    content = JSON.parse(content);
+}
+
+let studentContent = {};
+
+switch (challenge.challenge_type_key) {
+
+    case "predict_output":
+        studentContent = {
+            code_snippet: content.code_snippet
+        };
+        break;
+
+    case "bug_finder":
+        studentContent = {
+            code_snippet: content.code_snippet
+        };
+        break;
+
+    case "sql_query_challenge":
+        studentContent = {
+            database_schema: content.database_schema,
+            problem_description: content.problem_description
+        };
+        break;
+}
+
+delete challenge.challenge_content;
+delete challenge.created_by;
+delete challenge.content_schema;
+
+return res.status(200).json({
+    success: true,
+    challenge: {
+        ...challenge,
+        challenge_content: studentContent
+    }
+});
 
     } catch (error) {
 

@@ -199,3 +199,39 @@
     font-size: 19px;
   }
 }
+
+/* =====================================================
+   CHALLENGE ARENA SHORTCUT
+===================================================== */
+
+.challenge-arena-shortcut {
+  background: linear-gradient(
+    115deg,
+    #ffffff 0%,
+    #f0fdfa 55%,
+    #ecfeff 100%
+  );
+
+  border-color: #ccefe8;
+}
+
+.challenge-arena-shortcut:hover {
+  border-color: #5eead4;
+  box-shadow: 0 12px 30px rgba(13, 148, 136, 0.10);
+}
+
+.challenge-arena-shortcut .shortcut-label {
+  color: #0d9488;
+}
+
+.challenge-arena-shortcut button {
+  background: #0f766e;
+}
+
+.challenge-arena-shortcut button:hover {
+  background: #115e59;
+}
+
+.challenge-arena-shortcut button:focus-visible {
+  outline-color: #5eead4;
+}

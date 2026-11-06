@@ -1,0 +1,334 @@
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  color: #183638;
+}
+
+.challenge-details-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+/* PAGE HEADER */
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-label {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #f45b0b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.page-header p {
+  margin-top: 12px;
+  color: #718384;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* CHALLENGE CARD */
+
+.challenge-info-card {
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #e9eeee;
+  border-radius: 18px;
+}
+
+.challenge-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #edf0f0;
+}
+
+.challenge-type,
+.subject,
+.difficulty {
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.challenge-type {
+  background: #fff1e9;
+  color: #e65b16;
+}
+
+.subject {
+  background: #edf3f3;
+  color: #526768;
+}
+
+.difficulty {
+  background: #edf2f2;
+  color: #526768;
+}
+
+.difficulty.easy {
+  background: #e8f8ef;
+  color: #18864b;
+}
+
+.difficulty.medium {
+  background: #fff5df;
+  color: #b87912;
+}
+
+.difficulty.hard {
+  background: #ffebeb;
+  color: #d04444;
+}
+
+/* CONTENT SECTIONS */
+
+.challenge-section {
+  margin-top: 28px;
+}
+
+.challenge-section h2 {
+  margin: 0 0 12px;
+  color: #183638;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.challenge-section p {
+  margin: 0;
+  color: #718384;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.challenge-section pre {
+  overflow-x: auto;
+  margin: 0;
+  padding: 22px;
+  background: #142b2e;
+  color: #d7eeee;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.challenge-section code {
+  font-family: Consolas, Monaco, monospace;
+}
+
+/* LOADING AND ERROR */
+
+.loading-state,
+.error-state {
+  padding: 55px 20px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #edf0f0;
+  border-radius: 16px;
+}
+
+.loading-state p {
+  color: #829293;
+  font-size: 13px;
+}
+
+.error-state h3 {
+  color: #d04444;
+}
+
+.error-state p {
+  color: #718384;
+  font-size: 13px;
+}
+
+.loader {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 14px;
+  border: 3px solid #fce1d3;
+  border-top-color: #f45b0b;
+  border-radius: 50%;
+  animation: challenge-spin 0.8s linear infinite;
+}
+
+@keyframes challenge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .challenge-details-page {
+    padding: 22px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 26px;
+  }
+
+  .challenge-info-card {
+    padding: 20px;
+  }
+}
+
+/* =====================================
+   DYNAMIC SQL SCHEMA VIEWER
+===================================== */
+
+.schema-card {
+  margin-top: 22px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e8eeee;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(24, 54, 56, 0.035);
+}
+
+.schema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.schema-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.schema-title > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: #e65b16;
+  background: #fff1e9;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.schema-title h3 {
+  margin: 0;
+  color: #183638;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.schema-title p {
+  margin: 5px 0 0;
+  color: #829293;
+  font-size: 12px;
+}
+
+.record-count {
+  padding: 7px 12px;
+  color: #39736b;
+  background: #eaf5f1;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.schema-card h4 {
+  margin: 24px 0 13px;
+  color: #526768;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.schema-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e9eeee;
+  border-radius: 11px;
+}
+
+.schema-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.schema-table th {
+  padding: 13px 16px;
+  color: #718384;
+  background: #f5f8f7;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.schema-table td {
+  padding: 13px 16px;
+  color: #526768;
+  border-top: 1px solid #edf0f0;
+  font-size: 13px;
+}
+
+.schema-table tbody tr:hover {
+  background: #fafcfb;
+}
+
+.schema-table td:first-child {
+  color: #183638;
+  font-weight: 700;
+}
+
+.primary-key {
+  display: inline-block;
+  padding: 5px 8px;
+  color: #b87912;
+  background: #fff5df;
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.no-records {
+  margin-top: 14px;
+  color: #829293;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .schema-card {
+    padding: 16px;
+  }
+
+  .schema-header {
+    align-items: flex-start;
+  }
+
+  .schema-table th,
+  .schema-table td {
+    padding: 11px 12px;
+  }
+}

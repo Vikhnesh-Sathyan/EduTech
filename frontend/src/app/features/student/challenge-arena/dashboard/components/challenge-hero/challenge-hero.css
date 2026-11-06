@@ -1,0 +1,449 @@
+
+:host {
+  display: block;
+}
+
+/* =========================================
+   MAIN HERO
+========================================= */
+
+.challenge-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 40px;
+  min-height: 390px;
+  padding: 48px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(171, 201, 203, 0.25);
+  border-radius: 24px;
+
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(171, 201, 203, 0.18),
+      transparent 35%
+    ),
+    linear-gradient(
+      125deg,
+      #183638 0%,
+      #23484a 55%,
+      #31595a 100%
+    );
+
+  box-shadow: 0 18px 45px rgba(24, 54, 56, 0.16);
+}
+
+/* Decorative background */
+
+.challenge-hero::before {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  top: -210px;
+  left: 30%;
+  border: 1px solid rgba(171, 201, 203, 0.12);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 35px rgba(171, 201, 203, 0.035),
+    0 0 0 75px rgba(171, 201, 203, 0.025);
+  z-index: -1;
+}
+
+/* =========================================
+   HERO CONTENT
+========================================= */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+  color: #abc9cb;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #f45b0b;
+  box-shadow: 0 0 0 5px rgba(244, 91, 11, 0.18);
+}
+
+.eyebrow-divider {
+  color: #abc9cb;
+  opacity: 0.5;
+}
+
+.hero-content h1 {
+  margin: 0;
+  color: #abc9cb;
+  font-size: clamp(40px, 4.5vw, 62px);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: -2.5px;
+}
+
+.hero-content h1 span {
+  color: #f45b0b;
+}
+
+.hero-description {
+  max-width: 540px;
+  margin: 22px 0 30px;
+  color: #abc9cb;
+  font-size: 15px;
+  line-height: 1.85;
+  opacity: 0.9;
+}
+
+/* =========================================
+   HERO HIGHLIGHTS
+========================================= */
+
+.hero-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+.hero-highlight {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px;
+  border: 1px solid rgba(171, 201, 203, 0.25);
+  border-radius: 10px;
+  background: rgba(171, 201, 203, 0.09);
+  color: #abc9cb;
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.25s ease;
+}
+
+.hero-highlight:hover {
+  border-color: #f45b0b;
+  background: rgba(244, 91, 11, 0.10);
+  transform: translateY(-3px);
+}
+
+.hero-highlight i {
+  color: #f45b0b;
+  font-size: 14px;
+}
+
+/* =========================================
+   VISUAL PANEL
+========================================= */
+
+.hero-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 290px;
+}
+
+.visual-glow {
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  background: rgba(171, 201, 203, 0.15);
+  filter: blur(65px);
+}
+
+/* =========================================
+   CODE CARD
+========================================= */
+
+.visual-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 370px;
+  padding: 24px;
+
+  border: 1px solid rgba(171, 201, 203, 0.25);
+  border-radius: 18px;
+
+  background: linear-gradient(
+    145deg,
+    #23484a,
+    #183638
+  );
+
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.25);
+
+  transform: rotate(-3deg);
+  transition: transform 0.3s ease;
+}
+
+.visual-card:hover {
+  transform: rotate(0deg) translateY(-5px);
+}
+
+/* =========================================
+   TERMINAL HEADER
+========================================= */
+
+.visual-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(171, 201, 203, 0.2);
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #abc9cb;
+  opacity: 0.55;
+}
+
+.terminal-dots i:first-child {
+  background: #f45b0b;
+  opacity: 1;
+}
+
+.terminal-label {
+  color: #abc9cb;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+/* =========================================
+   CODE PREVIEW
+========================================= */
+
+.code-preview {
+  padding: 24px 0;
+  color: #abc9cb;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.code-preview p {
+  margin: 0;
+}
+
+.code-indent {
+  padding-left: 22px;
+}
+
+.code-purple {
+  color: #f45b0b;
+  font-weight: 700;
+}
+
+.code-blue {
+  color: #abc9cb;
+  font-weight: 700;
+}
+
+.code-green {
+  color: #f45b0b;
+}
+
+/* =========================================
+   CARD FOOTER
+========================================= */
+
+.visual-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(171, 201, 203, 0.2);
+}
+
+.footer-label {
+  display: block;
+  margin-bottom: 7px;
+  color: #abc9cb;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.visual-card-footer strong {
+  color: #abc9cb;
+  font-size: 13px;
+}
+
+.footer-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: #f45b0b;
+  color: #183638;
+  transition: 0.25s ease;
+}
+
+.footer-arrow:hover {
+  transform: rotate(45deg);
+}
+
+/* =========================================
+   FLOATING CHIPS
+========================================= */
+
+.floating-chip {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+
+  border: 1px solid rgba(171, 201, 203, 0.3);
+  border-radius: 12px;
+
+  background: #183638;
+  color: #abc9cb;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.floating-chip i {
+  color: #f45b0b;
+}
+
+.coding-chip {
+  top: 12px;
+  right: -5px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.theory-chip {
+  bottom: 10px;
+  left: -12px;
+  animation: float 4s ease-in-out infinite 1s;
+}
+
+/* =========================================
+   FLOAT ANIMATION
+========================================= */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 1050px) {
+  .challenge-hero {
+    grid-template-columns: 1fr 0.85fr;
+    gap: 25px;
+    padding: 35px;
+  }
+
+  .hero-content h1 {
+    font-size: 46px;
+  }
+}
+
+@media (max-width: 850px) {
+  .challenge-hero {
+    grid-template-columns: 1fr;
+    padding: 36px;
+  }
+
+  .hero-visual {
+    min-height: 310px;
+  }
+
+  .hero-content h1 {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .challenge-hero {
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .hero-content h1 {
+    font-size: 39px;
+    letter-spacing: -1.5px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .hero-highlights {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-visual {
+    min-height: 280px;
+  }
+
+  .visual-card {
+    max-width: 290px;
+    padding: 18px;
+  }
+
+  .coding-chip {
+    right: 0;
+  }
+
+  .theory-chip {
+    left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coding-chip,
+  .theory-chip {
+    animation: none;
+  }
+
+  .visual-card,
+  .hero-highlight {
+    transition: none;
+  }
+}

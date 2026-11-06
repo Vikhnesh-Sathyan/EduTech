@@ -35,8 +35,19 @@ export class CreateCodingChallenge implements OnInit {
   challengeTypes = signal<any[]>([]);
   contentSchema = signal<any[]>([]);
 
+  // TEST CASES
+
+testCases = signal<any[]>([
+  {
+    input_data: '',
+    expected_output: ''
+  }
+]);
+
   loading = signal(false);
   saving = signal(false);
+
+  createdChallengeId = signal<number | null>(null);
 
   message = '';
   errorMessage = '';
@@ -373,57 +384,143 @@ loadChallengeTypes(): void {
       .find(type => type.id === typeId)?.name || '';
 
   }
+  
+  // ==========================================
+// TEST CASE MANAGEMENT
+// ==========================================
 
+addTestCase(): void {
+  this.testCases.update(cases => [
+    ...cases,
+    {
+      input_data: {},
+      expected_output: ''
+    }
+  ]);
+}
+
+removeTestCase(index: number): void {
+  this.testCases.update(cases =>
+    cases.filter((_, i) => i !== index)
+  );
+}
+
+  updateTestCaseInput(
+  index: number,
+  value: string
+): void {
+  this.testCases.update(cases =>
+    cases.map((item, i) =>
+      i === index
+        ? { ...item, input_data: value }
+        : item
+    )
+  );
+}
+
+updateTestCaseOutput(
+  index: number,
+  value: string
+): void {
+  this.testCases.update(cases =>
+    cases.map((item, i) =>
+      i === index
+        ? { ...item, expected_output: value }
+        : item
+    )
+  );
+}
   // ==========================================
   // CREATE CODING CHALLENGE
   // ==========================================
 
-  onSubmit(): void {
+// ==========================================
+// CREATE CODING CHALLENGE + SAVE TEST CASES
+// ==========================================
 
-    this.message = '';
-    this.errorMessage = '';
+onSubmit(): void {
 
-    if (this.challengeForm.invalid) {
+  this.message = '';
+  this.errorMessage = '';
 
-      this.challengeForm.markAllAsTouched();
+  if (this.challengeForm.invalid) {
+    this.challengeForm.markAllAsTouched();
 
-      this.errorMessage =
-        'Please complete all required challenge details.';
+    this.errorMessage =
+      'Please complete all required challenge details.';
 
-      return;
-    }
+    return;
+  }
 
-    this.saving.set(true);
+  // VALIDATE AND PREPARE TEST CASES
 
-    const formValue = this.challengeForm.getRawValue();
+  let preparedTestCases: any[] = [];
 
-    const payload = {
+  try {
 
-      subject_id: Number(formValue.subject_id),
+    preparedTestCases = this.testCases().map((item, index) => {
 
-      challenge_type_id: Number(formValue.challenge_type_id),
+      if (!item.input_data.trim() || !item.expected_output.trim()) {
+        throw new Error(`Please complete Test Case ${index + 1}.`);
+      }
 
-      title: formValue.title.trim(),
+      const inputData = JSON.parse(item.input_data);
 
-      difficulty: formValue.difficulty,
+      if (
+        typeof inputData !== 'object' ||
+        inputData === null ||
+        Array.isArray(inputData)
+      ) {
+        throw new Error(
+          `Test Case ${index + 1}: Input must be a JSON object.`
+        );
+      }
 
-      instructions: formValue.instructions.trim(),
+      let expectedOutput: any;
 
-      challenge_content: formValue.challenge_content
+      try {
+        expectedOutput = JSON.parse(item.expected_output);
+      } catch {
+        expectedOutput = item.expected_output;
+      }
 
-    };
+      return {
+        input_data: inputData,
+        expected_output: expectedOutput
+      };
+
+    });
+
+  } catch (error: any) {
+
+    this.errorMessage =
+      error.message || 'Please check your test cases.';
+
+    return;
+  }
+
+  this.saving.set(true);
+
+  // SAVE TEST CASES
+
+  const saveTestCases = (challengeId: number) => {
 
     this.challengeService
-      .createCodingChallenge(payload)
+      .saveCodingChallengeTestCases(
+        challengeId,
+        preparedTestCases
+      )
       .subscribe({
 
-        next: (response: any) => {
+        next: (response) => {
 
           this.saving.set(false);
 
           this.message =
             response.message ||
-            'Coding Challenge created successfully.';
+            'Coding challenge and test cases saved successfully.';
+
+          this.createdChallengeId.set(null);
 
           this.challengeForm.reset({
             difficulty: 'easy'
@@ -435,6 +532,13 @@ loadChallengeTypes(): void {
           this.years.set([]);
           this.subjects.set([]);
 
+          this.testCases.set([
+            {
+              input_data: '',
+              expected_output: ''
+            }
+          ]);
+
         },
 
         error: (error) => {
@@ -443,13 +547,78 @@ loadChallengeTypes(): void {
 
           this.errorMessage =
             error.error?.message ||
-            'Failed to create Coding Challenge.';
+            'Challenge was created, but test cases could not be saved. Click Create Challenge again to retry.';
 
         }
 
       });
 
+  };
+
+  // RETRY TEST CASE SAVING IF CHALLENGE ALREADY EXISTS
+
+  const existingChallengeId = this.createdChallengeId();
+
+  if (existingChallengeId) {
+    saveTestCases(existingChallengeId);
+    return;
   }
+
+  // CREATE CHALLENGE
+
+  const formValue = this.challengeForm.getRawValue();
+
+  const payload = {
+
+    subject_id: Number(formValue.subject_id),
+
+    challenge_type_id: Number(formValue.challenge_type_id),
+
+    title: formValue.title.trim(),
+
+    difficulty: formValue.difficulty,
+
+    instructions: formValue.instructions.trim(),
+
+    challenge_content: formValue.challenge_content
+
+  };
+
+  this.challengeService
+    .createCodingChallenge(payload)
+    .subscribe({
+
+      next: (response: any) => {
+
+        if (!response.challengeId) {
+
+          this.saving.set(false);
+
+          this.errorMessage =
+            'Challenge was created, but its ID was not returned.';
+
+          return;
+        }
+
+        this.createdChallengeId.set(response.challengeId);
+
+        saveTestCases(response.challengeId);
+
+      },
+
+      error: (error) => {
+
+        this.saving.set(false);
+
+        this.errorMessage =
+          error.error?.message ||
+          'Failed to create Coding Challenge.';
+
+      }
+
+    });
+
+}
 
   // ==========================================
   // BACK TO CODING CHALLENGE LIST

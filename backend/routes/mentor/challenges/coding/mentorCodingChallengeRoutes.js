@@ -38,8 +38,11 @@ const {
     deleteMentorCodingChallenge
 } = require("../../../../controllers/mentor/challenges/coding/deleteMentorCodingChallengeController");
 
-const router = express.Router();
+const {
+    saveCodingChallengeTestCases
+} = require("../../../../controllers/mentor/challenges/coding/saveCodingChallengeTestCasesController");
 
+const router = express.Router();
 
 // ==========================================
 // MENTOR CODING CHALLENGE ROUTES
@@ -99,6 +102,13 @@ router.patch(
     authMiddleware,
     roleMiddleware("mentor"),
     updateMentorCodingChallengeStatus
+);
+
+router.post(
+    "/:challengeId/test-cases",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    saveCodingChallengeTestCases
 );
 
 

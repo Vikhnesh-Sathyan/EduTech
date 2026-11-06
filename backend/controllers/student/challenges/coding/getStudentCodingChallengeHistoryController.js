@@ -16,7 +16,6 @@ const getStudentCodingChallengeHistory = async (req, res) => {
                 cca.id AS attempt_id,
                 cca.challenge_id,
                 cca.attempt_number,
-                cca.submitted_content,
                 cca.score,
                 cca.result_status,
                 cca.feedback,
