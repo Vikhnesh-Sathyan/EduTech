@@ -15,8 +15,6 @@ import { mentorRoleGuard } from './core/guards/mentor-role.guard';
 // Student dashboard
 import { StudentLayout } from './dashboards/student/student-layout/student-layout';
 import { StudentDashboard } from './dashboards/student/student-dashboard/student-dashboard';
-// STUDENT CHALLENGE ARENA
-import { StudentChallengeDashboard } from './features/student/challenge-arena/dashboard/dashboard/dashboard';
 
 //Skillswap
 import { SkillSwapHome } from './features/student/skillswap/skill-swap-home/skill-swap-home';
@@ -119,17 +117,7 @@ import { NoteCreate } from './features/student/advanced/logic-to-code/notes/note
 import { NoteDetails } from './features/student/advanced/logic-to-code/notes/note-details/note-details';
 import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
 
-//Student CODING challenge
-import { StudentCodingChallengeList } from './features/student/challenge-arena/coding/challenge-list/challenge-list';
-import { StudentCodingChallengeDetails } from './features/student/challenge-arena/coding/challenge-details/challenge-details';
-import { CodingChallengeResult } from './features/student/challenge-arena/coding/coding-challenge-result/coding-challenge-result';
-import { History } from './features/student/challenge-arena/coding/history/history';
 
-// STUDENT THEORY CHALLENGES
-import { TheoryList } from './features/student/challenge-arena/theory/theory-list/theory-list';
-import { TheoryDetails } from './features/student/challenge-arena/theory/theory-details/theory-details';
-import { TheoryHistory } from './features/student/challenge-arena/theory/theory-history/theory-history';
-import { TheoryResult } from './features/student/challenge-arena/theory/theory-result/theory-result';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -171,21 +159,6 @@ import { MentorVerification } from './features/admin/mentors/mentor-verification
 // Admin Cheat Sheet
 import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
 
-// Admin CODING Challenge Arena
-import { CodingTypesComponent } from './features/admin/challenge-arena/challenge-types/coding-types/coding-types';
-import { EditCodingTypeComponent } from './features/admin/challenge-arena/challenge-types/coding-types/edit-coding-type/edit-coding-type';
-import { CodingChallengeList } from './features/admin/challenge-arena/coding-challenges/coding-challenge-list/coding-challenge-list';
-import { CreateCodingChallenge } from './features/admin/challenge-arena/coding-challenges/create-coding-challenge/create-coding-challenge';
-import { ViewCodingChallenge } from './features/admin/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
-import { EditCodingChallenge } from './features/admin/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
-
-// Admin THEORY Challenge Arena
-import { TheoryTypes } from './features/admin/challenge-arena/challenge-types/theory-types/theory-types';
-import { EditTheoryType } from './features/admin/challenge-arena/challenge-types/theory-types/edit-theory-type/edit-theory-type';
-import { CreateTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/create-theory-challenge/create-theory-challenge';
-import { TheoryChallengeList } from './features/admin/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
-import { ViewTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/view-theory-challenge/view-theory-challenge';
-import { EditTheoryChallenge } from './features/admin/challenge-arena/theory-challenges/edit-theory-challenge/edit-theory-challenge';
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -255,23 +228,6 @@ import {
 } from './features/mentor/advanced/logic-to-code/discussions/discussion-list/discussion-list';
 import { DiscussionReports } from './features/mentor/advanced/logic-to-code/discussions/discussion-reports/discussion-reports';
 
-//MENTOR CODING CHALLENGE
-import { CodingChallengeList as MentorCodingChallengeList }from './features/mentor/challenge-arena/coding-challenges/coding-challenge-list/coding-challenge-list';
-import { CreateCodingChallenge as MentorCreateCodingChallenge }from './features/mentor/challenge-arena/coding-challenges/create-coding-challenge.ts/create-coding-challenge';
-import { MentorViewCodingChallenge} from './features/mentor/challenge-arena/coding-challenges/view-coding-challenge/view-coding-challenge';
-import { EditCodingChallenge as MentorEditCodingChallenge } from './features/mentor/challenge-arena/coding-challenges/edit-coding-challenge/edit-coding-challenge';
-import {
-  CodingChallengeSubmissions
-} from './features/mentor/challenge-arena/coding-challenges/coding-challenge-submissions/coding-challenge-submissions';
-import { CodingChallengeReview } from './features/mentor/challenge-arena/coding-challenges/coding-challenge-review/coding-challenge-review';
-
-// MENTOR THEORY CHALLENGE
-import { TheoryChallengeList as MentorTheoryChallengeList  } from './features/mentor/challenge-arena/theory-challenges/theory-challenge-list/theory-challenge-list';
-import { CreateTheoryChallenge as MentorCreateTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/create-theory-challenge/create-theory-challenge';
-import { EditTheoryChallenge as MentorEditTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/edit-theory-challenge/edit-theory-challenge';
-import { MentorViewTheoryChallenge } from './features/mentor/challenge-arena/theory-challenges/view-theory-challenge/view-theory-challenge';
-import { SubmissionTheoryChallengeComponent } from './features/mentor/challenge-arena/theory-challenges/submission-theory-challenge/submission-theory-challenge';
-import { ReviewTheoryChallengeComponent } from './features/mentor/challenge-arena/theory-challenges/review-theory-challenge/review-theory-challenge';
 
 export const routes: Routes = [
 
@@ -299,11 +255,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
     
-      {
-        path: 'student/challenge-arena',
-        component: StudentChallengeDashboard
-      },
-
       {
         path: 'student-dashboard',
         component: StudentDashboard
@@ -589,40 +540,7 @@ export const routes: Routes = [
         path: 'student/advanced/logic-to-code/notes/:noteId',
         component: NoteDetails
       },
-      // STUDENT CODING CHALLENGES
-      {
-        path: 'student/challenge-arena/coding',
-        component: StudentCodingChallengeList
-      },
-      {
-        path: 'student/challenge-arena/coding/history',
-        component: History
-      },
-      {
-        path: 'student/challenge-arena/coding/result/:attemptId',
-        component: CodingChallengeResult
-      },  
-      {
-        path: 'student/challenge-arena/coding/:challengeId',
-        component: StudentCodingChallengeDetails
-      },
-      // STUDENT THEORY CHALLENGES
-      {
-        path: 'student/challenge-arena/theory',
-        component: TheoryList
-      },
-      {
-        path: 'student/challenge-arena/theory/history',
-        component: TheoryHistory
-      },
-      {
-        path: 'student/challenge-arena/theory/result/:attemptId',
-        component: TheoryResult
-      },
-      {
-        path: 'student/challenge-arena/theory/:challengeId',
-        component: TheoryDetails
-      },
+      
     ]
   },
 
@@ -741,57 +659,7 @@ export const routes: Routes = [
         path: 'skillswap/skill-suggestions',
         component: SkillSuggestions 
       },
-      // Admin CODING Challenge Arena
-      {
-        path: 'challenge-arena/challenge-types/coding',
-        component: CodingTypesComponent
-      },
-      {
-        path: 'challenge-arena/challenge-types/coding/:typeId/edit',
-        component: EditCodingTypeComponent
-      },
-      {
-        path: 'challenge-arena/coding-challenges',
-        component: CodingChallengeList
-      },
-      {
-        path: 'challenge-arena/coding-challenges/create',
-        component: CreateCodingChallenge
-      },
-      {
-        path: 'challenge-arena/coding-challenges/:challengeId/edit',
-        component: EditCodingChallenge
-      },
-      {
-        path: 'challenge-arena/coding-challenges/:challengeId',
-        component: ViewCodingChallenge
-      },
-
-      // Admin THEORY Challenge Arena
-      {
-        path: 'challenge-arena/challenge-types/theory',
-        component: TheoryTypes
-      },
-      {
-        path: 'challenge-arena/challenge-types/theory/:typeId/edit',
-        component: EditTheoryType
-      },
-      {
-        path: 'challenge-arena/theory-challenges',
-        component: TheoryChallengeList
-      },
-      {
-        path: 'challenge-arena/theory-challenges/create',
-        component: CreateTheoryChallenge
-      },
-      {
-        path: 'challenge-arena/theory-challenges/:challengeId',
-        component: ViewTheoryChallenge
-      },
-      {
-        path: 'challenge-arena/theory-challenges/:challengeId/edit',
-        component: EditTheoryChallenge
-      },
+      
     ]
   },
 
@@ -995,59 +863,6 @@ export const routes: Routes = [
         path: 'mentor/advanced/logic-to-code/:problemId/mistakes',
         component: MistakeManagement
       },
-      //MENTOR CODING CHALLENGE
-      {
-        path: 'mentor/challenge-arena/coding-challenges/create',
-        component: MentorCreateCodingChallenge,
-      },
-      {
-        path: 'mentor/challenge-arena/coding-challenges/:challengeId/edit',
-        component: MentorEditCodingChallenge
-      },
-      {
-        path: 'mentor/challenge-arena/coding-challenges/:challengeId',
-        component: MentorViewCodingChallenge,
-      },
-      {
-        path: 'mentor/challenge-arena/coding-challenges',
-        component: MentorCodingChallengeList,
-      },
-
-      // MENTOR THEORY CHALLENGE
-      {
-        path: 'mentor/challenge-arena/theory-challenges',
-        component: MentorTheoryChallengeList
-      },
-      {
-        path: 'mentor/challenge-arena/theory-challenges/create',
-        component: MentorCreateTheoryChallenge
-      },
-      {
-        path: 'mentor/challenge-arena/theory-challenges/:challengeId/edit',
-        component: MentorEditTheoryChallenge
-      },
-      {
-        path: 'mentor/challenge-arena/coding-challenges/:challengeId/submissions',
-        component: CodingChallengeSubmissions
-      },
-      {
-        path: 'mentor/challenge-arena/coding-challenges/:challengeId/submissions/:attemptId',
-        component: CodingChallengeReview
-      },
-      {
-        path: 'mentor/challenge-arena/theory-challenges/submissions',
-        component: SubmissionTheoryChallengeComponent
-      },
-      {
-        path: 'mentor/challenge-arena/theory-challenges/submissions/:attemptId',
-        component: ReviewTheoryChallengeComponent
-      },
-      {
-        path: 'mentor/challenge-arena/theory-challenges/:challengeId',
-        component: MentorViewTheoryChallenge
-      },
-
-
     ]
   },
 

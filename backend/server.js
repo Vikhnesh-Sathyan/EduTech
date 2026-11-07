@@ -124,26 +124,6 @@ const adminSwapSkillsRoutes =
 const adminSwapSkillSuggestionRoutes =
     require("./routes/admin/skillswap/swapskillsuggestionroutes");
 
-// Admin CODING Challenge Type routes
-const adminCodingChallengeTypeRoutes = require(
-    "./routes/admin/challenges/coding/codingChallengeTypeRoutes"
-);
-
-// Admin Coding Challenge routes
-const adminCodingChallengeRoutes = require(
-    "./routes/admin/challenges/coding/codingChallengeRoutes"
-);
-
-// Admin THEORY Challenge Type routes
-const adminTheoryChallengeTypeRoutes = require(
-    "./routes/admin/challenges/theory/theoryChallengeTypeRoutes"
-);
-
-// Admin Theory Challenge routes
-const adminTheoryChallengeRoutes = require(
-    "./routes/admin/challenges/theory/theoryChallengeRoutes"
-);
-
 
 
 // =====================================================
@@ -259,15 +239,6 @@ const studentLogicToCodeRoutes = require(
     "./routes/student/advanced/logic-to-code/problem.routes"
 );
 
-//STUDENT CODING CHALLENGE ROUTES
-const studentCodingChallengeRoutes = require(
-    "./routes/student/challenges/coding/codingChallengeRoutes"
-);
-
-//STUDENT THEORY CHALLENGE ROUTES
-const studentTheoryChallengeRoutes = require(
-    "./routes/student/challenges/theory/theoryChallengeRoutes"
-);
 
 // =====================================================
 // MENTOR ROUTES
@@ -307,19 +278,6 @@ const mentorLogicToCodeRoutes = require(
     "./routes/mentor/advanced/logic-to-code/problem.routes"
 );
 
-// MENTOR CODING CHALLENGE ROUTES
-
-const mentorCodingChallengeRoutes = require(
-    "./routes/mentor/challenges/coding/mentorCodingChallengeRoutes"
-);
-// MENTOR THEORY CHALLENGE ROUTES
-const mentorTheoryChallengeRoutes = require(
-    "./routes/mentor/challenges/theory/mentorTheoryChallengeRoutes"
-);
-
-const mentorChallengeAcademicsRoutes = require(
-    "./routes/mentor/challenges/mentorChallengeAcademicsRoutes"
-);
 
 // =====================================================
 // CREATE EXPRESS APPLICATION
@@ -463,25 +421,6 @@ app.use(
     "/api/mentor/advanced/logic-to-code",
     mentorLogicToCodeRoutes
 );
-
-// MENTOR CODING CHALLENGE ROUTES
-app.use(
-    "/api/mentor/coding-challenges",
-    mentorCodingChallengeRoutes
-);
-
-// MENTOR CHALLENGE ACADEMICS
-app.use(
-    "/api/mentor/challenge-academics",
-    mentorChallengeAcademicsRoutes
-);
-
-//MENTOR THEORY CHALLENGE ROUTES
-app.use(
-    "/api/mentor/theory-challenges",
-    mentorTheoryChallengeRoutes
-);
-
     
 // =====================================================
 // ADMIN ROUTES
@@ -610,30 +549,6 @@ app.use(
     "/api/admin/skillswap/suggestions",
     adminSwapSkillSuggestionRoutes
 );
-
-// CODING Challenge Type management
-app.use(
-    "/api/admin/coding-challenge-types",
-    adminCodingChallengeTypeRoutes
-);
-
-// Admin Coding Challenge management
-app.use(
-    "/api/admin/coding-challenges",
-    adminCodingChallengeRoutes
-);
-
-// THEORY Challenge Type management
-app.use(
-    "/api/admin/theory-challenge-types",
-    adminTheoryChallengeTypeRoutes
-);
-// Admin Theory Challenge management
-app.use(
-    "/api/admin/theory-challenges",
-    adminTheoryChallengeRoutes
-);
-
 
 // =====================================================
 // STUDENT EDUCATION ROUTES
@@ -777,17 +692,6 @@ app.use(
     studentLogicToCodeRoutes
 );
 
-// STUDENT CODING CHALLENGE
-app.use(
-    "/api/student/coding-challenges",
-    studentCodingChallengeRoutes
-);
-
-//STUDENT THEORY CHALLENGE
-app.use(
-    "/api/student/theory-challenges",
-    studentTheoryChallengeRoutes
-);
 
 // =====================================================
 // START SERVER WITH SOCKET.IO
