@@ -1,0 +1,6 @@
+const AI_SERVICE_URL =
+    process.env.AI_SERVICE_URL || "http://127.0.0.1:8001";
+
+module.exports = {
+    AI_SERVICE_URL
+};

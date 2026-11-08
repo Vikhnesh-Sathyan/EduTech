@@ -9,6 +9,8 @@ class ProgressReportService:
         if not isinstance(sessions, list):
             raise ValueError("Sessions must be a list")
 
+        total_sessions = 0
+
         total_words = 0
         total_filler_words = 0
         total_repetitions = 0
@@ -27,10 +29,12 @@ class ProgressReportService:
             if not isinstance(session, dict):
                 continue
 
-            feature = session.get("feature", "unknown")
+            total_sessions += 1
 
+            feature = session.get("feature", "unknown")
             feature_counts[feature] += 1
 
+            # Speech analysis
             analysis = session.get("analysis") or {}
 
             total_words += analysis.get("total_words", 0)
@@ -45,8 +49,15 @@ class ProgressReportService:
                 total_wpm += wpm
                 wpm_session_count += 1
 
+            # Evaluation scores
             evaluation = session.get("evaluation") or {}
-            scores = evaluation.get("scores") or {}
+
+            # Support both direct and wrapped evaluation responses
+            scores = (
+                evaluation.get("evaluation", {}).get("scores")
+                or evaluation.get("scores")
+                or {}
+            )
 
             for metric, score in scores.items():
 
@@ -54,11 +65,13 @@ class ProgressReportService:
                     evaluation_totals[metric] += score
                     evaluation_counts[metric] += 1
 
+        # Average speaking speed across sessions
         average_wpm = (
             round(total_wpm / wpm_session_count, 2)
             if wpm_session_count else 0
         )
 
+        # Average evaluation scores
         average_scores = {}
 
         for metric, total in evaluation_totals.items():
@@ -70,7 +83,7 @@ class ProgressReportService:
         return {
             "success": True,
             "report": {
-                "total_sessions": len(sessions),
+                "total_sessions": total_sessions,
                 "total_words": total_words,
                 "average_wpm": average_wpm,
                 "total_filler_words": total_filler_words,

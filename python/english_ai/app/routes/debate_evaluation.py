@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 from app.services.debate_evaluation_service import DebateEvaluationService
 
@@ -10,13 +10,39 @@ router = APIRouter(
     tags=["AI Debate Practice"]
 )
 
+
 evaluation_service = None
 
 
 class DebateEvaluationRequest(BaseModel):
 
     topic: str
-    student_arguments: list[str]
+
+    student_arguments: list[str] = Field(min_length=1)
+
+    @field_validator("topic")
+    @classmethod
+    def validate_topic(cls, value):
+
+        if not value.strip():
+            raise ValueError("Debate topic cannot be empty")
+
+        return value.strip()
+
+    @field_validator("student_arguments")
+    @classmethod
+    def validate_arguments(cls, value):
+
+        cleaned_arguments = [
+            argument.strip()
+            for argument in value
+            if argument.strip()
+        ]
+
+        if not cleaned_arguments:
+            raise ValueError("At least one debate argument is required")
+
+        return cleaned_arguments
 
 
 @router.post("/evaluate")

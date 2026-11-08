@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 from app.services.ai_conversation_service import AIConversationService
 
@@ -10,6 +10,7 @@ router = APIRouter(
     tags=["AI Conversation"]
 )
 
+
 conversation_service = None
 
 
@@ -17,7 +18,16 @@ class ConversationRequest(BaseModel):
 
     message: str
 
-    history: list[dict] = []
+    history: list[dict] = Field(default_factory=list)
+
+    @field_validator("message")
+    @classmethod
+    def validate_message(cls, value):
+
+        if not value.strip():
+            raise ValueError("Message cannot be empty")
+
+        return value.strip()
 
 
 @router.post("/chat")

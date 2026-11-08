@@ -17,7 +17,7 @@ class AIConversationService:
     MODEL_NAME = "gemini-3.8-flash"
 
     SYSTEM_INSTRUCTION = """
-    You are an friendly and supportive English speaking practice tutor.
+    You are a friendly and supportive English speaking practice tutor.
 
     Your responsibilities:
     1. Communicate naturally with the student in English.

@@ -8,7 +8,10 @@ from app.services.speech_service import SpeechService
 from app.analysis.speech_analysis import SpeechAnalysisService
 
 
-router = APIRouter(prefix="/api/speech", tags=["Speech"])
+router = APIRouter(
+    prefix="/api/speech",
+    tags=["Speech"]
+)
 
 
 # Service instances
@@ -21,10 +24,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
     global speech_service
 
-    # ----------------------------------
     # 1. Validate audio format
-    # ----------------------------------
-
     if not file.filename or not file.filename.lower().endswith(
         (".wav", ".mp3", ".m4a")
     ):
@@ -34,16 +34,16 @@ async def transcribe_audio(file: UploadFile = File(...)):
         )
 
     upload_dir = Path("uploads")
-    upload_dir.mkdir(exist_ok=True)
+    upload_dir.mkdir(parents=True, exist_ok=True)
 
-    temp_path = upload_dir / f"{uuid4()}{Path(file.filename).suffix}"
+    temp_path = (
+        upload_dir /
+        f"{uuid4()}{Path(file.filename).suffix.lower()}"
+    )
 
     try:
 
-        # ----------------------------------
         # 2. Read uploaded audio
-        # ----------------------------------
-
         audio_data = await file.read()
 
         if not audio_data:
@@ -54,35 +54,29 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
         temp_path.write_bytes(audio_data)
 
-        # ----------------------------------
         # 3. Initialize Whisper
-        # ----------------------------------
-
         if speech_service is None:
             speech_service = SpeechService()
 
-        # ----------------------------------
-        # 4. Convert audio into transcript
-        # ----------------------------------
-
+        # 4. Transcribe audio
         result = speech_service.transcribe_audio(str(temp_path))
 
         transcript = result["transcript"]
 
-        # ----------------------------------
-        # 5. Analyse transcript
-        # ----------------------------------
+        # 5. Analyse transcript and audio segments
+        analysis = speech_analysis_service.analyze_speech(
+            transcript,
+            result["duration_seconds"],
+            result["segments"]
+        )
 
-        analysis = speech_analysis_service.analyze_speech(transcript)
-
-        # ----------------------------------
-        # 6. Return combined response
-        # ----------------------------------
-
+        # 6. Return complete response
         return {
             "success": True,
             "language": result["language"],
             "transcript": transcript,
+            "duration_seconds": result["duration_seconds"],
+            "segments": result["segments"],
             "analysis": analysis
         }
 

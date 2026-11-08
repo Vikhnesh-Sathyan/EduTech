@@ -44,6 +44,15 @@ const profileRoutes =
     require("./routes/profileRoutes");
 
 // =====================================================
+// ENGLISH PRACTICE ROUTES
+// =====================================================
+
+const conversationRoutes = require(
+    "./english-practice/routes/conversation.routes"
+);
+
+
+// =====================================================
 // ADMIN ROUTES
 // =====================================================
 
@@ -345,6 +354,15 @@ app.use(
 app.use(
     "/api/profile",
     profileRoutes
+);
+
+// =====================================================
+// ENGLISH PRACTICE ROUTES
+// =====================================================
+
+app.use(
+    "/api/english-practice/conversation",
+    conversationRoutes
 );
 
 // =====================================================
