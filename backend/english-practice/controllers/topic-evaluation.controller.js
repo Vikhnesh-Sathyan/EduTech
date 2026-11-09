@@ -128,7 +128,57 @@ const evaluate = async (req, res) => {
     }
 };
 
+// Get one completed speaking evaluation
+const getEvaluationDetails = async (req, res) => {
+    try {
+        const attemptId = Number(req.params.attemptId);
+
+        if (!Number.isInteger(attemptId) || attemptId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Valid attempt ID is required"
+            });
+        }
+
+        const attempt =
+            await speakingAttemptService.getStudentAttemptById(
+                attemptId,
+                req.user.id
+            );
+
+        if (!attempt) {
+            return res.status(404).json({
+                success: false,
+                message: "Speaking attempt not found"
+            });
+        }
+
+        if (attempt.status !== "completed") {
+            return res.status(409).json({
+                success: false,
+                message: "Evaluation is not completed yet"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            attempt
+        });
+
+    } catch (error) {
+        console.error(
+            "Speaking Evaluation Details Error:",
+            error.message
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to fetch evaluation details"
+        });
+    }
+};
 
 module.exports = {
-    evaluate
+    evaluate,
+    getEvaluationDetails
 };

@@ -1,3 +1,4 @@
+
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -5,6 +6,10 @@ import { Observable } from 'rxjs';
 import {
   SpeakingEvaluationResponse
 } from '../../models/evaluation/speaking-evaluation.model';
+
+import {
+  SpeakingAttemptDetailsResponse
+} from '../../models/speaking/speaking-attempt.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +31,16 @@ export class EvaluationService {
       {
         attempt_id: attemptId
       }
+    );
+  }
+
+  // GET COMPLETE EVALUATION DETAILS
+  getAttemptDetails(
+    attemptId: number
+  ): Observable<SpeakingAttemptDetailsResponse> {
+
+    return this.http.get<SpeakingAttemptDetailsResponse>(
+      `${this.apiUrl}/attempts/${attemptId}`
     );
   }
 

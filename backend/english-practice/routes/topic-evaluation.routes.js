@@ -18,5 +18,12 @@ router.post(
     topicEvaluationController.evaluate
 );
 
+router.get(
+    "/attempts/:attemptId",
+    authMiddleware,
+    roleMiddleware("student"),
+    topicEvaluationController.getEvaluationDetails
+);
+
 
 module.exports = router;

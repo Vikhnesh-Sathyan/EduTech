@@ -1,53 +1,208 @@
+
+/* =====================================
+   TOPIC FILTER PANEL
+===================================== */
+
 .topic-filter {
-  display: flex;
-  align-items: end;
-  gap: 20px;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  padding: 25px;
+  margin-bottom: 28px;
+
   background: #ffffff;
-  border: 1px solid #eee7df;
-  border-radius: 14px;
-  margin-bottom: 24px;
+  border: 1px solid #eaeaea;
+  border-radius: 18px;
+
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.035);
 }
+
+/* =====================================
+   FILTER GROUP
+===================================== */
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex: 1;
+  gap: 11px;
+  min-width: 0;
 }
 
 .filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #000000;
   font-size: 13px;
-  font-weight: 600;
-  color: #5b4632;
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
+
+/* =====================================
+   LABEL ICONS
+===================================== */
+
+.filter-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  border-radius: 7px;
+  background: #fff0eb;
+  color: #f04400;
+
+  font-size: 14px;
+}
+
+/* =====================================
+   INPUT WRAPPER
+===================================== */
+
+.input-wrapper,
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* =====================================
+   INPUT FIELD
+===================================== */
 
 .filter-group input,
 .filter-group select {
+  box-sizing: border-box;
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #e5ddd3;
-  border-radius: 9px;
-  background: #fff;
-  color: #3d332b;
+  height: 50px;
+  padding: 0 16px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 11px;
+
+  background: #f9f9f7;
+  color: #000000;
+
+  font-family: inherit;
   font-size: 14px;
+  font-weight: 600;
+
   outline: none;
-  transition: border-color 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+/* =====================================
+   INPUT PLACEHOLDER
+===================================== */
+
+.filter-group input::placeholder {
+  color: #999999;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* =====================================
+   INPUT FOCUS
+===================================== */
 
 .filter-group input:focus,
 .filter-group select:focus {
-  border-color: #c8792c;
+  border-color: #f04400;
+  background: #ffffff;
+
+  box-shadow: 0 0 0 4px rgba(240, 68, 0, 0.09);
 }
 
-.filter-group input::placeholder {
-  color: #a69a8e;
+/* =====================================
+   SEARCH ICON
+===================================== */
+
+.input-wrapper input {
+  padding-right: 45px;
 }
+
+.input-symbol {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+
+  transform: translateY(-50%);
+
+  color: #f04400;
+  font-size: 23px;
+  pointer-events: none;
+}
+
+/* =====================================
+   CUSTOM SELECT DROPDOWN
+===================================== */
+
+.filter-group select {
+  appearance: none;
+  -webkit-appearance: none;
+
+  padding-right: 42px;
+  cursor: pointer;
+}
+
+.select-wrapper::after {
+  content: "";
+  position: absolute;
+
+  top: 19px;
+  right: 17px;
+
+  width: 8px;
+  height: 8px;
+
+  border-right: 2px solid #f04400;
+  border-bottom: 2px solid #f04400;
+
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* =====================================
+   DROPDOWN OPTIONS
+===================================== */
+
+.filter-group select option {
+  padding: 12px;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* =====================================
+   HOVER
+===================================== */
+
+.filter-group input:hover,
+.filter-group select:hover {
+  border-color: #d0f030;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
 
 @media (max-width: 600px) {
+
   .topic-filter {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
+    grid-template-columns: 1fr;
+    gap: 19px;
+    padding: 19px;
+    border-radius: 15px;
   }
+
+  .filter-group input,
+  .filter-group select {
+    height: 48px;
+  }
+
 }

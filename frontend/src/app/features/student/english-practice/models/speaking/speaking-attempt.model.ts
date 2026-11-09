@@ -1,3 +1,8 @@
+
+import {
+  SpeakingEvaluation
+} from '../evaluation/speaking-evaluation.model';
+
 export type SpeakingAttemptStatus =
   | 'pending'
   | 'completed'
@@ -20,11 +25,16 @@ export interface SpeakingAttemptHistory
   repetition_count: number;
   pause_count: number;
   overall_score: number | null;
-  evaluation_result: Record<string, unknown> | null;
+  evaluation_result: SpeakingEvaluation | null;
   created_at: string;
 }
 
 export interface SpeakingHistoryResponse {
   success: boolean;
   attempts: SpeakingAttemptHistory[];
+}
+
+export interface SpeakingAttemptDetailsResponse {
+  success: boolean;
+  attempt: SpeakingAttemptHistory;
 }

@@ -1,42 +1,124 @@
 
-@if (evaluation(); as result) {
+@if (loading()) {
 
   <main class="evaluation-page">
-
-    <header class="page-header">
-      <span class="eyebrow">ENGLISH PRACTICE</span>
-      <h1>Speaking Evaluation</h1>
-      <p>Review your performance and discover how to improve.</p>
-    </header>
-
-    <!-- OVERALL AND CATEGORY SCORES -->
-    <app-score-card
-      [evaluation]="result"
-    />
-
-    <!-- STRENGTHS AND IMPROVEMENTS -->
-    <section class="feedback-grid">
-
-      <app-strengths-list
-        [strengths]="result.strengths"
-      />
-
-      <app-improvement-list
-        [improvements]="result.improvements"
-      />
-
-    </section>
-
-    <!-- GRAMMAR CORRECTIONS -->
-    <app-grammar-corrections
-      [corrections]="result.grammar_corrections"
-    />
-
-    <!-- FINAL AI SUGGESTION -->
-    <app-suggestion-card
-      [suggestion]="result.suggestion"
-    />
-
+    <p>Loading your speaking evaluation...</p>
   </main>
+
+} @else if (errorMessage()) {
+
+  <main class="evaluation-page">
+    <p class="error-message">{{ errorMessage() }}</p>
+  </main>
+
+} @else if (attempt(); as currentAttempt) {
+
+  @if (evaluation(); as result) {
+
+    <main class="evaluation-page">
+
+      <header class="page-header">
+        <span class="eyebrow">ENGLISH PRACTICE</span>
+        <h1>Speaking Evaluation</h1>
+        <p>
+          Review your performance and discover how to improve.
+        </p>
+
+        <h3>{{ currentAttempt.topic_title }}</h3>
+
+        <p>
+          Attempt date: {{ currentAttempt.created_at }}
+        </p>
+      </header>
+
+      <!-- OVERALL AND CATEGORY SCORES -->
+      <app-score-card
+        [evaluation]="result"
+      />
+
+      <!-- SPEECH ANALYSIS -->
+      <section class="speech-analysis">
+
+        <h2>Speech Analysis</h2>
+
+        <div class="analysis-grid">
+
+          <article>
+            <span>Duration</span>
+            <strong>{{ currentAttempt.duration_seconds }} sec</strong>
+          </article>
+
+          <article>
+            <span>Total Words</span>
+            <strong>{{ currentAttempt.word_count }}</strong>
+          </article>
+
+          <article>
+            <span>Speaking Speed</span>
+            <strong>{{ currentAttempt.speaking_speed }} WPM</strong>
+          </article>
+
+          <article>
+            <span>Filler Words</span>
+            <strong>{{ currentAttempt.filler_count }}</strong>
+          </article>
+
+          <article>
+            <span>Repetitions</span>
+            <strong>{{ currentAttempt.repetition_count }}</strong>
+          </article>
+
+          <article>
+            <span>Pauses</span>
+            <strong>{{ currentAttempt.pause_count }}</strong>
+          </article>
+
+        </div>
+
+      </section>
+
+      <!-- ORIGINAL TRANSCRIPT -->
+      <section class="transcript-section">
+
+        <h2>Your Speech Transcript</h2>
+
+        @if (currentAttempt.transcript) {
+
+          <p>{{ currentAttempt.transcript }}</p>
+
+        } @else {
+
+          <p>No transcript available.</p>
+
+        }
+
+      </section>
+
+      <!-- STRENGTHS AND IMPROVEMENTS -->
+      <section class="feedback-grid">
+
+        <app-strengths-list
+          [strengths]="result.strengths"
+        />
+
+        <app-improvement-list
+          [improvements]="result.improvements"
+        />
+
+      </section>
+
+      <!-- GRAMMAR CORRECTIONS -->
+      <app-grammar-corrections
+        [corrections]="result.grammar_corrections"
+      />
+
+      <!-- FINAL AI SUGGESTION -->
+      <app-suggestion-card
+        [suggestion]="result.suggestion"
+      />
+
+    </main>
+
+  }
 
 }

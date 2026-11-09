@@ -1,32 +1,55 @@
+
 <div class="topic-filter">
 
+  <!-- CATEGORY FILTER -->
   <div class="filter-group">
-    <label for="category">Category</label>
 
-    <input
-      #categoryInput
-      id="category"
-      type="text"
-      placeholder="Enter a category"
-      [value]="category"
-      (input)="onCategoryChange(categoryInput.value)"
-    />
+    <label for="category">
+      <span class="filter-icon">✦</span>
+      Category
+    </label>
+
+    <div class="input-wrapper">
+
+      <input
+        #categoryInput
+        id="category"
+        type="text"
+        placeholder="Search by category..."
+        [value]="category"
+        (input)="onCategoryChange(categoryInput.value)"
+      />
+
+      <span class="input-symbol">⌕</span>
+
+    </div>
+
   </div>
 
+  <!-- DIFFICULTY FILTER -->
   <div class="filter-group">
-    <label for="difficulty">Difficulty</label>
 
-    <select
-      #difficultySelect
-      id="difficulty"
-      [value]="difficulty"
-      (change)="onDifficultyChange(difficultySelect.value)"
-    >
-      <option value="">All difficulties</option>
-      <option value="easy">Easy</option>
-      <option value="medium">Medium</option>
-      <option value="hard">Hard</option>
-    </select>
+    <label for="difficulty">
+      <span class="filter-icon">◈</span>
+      Difficulty
+    </label>
+
+    <div class="select-wrapper">
+
+      <select
+        #difficultySelect
+        id="difficulty"
+        [value]="difficulty"
+        (change)="onDifficultyChange(difficultySelect.value)"
+      >
+        <option value="">All difficulties</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+
+    </div>
+
   </div>
 
 </div>

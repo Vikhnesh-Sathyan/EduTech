@@ -1,5 +1,10 @@
 
-<article class="attempt-card">
+<article
+  class="attempt-card"
+  [class.clickable]="attempt().status === 'completed'"
+  [class.disabled]="attempt().status !== 'completed'"
+  (click)="openDetails()"
+>
 
   <div class="attempt-details">
 
@@ -22,11 +27,15 @@
     @if (attempt().status === 'completed') {
 
       <strong class="score">
-        {{ attempt().overall_score }}/100
+        {{ attempt().overall_score }}/10
       </strong>
 
       <span class="status completed">
         Completed
+      </span>
+
+      <span class="view-details">
+        View Evaluation →
       </span>
 
     } @else if (attempt().status === 'pending') {

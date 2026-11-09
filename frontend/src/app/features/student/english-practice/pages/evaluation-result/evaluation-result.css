@@ -1,58 +1,285 @@
 
+/* =========================================
+   EVALUATION PAGE
+========================================= */
+
 .evaluation-page {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  width: 100%;
-  max-width: 1200px;
+  width: min(1150px, 100%);
   margin: 0 auto;
-  padding: 32px;
+  padding: 40px 28px 70px;
+  color: #000000;
+  background: #ffffff;
+  box-sizing: border-box;
 }
+
+/* =========================================
+   PAGE HEADER
+========================================= */
 
 .page-header {
-  margin-bottom: 4px;
+  position: relative;
+  overflow: hidden;
+  padding: 38px;
+  margin-bottom: 30px;
+  background: #000000;
+  border-radius: 22px;
+  color: #ffffff;
 }
 
-.eyebrow {
-  color: #c8792c;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+.page-header::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -65px;
+  top: -95px;
+  border-radius: 50%;
+  background: #f04400;
+  opacity: 0.9;
+}
+
+.page-header .eyebrow {
+  display: inline-block;
+  padding: 7px 13px;
+  margin-bottom: 15px;
+  border-radius: 30px;
+  background: #d0f030;
+  color: #000000;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
 }
 
 .page-header h1 {
-  margin: 10px 0;
-  color: #5b4632;
-  font-size: 30px;
-  font-weight: 750;
+  position: relative;
+  z-index: 1;
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
 }
 
 .page-header p {
-  margin: 0;
-  color: #887765;
-  font-size: 15px;
-  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+  margin: 8px 0;
+  color: #d0d0d0;
+  font-size: 14px;
+  line-height: 1.7;
 }
+
+.page-header h3 {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 20px 0 5px;
+  padding: 10px 15px;
+  background: #ffd91a;
+  border-radius: 8px;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* =========================================
+   COMMON SECTION HEADINGS
+========================================= */
+
+.speech-analysis h2,
+.transcript-section h2 {
+  margin: 0 0 22px;
+  color: #000000;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* =========================================
+   SPEECH ANALYSIS
+========================================= */
+
+.speech-analysis {
+  padding: 28px;
+  margin: 30px 0;
+  background: #ffffff;
+  border: 1px solid #ededed;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.045);
+}
+
+.speech-analysis h2::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 22px;
+  margin-right: 11px;
+  vertical-align: -4px;
+  border-radius: 5px;
+  background: #f04400;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.analysis-grid article {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 115px;
+  padding: 22px;
+  background: #f8f8f8;
+  border: 1px solid #eeeeee;
+  border-radius: 15px;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease,
+              border-color 0.25s ease;
+}
+
+.analysis-grid article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #d0f030;
+}
+
+.analysis-grid article:nth-child(2)::before,
+.analysis-grid article:nth-child(5)::before {
+  background: #ffd91a;
+}
+
+.analysis-grid article:nth-child(3)::before,
+.analysis-grid article:nth-child(6)::before {
+  background: #f04400;
+}
+
+.analysis-grid article:hover {
+  transform: translateY(-4px);
+  border-color: #f04400;
+  box-shadow: 0 10px 24px rgba(240, 68, 0, 0.09);
+}
+
+.analysis-grid article span {
+  color: #777777;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.analysis-grid article strong {
+  color: #000000;
+  font-size: 27px;
+  font-weight: 850;
+  letter-spacing: -1px;
+}
+
+/* =========================================
+   TRANSCRIPT SECTION
+========================================= */
+
+.transcript-section {
+  position: relative;
+  padding: 28px;
+  margin: 30px 0;
+  background: #fffbea;
+  border: 1px solid #f3e7ae;
+  border-radius: 20px;
+}
+
+.transcript-section h2::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 22px;
+  margin-right: 11px;
+  vertical-align: -4px;
+  border-radius: 5px;
+  background: #ffd91a;
+}
+
+.transcript-section p {
+  margin: 0;
+  padding: 20px;
+  background: #ffffff;
+  border-left: 4px solid #f04400;
+  border-radius: 10px;
+  color: #292929;
+  font-size: 15px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================
+   STRENGTHS AND IMPROVEMENTS
+========================================= */
 
 .feedback-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 22px;
+  margin: 30px 0;
 }
+
+.feedback-grid > * {
+  min-width: 0;
+}
+
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.error-message {
+  padding: 18px 22px;
+  background: #fff0ec;
+  border: 1px solid #f04400;
+  border-radius: 12px;
+  color: #c53500;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =========================================
+   LOADING STATE
+========================================= */
+
+.evaluation-page > p {
+  padding: 30px;
+  color: #555555;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
 
 @media (max-width: 768px) {
 
   .evaluation-page {
-    padding: 20px;
-    gap: 22px;
+    padding: 25px 18px 50px;
+  }
+
+  .page-header {
+    padding: 28px 24px;
+  }
+
+  .analysis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .feedback-grid {
     grid-template-columns: 1fr;
   }
 
-  .page-header h1 {
-    font-size: 25px;
+  .speech-analysis,
+  .transcript-section {
+    padding: 22px;
   }
 
 }
@@ -60,7 +287,43 @@
 @media (max-width: 480px) {
 
   .evaluation-page {
-    padding: 14px;
+    padding: 18px 12px 40px;
+  }
+
+  .page-header {
+    padding: 25px 20px;
+    border-radius: 16px;
+  }
+
+  .page-header::after {
+    width: 130px;
+    height: 130px;
+    right: -55px;
+    top: -50px;
+  }
+
+  .page-header h1 {
+    font-size: 27px;
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .analysis-grid article {
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .analysis-grid article strong {
+    font-size: 24px;
+  }
+
+  .speech-analysis,
+  .transcript-section {
+    padding: 18px;
+    border-radius: 15px;
   }
 
 }

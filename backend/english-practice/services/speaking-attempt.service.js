@@ -155,11 +155,53 @@ const getStudentAttempts = async (studentId) => {
     return rows;
 };
 
+// Get one speaking attempt belonging to a student
+const getStudentAttemptById = async (attemptId, studentId) => {
+
+    const [rows] = await db.execute(
+        `SELECT
+            id,
+            topic_id,
+            topic_title,
+            transcript,
+            duration_seconds,
+            word_count,
+            speaking_speed,
+            filler_count,
+            repetition_count,
+            pause_count,
+            overall_score,
+            evaluation_result,
+            status,
+            created_at
+         FROM english_speaking_attempts
+         WHERE id = ?
+         AND student_id = ?
+         LIMIT 1`,
+        [attemptId, studentId]
+    );
+
+    const attempt = rows[0];
+
+    if (!attempt) {
+        return null;
+    }
+
+    // Convert the stored JSON string into an object
+    if (typeof attempt.evaluation_result === "string") {
+        attempt.evaluation_result = JSON.parse(
+            attempt.evaluation_result
+        );
+    }
+
+    return attempt;
+};
 
 module.exports = {
     saveAttempt,
     getAttemptForEvaluation,
     saveEvaluation,
     markAttemptFailed,
-    getStudentAttempts
+    getStudentAttempts,
+    getStudentAttemptById
 };
