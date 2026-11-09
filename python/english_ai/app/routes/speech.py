@@ -26,12 +26,12 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
     # 1. Validate audio format
     if not file.filename or not file.filename.lower().endswith(
-        (".wav", ".mp3", ".m4a")
+     (".wav", ".mp3", ".m4a", ".webm")
     ):
         raise HTTPException(
-            status_code=400,
-            detail="Unsupported audio format"
-        )
+        status_code=400,
+        detail="Unsupported audio format"
+    )
 
     upload_dir = Path("uploads")
     upload_dir.mkdir(parents=True, exist_ok=True)

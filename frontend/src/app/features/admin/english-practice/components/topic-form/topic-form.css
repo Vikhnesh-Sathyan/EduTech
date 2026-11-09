@@ -1,0 +1,100 @@
+.topic-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #eadfce;
+  border-radius: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.form-group label {
+  color: #5b4632;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #e2d6c6;
+  border-radius: 8px;
+  background: #fffdfa;
+  color: #5b4632;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #c8792c;
+  box-shadow: 0 0 0 3px rgba(200, 121, 44, 0.12);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.form-row {
+  display: flex;
+  gap: 18px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+.topic-form button {
+  align-self: flex-start;
+  padding: 12px 22px;
+  background: #5b4632;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.topic-form button:hover:not(:disabled) {
+  background: #806747;
+}
+
+.topic-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin: 0;
+  padding: 12px;
+  color: #b5473c;
+  background: #fcebea;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.success-message {
+  margin: 0;
+  padding: 12px;
+  color: #267344;
+  background: #e7f5ec;
+  border-radius: 8px;
+  font-size: 13px;
+}

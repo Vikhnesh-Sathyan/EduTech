@@ -16,7 +16,10 @@ class SpeechService:
 
         segments, info = self.model.transcribe(
             audio_path,
-            beam_size=3
+            language="en",
+            task="transcribe",
+            beam_size=5,
+            vad_filter=True
         )
 
         transcript_parts = []

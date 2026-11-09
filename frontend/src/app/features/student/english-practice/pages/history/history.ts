@@ -12,9 +12,11 @@ import {
   SpeakingAttemptHistory
 } from '../../models/speaking/speaking-attempt.model';
 
+import { AttemptList } from '../../components/history/attempt-list/attempt-list';
+
 @Component({
   selector: 'app-history',
-  imports: [],
+  imports: [AttemptList],
   templateUrl: './history.html',
   styleUrl: './history.css'
 })

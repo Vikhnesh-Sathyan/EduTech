@@ -134,9 +134,6 @@ import { EvaluationResult }
 import { History as EnglishPracticeHistory }
   from './features/student/english-practice/pages/history/history';
 
-
-
-
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';
@@ -177,6 +174,11 @@ import { MentorVerification } from './features/admin/mentors/mentor-verification
 // Admin Cheat Sheet
 import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
 
+//ENGLISH SPEAKING TOPICS
+
+import {
+  Topics as EnglishSpeakingTopics
+} from './features/admin/english-practice/pages/topics/topics';
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -559,6 +561,31 @@ export const routes: Routes = [
         component: NoteDetails
       },
       
+      // =====================================================
+      // STUDENT ENGLISH PRACTICE
+      // =====================================================
+
+      {
+        path: 'english-practice',
+        component: EnglishPracticeDashboard
+      },
+      {
+        path: 'english-practice/topics',
+        component: EnglishPracticeTopics
+      },
+      {
+        path: 'english-practice/speaking',
+        component: SpeakingPractice
+      },
+      {
+        path: 'english-practice/result/:attemptId',
+        component: EvaluationResult
+      },
+      {
+        path: 'english-practice/history',
+        component: EnglishPracticeHistory
+      },
+      
     ]
   },
 
@@ -677,30 +704,9 @@ export const routes: Routes = [
         path: 'skillswap/skill-suggestions',
         component: SkillSuggestions 
       },
-
-      // =====================================================
-      // STUDENT ENGLISH PRACTICE
-      // =====================================================
-
       {
-        path: 'english-practice',
-        component: EnglishPracticeDashboard
-      },
-      {
-        path: 'english-practice/topics',
-        component: EnglishPracticeTopics
-      },
-      {
-        path: 'english-practice/speaking',
-        component: SpeakingPractice
-      },
-      {
-        path: 'english-practice/result/:attemptId',
-        component: EvaluationResult
-      },
-      {
-        path: 'english-practice/history',
-        component: EnglishPracticeHistory
+        path: 'english-speaking-topics',
+        component: EnglishSpeakingTopics
       },
       
     ]

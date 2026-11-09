@@ -58,7 +58,7 @@ export class SpeakingPractice implements OnInit {
     if (!selectedTopic) {
 
       this.router.navigate([
-        '/student/english-practice/topics'
+        '/english-practice/topics'
       ]);
 
       return;
@@ -129,7 +129,7 @@ export class SpeakingPractice implements OnInit {
 
         this.router.navigate(
           [
-            '/student/english-practice/result',
+            '/english-practice/result',
             response.attempt_id
           ],
           {

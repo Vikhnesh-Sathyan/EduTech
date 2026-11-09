@@ -1,1 +1,46 @@
-<p>recent-attempts works!</p>
+
+<section class="recent-attempts">
+
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">KEEP PRACTICING</span>
+      <h2>Recent Attempts</h2>
+      <p>Your latest English speaking sessions.</p>
+    </div>
+
+    <a routerLink="/english-practice/history">
+      View All
+    </a>
+  </div>
+
+  @if (loading()) {
+
+    <div class="empty-state">
+      <p>Loading your recent attempts...</p>
+    </div>
+
+  } @else {
+
+    @if (recentAttempts().length > 0) {
+
+      <div class="attempt-list">
+
+        @for (attempt of recentAttempts(); track attempt.id) {
+          <app-attempt-card [attempt]="attempt" />
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+        <span class="empty-icon">🎙️</span>
+        <h3>No attempts yet</h3>
+        <p>Your recent speaking sessions will appear here.</p>
+      </div>
+
+    }
+
+  }
+
+</section>

@@ -1,6 +1,4 @@
-
-const adminTopicService = require("../services/admin-topic.service");
-
+const adminTopicService = require("../../services/admin/admin-topic.service");
 
 // Create speaking topic
 const createTopic = async (req, res) => {

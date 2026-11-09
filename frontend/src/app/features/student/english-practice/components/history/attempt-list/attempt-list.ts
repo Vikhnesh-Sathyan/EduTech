@@ -1,5 +1,6 @@
-
 import { Component, input } from '@angular/core';
+
+import { AttemptCard } from '../attempt-card/attempt-card';
 
 import {
   SpeakingAttemptHistory
@@ -7,7 +8,7 @@ import {
 
 @Component({
   selector: 'app-attempt-list',
-  imports: [],
+  imports: [AttemptCard],
   templateUrl: './attempt-list.html',
   styleUrl: './attempt-list.css'
 })

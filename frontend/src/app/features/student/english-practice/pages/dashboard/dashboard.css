@@ -1,0 +1,19 @@
+
+.dashboard-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+@media (max-width: 650px) {
+  .dashboard-page {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .dashboard-page {
+    padding: 14px;
+  }
+}

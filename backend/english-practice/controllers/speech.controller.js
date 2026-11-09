@@ -70,16 +70,18 @@ const transcribe = async (req, res) => {
             attempt
         });
 
-    } catch (error) {
+    }  catch (error) {
 
-        console.error(
-            "English Practice Speech Error:",
-            error.message
-        );
+        console.error("English Practice Speech Error:", error);
+
+        console.error("Error message:", error?.message);
+        console.error("Error stack:", error?.stack);
+        console.error("Error response:", error?.response?.data);
 
         return res.status(500).json({
             success: false,
-            message: "Unable to process speaking attempt"
+            message: "Unable to process speaking attempt",
+            error: error?.message || String(error)
         });
     }
 };

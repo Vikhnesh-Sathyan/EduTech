@@ -1,1 +1,48 @@
-<p>attempt-card works!</p>
+
+<article class="attempt-card">
+
+  <div class="attempt-details">
+
+    <div class="attempt-icon">
+      🎙️
+    </div>
+
+    <div>
+      <h3>{{ attempt().topic_title }}</h3>
+
+      <span class="attempt-date">
+        {{ attempt().created_at | date:'mediumDate' }}
+      </span>
+    </div>
+
+  </div>
+
+  <div class="attempt-result">
+
+    @if (attempt().status === 'completed') {
+
+      <strong class="score">
+        {{ attempt().overall_score }}/100
+      </strong>
+
+      <span class="status completed">
+        Completed
+      </span>
+
+    } @else if (attempt().status === 'pending') {
+
+      <span class="status pending">
+        Pending
+      </span>
+
+    } @else {
+
+      <span class="status failed">
+        Failed
+      </span>
+
+    }
+
+  </div>
+
+</article>

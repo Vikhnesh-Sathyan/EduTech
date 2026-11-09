@@ -1,11 +1,8 @@
 
 const aiClient = require("./ai.service");
 
-
 const transcribeAudio = async (file) => {
-
     try {
-
         const formData = new FormData();
 
         const audioBlob = new Blob(
@@ -28,31 +25,19 @@ const transcribeAudio = async (file) => {
 
     } catch (error) {
 
-        if (error.code === "ECONNREFUSED") {
-            throw new Error("Python AI service is unavailable");
-        }
+        console.error("Speech Service Error:", error);
 
-        if (
-            error.code === "ECONNABORTED" ||
-            error.code === "ETIMEDOUT"
-        ) {
-            throw new Error("Speech transcription request timed out");
-        }
-
-        if (error.response) {
-            throw new Error(
-                error.response.data.detail ||
-                "Speech transcription failed"
-            );
-        }
+        console.error("Error code:", error?.code);
+        console.error("Error message:", error?.message);
+        console.error("Error cause:", error?.cause);
+        console.error("Error response:", error?.response?.data);
 
         throw new Error(
-            "Unable to communicate with Python AI service"
+            `Speech service failed: ${
+                error?.message || String(error)
+            }`
         );
     }
 };
 
-
-module.exports = {
-    transcribeAudio
-};
+module.exports = { transcribeAudio };

@@ -49,7 +49,7 @@ export class EvaluationResult implements OnInit {
     if (!result) {
 
       this.router.navigate([
-        '/student/english-practice/topics'
+        '/english-practice/topics'
       ]);
 
       return;

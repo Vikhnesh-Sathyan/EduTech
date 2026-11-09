@@ -51,7 +51,8 @@ openSkillSwap(): void {
   this.router.navigate(['/skill-swap']);
 }
 
-openChallengeArena(): void {
-  this.router.navigate(['/student/challenge-arena']);
+openEnglishPractice(): void {
+  this.router.navigate(['/english-practice']);
 }
+
 }

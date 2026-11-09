@@ -1,1 +1,56 @@
-<p>history works!</p>
+
+<main class="history-page">
+
+  <header class="page-header">
+
+    <div>
+      <span class="eyebrow">ENGLISH PRACTICE</span>
+
+      <h1>Speaking History</h1>
+
+      <p>Review your previous speaking practice sessions.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadHistory()"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Refreshing...' : 'Refresh History' }}
+    </button>
+
+  </header>
+
+  @if (errorMessage()) {
+
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+  @if (loading()) {
+
+    <div class="loading-message">
+      Loading your speaking history...
+    </div>
+
+  } @else {
+
+    <section class="history-content">
+
+      <div class="history-heading">
+        <h2>Your Attempts</h2>
+        <span>{{ attempts().length }} Attempts</span>
+      </div>
+
+      <app-attempt-list
+        [attempts]="attempts()"
+      />
+
+    </section>
+
+  }
+
+</main>

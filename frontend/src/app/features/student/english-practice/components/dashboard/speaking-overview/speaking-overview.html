@@ -1,1 +1,49 @@
-<p>speaking-overview works!</p>
+
+<section class="speaking-overview">
+
+  <div class="section-heading">
+    <span class="eyebrow">YOUR PERFORMANCE</span>
+    <h2>Speaking Overview</h2>
+    <p>Track your English speaking practice progress.</p>
+  </div>
+
+  <div class="overview-grid">
+
+    <article class="overview-card">
+      <div class="card-icon">🎙️</div>
+      <span class="card-label">Total Attempts</span>
+      <strong>{{ totalAttempts() }}</strong>
+      <span class="card-description">
+        Speaking sessions recorded
+      </span>
+    </article>
+
+    <article class="overview-card">
+      <div class="card-icon">⭐</div>
+      <span class="card-label">Average Score</span>
+
+      <strong>
+        @if (averageScore() !== null) {
+          {{ averageScore() }}/100
+        } @else {
+          --
+        }
+      </strong>
+
+      <span class="card-description">
+        Your completed evaluation average
+      </span>
+    </article>
+
+    <article class="overview-card">
+      <div class="card-icon">📝</div>
+      <span class="card-label">Words Practiced</span>
+      <strong>{{ totalWords() }}</strong>
+      <span class="card-description">
+        Total words spoken
+      </span>
+    </article>
+
+  </div>
+
+</section>

@@ -82,7 +82,7 @@ export class Topics {
   startPractice(topic: SpeakingTopic): void {
 
     this.router.navigate(
-      ['/student/english-practice/speaking'],
+      ['english-practice/speaking'],
       {
         state: { topic }
       }

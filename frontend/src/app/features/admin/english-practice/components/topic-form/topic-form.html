@@ -1,0 +1,100 @@
+<form class="topic-form" (ngSubmit)="submitTopic()">
+
+  <div class="form-group">
+    <label for="subject">Subject (Optional)</label>
+
+    <select
+      id="subject"
+      name="subject_id"
+      [(ngModel)]="subject_id">
+
+      <option [ngValue]="null">
+        General Topic (All Students)
+      </option>
+
+      @if (loadingSubjects()) {
+        <option disabled>Loading subjects...</option>
+      }
+
+      @for (subject of subjects(); track subject.id) {
+        <option [ngValue]="subject.id">
+          {{ subject.program_name }} /
+          {{ subject.department_name }} /
+          {{ subject.year_name }} /
+          {{ subject.name }}
+        </option>
+      }
+
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="title">Topic Title</label>
+
+    <input
+      id="title"
+      name="title"
+      type="text"
+      [(ngModel)]="title"
+      placeholder="Example: My Favourite Hobby"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="prompt">Speaking Prompt</label>
+
+    <textarea
+      id="prompt"
+      name="prompt"
+      [(ngModel)]="prompt"
+      rows="5"
+      placeholder="Describe what the student should speak about..."
+      required
+    ></textarea>
+  </div>
+
+  <div class="form-row">
+
+    <div class="form-group">
+      <label for="category">Category</label>
+
+      <input
+        id="category"
+        name="category"
+        type="text"
+        [(ngModel)]="category"
+        placeholder="Example: Personal"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="difficulty">Difficulty</label>
+
+      <select
+        id="difficulty"
+        name="difficulty"
+        [(ngModel)]="difficulty">
+
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+
+      </select>
+    </div>
+
+  </div>
+
+  @if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="success-message">{{ successMessage() }}</p>
+  }
+
+  <button type="submit" [disabled]="saving()">
+    {{ saving() ? 'Creating...' : 'Create Topic' }}
+  </button>
+
+</form>

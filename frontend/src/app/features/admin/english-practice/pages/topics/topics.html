@@ -1,0 +1,40 @@
+<section class="topics-page">
+
+  <header class="page-header">
+    <div>
+      <h1>English Speaking Topics</h1>
+      <p>Manage speaking practice topics for students.</p>
+    </div>
+
+    <button type="button" (click)="loadTopics()">
+      Refresh Topics
+    </button>
+  </header>
+
+  <section class="create-topic-section">
+
+  <div class="section-heading">
+    <h2>Create Speaking Topic</h2>
+    <p>Add a new topic for students to practise speaking.</p>
+  </div>
+
+  <app-topic-form
+    (topicCreated)="loadTopics()"
+  />
+
+</section>
+
+  <div class="topics-summary">
+    <span>Total Topics</span>
+    <strong>{{ topics().length }}</strong>
+  </div>
+
+  @if (loading()) {
+    <p>Loading speaking topics...</p>
+  } @else if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  } @else {
+    <app-topic-list [topics]="topics()" />
+  }
+
+</section>

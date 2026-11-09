@@ -1,0 +1,12 @@
+<div class="topic-list">
+
+  @for (topic of topics(); track topic.id) {
+    <app-topic-card [topic]="topic" />
+  } @empty {
+    <div class="empty-state">
+      <h3>No speaking topics found</h3>
+      <p>Create your first speaking topic to get started.</p>
+    </div>
+  }
+
+</div>

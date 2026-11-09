@@ -1,0 +1,34 @@
+<article class="topic-card">
+
+  <div class="topic-header">
+    <h3>{{ topic().title }}</h3>
+
+    <span
+      class="status"
+      [class.active]="topic().status === 'active'"
+      [class.inactive]="topic().status === 'inactive'">
+      {{ topic().status }}
+    </span>
+  </div>
+
+  <p class="prompt">
+    {{ topic().prompt }}
+  </p>
+
+  <div class="topic-details">
+
+    <span>
+      {{ topic().category || 'General' }}
+    </span>
+
+    <span>
+      {{ topic().difficulty | titlecase }}
+    </span>
+
+    <span>
+      {{ topic().created_at | date:'mediumDate' }}
+    </span>
+
+  </div>
+
+</article>

@@ -1,6 +1,4 @@
-
-const db = require("../../config/db");
-
+const db = require("../../../config/db");
 
 // Create a new speaking topic
 const createTopic = async ({
