@@ -10,10 +10,14 @@ const speakingAttemptService = require(
 
 const evaluate = async (req, res) => {
 
+    let attemptId;
+    let studentId;
+    let attempt;
+
     try {
 
         // 1. Validate attempt ID
-        const attemptId = Number(req.body?.attempt_id);
+        attemptId = Number(req.body?.attempt_id);
 
         if (
             !Number.isInteger(attemptId) ||
@@ -25,10 +29,10 @@ const evaluate = async (req, res) => {
             });
         }
 
-        const studentId = req.user.id;
+        studentId = req.user.id;
 
         // 2. Fetch student's pending attempt
-        const attempt =
+        attempt =
             await speakingAttemptService.getAttemptForEvaluation(
                 attemptId,
                 studentId
@@ -41,41 +45,58 @@ const evaluate = async (req, res) => {
             });
         }
 
-        // 3. Evaluate saved transcript using Python AI
-        const result =
-            await topicEvaluationService.evaluateTopicResponse(
-                attempt.topic_title,
-                attempt.transcript
+        let evaluation;
+
+        // 3. Evaluate transcript using Python AI
+        try {
+
+            const result =
+                await topicEvaluationService.evaluateTopicResponse(
+                    attempt.topic_title,
+                    attempt.transcript
+                );
+
+            // 4. Validate AI evaluation response
+            evaluation = result?.evaluation;
+
+            const overallScore = Number(
+                evaluation?.overall_score
             );
 
-        // 4. Validate AI evaluation response
-        const evaluation = result?.evaluation;
+            if (
+                result?.success !== true ||
+                !evaluation ||
+                !Number.isFinite(overallScore) ||
+                overallScore < 0 ||
+                overallScore > 10
+            ) {
+                throw new Error(
+                    "Invalid evaluation response from Python AI service"
+                );
+            }
 
-        const overallScore = Number(
-            evaluation?.overall_score
-        );
+            evaluation = {
+                ...evaluation,
+                overall_score: overallScore
+            };
 
-        if (
-            result?.success !== true ||
-            !evaluation ||
-            !Number.isFinite(overallScore) ||
-            overallScore < 0 ||
-            overallScore > 10
-        ) {
-            throw new Error(
-                "Invalid evaluation response from Python AI service"
+        } catch (evaluationError) {
+
+            // Mark attempt as failed when AI evaluation fails
+            await speakingAttemptService.markAttemptFailed(
+                attemptId,
+                studentId
             );
+
+            throw evaluationError;
         }
 
-        // 5. Save evaluation in database
+        // 5. Save completed evaluation
         const saved =
             await speakingAttemptService.saveEvaluation(
                 attemptId,
                 studentId,
-                {
-                    ...evaluation,
-                    overall_score: overallScore
-                }
+                evaluation
             );
 
         if (!saved) {
@@ -90,10 +111,7 @@ const evaluate = async (req, res) => {
             success: true,
             attempt_id: attemptId,
             status: "completed",
-            evaluation: {
-                ...evaluation,
-                overall_score: overallScore
-            }
+            evaluation
         });
 
     } catch (error) {
@@ -105,8 +123,7 @@ const evaluate = async (req, res) => {
 
         return res.status(503).json({
             success: false,
-            message: error.message ||
-                "Topic evaluation service is unavailable"
+            message: "Unable to complete topic evaluation"
         });
     }
 };

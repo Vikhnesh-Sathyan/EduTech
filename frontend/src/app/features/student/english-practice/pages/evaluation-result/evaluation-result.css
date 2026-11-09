@@ -1,0 +1,66 @@
+
+.evaluation-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.page-header {
+  margin-bottom: 4px;
+}
+
+.eyebrow {
+  color: #c8792c;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.page-header h1 {
+  margin: 10px 0;
+  color: #5b4632;
+  font-size: 30px;
+  font-weight: 750;
+}
+
+.page-header p {
+  margin: 0;
+  color: #887765;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+
+  .evaluation-page {
+    padding: 20px;
+    gap: 22px;
+  }
+
+  .feedback-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header h1 {
+    font-size: 25px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .evaluation-page {
+    padding: 14px;
+  }
+
+}

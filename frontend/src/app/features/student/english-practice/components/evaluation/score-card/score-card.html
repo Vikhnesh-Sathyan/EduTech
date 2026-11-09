@@ -1,0 +1,38 @@
+
+<section class="score-card">
+
+  <div class="overall-score">
+
+    <span class="score-label">OVERALL SCORE</span>
+
+    <h2>{{ evaluation().overall_score }}<small>/100</small></h2>
+
+    <p>Your speaking performance</p>
+
+  </div>
+
+  <div class="category-scores">
+
+    <div class="score-item">
+      <span>Topic Relevance</span>
+      <strong>{{ evaluation().scores.topic_relevance }}/100</strong>
+    </div>
+
+    <div class="score-item">
+      <span>Grammar</span>
+      <strong>{{ evaluation().scores.grammar }}/100</strong>
+    </div>
+
+    <div class="score-item">
+      <span>Vocabulary</span>
+      <strong>{{ evaluation().scores.vocabulary }}/100</strong>
+    </div>
+
+    <div class="score-item">
+      <span>Clarity</span>
+      <strong>{{ evaluation().scores.clarity }}/100</strong>
+    </div>
+
+  </div>
+
+</section>

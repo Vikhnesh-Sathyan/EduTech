@@ -1,0 +1,47 @@
+
+<section class="attempt-list">
+
+  @for (attempt of attempts(); track attempt.id) {
+
+    <article class="attempt-item">
+
+      <div class="attempt-info">
+
+        <h3>{{ attempt.topic_title }}</h3>
+
+        <span>
+          {{ attempt.created_at | date:'mediumDate' }}
+        </span>
+
+      </div>
+
+      <div class="attempt-score">
+
+        @if (attempt.status === 'completed') {
+
+          <strong>{{ attempt.overall_score }}/100</strong>
+
+        } @else if (attempt.status === 'pending') {
+
+          <span class="pending-status">Pending</span>
+
+        } @else {
+
+          <span class="failed-status">Failed</span>
+
+        }
+
+      </div>
+
+    </article>
+
+  } @empty {
+
+    <div class="empty-state">
+      <h3>No speaking attempts yet</h3>
+      <p>Your completed speaking practices will appear here.</p>
+    </div>
+
+  }
+
+</section>

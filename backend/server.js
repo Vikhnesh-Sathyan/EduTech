@@ -775,6 +775,53 @@ app.use(
 
 
 // =====================================================
+// GLOBAL ERROR HANDLING
+// =====================================================
+
+app.use((err, req, res, next) => {
+
+    // Response already started
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    // Multer upload errors
+    if (err.name === "MulterError") {
+
+        if (err.code === "LIMIT_FILE_SIZE") {
+            return res.status(413).json({
+                success: false,
+                message: "Audio file must not exceed 10 MB"
+            });
+        }
+
+        return res.status(400).json({
+            success: false,
+            message: "Audio upload failed"
+        });
+    }
+
+    // Unsupported audio format
+    if (err.message === "Unsupported audio format") {
+
+        return res.status(400).json({
+            success: false,
+            message: "Only WAV, MP3 and M4A audio files are allowed"
+        });
+
+    }
+
+    // Unexpected server errors
+    console.error("Global Server Error:", err);
+
+    return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+    });
+
+});
+
+// =====================================================
 // START SERVER WITH SOCKET.IO
 // =====================================================
 

@@ -1,0 +1,83 @@
+
+@if (topic(); as selectedTopic) {
+
+  <main class="speaking-page">
+
+    <header class="page-header">
+      <div>
+        <span class="eyebrow">ENGLISH PRACTICE</span>
+        <h1>Speaking Practice</h1>
+        <p>Express your thoughts and improve your spoken English.</p>
+      </div>
+
+      <span class="difficulty-badge">
+        {{ selectedTopic.difficulty }}
+      </span>
+    </header>
+
+    <section class="topic-card">
+
+      <span class="topic-category">
+        {{ selectedTopic.category }}
+      </span>
+
+      <h2>{{ selectedTopic.title }}</h2>
+
+      <p>{{ selectedTopic.prompt }}</p>
+
+    </section>
+
+    <section class="recorder-section">
+
+      <div class="section-heading">
+        <h2>Your Recording</h2>
+        <p>Speak naturally and clearly about the topic.</p>
+      </div>
+
+      <app-audio-recorder
+        (recordingComplete)="onRecordingComplete($event)"
+      />
+
+      @if (uploading()) {
+
+        <div class="loading-message">
+          <span class="loader"></span>
+          <p>Processing your recording and generating transcript...</p>
+        </div>
+
+      }
+
+      @if (errorMessage()) {
+
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+
+      }
+
+    </section>
+
+@if (transcription(); as result) {
+
+  <section class="transcript-section">
+
+    <app-transcript-preview
+      [transcription]="result"
+    />
+
+    <button
+  type="button"
+  class="evaluate-button"
+  [disabled]="evaluating()"
+  (click)="evaluateSpeaking()"
+>
+  {{ evaluating() ? 'Evaluating...' : 'Evaluate My Speaking' }}
+</button>
+
+  </section>
+
+}
+
+  </main>
+
+}

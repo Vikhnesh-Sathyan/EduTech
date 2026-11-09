@@ -1,0 +1,55 @@
+
+.suggestion-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 26px;
+  background: #fff8e9;
+  border: 1px solid #f1dfb8;
+  border-radius: 14px;
+}
+
+.suggestion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  background: #f4e5c5;
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+.suggestion-content {
+  flex: 1;
+}
+
+.suggestion-label {
+  color: #a16b2d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.suggestion-content h3 {
+  margin: 8px 0;
+  color: #5b4632;
+  font-size: 18px;
+}
+
+.suggestion-content p {
+  margin: 0;
+  color: #74614c;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 480px) {
+
+  .suggestion-card {
+    padding: 18px;
+    gap: 12px;
+  }
+
+}

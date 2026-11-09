@@ -1,0 +1,29 @@
+
+<section class="feedback-card">
+
+  <div class="feedback-heading">
+    <span class="feedback-icon">↗</span>
+    <div>
+      <h3>Areas to Improve</h3>
+      <p>Focus on these areas next</p>
+    </div>
+  </div>
+
+  <ul class="feedback-list">
+
+    @for (improvement of improvements(); track $index) {
+
+      <li>
+        <span class="improvement-icon">•</span>
+        {{ improvement }}
+      </li>
+
+    } @empty {
+
+      <li>No improvements suggested.</li>
+
+    }
+
+  </ul>
+
+</section>

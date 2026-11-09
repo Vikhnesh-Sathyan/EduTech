@@ -1,0 +1,35 @@
+
+<section class="corrections-card">
+
+  <div class="corrections-heading">
+    <span class="corrections-icon">Aa</span>
+
+    <div>
+      <h3>Grammar Corrections</h3>
+      <p>Learn from your speaking mistakes</p>
+    </div>
+  </div>
+
+  <div class="corrections-list">
+
+    @for (correction of corrections(); track $index) {
+
+      <div class="correction-item">
+        <span class="correction-number">
+          {{ $index + 1 }}
+        </span>
+
+        <p>{{ correction }}</p>
+      </div>
+
+    } @empty {
+
+      <p class="empty-message">
+        No grammar corrections suggested.
+      </p>
+
+    }
+
+  </div>
+
+</section>

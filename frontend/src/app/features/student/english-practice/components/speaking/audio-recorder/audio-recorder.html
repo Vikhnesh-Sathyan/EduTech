@@ -1,0 +1,50 @@
+
+<div class="recorder-container">
+
+  <div class="recorder-icon">
+    <span>{{ isRecording() ? '🔴' : '🎙️' }}</span>
+  </div>
+
+  <h3>
+    {{ isRecording() ? 'Recording in progress' : 'Ready to practice?' }}
+  </h3>
+
+  <p>
+    {{
+      isRecording()
+        ? 'Speak clearly into your microphone.'
+        : 'Start recording when you are ready to speak.'
+    }}
+  </p>
+
+  @if (isRecording()) {
+
+    <button
+      type="button"
+      class="stop-button"
+      (click)="stopRecording()"
+    >
+      Stop Recording
+    </button>
+
+  } @else {
+
+    <button
+      type="button"
+      class="start-button"
+      (click)="startRecording()"
+    >
+      Start Recording
+    </button>
+
+  }
+
+  @if (errorMessage()) {
+
+    <p class="error-message">
+      {{ errorMessage() }}
+    </p>
+
+  }
+
+</div>

@@ -22,20 +22,28 @@ const evaluateTopicResponse = async (
     } catch (error) {
 
         if (error.code === "ECONNREFUSED") {
-            throw new Error("Python AI service is unavailable");
+            throw new Error(
+                "Python AI service is unavailable"
+            );
         }
 
         if (
             error.code === "ECONNABORTED" ||
             error.code === "ETIMEDOUT"
         ) {
-            throw new Error("Python AI service request timed out");
+            throw new Error(
+                "Python AI service request timed out"
+            );
         }
 
         if (error.response) {
+
+            const detail = error.response.data?.detail;
+
             throw new Error(
-                error.response.data.detail ||
-                "Python AI service returned an error"
+                typeof detail === "string"
+                    ? detail
+                    : "Python AI service returned an error"
             );
         }
 

@@ -1,0 +1,42 @@
+
+@if (evaluation(); as result) {
+
+  <main class="evaluation-page">
+
+    <header class="page-header">
+      <span class="eyebrow">ENGLISH PRACTICE</span>
+      <h1>Speaking Evaluation</h1>
+      <p>Review your performance and discover how to improve.</p>
+    </header>
+
+    <!-- OVERALL AND CATEGORY SCORES -->
+    <app-score-card
+      [evaluation]="result"
+    />
+
+    <!-- STRENGTHS AND IMPROVEMENTS -->
+    <section class="feedback-grid">
+
+      <app-strengths-list
+        [strengths]="result.strengths"
+      />
+
+      <app-improvement-list
+        [improvements]="result.improvements"
+      />
+
+    </section>
+
+    <!-- GRAMMAR CORRECTIONS -->
+    <app-grammar-corrections
+      [corrections]="result.grammar_corrections"
+    />
+
+    <!-- FINAL AI SUGGESTION -->
+    <app-suggestion-card
+      [suggestion]="result.suggestion"
+    />
+
+  </main>
+
+}

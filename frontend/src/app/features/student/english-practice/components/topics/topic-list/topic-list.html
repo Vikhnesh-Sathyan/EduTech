@@ -1,0 +1,19 @@
+<div class="topic-grid">
+
+  @for (topic of topics(); track topic.id) {
+
+    <app-topic-card
+      [topic]="topic"
+      (startPractice)="onStartPractice($event)"
+    />
+
+  } @empty {
+
+    <div class="empty-state">
+      <h3>No topics available</h3>
+      <p>Generate a speaking topic to start practising.</p>
+    </div>
+
+  }
+
+</div>

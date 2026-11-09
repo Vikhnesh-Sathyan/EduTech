@@ -1,0 +1,31 @@
+<article class="topic-card">
+
+  <div class="topic-header">
+    <span class="category">{{ topic().category }}</span>
+
+    <span
+      class="difficulty"
+      [class.easy]="topic().difficulty === 'easy'"
+      [class.medium]="topic().difficulty === 'medium'"
+      [class.hard]="topic().difficulty === 'hard'"
+    >
+      {{ topic().difficulty | titlecase }}
+    </span>
+  </div>
+
+  <h3>{{ topic().title }}</h3>
+
+  <p class="topic-prompt">
+    {{ topic().prompt }}
+  </p>
+
+  <button
+    type="button"
+    class="practice-button"
+    (click)="onStartPractice()"
+  >
+    Start Practice
+    <span>→</span>
+  </button>
+
+</article>

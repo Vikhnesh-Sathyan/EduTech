@@ -1,0 +1,32 @@
+<div class="topic-filter">
+
+  <div class="filter-group">
+    <label for="category">Category</label>
+
+    <input
+      #categoryInput
+      id="category"
+      type="text"
+      placeholder="Enter a category"
+      [value]="category"
+      (input)="onCategoryChange(categoryInput.value)"
+    />
+  </div>
+
+  <div class="filter-group">
+    <label for="difficulty">Difficulty</label>
+
+    <select
+      #difficultySelect
+      id="difficulty"
+      [value]="difficulty"
+      (change)="onDifficultyChange(difficultySelect.value)"
+    >
+      <option value="">All difficulties</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+  </div>
+
+</div>

@@ -1,0 +1,47 @@
+<div class="topics-page">
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">ENGLISH PRACTICE</span>
+      <h1>Speaking Topics</h1>
+      <p>
+        Choose a topic, express your thoughts, and improve your
+        English speaking skills.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="generate-button"
+      (click)="generateTopic()"
+      [disabled]="loading()"
+    >
+      @if (loading()) {
+        Generating...
+      } @else {
+        + Generate Topic
+      }
+    </button>
+  </div>
+
+  <app-topic-filter
+    (filtersChanged)="onFiltersChanged($event)"
+  />
+
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <div class="section-heading">
+    <h2>Your Topics</h2>
+    <span>{{ topics().length }} topics</span>
+  </div>
+
+  <app-topic-list
+    [topics]="topics()"
+    (startPractice)="startPractice($event)"
+  />
+
+</div>

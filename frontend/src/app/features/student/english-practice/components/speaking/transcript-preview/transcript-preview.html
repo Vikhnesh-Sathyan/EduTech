@@ -1,0 +1,33 @@
+
+<section class="transcript-card">
+
+  <div class="transcript-header">
+    <div>
+      <h3>Your Transcript</h3>
+      <p>Review what was captured from your speech.</p>
+    </div>
+
+    <span class="language-badge">
+      {{ transcription().language }}
+    </span>
+  </div>
+
+  <div class="transcript-content">
+    {{ transcription().transcript }}
+  </div>
+
+  <div class="transcript-footer">
+
+    <span>
+      Duration:
+      {{ transcription().duration_seconds }} seconds
+    </span>
+
+    <span>
+      Words:
+      {{ transcription().transcript.trim().split(/\s+/).length }}
+    </span>
+
+  </div>
+
+</section>

@@ -22,21 +22,7 @@ const transcribe = async (req, res) => {
             });
         }
 
-        // 2. Validate audio extension
-        const allowedExtensions = [".wav", ".mp3", ".m4a"];
-
-        const extension = require("path")
-            .extname(file.originalname)
-            .toLowerCase();
-
-        if (!allowedExtensions.includes(extension)) {
-            return res.status(400).json({
-                success: false,
-                message: "Unsupported audio format"
-            });
-        }
-
-        // 3. Validate topic ID
+        // 2. Validate topic ID
         const topicId = Number(req.body.topic_id);
 
         if (!Number.isInteger(topicId) || topicId <= 0) {
@@ -46,12 +32,12 @@ const transcribe = async (req, res) => {
             });
         }
 
-        // 4. Check topic availability
+        // 3. Check topic availability
         const availableTopics =
             await topicService.getAvailableTopics(req.user.id);
 
         const selectedTopic = availableTopics.find(
-            topic => topic.id === topicId
+            topic => Number(topic.id) === topicId
         );
 
         if (!selectedTopic) {
@@ -61,7 +47,7 @@ const transcribe = async (req, res) => {
             });
         }
 
-        // 5. Transcribe audio
+        // 4. Transcribe audio
         const result = await speechService.transcribeAudio(file);
 
         if (!result.success) {
@@ -71,7 +57,7 @@ const transcribe = async (req, res) => {
             });
         }
 
-        // 6. Save attempt
+        // 5. Save speaking attempt
         const attempt = await speakingAttemptService.saveAttempt({
             studentId: req.user.id,
             topicId: selectedTopic.id,
@@ -91,10 +77,9 @@ const transcribe = async (req, res) => {
             error.message
         );
 
-        return res.status(503).json({
+        return res.status(500).json({
             success: false,
-            message: error.message ||
-                "Speech transcription service is unavailable"
+            message: "Unable to process speaking attempt"
         });
     }
 };

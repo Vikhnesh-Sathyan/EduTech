@@ -118,6 +118,24 @@ import { NoteDetails } from './features/student/advanced/logic-to-code/notes/not
 import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
 
 
+// STUDENT ENGLISH PRACTICE
+import { Dashboard as EnglishPracticeDashboard }
+  from './features/student/english-practice/pages/dashboard/dashboard';
+
+import { Topics as EnglishPracticeTopics }
+  from './features/student/english-practice/pages/topics/topics';
+
+import { SpeakingPractice }
+  from './features/student/english-practice/pages/speaking-practice/speaking-practice';
+
+import { EvaluationResult }
+  from './features/student/english-practice/pages/evaluation-result/evaluation-result';
+
+import { History as EnglishPracticeHistory }
+  from './features/student/english-practice/pages/history/history';
+
+
+
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -658,6 +676,31 @@ export const routes: Routes = [
       {
         path: 'skillswap/skill-suggestions',
         component: SkillSuggestions 
+      },
+
+      // =====================================================
+      // STUDENT ENGLISH PRACTICE
+      // =====================================================
+
+      {
+        path: 'english-practice',
+        component: EnglishPracticeDashboard
+      },
+      {
+        path: 'english-practice/topics',
+        component: EnglishPracticeTopics
+      },
+      {
+        path: 'english-practice/speaking',
+        component: SpeakingPractice
+      },
+      {
+        path: 'english-practice/result/:attemptId',
+        component: EvaluationResult
+      },
+      {
+        path: 'english-practice/history',
+        component: EnglishPracticeHistory
       },
       
     ]

@@ -1,0 +1,32 @@
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 50px 24px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px dashed #ded3c7;
+  border-radius: 14px;
+}
+
+.empty-state h3 {
+  margin: 0 0 10px;
+  color: #5b4632;
+  font-size: 18px;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #8b8178;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .topic-grid {
+    grid-template-columns: 1fr;
+  }
+}

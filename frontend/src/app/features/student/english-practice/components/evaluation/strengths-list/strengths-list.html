@@ -1,0 +1,29 @@
+
+<section class="feedback-card">
+
+  <div class="feedback-heading">
+    <span class="feedback-icon">✓</span>
+    <div>
+      <h3>Your Strengths</h3>
+      <p>Things you did well</p>
+    </div>
+  </div>
+
+  <ul class="feedback-list">
+
+    @for (strength of strengths(); track $index) {
+
+      <li>
+        <span class="check-icon">✓</span>
+        {{ strength }}
+      </li>
+
+    } @empty {
+
+      <li>No strengths available.</li>
+
+    }
+
+  </ul>
+
+</section>

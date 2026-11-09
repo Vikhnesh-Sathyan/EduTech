@@ -105,6 +105,28 @@ const saveEvaluation = async (
 };
 
 
+// Mark an attempt as failed
+const markAttemptFailed = async (
+    attemptId,
+    studentId
+) => {
+
+    const [result] = await db.execute(
+        `UPDATE english_speaking_attempts
+         SET status = 'failed'
+         WHERE id = ?
+         AND student_id = ?
+         AND status = 'pending'`,
+        [
+            attemptId,
+            studentId
+        ]
+    );
+
+    return result.affectedRows > 0;
+};
+
+
 // Get a student's speaking attempt history
 const getStudentAttempts = async (studentId) => {
 
@@ -138,5 +160,6 @@ module.exports = {
     saveAttempt,
     getAttemptForEvaluation,
     saveEvaluation,
+    markAttemptFailed,
     getStudentAttempts
 };

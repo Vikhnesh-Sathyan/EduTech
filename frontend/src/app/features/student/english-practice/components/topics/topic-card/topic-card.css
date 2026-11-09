@@ -1,0 +1,89 @@
+.topic-card {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #eee7df;
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(91, 70, 50, 0.08);
+}
+
+.topic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.category {
+  color: #9a6332;
+  background: #fff4e8;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.difficulty {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.difficulty.easy {
+  color: #287a50;
+  background: #e9f7ef;
+}
+
+.difficulty.medium {
+  color: #a66a13;
+  background: #fff4dc;
+}
+
+.difficulty.hard {
+  color: #b44242;
+  background: #ffeded;
+}
+
+.topic-card h3 {
+  margin: 0 0 12px;
+  color: #3d3026;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.topic-prompt {
+  color: #82766c;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.practice-button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 9px;
+  background: #5b4632;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.practice-button:hover {
+  background: #c8792c;
+}
+
+.practice-button span {
+  font-size: 19px;
+}
