@@ -29,6 +29,28 @@ class ConversationRequest(BaseModel):
 
         return value.strip()
 
+    @field_validator("history")
+    @classmethod
+    def validate_history(cls, value):
+
+        if len(value) > 30:
+            raise ValueError("Conversation history cannot exceed 30 messages")
+
+        for item in value:
+
+            if not isinstance(item, dict):
+                raise ValueError("Invalid conversation history")
+
+            if item.get("role") not in ["user", "model"]:
+                raise ValueError("Invalid conversation history role")
+
+            content = item.get("content")
+
+            if not isinstance(content, str) or not content.strip():
+                raise ValueError("Invalid conversation history content")
+
+        return value
+
 
 @router.post("/chat")
 async def chat_with_ai(request: ConversationRequest):

@@ -51,6 +51,34 @@ const conversationRoutes = require(
     "./english-practice/routes/conversation.routes"
 );
 
+const debateRoutes = require(
+    "./english-practice/routes/debate.routes"
+);
+
+const debateEvaluationRoutes = require(
+    "./english-practice/routes/debate-evaluation.routes"
+);
+
+const topicRoutes = require(
+    "./english-practice/routes/topic.routes"
+);
+
+const topicEvaluationRoutes = require(
+    "./english-practice/routes/topic-evaluation.routes"
+);
+
+const speechRoutes = require(
+    "./english-practice/routes/speech.routes"
+);
+
+const progressRoutes = require(
+    "./english-practice/routes/progress.routes"
+);
+
+const adminEnglishTopicRoutes = require(
+    "./english-practice/routes/admin/admin-topic.routes"
+);
+
 
 // =====================================================
 // ADMIN ROUTES
@@ -363,6 +391,41 @@ app.use(
 app.use(
     "/api/english-practice/conversation",
     conversationRoutes
+);
+
+app.use(
+    "/api/english-practice/debate",
+    debateRoutes
+);
+
+app.use(
+    "/api/english-practice/debate-evaluation",
+    debateEvaluationRoutes
+);
+
+app.use(
+    "/api/english-practice/topics",
+    topicRoutes
+);
+
+app.use(
+    "/api/english-practice/topic-evaluation",
+    topicEvaluationRoutes
+);
+
+app.use(
+    "/api/english-practice/speech",
+    speechRoutes
+);
+
+app.use(
+    "/api/english-practice/progress",
+    progressRoutes
+);
+
+app.use(
+    "/api/english-practice/admin/topics",
+    adminEnglishTopicRoutes
 );
 
 // =====================================================

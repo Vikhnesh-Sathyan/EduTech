@@ -16,7 +16,7 @@ class SpeechService:
 
         segments, info = self.model.transcribe(
             audio_path,
-            beam_size=5
+            beam_size=3
         )
 
         transcript_parts = []
