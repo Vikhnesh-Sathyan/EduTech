@@ -117,7 +117,6 @@ import { NoteCreate } from './features/student/advanced/logic-to-code/notes/note
 import { NoteDetails } from './features/student/advanced/logic-to-code/notes/note-details/note-details';
 import { NoteEdit } from './features/student/advanced/logic-to-code/notes/note-edit/note-edit';
 
-
 // STUDENT ENGLISH PRACTICE
 import { Dashboard as EnglishPracticeDashboard }
   from './features/student/english-practice/pages/dashboard/dashboard';
@@ -133,6 +132,24 @@ import { EvaluationResult }
 
 import { History as EnglishPracticeHistory }
   from './features/student/english-practice/pages/history/history';
+
+  // STUDENT ENGLISH DEBATE
+
+import { DebateDashboard }
+  from './features/student/english-practice/pages/debate/debate-dashboard/debate-dashboard';
+
+import { DebateStart }
+  from './features/student/english-practice/pages/debate/debate-start/debate-start';
+
+import { DebateRoom }
+  from './features/student/english-practice/pages/debate/debate-room/debate-room';
+
+import { DebateResult }
+  from './features/student/english-practice/pages/debate/debate-result/debate-result';
+
+import { DebateHistory }
+  from './features/student/english-practice/pages/debate/debate-history/debate-history';
+
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -584,6 +601,30 @@ export const routes: Routes = [
       {
         path: 'english-practice/history',
         component: EnglishPracticeHistory
+      },
+      // =====================================================
+      // STUDENT ENGLISH DEBATE
+      // =====================================================
+
+      {
+        path: 'english-practice/debate',
+        component: DebateDashboard
+      },  
+      {
+        path: 'english-practice/debate/start',
+        component: DebateStart
+      },
+      {
+        path: 'english-practice/debate/room/:sessionId',
+        component: DebateRoom 
+      },
+      {
+        path: 'english-practice/debate/result/:sessionId',
+        component: DebateResult
+      },
+      {
+        path: 'english-practice/debate/history',
+        component: DebateHistory
       },
       
     ]

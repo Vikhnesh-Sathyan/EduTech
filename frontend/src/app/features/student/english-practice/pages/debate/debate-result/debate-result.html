@@ -1,0 +1,225 @@
+
+<div class="debate-result-page">
+
+  @if (isLoading()) {
+
+    <div class="loading-state">
+      <div class="loader"></div>
+      <p>Preparing your debate evaluation...</p>
+    </div>
+
+  }
+
+  @else if (errorMessage() && !session()?.evaluation_result) {
+
+    <div class="error-state">
+      <div class="error-icon">!</div>
+      <h2>Evaluation Unavailable</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button class="primary-btn" (click)="goToDashboard()">
+        Back to Debate Dashboard
+      </button>
+    </div>
+
+  }
+
+  @else if (session()?.evaluation_result; as evaluation) {
+
+    @if (session(); as result) {
+
+      <header class="result-header">
+        <span class="eyebrow">ENGLISH PRACTICE / DEBATE RESULT</span>
+
+        <h1>Your Debate Evaluation</h1>
+
+        <p>
+          Review your performance, understand your strengths
+          and discover opportunities to improve.
+        </p>
+      </header>
+
+      <section class="overall-score-card">
+
+        <div class="score-content">
+          <span class="score-label">OVERALL PERFORMANCE</span>
+
+          <div class="score-value">
+            {{ evaluation.overall_score | number:'1.1-1' }}
+            <span>/ 10</span>
+          </div>
+
+          <h2>{{ result.topic }}</h2>
+
+          <p>
+            Your position:
+            <strong>
+              {{ result.student_position === 'for' ? 'For' : 'Against' }}
+            </strong>
+          </p>
+        </div>
+
+        <div class="score-circle"
+          [style.--score]="evaluation.overall_score * 10">
+
+          <div class="score-circle-inner">
+            <strong>
+              {{ evaluation.overall_score | number:'1.1-1' }}
+            </strong>
+            <span>OUT OF 10</span>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="criteria-section">
+
+        <div class="section-heading">
+          <span>PERFORMANCE BREAKDOWN</span>
+          <h2>Evaluation Criteria</h2>
+          <p>Understand how you performed in each area.</p>
+        </div>
+
+   
+<div class="criteria-grid">
+
+  <article class="criteria-card">
+    <div class="criteria-top">
+      <h3>Argument Quality</h3>
+      <strong>{{ evaluation.scores.argument_quality }}/10</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"
+        [style.width.%]="evaluation.scores.argument_quality * 10">
+      </div>
+    </div>
+  </article>
+
+  <article class="criteria-card">
+    <div class="criteria-top">
+      <h3>Topic Relevance</h3>
+      <strong>{{ evaluation.scores.topic_relevance }}/10</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"
+        [style.width.%]="evaluation.scores.topic_relevance * 10">
+      </div>
+    </div>
+  </article>
+
+  <article class="criteria-card">
+    <div class="criteria-top">
+      <h3>Grammar</h3>
+      <strong>{{ evaluation.scores.grammar }}/10</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"
+        [style.width.%]="evaluation.scores.grammar * 10">
+      </div>
+    </div>
+  </article>
+
+  <article class="criteria-card">
+    <div class="criteria-top">
+      <h3>Vocabulary</h3>
+      <strong>{{ evaluation.scores.vocabulary }}/10</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"
+        [style.width.%]="evaluation.scores.vocabulary * 10">
+      </div>
+    </div>
+  </article>
+
+  <article class="criteria-card">
+    <div class="criteria-top">
+      <h3>Critical Thinking</h3>
+      <strong>{{ evaluation.scores.critical_thinking }}/10</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"
+        [style.width.%]="evaluation.scores.critical_thinking * 10">
+      </div>
+    </div>
+  </article>
+
+</div>
+
+      </section>
+
+      <section class="feedback-grid">
+
+        <article class="feedback-card strengths-card">
+          <div class="feedback-heading">
+            <span class="feedback-icon">✓</span>
+            <h2>Your Strengths</h2>
+          </div>
+
+          @if (evaluation.strengths.length) {
+            <ul>
+              @for (item of evaluation.strengths; track $index) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          } @else {
+            <p>No strengths provided.</p>
+          }
+        </article>
+
+        <article class="feedback-card improvements-card">
+          <div class="feedback-heading">
+            <span class="feedback-icon">↗</span>
+            <h2>Areas to Improve</h2>
+          </div>
+
+          @if (evaluation.improvements.length) {
+            <ul>
+              @for (item of evaluation.improvements; track $index) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          } @else {
+            <p>No improvement areas provided.</p>
+          }
+        </article>
+
+      </section>
+
+      <section class="suggestions-card">
+        <div class="feedback-heading">
+          <span class="feedback-icon">💡</span>
+          <h2>AI Improvement Suggestions</h2>
+        </div>
+
+        @if (evaluation.suggestions.length) {
+          <ul>
+            @for (item of evaluation.suggestions; track $index) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+        } @else {
+          <p>No suggestions available.</p>
+        }
+      </section>
+
+      <section class="summary-card">
+        <span>AI EVALUATION SUMMARY</span>
+        <h2>Overall Feedback</h2>
+        <p>{{ evaluation.summary }}</p>
+      </section>
+
+      <div class="result-actions">
+        <button class="secondary-btn" (click)="viewHistory()">
+          View Debate History
+        </button>
+
+        <button class="primary-btn" (click)="goToDashboard()">
+          Back to Dashboard
+        </button>
+      </div>
+
+    }
+
+  }
+
+</div>

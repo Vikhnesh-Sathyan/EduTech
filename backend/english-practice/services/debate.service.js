@@ -15,32 +15,48 @@ const sendDebateArgument = async (
             {
                 topic,
                 student_position: studentPosition,
-                student_argument: studentArgument,
+                argument: studentArgument,
                 history
             }
         );
 
         return response.data;
 
-    } catch (error) {
+    }   catch (error) {
 
         if (error.code === "ECONNREFUSED") {
-            throw new Error("Python AI service is unavailable");
+            throw new Error(
+                "Python AI service is unavailable. Please check whether it is running."
+            );
         }
 
         if (
             error.code === "ECONNABORTED" ||
             error.code === "ETIMEDOUT"
         ) {
-            throw new Error("Python AI service request timed out");
+            console.error("Python AI request timeout:", error.message);
+
+            throw new Error(
+                "The AI is taking too long to respond. Please try again."
+            );
         }
 
         if (error.response) {
+
+            console.error(
+                "Python AI error:",
+                error.response.status,
+                error.response.data
+            );
+
             throw new Error(
                 error.response.data.detail ||
+                error.response.data.message ||
                 "Python AI service returned an error"
             );
         }
+
+        console.error("AI communication error:", error);
 
         throw new Error(
             "Unable to communicate with Python AI service"

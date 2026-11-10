@@ -6,13 +6,16 @@ import { SpeakingOverview } from '../../components/dashboard/speaking-overview/s
 
 import { RecentAttempts } from '../../components/dashboard/recent-attempts/recent-attempts';
 
+import { DebateEntry } from '../../components/dashboard/debate-entry/debate-entry';
+
 @Component({
   selector: 'app-dashboard',
   imports: [
-  WelcomeSection,
-  SpeakingOverview,
-  RecentAttempts
-],
+    WelcomeSection,
+    SpeakingOverview,
+    RecentAttempts,
+    DebateEntry
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

@@ -1,6 +1,7 @@
 
 import json
 import os
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -14,7 +15,9 @@ load_dotenv(ENV_PATH)
 
 class DebateEvaluationService:
 
-    MODEL_NAME = "gemini-3.8-flash"
+    MODEL_NAME = "gemini-3.5-flash"
+
+    MAX_RETRIES = 3
 
     SYSTEM_INSTRUCTION = """
     You are an English debate performance evaluator.
@@ -68,6 +71,68 @@ class DebateEvaluationService:
 
         self.client = genai.Client(api_key=api_key)
 
+    def _is_retryable_error(self, error):
+
+        error_message = str(error).lower()
+
+        retryable_codes = ["429", "500", "502", "503", "504"]
+
+        status_code = getattr(error, "status_code", None)
+
+        if status_code is None:
+            status_code = getattr(error, "code", None)
+
+        if status_code is not None:
+            if str(status_code) in retryable_codes:
+                return True
+
+        return any(
+            code in error_message
+            for code in retryable_codes
+        )
+
+    def _generate_with_retry(self, prompt):
+
+        for attempt in range(self.MAX_RETRIES + 1):
+
+            try:
+
+                print(
+                    f"Generating debate evaluation... "
+                    f"Attempt {attempt + 1}"
+                )
+
+                return self.client.models.generate_content(
+                    model=self.MODEL_NAME,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=self.SYSTEM_INSTRUCTION,
+                        temperature=0.3,
+                        response_mime_type="application/json"
+                    )
+                )
+
+            except Exception as error:
+                
+                
+                print("Gemini evaluation error:", repr(error))
+
+                if not self._is_retryable_error(error):
+                    raise
+
+                if attempt == self.MAX_RETRIES:
+                    print("Gemini evaluation failed after all retries.")
+                    raise
+
+                wait_time = 2 ** (attempt + 1)
+
+                print(
+                    f"Gemini temporarily unavailable. "
+                    f"Retrying in {wait_time} seconds..."
+                )
+
+                time.sleep(wait_time)
+
     def evaluate_debate(self, topic, student_arguments):
 
         if not topic or not topic.strip():
@@ -91,20 +156,18 @@ class DebateEvaluationService:
         Evaluate the student's overall debate performance.
         """
 
-        response = self.client.models.generate_content(
-            model=self.MODEL_NAME,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=self.SYSTEM_INSTRUCTION,
-                temperature=0.3,
-                response_mime_type="application/json"
-            )
-        )
+        response = self._generate_with_retry(prompt)
 
         if not response.text:
             raise RuntimeError("Gemini returned an empty evaluation")
 
-        evaluation = json.loads(response.text)
+        try:
+            evaluation = json.loads(response.text)
+
+        except json.JSONDecodeError as error:
+            raise RuntimeError(
+                "Gemini returned an invalid evaluation format"
+            ) from error
 
         return {
             "success": True,

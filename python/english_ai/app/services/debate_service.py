@@ -1,5 +1,6 @@
 
 import os
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -13,7 +14,9 @@ load_dotenv(ENV_PATH)
 
 class DebateService:
 
-    MODEL_NAME = "gemini-3.8-flash"
+    MODEL_NAME = "gemini-3.5-flash"
+
+    MAX_RETRIES = 3
 
     SYSTEM_INSTRUCTION = """
     You are an intelligent English debate opponent.
@@ -42,6 +45,98 @@ class DebateService:
             raise ValueError("GEMINI_API_KEY is missing from .env")
 
         self.client = genai.Client(api_key=api_key)
+
+    # ==========================================
+    # GEMINI CONNECTION TEST
+    # ==========================================
+
+    def test_gemini_connection(self):
+
+        print("Testing Gemini connection...")
+
+        try:
+
+            response = self.client.models.generate_content(
+                model=self.MODEL_NAME,
+                contents="Reply with exactly: Gemini connection successful"
+            )
+
+            if not response.text:
+                raise RuntimeError("Gemini returned an empty response")
+
+            print("Gemini response:", response.text)
+
+            return response.text
+
+        except Exception as error:
+
+            print("Gemini test failed:", repr(error))
+
+            raise
+
+    # ==========================================
+    # GENERATE RESPONSE WITH RETRY
+    # ==========================================
+
+    def _generate_with_retry(self, contents):
+
+        for attempt in range(self.MAX_RETRIES + 1):
+
+            try:
+
+                return self.client.models.generate_content(
+                    model=self.MODEL_NAME,
+                    contents=contents,
+                    config=types.GenerateContentConfig(
+                        system_instruction=self.SYSTEM_INSTRUCTION,
+                        temperature=0.7,
+                        max_output_tokens=800
+                    )
+                )
+
+            except Exception as error:
+
+                status_code = (
+                    getattr(error, "code", None)
+                    or getattr(error, "status_code", None)
+                )
+
+                try:
+                    status_code = int(status_code)
+                except (TypeError, ValueError):
+                    status_code = None
+
+                retryable_errors = [429, 500, 502, 503, 504]
+
+                if status_code not in retryable_errors:
+                    raise
+
+                if attempt == self.MAX_RETRIES:
+
+                    print(
+                        f"Gemini API failed after "
+                        f"{self.MAX_RETRIES + 1} attempts."
+                    )
+
+                    print(f"Original error: {repr(error)}")
+
+                    raise RuntimeError(
+                        "The AI debate service is temporarily unavailable. "
+                        "Please try again in a moment."
+                    ) from error
+
+                wait_seconds = 2 ** (attempt + 1)
+
+                print(
+                    f"Gemini error {status_code}. "
+                    f"Retrying in {wait_seconds} seconds..."
+                )
+
+                time.sleep(wait_seconds)
+
+    # ==========================================
+    # GENERATE DEBATE OPPONENT RESPONSE
+    # ==========================================
 
     def generate_opponent_response(
         self,
@@ -98,19 +193,20 @@ class DebateService:
             }]
         })
 
-        response = self.client.models.generate_content(
-            model=self.MODEL_NAME,
-            contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction=self.SYSTEM_INSTRUCTION,
-                temperature=0.7,
-                max_output_tokens=350
+        response = self._generate_with_retry(contents)
+
+        if response.candidates:
+            candidate = response.candidates[0]
+
+            print("Gemini finish reason:", candidate.finish_reason)
+
+            print(
+                "Gemini generated characters:",
+                len(response.text or "")
             )
-        )
 
         if not response.text:
             raise RuntimeError("Gemini returned an empty response")
-
         return {
             "success": True,
             "ai_position": ai_position,

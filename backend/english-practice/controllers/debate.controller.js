@@ -1,93 +1,171 @@
 const debateService = require("../services/debate.service");
 
+const debateSessionService = require(
+    "../services/debate-session.service"
+);
+
 
 const respond = async (req, res) => {
 
     try {
 
-        const {
-            topic,
-            studentPosition,
-            studentArgument,
-            history = []
-        } = req.body;
+        const { sessionId, studentArgument } = req.body;
 
-
-        if (
-            !topic ||
-            typeof topic !== "string" ||
-            !topic.trim()
-        ) {
+        // 1. Validate session ID
+        if (!Number.isInteger(Number(sessionId)) || Number(sessionId) <= 0) {
             return res.status(400).json({
-                message: "Debate topic is required"
+                success: false,
+                message: "Valid debate session ID is required"
             });
         }
 
-
-        if (!["for", "against"].includes(studentPosition)) {
-            return res.status(400).json({
-                message: "Position must be for or against"
-            });
-        }
-
-
+        // 2. Validate student argument
         if (
-            !studentArgument ||
             typeof studentArgument !== "string" ||
             !studentArgument.trim()
         ) {
             return res.status(400).json({
+                success: false,
                 message: "Student argument is required"
             });
         }
 
-
-        if (!Array.isArray(history) || history.length > 30) {
-            return res.status(400).json({
-                message: "Invalid debate history"
-            });
-        }
-
-
-        const validHistory = history.every(
-            (item) =>
-                item &&
-                ["user", "model"].includes(item.role) &&
-                typeof item.content === "string" &&
-                item.content.trim()
+        // 3. Retrieve session and verify ownership
+        const session = await debateSessionService.getStudentSessionById(
+            Number(sessionId),
+            req.user.id
         );
 
-
-        if (!validHistory) {
-            return res.status(400).json({
-                message: "Invalid debate history format"
+        if (!session) {
+            return res.status(404).json({
+                success: false,
+                message: "Debate session not found"
             });
         }
 
+        // 4. Only active sessions can continue
+        if (session.status !== "active") {
+            return res.status(409).json({
+                success: false,
+                message: "This debate session is no longer active"
+            });
+        }
 
+        // 5. Reconstruct conversation history from database
+        const history = [];
+
+        for (const item of session.arguments) {
+
+            history.push({
+                role: "user",
+                content: item.student_argument
+            });
+
+            if (item.ai_response) {
+                history.push({
+                    role: "model",
+                    content: item.ai_response
+                });
+            }
+        }
+
+        // 6. Generate AI counterargument
         const result = await debateService.sendDebateArgument(
-            topic,
-            studentPosition,
-            studentArgument,
+            session.topic,
+            session.student_position,
+            studentArgument.trim(),
             history
         );
 
+        if (!result || !result.response) {
+            throw new Error("AI returned an empty debate response");
+        }
 
-        return res.status(200).json(result);
+        // 7. Save conversation round in MySQL
+        const sequenceNumber = session.arguments.length + 1;
+
+        await debateSessionService.saveArgument({
+            sessionId: session.id,
+            sequenceNumber,
+            studentArgument: studentArgument.trim(),
+            aiResponse: result.response
+        });
+
+        // 8. Return saved conversation round
+        return res.status(200).json({
+            success: true,
+            sessionId: session.id,
+            sequenceNumber,
+            aiPosition: result.ai_position,
+            studentArgument: studentArgument.trim(),
+            response: result.response
+        });
 
     } catch (error) {
 
-        console.error("Debate controller error:", error.message);
+        console.error(
+            "Debate response controller error:",
+            error.message
+        );
 
-        return res.status(503).json({
-            message: error.message
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Unable to process debate argument"
+        });
+    }
+};
+
+
+
+const createSession = async (req, res) => {
+
+    try {
+
+        const { topic, studentPosition } = req.body;
+
+        if (
+            typeof topic !== "string" ||
+            !topic.trim() ||
+            topic.trim().length > 300
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "A valid debate topic is required"
+            });
+        }
+
+        if (!["for", "against"].includes(studentPosition)) {
+            return res.status(400).json({
+                success: false,
+                message: "Position must be for or against"
+            });
+        }
+
+        const sessionId = await debateSessionService.createSession({
+            studentId: req.user.id,
+            topic: topic.trim(),
+            studentPosition
         });
 
-    }
+        return res.status(201).json({
+            success: true,
+            message: "Debate session created successfully",
+            sessionId
+        });
 
+    } catch (error) {
+
+        console.error("Create debate session error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to create debate session"
+        });
+    }
 };
 
 
 module.exports = {
-    respond
+    respond,
+    createSession
 };

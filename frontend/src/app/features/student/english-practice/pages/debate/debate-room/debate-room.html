@@ -1,0 +1,360 @@
+
+<div class="debate-room-page">
+
+  @if (isLoading()) {
+
+    <div class="loading-state">
+      <div class="loader"></div>
+      <p>Loading your debate...</p>
+    </div>
+
+  }
+
+  @else if (errorMessage() && !session()) {
+
+    <div class="error-state">
+      <h2>Unable to Open Debate</h2>
+      <p>{{ errorMessage() }}</p>
+
+      <button class="back-btn" (click)="goBack()">
+        Back to Dashboard
+      </button>
+    </div>
+
+  }
+
+  @else if (session(); as debate) {
+
+    <!-- HEADER -->
+
+    <header class="debate-header">
+
+      <div>
+
+        <button class="back-btn" (click)="goBack()">
+          ← Dashboard
+        </button>
+
+        <span class="eyebrow">LIVE VOICE DEBATE</span>
+
+        <h1>{{ debate.topic }}</h1>
+
+        <div class="session-meta">
+
+          <span>
+            Your Position:
+            <strong>
+              {{ debate.student_position === 'for' ? 'For' : 'Against' }}
+            </strong>
+          </span>
+
+          <span
+            class="status-badge"
+            [class.completed]="debate.status !== 'active'">
+
+            {{ debate.status | titlecase }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+      @if (debate.status === 'active') {
+
+        <button
+          class="finish-btn"
+          [disabled]="isEvaluating() || isSending()"
+          (click)="finishDebate()">
+
+          @if (isEvaluating()) {
+            Evaluating...
+          } @else {
+            Finish Debate
+          }
+
+        </button>
+
+      }
+
+    </header>
+
+
+    <!-- CONVERSATION -->
+
+    <section class="conversation-card">
+
+      <div class="conversation-heading">
+
+        <div>
+          <h2>Debate Conversation</h2>
+          <p>Speak your arguments and listen to your AI opponent.</p>
+        </div>
+
+        <span class="argument-count">
+          {{ debate.arguments?.length || 0 }} Rounds
+        </span>
+
+      </div>
+
+
+      <!-- MESSAGES -->
+
+      <div class="conversation-messages">
+
+        @if (!debate.arguments?.length) {
+
+          <div class="empty-conversation">
+
+            <div class="empty-icon">💬</div>
+
+            <h3>Start the Conversation</h3>
+
+            <p>
+              Start by speaking your opening argument.
+              Your AI opponent will respond with a different perspective.
+            </p>
+
+          </div>
+
+        }
+
+
+        @for (argument of debate.arguments || []; track argument.id) {
+
+          <div class="message-group">
+
+            <!-- STUDENT -->
+
+            <div class="message student-message">
+
+              <div class="message-avatar student-avatar">
+                You
+              </div>
+
+              <div class="message-content">
+
+                <div class="message-label">
+                  Your Argument
+                </div>
+
+                <div class="message-bubble">
+                  {{ argument.student_argument }}
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- AI -->
+
+            @if (argument.ai_response) {
+
+              <div class="message ai-message">
+
+                <div class="message-avatar ai-avatar">
+                  AI
+                </div>
+
+                <div class="message-content">
+
+                  <div class="message-label">
+                    AI Opponent
+                  </div>
+
+                  <div class="message-bubble">
+                    {{ argument.ai_response }}
+                  </div>
+
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+
+        @if (isSending()) {
+
+          <div class="ai-thinking">
+
+            <div class="thinking-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            AI opponent is preparing a response...
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- VOICE INPUT -->
+
+      @if (debate.status === 'active') {
+
+        <div class="voice-composer">
+
+          <div class="voice-heading">
+            <h3>Your Turn to Speak</h3>
+            <p>Use your microphone to present your argument.</p>
+          </div>
+
+
+          @if (!isVoiceSupported()) {
+
+            <div class="error-message">
+              Speech recognition is not supported in this browser.
+              Please use the text input below.
+            </div>
+
+          }
+
+          @else {
+
+            <div class="microphone-area">
+
+              @if (isListening()) {
+
+                <button
+                  class="microphone-button recording"
+                  (click)="stopRecording()">
+
+                  <span>■</span>
+
+                </button>
+
+                <p class="recording-status">
+                  Listening... Click to stop
+                </p>
+
+              }
+
+              @else {
+
+                <button
+                  class="microphone-button"
+                  [disabled]="isSending() || isEvaluating()"
+                  (click)="startRecording()">
+
+                  <span>🎙</span>
+
+                </button>
+
+                <p>
+                  Click the microphone and start speaking
+                </p>
+
+              }
+
+            </div>
+
+          }
+
+
+          <!-- LIVE TRANSCRIPTION -->
+
+          @if (liveTranscript()) {
+
+            <div class="live-transcription">
+
+              <span class="transcription-label">
+                LIVE TRANSCRIPTION
+              </span>
+
+              <p>{{ liveTranscript() }}</p>
+
+            </div>
+
+          }
+
+
+          <!-- VOICE ERROR -->
+
+          @if (voiceError()) {
+
+            <div class="error-message">
+              {{ voiceError() }}
+            </div>
+
+          }
+
+
+          <!-- TEXT FALLBACK -->
+
+          <div class="manual-input">
+
+            <label for="argument">
+              Your Argument
+            </label>
+
+            <textarea
+              id="argument"
+              [ngModel]="argumentText()"
+              (ngModelChange)="argumentText.set($event)"
+              rows="4"
+              placeholder="Your recognized speech will appear here. You can also type..."
+              [disabled]="isSending() || isEvaluating()">
+            </textarea>
+
+            <div class="composer-footer">
+
+              <span>
+                You can edit your recognized speech before sending.
+              </span>
+
+              <button
+                class="send-btn"
+                [disabled]="
+                  !argumentText().trim() ||
+                  isSending() ||
+                  isEvaluating()
+                "
+                (click)="sendArgument()">
+
+                @if (isSending()) {
+                  Sending...
+                } @else {
+                  Send Argument →
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+          @if (errorMessage()) {
+
+            <div class="error-message">
+              {{ errorMessage() }}
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+      @else {
+
+        <div class="completed-notice">
+          This debate session is {{ debate.status }}.
+          You can view your evaluation from the result page.
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

@@ -1,0 +1,142 @@
+
+<div class="debate-start-page">
+
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back to Debate
+    </button>
+
+    <span class="eyebrow">ENGLISH PRACTICE</span>
+
+    <h1>Prepare Your Debate</h1>
+
+    <p>
+      Choose a topic and decide which side you want to defend.
+      Your AI opponent will challenge your arguments.
+    </p>
+  </div>
+
+
+  <div class="debate-form-card">
+
+    <div class="form-heading">
+      <div class="form-icon">⚖️</div>
+
+      <div>
+        <h2>Debate Setup</h2>
+        <p>Configure your debate session before starting.</p>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="topic">Debate Topic</label>
+
+      <textarea
+        id="topic"
+        [(ngModel)]="topic"
+        maxlength="300"
+        rows="4"
+        placeholder="Example: Is artificial intelligence beneficial for society?"
+        [disabled]="isLoading">
+      </textarea>
+
+      <div class="field-footer">
+        <span>Enter a topic you would like to discuss.</span>
+        <span>{{ topic.length }}/300</span>
+      </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Choose Your Position</label>
+
+      <div class="position-options">
+
+        <button
+          type="button"
+          class="position-card"
+          [class.selected]="studentPosition === 'for'"
+          [disabled]="isLoading"
+          (click)="studentPosition = 'for'">
+
+          <span class="position-icon">👍</span>
+
+          <span class="position-title">For the Topic</span>
+
+          <span class="position-description">
+            Support the statement and defend its advantages.
+          </span>
+
+          <span class="selection-indicator">
+            {{ studentPosition === 'for' ? '✓ Selected' : 'Select position' }}
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="position-card"
+          [class.selected]="studentPosition === 'against'"
+          [disabled]="isLoading"
+          (click)="studentPosition = 'against'">
+
+          <span class="position-icon">👎</span>
+
+          <span class="position-title">Against the Topic</span>
+
+          <span class="position-description">
+            Oppose the statement and explain its disadvantages.
+          </span>
+
+          <span class="selection-indicator">
+            {{ studentPosition === 'against' ? '✓ Selected' : 'Select position' }}
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        [disabled]="isLoading"
+        (click)="goBack()">
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="start-btn"
+        [disabled]="isLoading || !topic.trim()"
+        (click)="startDebate()">
+
+        @if (isLoading) {
+          Starting Debate...
+        } @else {
+          Start Debate →
+        }
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

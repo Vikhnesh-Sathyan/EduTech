@@ -1,0 +1,144 @@
+
+<div class="history-page">
+
+  <header class="history-header">
+    <div>
+      <span class="eyebrow">ENGLISH PRACTICE</span>
+      <h1>Debate History</h1>
+      <p>Review your previous debate sessions and performance.</p>
+    </div>
+
+    <button class="back-button" (click)="goToDashboard()">
+      Back to Dashboard
+    </button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading your debate history...</p>
+    </div>
+  }
+
+  @else if (errorMessage()) {
+    <div class="state-card error-state">
+      <p>{{ errorMessage() }}</p>
+      <button (click)="loadHistory()">Try Again</button>
+    </div>
+  }
+
+  @else if (sessions().length === 0) {
+    <div class="state-card empty-state">
+      <div class="empty-icon">💬</div>
+      <h2>No debates yet</h2>
+      <p>Your completed and active debate sessions will appear here.</p>
+
+      <button (click)="goToDashboard()">
+        Start a Debate
+      </button>
+    </div>
+  }
+
+  @else {
+    <div class="history-summary">
+
+      <div class="summary-card">
+        <span>Total Debates</span>
+        <h2>{{ sessions().length }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <span>Completed</span>
+        <h2>
+          {{ sessions().filter(s => s.status === 'completed').length }}
+        </h2>
+      </div>
+
+      <div class="summary-card">
+        <span>Active</span>
+        <h2>
+          {{ sessions().filter(s => s.status === 'active').length }}
+        </h2>
+      </div>
+
+    </div>
+
+    <div class="history-list">
+
+      @for (session of sessions(); track session.id) {
+        <article class="history-card">
+
+          <div class="card-main">
+
+            <div class="topic-section">
+              <h3>{{ session.topic }}</h3>
+
+              <p>
+                Your position:
+                <strong>{{ session.student_position | titlecase }}</strong>
+              </p>
+
+              <span class="session-date">
+                {{ session.created_at | date:'medium' }}
+              </span>
+            </div>
+
+            <div class="card-details">
+
+              <span
+                class="status-badge"
+                [class.completed]="session.status === 'completed'"
+                [class.active]="session.status === 'active'"
+                [class.abandoned]="session.status === 'abandoned'"
+              >
+                {{ session.status | titlecase }}
+              </span>
+
+              @if (session.status === 'completed') {
+                <div class="score">
+                  <span>Score</span>
+                  <strong>
+                    {{ session.overall_score ?? 0 | number:'1.1-1' }}/10
+                  </strong>
+                </div>
+              }
+
+            </div>
+
+          </div>
+
+  <div class="card-footer">
+
+  @if (session.status === 'completed') {
+    <button
+      class="view-button"
+      (click)="viewResult(session.id)"
+    >
+      View Result
+    </button>
+  }
+
+  @else if (session.status === 'active') {
+    <button
+      class="view-button"
+      (click)="openSession(session)"
+    >
+      Continue Debate
+    </button>
+  }
+
+  @else {
+    <button class="view-button" disabled>
+      Abandoned
+    </button>
+  }
+
+</div>
+
+        </article>
+      }
+
+    </div>
+  }
+
+</div>
