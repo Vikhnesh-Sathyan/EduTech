@@ -192,10 +192,13 @@ import { MentorVerification } from './features/admin/mentors/mentor-verification
 import { AdminCheatsheetComponent } from './features/admin/cheatsheet/admin-cheatsheet/admin-cheatsheet';
 
 //ENGLISH SPEAKING TOPICS
-
 import {
   Topics as EnglishSpeakingTopics
 } from './features/admin/english-practice/pages/topics/topics';
+
+
+//ADMIN DAILY  QUIZ
+
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -749,6 +752,9 @@ export const routes: Routes = [
         path: 'english-speaking-topics',
         component: EnglishSpeakingTopics
       },
+        // DAILY QUIZ MANAGEMENT
+    
+
       
     ]
   },

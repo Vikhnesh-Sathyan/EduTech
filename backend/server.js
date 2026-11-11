@@ -25,9 +25,20 @@ const { Server } = require("socket.io");
 // sending messages, and receiving real-time messages.
 const registerChatSocket = require("./sockets/chatSocket");
 
+// =====================================================
+// DAILY QUIZ SCHEDULERS
+// =====================================================
+
+// Generates one global daily quiz
 const {
-    startDailyQuizScheduler
+    startDailyQuizScheduler: startDailyQuizGenerationScheduler
+} = require("./services/dailyQuiz/dailyQuizScheduler");
+
+// Sends notifications to eligible students
+const {
+    startDailyQuizScheduler: startDailyQuizNotificationScheduler
 } = require("./jobs/dailyQuizScheduler");
+
 
 // =====================================================
 // IMPORT DATABASE CONNECTION
@@ -166,8 +177,8 @@ const adminSwapSkillSuggestionRoutes =
     require("./routes/admin/skillswap/swapskillsuggestionroutes");
 
 //ADMIN DAILY QUIZ
-const adminDailyQuizRoutes = require("./routes/admin/daily-quiz/dailyQuiz.routes");
-const studentDailyQuizRoutes = require("./routes/student/daily-quiz/dailyQuizStudent.routes");
+const adminDailyQuizRoutes = require("./routes/admin/daily-quiz/dailyQuiz");
+
 
 
 // =====================================================
@@ -282,6 +293,8 @@ const studentCodeToLogicRoutes = require(
 const studentLogicToCodeRoutes = require(
     "./routes/student/advanced/logic-to-code/problem.routes"
 );
+
+//STUDENT DAILY QUIZ
 
 
 // =====================================================
@@ -639,9 +652,7 @@ app.use(
 );
 
 //DAILY QUIZ ADMIN
-app.use("/api/admin/daily-quizzes", adminDailyQuizRoutes);
-
-app.use("/api/student/daily-quizzes", studentDailyQuizRoutes);
+app.use("/api/admin/daily-quiz", adminDailyQuizRoutes);
 
 
 // =====================================================
@@ -850,11 +861,17 @@ methods: ["GET", "POST"]
 app.set("io", io);
 
 // Register chat authentication and events.
+// Register chat authentication and events.
 registerChatSocket(io);
 
-startDailyQuizScheduler(io);
+// Start daily quiz generation scheduler.
+startDailyQuizGenerationScheduler();
 
+// Start daily quiz notification scheduler.
+startDailyQuizNotificationScheduler(io);
+
+// Start Express server.
 server.listen(PORT, () => {
-console.log(`Server running on port ${PORT}`);
-console.log("Socket.IO is ready");
+    console.log(`Server running on port ${PORT}`);
+    console.log("Socket.IO is ready");
 });

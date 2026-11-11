@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -10,6 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './topbar.css'
 })
 export class Topbar {
+
   isSkillSwapOpen = false;
 
   toggleSkillSwap(): void {
