@@ -179,8 +179,6 @@ const adminSwapSkillSuggestionRoutes =
 //ADMIN DAILY QUIZ
 const adminDailyQuizRoutes = require("./routes/admin/daily-quiz/dailyQuiz");
 
-
-
 // =====================================================
 // STUDENT ROUTES
 // =====================================================
@@ -294,8 +292,13 @@ const studentLogicToCodeRoutes = require(
     "./routes/student/advanced/logic-to-code/problem.routes"
 );
 
-//STUDENT DAILY QUIZ
+// =====================================================
+// STUDENT DAILY QUIZ
+// =====================================================
 
+const studentDailyQuizRoutes = require(
+    "./routes/student/daily-quiz/dailyQuiz"
+);
 
 // =====================================================
 // MENTOR ROUTES
@@ -795,6 +798,15 @@ app.use(
 app.use(
     "/api/student/logic-to-code",
     studentLogicToCodeRoutes
+);
+
+// =====================================================
+// STUDENT DAILY QUIZ ROUTES
+// =====================================================
+
+app.use(
+    "/api/student/daily-quiz",
+    studentDailyQuizRoutes
 );
 
 
