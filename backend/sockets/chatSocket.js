@@ -65,6 +65,20 @@ const registerChatSocket = (io) => {
             `Chat connected: ${socket.user.role} ${socket.user.id}`
         );
 
+        // ==========================================
+        // JOIN STUDENT NOTIFICATION ROOM
+        // ==========================================
+
+        if (socket.user.role === "student") {
+
+            socket.join(`student_${socket.user.id}`);
+
+        console.log(
+            `Student notification room joined: student_${socket.user.id}`
+        );
+
+        }
+
         // =====================================================
         // 3. JOIN CONVERSATION
         // =====================================================

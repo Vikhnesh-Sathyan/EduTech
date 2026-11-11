@@ -1,212 +1,439 @@
-/* =========================================================
-   Student Navbar
-   ========================================================= */
+
+/* =====================================================
+   EDUTECH — PREMIUM STUDENT NAVBAR
+===================================================== */
+
+:host {
+  --navy: #101d35;
+  --navy-light: #263955;
+  --blue: #60a5fa;
+  --blue-dark: #2563eb;
+  --text-muted: #94a3b8;
+  --border: #e5eaf2;
+  --surface: #ffffff;
+}
+
+/* =====================================================
+   MAIN NAVBAR
+===================================================== */
 
 .navbar {
-  height: 68px;
-  padding: 0 32px;
+  height: 76px;
+  padding: 0 38px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 25px;
 
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--navy);
+  border-bottom: 1px solid #263955;
 
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-/* =========================================================
-   Brand
-   ========================================================= */
+/* =====================================================
+   BRAND
+===================================================== */
 
 .navbar-brand {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
 
-  color: #111827;
+  color: #ffffff;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
 
   cursor: pointer;
   white-space: nowrap;
 }
 
-/* Small premium accent */
-
 .navbar-brand::after {
   content: "";
-  display: inline-block;
 
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 
-  margin-left: 4px;
+  margin-left: 7px;
 
-  background: #2563eb;
+  background: var(--blue);
   border-radius: 50%;
 
-  vertical-align: middle;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
 }
 
-/* =========================================================
-   Navigation Links
-   ========================================================= */
+/* =====================================================
+   NAVIGATION LINKS
+===================================================== */
 
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 5px;
 }
 
 .navbar-links a {
   position: relative;
 
-  padding: 10px 14px;
+  padding: 11px 15px;
 
-  color: #6b7280;
-
-  font-size: 14px;
-  font-weight: 500;
+  color: #c1ccdc;
+  font-size: 13px;
+  font-weight: 600;
 
   text-decoration: none;
+  white-space: nowrap;
 
-  border-radius: 8px;
-
+  border-radius: 9px;
   cursor: pointer;
 
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
+    color 0.25s ease,
+    background 0.25s ease;
 }
-
-/* Hover */
 
 .navbar-links a:hover {
-  color: #111827;
-  background: #f3f4f6;
+  color: #ffffff;
+  background: var(--navy-light);
 }
 
-/* =========================================================
-   Active-style effect
-   ========================================================= */
+/* Active route */
 
-.navbar-links a::after {
+.navbar-links a.active {
+  color: #ffffff;
+  background: var(--navy-light);
+}
+
+.navbar-links a.active::after {
   content: "";
 
   position: absolute;
-
   left: 50%;
   bottom: 3px;
 
-  width: 0;
+  width: 16px;
   height: 2px;
 
-  background: #2563eb;
-  border-radius: 10px;
+  background: var(--blue);
+  border-radius: 5px;
 
   transform: translateX(-50%);
-
-  transition: width 0.2s ease;
 }
 
-.navbar-links a:hover::after {
-  width: 18px;
-}
-
-/* =========================================================
-   Navbar Actions
-   ========================================================= */
+/* =====================================================
+   NAVBAR ACTIONS
+===================================================== */
 
 .navbar-actions {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
-/* Logout */
+/* =====================================================
+   NOTIFICATION BELL
+===================================================== */
 
-.navbar-actions button {
-  padding: 9px 17px;
+.notification-wrapper {
+  position: relative;
+}
 
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+.notification-btn {
+  position: relative;
 
-  background: #ffffff;
+  width: 43px;
+  height: 43px;
 
-  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  font-size: 14px;
-  font-weight: 600;
+  padding: 0;
+
+  color: #d5dfed;
+  background: var(--navy-light);
+
+  border: 1px solid #40516d;
+  border-radius: 12px;
 
   cursor: pointer;
 
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-.navbar-actions button:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+.notification-btn:hover {
+  color: #ffffff;
+  background: #334a6b;
+  border-color: var(--blue);
 
-  color: #111827;
-
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-.navbar-actions button:active {
+.notification-btn svg {
+  width: 21px;
+  height: 21px;
+}
+
+/* Unread badge */
+
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  min-width: 19px;
+  height: 19px;
+  padding: 0 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  border: 2px solid var(--navy);
+  border-radius: 20px;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* =====================================================
+   LOGOUT BUTTON
+===================================================== */
+
+.navbar-actions .logout-btn {
+  padding: 11px 20px;
+
+  color: #ffffff;
+  background: #263955;
+
+  border: 1px solid #40516d;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.navbar-actions .logout-btn:hover {
+  color: var(--navy);
+  background: var(--blue);
+  border-color: var(--blue);
+
+  transform: translateY(-2px);
+}
+
+.navbar-actions .logout-btn:active {
   transform: translateY(0);
 }
 
-/* =========================================================
-   Responsive
-   ========================================================= */
+/* =====================================================
+   NOTIFICATION DROPDOWN
+===================================================== */
+
+.notification-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+
+  width: 370px;
+  max-height: 460px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.18);
+
+  z-index: 1100;
+  overflow: hidden;
+
+  animation: notificationOpen 0.2s ease;
+}
+
+@keyframes notificationOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px;
+
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+}
+
+.notification-header h3 {
+  margin: 0;
+
+  color: var(--navy);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.mark-all-btn {
+  padding: 0;
+
+  color: var(--blue-dark);
+  background: transparent;
+
+  border: none;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.mark-all-btn:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.notification-list {
+  max-height: 370px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: block;
+  width: 100%;
+
+  padding: 16px;
+
+  text-align: left;
+
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+  background: #f1f6ff;
+}
+
+.notification-item.unread {
+  background: #f5f9ff;
+}
+
+.notification-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.notification-content p {
+  margin: 7px 0;
+
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.notification-content small {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+
+  background: var(--blue-dark);
+  border-radius: 50%;
+}
+
+.empty-notifications {
+  padding: 38px 15px;
+
+  text-align: center;
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
 @media (max-width: 900px) {
-
   .navbar {
     padding: 0 20px;
+    gap: 10px;
   }
 
   .navbar-links {
-    gap: 2px;
+    gap: 0;
   }
 
   .navbar-links a {
-    padding: 9px 10px;
+    padding: 10px 9px;
+    font-size: 12px;
   }
-
 }
 
 @media (max-width: 700px) {
-
   .navbar {
     height: auto;
-    min-height: 68px;
+    min-height: 70px;
 
     flex-wrap: wrap;
-    gap: 10px;
-
-    padding: 12px 18px;
+    padding: 13px 17px;
   }
 
   .navbar-links {
     order: 3;
-
     width: 100%;
 
+    justify-content: flex-start;
     overflow-x: auto;
 
-    padding-bottom: 2px;
-
-    justify-content: flex-start;
+    padding-bottom: 5px;
   }
 
   .navbar-links a {
-    white-space: nowrap;
+    flex-shrink: 0;
   }
+}
 
+@media (max-width: 480px) {
+  .notification-dropdown {
+    position: fixed;
+    top: 75px;
+    left: 10px;
+    right: 10px;
+
+    width: auto;
+  }
 }

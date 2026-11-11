@@ -1,7 +1,3 @@
-<!--
-  USE:
-  Provides the main navigation for student pages.
--->
 
 <nav class="navbar">
 
@@ -9,41 +5,157 @@
     EduTech
   </div>
 
+<div class="navbar-links">
 
-  <div class="navbar-links">
+  <a
+    routerLink="/student-dashboard"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Dashboard
+  </a>
 
-    <a routerLink="/student-dashboard">
-      Dashboard
-    </a>
+  <a routerLink="/study" routerLinkActive="active">
+    Study
+  </a>
 
-    <a routerLink="/study">
-      Study
-    </a>
+  <a routerLink="/career" routerLinkActive="active">
+    Career
+  </a>
 
-    <a>
-      Career
-    </a>
+  <a routerLink="/practice" routerLinkActive="active">
+    Practice
+  </a>
 
-    <a>
-      Practice
-    </a>
+  <a routerLink="/mentor" routerLinkActive="active">
+    Mentor
+  </a>
 
-    <a>
-      Mentor
-    </a>
+  <a routerLink="/profile" routerLinkActive="active">
+    Profile
+  </a>
 
-    <a routerLink="/profile">
-      Profile
-    </a>
-
-  </div>
-
+</div>
 
   <div class="navbar-actions">
 
-    <button type="button" (click)="logout()">
-      Logout
-    </button>
+    <!-- NOTIFICATION -->
+    <div
+      class="notification-wrapper"
+      (click)="$event.stopPropagation()"
+    >
+
+      <button
+        type="button"
+        class="notification-btn"
+        aria-label="Notifications"
+        [attr.aria-expanded]="isDropdownOpen"
+        (click)="toggleNotifications()"
+      >
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+          <path d="M10 21h4"/>
+        </svg>
+
+        @if (unreadCount > 0) {
+          <span class="notification-badge">
+            {{ unreadCount > 99 ? '99+' : unreadCount }}
+          </span>
+        }
+
+      </button>
+
+      <!-- DROPDOWN -->
+      @if (isDropdownOpen) {
+
+        <div class="notification-dropdown">
+
+          <div class="notification-header">
+
+            <h3>Notifications</h3>
+
+            @if (unreadCount > 0) {
+              <button
+                type="button"
+                class="mark-all-btn"
+                (click)="markAllAsRead()"
+              >
+                Mark all as read
+              </button>
+            }
+
+          </div>
+
+          <div class="notification-list">
+
+            @if (notifications.length === 0) {
+
+              <div class="empty-notifications">
+                <p>No notifications yet</p>
+              </div>
+
+            } @else {
+
+              @for (notification of notifications; track notification.id) {
+
+                <button
+                  type="button"
+                  class="notification-item"
+                  [class.unread]="!notification.is_read"
+                  (click)="markAsRead(notification)"
+                >
+
+                  <div class="notification-content">
+
+                    <div class="notification-title">
+                      {{ notification.title }}
+
+                      @if (!notification.is_read) {
+                        <span class="unread-dot"></span>
+                      }
+                    </div>
+
+                    <p>{{ notification.message }}</p>
+
+                    <small>
+                      {{ notification.created_at | date:'medium' }}
+                    </small>
+
+                  </div>
+
+                </button>
+
+              }
+
+            }
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- LOGOUT -->
+    <button
+  type="button"
+  class="logout-btn"
+  (click)="logout()"
+>
+  Logout
+</button>
 
   </div>
 

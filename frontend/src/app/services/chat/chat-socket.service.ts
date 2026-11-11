@@ -1,16 +1,44 @@
+
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { Subject } from 'rxjs';
+
+// ==========================================
+// NOTIFICATION TYPE
+// ==========================================
+export interface DailyQuizNotification {
+  id: number;
+  daily_quiz_id: number;
+  user_id: number;
+  notification_type: 'new_quiz' | 'reminder';
+  title: string;
+  message: string;
+  is_read: boolean;
+  read_at: string | null;
+  created_at: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatSocketService {
+
   private socket: Socket | null = null;
   private currentToken: string | null = null;
 
-  // Connect using the logged-in user's JWT.
+  // ==========================================
+  // NOTIFICATION STREAM
+  // ==========================================
+  private notificationSubject =
+    new Subject<DailyQuizNotification>();
+
+  notifications$ = this.notificationSubject.asObservable();
+
+  // ==========================================
+  // CONNECT SOCKET
+  // ==========================================
   connect(token: string): Socket {
-    // Reuse only the connection belonging to this token.
+
     if (
       this.socket &&
       this.currentToken === token
@@ -22,7 +50,6 @@ export class ChatSocketService {
       return this.socket;
     }
 
-    // Disconnect a previous user's connection.
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;
@@ -35,17 +62,31 @@ export class ChatSocketService {
       auth: { token }
     });
 
+    // Listen for new notifications.
+    this.socket.on(
+      'notification:new',
+      (notification: DailyQuizNotification) => {
+        this.notificationSubject.next(notification);
+      }
+    );
+
     this.socket.connect();
 
     return this.socket;
   }
 
+  // ==========================================
+  // GET SOCKET
+  // ==========================================
   getSocket(): Socket | null {
     return this.socket;
   }
 
-  // Disconnect when the user logs out.
+  // ==========================================
+  // DISCONNECT
+  // ==========================================
   disconnect(): void {
+
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;

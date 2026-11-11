@@ -25,6 +25,10 @@ const { Server } = require("socket.io");
 // sending messages, and receiving real-time messages.
 const registerChatSocket = require("./sockets/chatSocket");
 
+const {
+    startDailyQuizScheduler
+} = require("./jobs/dailyQuizScheduler");
+
 // =====================================================
 // IMPORT DATABASE CONNECTION
 // =====================================================
@@ -161,6 +165,9 @@ const adminSwapSkillsRoutes =
 const adminSwapSkillSuggestionRoutes =
     require("./routes/admin/skillswap/swapskillsuggestionroutes");
 
+//ADMIN DAILY QUIZ
+const adminDailyQuizRoutes = require("./routes/admin/daily-quiz/dailyQuiz.routes");
+const studentDailyQuizRoutes = require("./routes/student/daily-quiz/dailyQuizStudent.routes");
 
 
 // =====================================================
@@ -631,6 +638,12 @@ app.use(
     adminSwapSkillSuggestionRoutes
 );
 
+//DAILY QUIZ ADMIN
+app.use("/api/admin/daily-quizzes", adminDailyQuizRoutes);
+
+app.use("/api/student/daily-quizzes", studentDailyQuizRoutes);
+
+
 // =====================================================
 // STUDENT EDUCATION ROUTES
 // =====================================================
@@ -838,6 +851,8 @@ app.set("io", io);
 
 // Register chat authentication and events.
 registerChatSocket(io);
+
+startDailyQuizScheduler(io);
 
 server.listen(PORT, () => {
 console.log(`Server running on port ${PORT}`);
