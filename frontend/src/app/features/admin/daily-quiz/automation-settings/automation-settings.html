@@ -1,0 +1,270 @@
+
+<div class="automation-settings">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY QUIZ MANAGEMENT</span>
+      <h2>Automation Settings</h2>
+      <p>Configure daily quiz publishing schedules for each subject.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadSettings()"
+      [disabled]="loadingSettings()">
+
+      {{ loadingSettings() ? 'Refreshing...' : 'Refresh Settings' }}
+
+    </button>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-grid">
+
+    <div class="summary-card">
+      <span>Total Subjects</span>
+      <strong>{{ totalSubjects() }}</strong>
+    </div>
+
+    <div class="summary-card active-summary">
+      <span>Active</span>
+      <strong>{{ activeCount() }}</strong>
+    </div>
+
+    <div class="summary-card paused-summary">
+      <span>Paused</span>
+      <strong>{{ pausedCount() }}</strong>
+    </div>
+
+    <div class="summary-card unconfigured-summary">
+      <span>Not Configured</span>
+      <strong>{{ notConfiguredCount() }}</strong>
+    </div>
+
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  @if (successMessage()) {
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+  }
+
+  <!-- ERROR MESSAGE -->
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- LOADING -->
+  @if (loadingSettings()) {
+
+    <div class="loading-state">
+      <p>Loading automation settings...</p>
+    </div>
+
+  } @else {
+
+    <!-- EMPTY STATE -->
+    @if (settings().length === 0) {
+
+      <div class="empty-state">
+        <h3>No subjects available</h3>
+        <p>Active subjects will appear here when they are available.</p>
+      </div>
+
+    } @else {
+
+      <!-- SUBJECT SETTINGS -->
+      <div class="settings-list">
+
+        @for (setting of settings(); track setting.subject_id) {
+
+          <section class="setting-card">
+
+            <!-- SUBJECT HEADER -->
+            <div class="setting-header">
+
+              <div class="subject-details">
+                <span class="eyebrow">SUBJECT AUTOMATION</span>
+
+                <h3>{{ setting.subject_name }}</h3>
+
+                <p>
+                  {{ setting.program_name }}
+                  <span> / </span>
+                  {{ setting.department_name }}
+                  <span> / </span>
+                  {{ setting.education_year_name }}
+                </p>
+              </div>
+
+              <span
+                class="status-badge"
+                [class.status-active]="setting.automation_status === 'active'"
+                [class.status-paused]="setting.automation_status === 'paused'"
+                [class.status-unconfigured]="setting.automation_status === 'not_configured'">
+
+                @if (setting.automation_status === 'active') {
+                  Active
+                } @else if (setting.automation_status === 'paused') {
+                  Paused
+                } @else {
+                  Not Configured
+                }
+
+              </span>
+
+            </div>
+
+            <!-- SETTINGS DETAILS -->
+            <div class="settings-details">
+
+              <div class="detail-item">
+                <span>Daily Publish Time</span>
+                <strong>{{ setting.publish_time.substring(0, 5) }}</strong>
+              </div>
+
+              <div class="detail-item">
+                <span>Time Zone</span>
+                <strong>{{ setting.time_zone }}</strong>
+              </div>
+
+              <div class="detail-item">
+                <span>Low Stock Threshold</span>
+                <strong>{{ setting.low_stock_threshold }} questions</strong>
+              </div>
+
+            </div>
+
+            <!-- EDIT SETTINGS -->
+            @if (editingSubjectId() === setting.subject_id) {
+
+              <div class="edit-settings">
+
+                <div class="form-group">
+                  <label [for]="'publish-time-' + setting.subject_id">
+                    Daily Publish Time
+                  </label>
+
+                  <input
+                    type="time"
+                    [id]="'publish-time-' + setting.subject_id"
+                    [ngModel]="publishTime()"
+                    (ngModelChange)="publishTime.set($event)">
+                </div>
+
+                <div class="form-group">
+                  <label [for]="'threshold-' + setting.subject_id">
+                    Low Stock Threshold
+                  </label>
+
+                  <input
+                    type="number"
+                    [id]="'threshold-' + setting.subject_id"
+                    min="3"
+                    max="1000"
+                    [ngModel]="lowStockThreshold()"
+                    (ngModelChange)="lowStockThreshold.set(+$event)">
+                  <small>Allowed range: 3–1000 questions.</small>
+                </div>
+
+                <div class="edit-actions">
+
+                  <button
+                    type="button"
+                    class="cancel-button"
+                    (click)="cancelEditing()"
+                    [disabled]="savingSettings()">
+
+                    Cancel
+
+                  </button>
+
+                  <button
+                    type="button"
+                    class="save-button"
+                    (click)="saveSettings(setting)"
+                    [disabled]="savingSettings()">
+
+                    {{ savingSettings() ? 'Saving...' : 'Save Settings' }}
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            } @else {
+
+              <!-- CARD ACTIONS -->
+              <div class="setting-actions">
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="editSettings(setting)"
+                  [disabled]="savingSettings() || updatingSubjectId() !== null">
+
+                  Edit Settings
+
+                </button>
+
+                @if (setting.automation_status === 'active') {
+
+                  <button
+                    type="button"
+                    class="pause-button"
+                    (click)="pauseAutomation(setting)"
+                    [disabled]="updatingSubjectId() !== null || savingSettings()">
+
+                    @if (updatingSubjectId() === setting.subject_id) {
+                      Updating...
+                    } @else {
+                      Pause Automation
+                    }
+
+                  </button>
+
+                } @else if (setting.automation_status === 'paused') {
+
+                  <button
+                    type="button"
+                    class="resume-button"
+                    (click)="resumeAutomation(setting)"
+                    [disabled]="updatingSubjectId() !== null || savingSettings()">
+
+                    @if (updatingSubjectId() === setting.subject_id) {
+                      Updating...
+                    } @else {
+                      Resume Automation
+                    }
+
+                  </button>
+
+                } @else {
+
+                  <span class="configure-hint">
+                    Save settings to enable automation.
+                  </span>
+
+                }
+
+              </div>
+
+            }
+
+          </section>
+
+        }
+
+      </div>
+
+    }
+
+  }
+
+</div>

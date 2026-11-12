@@ -196,9 +196,25 @@ import {
   Topics as EnglishSpeakingTopics
 } from './features/admin/english-practice/pages/topics/topics';
 
+// ==========================================
+// ADMIN DAILY QUIZ MANAGEMENT
+// ==========================================
 
-//ADMIN DAILY  QUIZ
+import {
+  DailyQuizDashboard
+} from './features/admin/daily-quiz/daily-quiz-dashboard/daily-quiz-dashboard';
 
+import {
+  QuestionBank as DailyQuizQuestionBank
+} from './features/admin/daily-quiz/question-bank/question-bank';
+
+import {
+  CsvUpload as DailyQuizCsvUpload
+} from './features/admin/daily-quiz/csv-upload/csv-upload';
+
+import {
+  AutomationSettings
+} from './features/admin/daily-quiz/automation-settings/automation-settings';
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -752,7 +768,28 @@ export const routes: Routes = [
         path: 'english-speaking-topics',
         component: EnglishSpeakingTopics
       },
+        
+        // ==========================================
         // DAILY QUIZ MANAGEMENT
+        // ==========================================
+
+      {
+        path: 'daily-quiz',
+        component: DailyQuizDashboard
+      },
+      {
+        path: 'daily-quiz/question-bank',
+        component: DailyQuizQuestionBank
+      },
+      {
+        path: 'daily-quiz/csv-upload',
+        component: DailyQuizCsvUpload
+      },
+      {
+        path: 'daily-quiz/automation',
+        component: AutomationSettings
+      },
+
     
 
       

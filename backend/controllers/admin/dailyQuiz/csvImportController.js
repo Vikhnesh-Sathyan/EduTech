@@ -27,7 +27,7 @@ const importDailyQuizCsv = async (req, res) => {
         const subjectId = Number(req.body.subject_id);
         const adminId = req.user.id;
 
-        // CHECK SUBJECT
+        // CHECK SELECTED SUBJECT
 
         if (!Number.isInteger(subjectId) || subjectId <= 0) {
             return res.status(400).json({
@@ -45,6 +45,17 @@ const importDailyQuizCsv = async (req, res) => {
             });
         }
 
+        if (
+            !req.file.originalname
+                .toLowerCase()
+                .endsWith(".csv")
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Only CSV files are allowed"
+            });
+        }
+
         // VALIDATE CSV
 
         const result = await validateCsvBuffer(req.file.buffer);
@@ -52,6 +63,8 @@ const importDailyQuizCsv = async (req, res) => {
         if (!result.success) {
             return res.status(400).json(result);
         }
+
+        // REJECT INVALID ROWS
 
         if (result.invalid_count > 0) {
             return res.status(400).json({
@@ -64,24 +77,12 @@ const importDailyQuizCsv = async (req, res) => {
             });
         }
 
+        // CHECK VALID QUESTIONS
+
         if (result.valid_rows.length === 0) {
             return res.status(400).json({
                 success: false,
                 message: "No valid questions available for import"
-            });
-        }
-
-        // CHECK SELECTED SUBJECT MATCH
-
-        const mismatchedRows = result.valid_rows.filter(
-            row => row.data.subject_id !== subjectId
-        );
-
-        if (mismatchedRows.length > 0) {
-            return res.status(400).json({
-                success: false,
-                message: "CSV subject_id does not match the selected subject",
-                mismatched_rows: mismatchedRows.map(row => row.row_number)
             });
         }
 
@@ -91,7 +92,7 @@ const importDailyQuizCsv = async (req, res) => {
 
         await connection.beginTransaction();
 
-        // VERIFY SUBJECT IS ACTIVE
+        // VERIFY SELECTED SUBJECT IS ACTIVE
 
         const [subjects] = await connection.execute(
             `SELECT id
@@ -110,7 +111,7 @@ const importDailyQuizCsv = async (req, res) => {
             });
         }
 
-        // CHECK EXISTING QUESTIONS
+        // CHECK EXISTING QUESTIONS IN SELECTED SUBJECT
 
         const [existingQuestions] = await connection.execute(
             `SELECT question_text
@@ -163,7 +164,11 @@ const importDailyQuizCsv = async (req, res) => {
 
             const questionId = questionResult.insertId;
 
-            for (let index = 0; index < row.data.options.length; index++) {
+            for (
+                let index = 0;
+                index < row.data.options.length;
+                index++
+            ) {
 
                 const option = row.data.options[index];
 
@@ -181,6 +186,7 @@ const importDailyQuizCsv = async (req, res) => {
                         index + 1
                     ]
                 );
+
             }
 
             importedCount++;
@@ -203,7 +209,10 @@ const importDailyQuizCsv = async (req, res) => {
             await connection.rollback();
         }
 
-        console.error("Daily Quiz CSV import error:", error);
+        console.error(
+            "Daily Quiz CSV import error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -215,6 +224,7 @@ const importDailyQuizCsv = async (req, res) => {
         if (connection) {
             connection.release();
         }
+
     }
 };
 

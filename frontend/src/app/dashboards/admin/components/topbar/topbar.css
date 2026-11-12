@@ -35,7 +35,7 @@
   min-width: 0;
 }
 
-/* SKILL SWAP DROPDOWN */
+/* DAILY QUIZ AND SKILL SWAP DROPDOWNS */
 
 .dropdown {
   position: relative;
@@ -85,7 +85,7 @@
   font-size: 9px;
 }
 
-/* SKILL SWAP DROPDOWN MENU */
+/* DROPDOWN MENU */
 
 .dropdown-menu {
   position: absolute;
@@ -163,27 +163,6 @@
   }
 }
 
-/* DAILY QUIZ MANAGEMENT LINK */
-
-.management-link {
-  color: #80552f;
-  background: #fff8ef;
-  border-color: #ead6bd;
-}
-
-.management-link:hover,
-.management-link.active {
-  color: #fff;
-  background: #a9682d;
-  border-color: #a9682d;
-}
-
-.management-link.active .swap-icon,
-.management-link:hover .swap-icon {
-  color: #fff;
-  background: rgb(255 255 255 / 18%);
-}
-
 /* ADMIN PROFILE */
 
 .admin-profile {
@@ -244,7 +223,7 @@
   }
 
   .dropdown-menu {
-    right: -55px;
+    right: 0;
     width: min(290px, calc(100vw - 24px));
   }
 }

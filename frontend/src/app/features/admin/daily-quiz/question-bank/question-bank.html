@@ -1,0 +1,370 @@
+
+<div class="question-bank">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY QUIZ MANAGEMENT</span>
+      <h2>Question Bank</h2>
+      <p>Manage imported questions across your subjects.</p>
+    </div>
+
+    <button
+      class="refresh-button"
+      (click)="loadQuestions()"
+      [disabled]="loadingQuestions() || !selectedSubjectId()">
+      <span class="refresh-icon">↻</span>
+      Refresh
+    </button>
+  </div>
+
+  <!-- SUBJECT FILTER -->
+  <div class="filter-section">
+    <div class="filter-group">
+      <label for="subject">Select Subject</label>
+
+      <select
+        id="subject"
+        [ngModel]="selectedSubjectId()"
+        (ngModelChange)="onSubjectChange($event)"
+        [disabled]="loadingSubjects()">
+
+        <option [ngValue]="null">Select a subject</option>
+
+        @for (subject of subjects(); track subject.id) {
+          <option [ngValue]="subject.id">
+            {{ subject.name }}
+          </option>
+        }
+
+      </select>
+    </div>
+
+    @if (loadingSubjects()) {
+      <span class="filter-hint">Loading subjects...</span>
+    }
+  </div>
+
+  <!-- ERROR MESSAGE -->
+  @if (errorMessage()) {
+    <div class="error-message">
+      <span class="error-icon">!</span>
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- QUESTION CONTENT -->
+  @if (selectedSubjectId()) {
+
+    @if (loadingQuestions()) {
+
+      <div class="state-message">
+        <div class="loader"></div>
+        <p>Loading questions...</p>
+      </div>
+
+    } @else {
+
+      <!-- STATISTICS -->
+      <div class="statistics-grid">
+
+        <div class="stat-card">
+          <div class="stat-icon total-icon">Q</div>
+          <div>
+            <span>Total Questions</span>
+            <h3>{{ totalQuestions() }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon active-icon">A</div>
+          <div>
+            <span>Active Questions</span>
+            <h3>{{ activeCount() }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon archived-icon">AR</div>
+          <div>
+            <span>Archived Questions</span>
+            <h3>{{ archivedCount() }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon used-icon">U</div>
+          <div>
+            <span>Used Questions</span>
+            <h3>{{ usedCount() }}</h3>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- QUESTIONS SECTION -->
+      <div class="questions-section">
+
+        <div class="section-header">
+          <div>
+            <h3>Questions</h3>
+            <p>View and manage questions for the selected subject.</p>
+          </div>
+
+          <span class="question-count">
+            {{ totalQuestions() }} Questions
+          </span>
+        </div>
+
+        @if (questions().length === 0) {
+
+          <div class="empty-message">
+            <div class="empty-icon">?</div>
+            <h3>No Questions Found</h3>
+            <p>
+              This subject does not have any imported questions yet.
+              Upload a CSV file to add questions.
+            </p>
+          </div>
+
+        } @else {
+
+          <div class="question-list">
+
+            @for (question of questions(); track question.question_id) {
+
+              <div class="question-card">
+
+                <!-- QUESTION HEADER -->
+                <div class="question-header">
+
+                  <div class="question-heading">
+
+                    <span class="question-number">
+                      QUESTION #{{ question.question_id }}
+                    </span>
+
+                    <span
+                      class="status-badge"
+                      [class.active-status]="question.status === 'active'"
+                      [class.archived-status]="question.status === 'archived'">
+                      {{ question.status }}
+                    </span>
+
+                    @if (question.is_used) {
+                      <span class="used-badge">
+                        Used in Quiz
+                      </span>
+                    }
+
+                  </div>
+
+                  <!-- ACTIONS -->
+                  <div class="question-actions">
+
+                    @if (question.can_edit) {
+                      <button
+                        class="edit-button"
+                        (click)="editQuestion(question)">
+                        Edit
+                      </button>
+                    }
+
+                    @if (question.can_archive) {
+                      <button
+                        class="archive-button"
+                        (click)="archiveQuestion(question)">
+                        Archive
+                      </button>
+                    }
+
+                    @if (question.can_restore) {
+                      <button
+                        class="restore-button"
+                        (click)="restoreQuestion(question)">
+                        Restore
+                      </button>
+                    }
+
+                  </div>
+
+                </div>
+
+                <!-- INLINE EDIT FORM -->
+                @if (editingQuestion()?.question_id === question.question_id) {
+
+                  <div class="edit-form">
+
+                    <div class="edit-form-header">
+                      <div>
+                        <h4>Edit Question</h4>
+                        <p>Update the question and its three answer options.</p>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="cancel-icon"
+                        (click)="cancelEdit()"
+                        [disabled]="savingQuestion()">
+                        ✕
+                      </button>
+                    </div>
+
+                    <!-- QUESTION TEXT -->
+                    <div class="form-group">
+                      <label>Question Text</label>
+
+                      <textarea
+                        rows="3"
+                        [value]="editingQuestion()!.question_text"
+                        (input)="updateEditingQuestionText($any($event.target).value)"
+                        placeholder="Enter question text">
+                      </textarea>
+                    </div>
+
+                    <!-- ANSWER OPTIONS -->
+                    <div class="form-group">
+
+                      <label>Answer Options</label>
+
+                      <p class="field-hint">
+                        Select the radio button beside the correct answer.
+                      </p>
+
+                      @for (
+                        option of editingQuestion()!.options;
+                        track option.option_id;
+                        let i = $index
+                      ) {
+
+                        <div class="edit-option-row">
+
+                          <span class="option-order">
+                            {{ ['A', 'B', 'C'][i] }}
+                          </span>
+
+                          <input
+                            type="text"
+                            [value]="option.option_text"
+                            (input)="updateEditingOptionText(i, $any($event.target).value)"
+                            [placeholder]="'Enter option ' + ['A', 'B', 'C'][i]">
+
+                          <label class="correct-selector">
+
+                            <input
+                              type="radio"
+                              name="correctOption"
+                              [checked]="option.is_correct"
+                              (change)="setCorrectOption(i)">
+
+                            <span>Correct</span>
+
+                          </label>
+
+                        </div>
+
+                      }
+
+                    </div>
+
+                    <!-- EDIT ACTIONS -->
+                    <div class="edit-form-actions">
+
+                      <button
+                        type="button"
+                        class="cancel-button"
+                        (click)="cancelEdit()"
+                        [disabled]="savingQuestion()">
+                        Cancel
+                      </button>
+
+                      <button
+                        type="button"
+                        class="save-button"
+                        (click)="saveQuestion()"
+                        [disabled]="savingQuestion()">
+
+                        {{ savingQuestion() ? 'Saving...' : 'Save Changes' }}
+
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                } @else {
+
+                  <!-- NORMAL QUESTION DISPLAY -->
+                  <h4 class="question-text">
+                    {{ question.question_text }}
+                  </h4>
+
+                  <!-- OPTIONS -->
+                  <div class="options-list">
+
+                    @for (
+                      option of question.options;
+                      track option.option_id
+                    ) {
+
+                      <div
+                        class="option-item"
+                        [class.correct-option]="option.is_correct">
+
+                        <span class="option-order">
+                          {{ ['A', 'B', 'C'][option.option_order - 1] }}
+                        </span>
+
+                        <span class="option-text">
+                          {{ option.option_text }}
+                        </span>
+
+                        @if (option.is_correct) {
+                          <span class="correct-label">
+                            ✓ Correct Answer
+                          </span>
+                        }
+
+                      </div>
+
+                    }
+
+                  </div>
+
+                  <!-- READ ONLY NOTICE -->
+                  @if (question.is_used) {
+                    <div class="readonly-notice">
+                      This question has already been used in a quiz.
+                      Editing and archiving are disabled.
+                    </div>
+                  }
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  } @else {
+
+    @if (!loadingSubjects()) {
+      <div class="empty-message initial-empty">
+        <div class="empty-icon">Q</div>
+        <h3>Select a Subject</h3>
+        <p>
+          Choose a subject above to view and manage its question bank.
+        </p>
+      </div>
+    }
+
+  }
+
+</div>

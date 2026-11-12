@@ -1,0 +1,336 @@
+<div class="csv-upload">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY QUIZ MANAGEMENT</span>
+      <h2>CSV Question Import</h2>
+      <p>Import validated questions into your subject question bank.</p>
+    </div>
+  </div>
+
+  <!-- UPLOAD CARD -->
+  <section class="upload-card">
+
+    <div class="section-heading">
+      <div>
+        <h3>Upload Questions</h3>
+        <p>Select a subject and upload its CSV file.</p>
+      </div>
+    </div>
+
+    <!-- SUBJECT SELECTION -->
+    <div class="form-group">
+      <label for="subject">Select Subject</label>
+
+      <select
+        id="subject"
+        [ngModel]="selectedSubjectId()"
+        (ngModelChange)="onSubjectChange($event ? +$event : null)"
+        [disabled]="loadingSubjects() || previewing() || importing()">
+
+        <option [ngValue]="null">Choose a subject</option>
+
+        @for (subject of subjects(); track subject.id) {
+          <option [ngValue]="subject.id">
+            {{ subject.name }}
+          </option>
+        }
+
+      </select>
+
+      @if (loadingSubjects()) {
+        <small>Loading subjects...</small>
+      }
+    </div>
+
+    <!-- CSV FILE SELECTION -->
+    <div class="form-group">
+      <label>CSV File</label>
+
+      <div class="file-upload-area">
+        <div class="file-upload-content">
+          <span class="upload-icon">↑</span>
+
+          @if (selectedFile()) {
+            <h4>{{ fileName() }}</h4>
+            <p>CSV file selected successfully.</p>
+          } @else {
+            <h4>Choose your CSV file</h4>
+            <p>Select a CSV file from your computer.</p>
+          }
+
+          <label for="csvFile" class="choose-file-button">
+            Browse File
+          </label>
+
+          <input
+            type="file"
+            id="csvFile"
+            accept=".csv,text/csv"
+            (change)="onFileSelected($event)"
+            [disabled]="previewing() || importing()">
+        </div>
+      </div>
+    </div>
+
+    <!-- CSV FORMAT INFORMATION -->
+    <div class="format-info">
+      <h4>Required CSV Columns</h4>
+
+      <p>Your CSV file must contain these column names:</p>
+
+      <div class="column-list">
+        <code>question_text</code>
+        <code>option_a</code>
+        <code>option_b</code>
+        <code>option_c</code>
+        <code>correct_option</code>
+      </div>
+
+      <div class="format-rules">
+        <p>• Each question must contain exactly three options.</p>
+        <p>• Correct option must be A, B or C.</p>
+        <p>• Questions will automatically belong to the selected subject.</p>
+        <p>• Duplicate questions inside the CSV are not allowed.</p>
+        <p>• All rows must be valid before importing.</p>
+      </div>
+
+      <!-- CSV EXAMPLE -->
+      <div class="csv-example">
+        <h4>CSV Example</h4>
+
+        <pre>question_text,option_a,option_b,option_c,correct_option
+What is Angular?,Framework,Database,Operating System,A
+What is a component?,UI building block,Database table,Server,A
+Which language does Angular use?,JavaScript,Python,C++,A</pre>
+      </div>
+    </div>
+
+    <!-- GENERAL ERROR -->
+    @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- IMPORT SUCCESS -->
+    @if (importSuccess()) {
+      <div class="success-message">
+        {{ importSuccess() }}
+      </div>
+    }
+
+    <!-- IMPORT ERROR -->
+    @if (importError()) {
+      <div class="error-message">
+        {{ importError() }}
+      </div>
+    }
+
+    <!-- PREVIEW BUTTON -->
+    <div class="upload-actions">
+      <button
+        type="button"
+        class="preview-button"
+        (click)="previewCsv()"
+        [disabled]="previewing() || importing() || !selectedSubjectId() || !selectedFile()">
+
+        @if (previewing()) {
+          Validating CSV...
+        } @else {
+          Preview CSV
+        }
+
+      </button>
+    </div>
+
+  </section>
+
+  <!-- CSV PREVIEW -->
+  @if (previewData(); as preview) {
+
+    <section class="preview-section">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CSV VALIDATION</span>
+          <h3>Import Preview</h3>
+          <p>{{ preview.message }}</p>
+          <p>Selected Subject: {{ preview.subject?.name }}</p>
+        </div>
+      </div>
+
+      <!-- PREVIEW STATISTICS -->
+      <div class="preview-stats">
+
+        <div class="stat-card">
+          <span>Total Rows</span>
+          <strong>{{ preview.total_rows }}</strong>
+        </div>
+
+        <div class="stat-card valid-stat">
+          <span>Valid Questions</span>
+          <strong>{{ preview.valid_count }}</strong>
+        </div>
+
+        <div class="stat-card invalid-stat">
+          <span>Invalid Questions</span>
+          <strong>{{ preview.invalid_count }}</strong>
+        </div>
+
+      </div>
+
+      <!-- VALID QUESTIONS -->
+      @if (preview.valid_rows?.length > 0) {
+
+        <div class="preview-table-card">
+
+          <div class="table-heading">
+            <h4>Valid Questions</h4>
+            <span class="count-badge">
+              {{ preview.valid_rows.length }}
+            </span>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>CSV Row</th>
+                  <th>Question</th>
+                  <th>Correct Option</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (row of preview.valid_rows; track row.row_number) {
+
+                  <tr>
+                    <td>{{ row.row_number }}</td>
+
+                    <td>
+                      {{ row.data.question_text }}
+                    </td>
+
+                    <td>
+                      <span class="answer-badge">
+                        @if (row.data.options[0]?.is_correct) {
+                          A
+                        } @else if (row.data.options[1]?.is_correct) {
+                          B
+                        } @else {
+                          C
+                        }
+                      </span>
+                    </td>
+
+                    <td>
+                      <span class="status-valid">
+                        Valid
+                      </span>
+                    </td>
+                  </tr>
+
+                }
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      }
+
+      <!-- INVALID QUESTIONS -->
+      @if (preview.invalid_rows?.length > 0) {
+
+        <div class="preview-table-card invalid-table-card">
+
+          <div class="table-heading">
+            <h4>Invalid Questions</h4>
+
+            <span class="count-badge invalid-count-badge">
+              {{ preview.invalid_rows.length }}
+            </span>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>CSV Row</th>
+                  <th>Question</th>
+                  <th>Validation Errors</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (row of preview.invalid_rows; track row.row_number) {
+
+                  <tr>
+                    <td>{{ row.row_number }}</td>
+
+                    <td>
+                      {{ row.data?.question_text || 'Question text unavailable' }}
+                    </td>
+
+                    <td>
+                      @if (row.errors?.length > 0) {
+                        <ul class="validation-errors">
+                          @for (error of row.errors; track $index) {
+                            <li>{{ error }}</li>
+                          }
+                        </ul>
+                      }
+                    </td>
+                  </tr>
+
+                }
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      }
+
+      <!-- IMPORT FOOTER -->
+      <div class="import-footer">
+
+        @if (preview.invalid_count > 0) {
+          <p class="import-warning">
+            Correct all invalid rows in your CSV and upload it again.
+          </p>
+        } @else if (preview.valid_count > 0) {
+          <p class="import-ready">
+            All questions passed validation. You can import them now.
+          </p>
+        }
+
+        <button
+          type="button"
+          class="import-button"
+          (click)="importCsv()"
+          [disabled]="
+            importing() ||
+            previewing() ||
+            preview.invalid_count > 0 ||
+            preview.valid_count === 0
+          ">
+
+          @if (importing()) {
+            Importing Questions...
+          } @else {
+            Import Questions
+          }
+
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+</div>

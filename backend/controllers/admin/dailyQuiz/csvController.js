@@ -11,11 +11,10 @@ const {
 
 const previewDailyQuizCsv = async (req, res) => {
     try {
-        const { subject_id } = req.body;
 
-        // CHECK SELECTED SUBJECT
+        // GET SELECTED SUBJECT ID FROM FRONTEND
 
-        const selectedSubjectId = Number(subject_id);
+        const selectedSubjectId = Number(req.body.subject_id);
 
         if (
             !Number.isInteger(selectedSubjectId) ||
@@ -36,14 +35,18 @@ const previewDailyQuizCsv = async (req, res) => {
             });
         }
 
-        if (!req.file.originalname.toLowerCase().endsWith(".csv")) {
+        if (
+            !req.file.originalname
+                .toLowerCase()
+                .endsWith(".csv")
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "Only CSV files are allowed"
             });
         }
 
-        // VERIFY SUBJECT IN DATABASE
+        // VERIFY SELECTED SUBJECT IN DATABASE
 
         const [subjects] = await db.execute(
             `SELECT id, name
@@ -60,7 +63,7 @@ const previewDailyQuizCsv = async (req, res) => {
             });
         }
 
-        // VALIDATE CSV
+        // VALIDATE CSV CONTENT
 
         const result = await validateCsvBuffer(req.file.buffer);
 
@@ -68,50 +71,34 @@ const previewDailyQuizCsv = async (req, res) => {
             return res.status(400).json(result);
         }
 
-        // CHECK CSV SUBJECT AGAINST SELECTED SUBJECT
-
-        const allRows = [
-            ...result.valid_rows,
-            ...result.invalid_rows
-        ];
-
-        const mismatchedRows = allRows.filter(row => {
-    const csvSubjectId = Number(row.data?.subject_id);
-
-    return (
-        Number.isInteger(csvSubjectId) &&
-        csvSubjectId > 0 &&
-        csvSubjectId !== selectedSubjectId
-    );
-});
-
-        if (mismatchedRows.length > 0) {
-            return res.status(400).json({
-                success: false,
-                message: "CSV subject_id does not match the selected subject",
-                selected_subject: subjects[0].name,
-                mismatched_rows: mismatchedRows.map(row => row.row_number)
-            });
-        }
+        // RETURN PREVIEW
 
         return res.status(200).json({
             success: true,
             message: "CSV preview generated successfully",
+
             subject: subjects[0],
+
             total_rows: result.total_rows,
             valid_count: result.valid_count,
             invalid_count: result.invalid_count,
+
             valid_rows: result.valid_rows,
             invalid_rows: result.invalid_rows
         });
 
     } catch (error) {
-        console.error("Daily Quiz CSV preview error:", error);
+
+        console.error(
+            "Daily Quiz CSV preview error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
             message: "Failed to preview CSV file"
         });
+
     }
 };
 

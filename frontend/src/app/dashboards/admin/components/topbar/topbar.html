@@ -7,15 +7,75 @@
 
   <div class="topbar-actions">
 
-<!-- Daily Quiz Management -->
-<a
-  class="dropdown-trigger management-link"
-  routerLink="/admin/daily-quizzes"
-  routerLinkActive="active"
->
-  <span class="swap-icon">▤</span>
-  <span>Daily Quiz Management</span>
-</a>
+    <!-- Daily Quiz dropdown -->
+    <div class="dropdown">
+      <button
+        class="dropdown-trigger"
+        type="button"
+        [class.active]="isDailyQuizOpen"
+        [attr.aria-expanded]="isDailyQuizOpen"
+        (click)="toggleDailyQuiz()"
+      >
+        <span class="swap-icon">✎</span>
+        <span>Daily Quiz</span>
+        <span class="chevron">{{ isDailyQuizOpen ? '▲' : '▼' }}</span>
+      </button>
+
+      @if (isDailyQuizOpen) {
+        <div class="dropdown-menu">
+
+          <a
+            routerLink="/admin/daily-quiz"
+            routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeDailyQuiz()"
+          >
+            <span class="menu-icon">▦</span>
+            <span>
+              <strong>Dashboard</strong>
+              <small>Daily quiz overview</small>
+            </span>
+          </a>
+
+          <a
+            routerLink="/admin/daily-quiz/question-bank"
+            routerLinkActive="selected"
+            (click)="closeDailyQuiz()"
+          >
+            <span class="menu-icon">☷</span>
+            <span>
+              <strong>Question Bank</strong>
+              <small>Manage imported questions</small>
+            </span>
+          </a>
+
+          <a
+            routerLink="/admin/daily-quiz/csv-upload"
+            routerLinkActive="selected"
+            (click)="closeDailyQuiz()"
+          >
+            <span class="menu-icon">⇧</span>
+            <span>
+              <strong>CSV Upload</strong>
+              <small>Import quiz questions</small>
+            </span>
+          </a>
+
+          <a
+            routerLink="/admin/daily-quiz/automation"
+            routerLinkActive="selected"
+            (click)="closeDailyQuiz()"
+          >
+            <span class="menu-icon">⚙</span>
+            <span>
+              <strong>Automation Settings</strong>
+              <small>Configure daily quiz publishing</small>
+            </span>
+          </a>
+
+        </div>
+      }
+    </div>
 
     <!-- Skill Swap dropdown -->
     <div class="dropdown">

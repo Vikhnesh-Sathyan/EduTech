@@ -11,6 +11,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class Topbar {
 
   isSkillSwapOpen = false;
+  isDailyQuizOpen = false;
+
 
   toggleSkillSwap(): void {
     this.isSkillSwapOpen = !this.isSkillSwapOpen;
@@ -19,4 +21,13 @@ export class Topbar {
   closeSkillSwap(): void {
     this.isSkillSwapOpen = false;
   }
+
+  toggleDailyQuiz(): void {
+  this.isDailyQuizOpen = !this.isDailyQuizOpen;
+}
+
+closeDailyQuiz(): void {
+  this.isDailyQuizOpen = false;
+}
+
 }

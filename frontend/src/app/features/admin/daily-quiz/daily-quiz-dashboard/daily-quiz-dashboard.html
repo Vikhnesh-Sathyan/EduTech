@@ -1,1 +1,168 @@
-<p>daily-quiz-dashboard works!</p>
+
+<div class="daily-quiz-dashboard">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY QUIZ MANAGEMENT</span>
+      <h2>Dashboard</h2>
+      <p>Monitor question availability and daily quiz automation.</p>
+    </div>
+
+    <button
+      class="refresh-button"
+      (click)="loadDashboard()"
+      [disabled]="loading()">
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-message">
+      Loading dashboard...
+    </div>
+  }
+
+  <!-- ERROR -->
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- DASHBOARD CONTENT -->
+  @if (!loading() && !errorMessage()) {
+
+    <!-- OVERVIEW CARDS -->
+    <div class="overview-grid">
+
+      <div class="overview-card">
+        <span>Total Subjects</span>
+        <h3>{{ subjects().length }}</h3>
+      </div>
+
+      <div class="overview-card">
+        <span>Total Questions</span>
+        <h3>{{ totalQuestions() }}</h3>
+      </div>
+
+      <div class="overview-card">
+        <span>Unused Questions</span>
+        <h3>{{ unusedQuestions() }}</h3>
+      </div>
+
+      <div class="overview-card">
+        <span>Possible Quizzes</span>
+        <h3>{{ possibleQuizzes() }}</h3>
+      </div>
+
+    </div>
+
+    <!-- SUBJECT TABLE -->
+    <div class="table-section">
+
+      <div class="section-header">
+        <div>
+          <h3>Subject Overview</h3>
+          <p>Question availability across active subjects.</p>
+        </div>
+      </div>
+
+      @if (subjects().length === 0) {
+
+        <div class="empty-message">
+          No active subjects found.
+        </div>
+
+      } @else {
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Academic Details</th>
+                <th>Subject</th>
+                <th>Total Questions</th>
+                <th>Unused</th>
+                <th>Possible Quizzes</th>
+                <th>Stock</th>
+                <th>Automation</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (subject of subjects(); track subject.subject_id) {
+
+                <tr>
+
+                  <td>
+                    <div class="academic-details">
+                      <strong>{{ subject.program_name }}</strong>
+                      <span>{{ subject.department_name }}</span>
+                      <span>{{ subject.year_name }}</span>
+                    </div>
+                  </td>
+
+                  <td>
+                    <strong>{{ subject.subject_name }}</strong>
+                  </td>
+
+                  <td>{{ subject.total_questions }}</td>
+
+                  <td>{{ subject.unused_questions }}</td>
+
+                  <td>{{ subject.possible_quizzes }}</td>
+
+                  <td>
+                    @if (subject.low_stock) {
+                      <span class="status-badge low-stock">
+                        Low Stock
+                      </span>
+                    } @else {
+                      <span class="status-badge sufficient-stock">
+                        Sufficient
+                      </span>
+                    }
+                  </td>
+
+                  <td>
+                    <div class="automation-details">
+
+                      <span
+                        class="status-badge"
+                        [class.active-status]="subject.automation_status === 'active'"
+                        [class.paused-status]="subject.automation_status === 'paused'"
+                        [class.not-configured]="subject.automation_status === 'not_configured'">
+
+                        {{ subject.automation_status }}
+
+                      </span>
+
+                      <small>
+                        {{ subject.publish_time }}
+                      </small>
+
+                    </div>
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>
