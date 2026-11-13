@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -12,9 +13,9 @@ import { Subscription } from 'rxjs';
 import { Auth } from '../../../../services/auth';
 
 import {
-  DailyQuizNotificationService,
-  DailyQuizNotification
-} from '../../../../core/services/daily-quiz-notification.service';
+  StudentDailyQuizNotificationService,
+  StudentDailyQuizNotification
+} from '../../../../services/student/daily-quiz/student-daily-quiz-notification.service';
 
 import { ChatSocketService } from '../../../../services/chat/chat-socket.service';
 
@@ -27,7 +28,7 @@ import { ChatSocketService } from '../../../../services/chat/chat-socket.service
 })
 export class Navbar implements OnInit, OnDestroy {
 
-  notifications: DailyQuizNotification[] = [];
+  notifications: StudentDailyQuizNotification[] = [];
 
   unreadCount = 0;
   isDropdownOpen = false;
@@ -35,43 +36,43 @@ export class Navbar implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
-    private auth: Auth,
-    private router: Router,
-    private notificationService: DailyQuizNotificationService,
-    private chatSocket: ChatSocketService
-  ) {}
+  private auth: Auth,
+  private router: Router,
+  private notificationService: StudentDailyQuizNotificationService,
+  private chatSocket: ChatSocketService,
+  private cdr: ChangeDetectorRef
+) {}
 
   // ==========================================
   // INITIALIZE
   // ==========================================
-ngOnInit(): void {
 
-  // Load saved notifications
-  this.loadNotifications();
+  ngOnInit(): void {
 
-  // Connect using the logged-in student's JWT
-  const token = localStorage.getItem('token');
+    this.loadNotifications();
 
-  if (token) {
-    this.chatSocket.connect(token);
+    this.loadUnreadCount();
+
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      this.chatSocket.connect(token);
+    }
+
+    this.listenForLiveNotifications();
   }
-
-  // Listen for live notifications
-  this.listenForLiveNotifications();
-
-}
 
   // ==========================================
   // LOAD NOTIFICATION HISTORY
   // ==========================================
+
   loadNotifications(): void {
 
     const subscription = this.notificationService
-      .getNotifications()
+      .getNotifications(1)
       .subscribe({
         next: (response) => {
-          this.notifications = response.data.notifications;
-          this.unreadCount = response.data.unread_count;
+          this.notifications = response.notifications;
         },
         error: (error) => {
           console.error('Failed to load notifications:', error);
@@ -82,8 +83,33 @@ ngOnInit(): void {
   }
 
   // ==========================================
-  // LISTEN FOR SOCKET NOTIFICATIONS
+  // LOAD UNREAD COUNT
   // ==========================================
+
+ loadUnreadCount(): void {
+
+  const subscription = this.notificationService
+    .getUnreadCount()
+    .subscribe({
+      next: (response) => {
+
+        this.unreadCount = Number(response.unread_count);
+
+        this.cdr.markForCheck();
+
+      },
+      error: (error) => {
+        console.error('Failed to load unread count:', error);
+      }
+    });
+
+  this.subscriptions.add(subscription);
+}
+
+  // ==========================================
+  // LISTEN FOR LIVE NOTIFICATIONS
+  // ==========================================
+
   listenForLiveNotifications(): void {
 
     const subscription = this.chatSocket.notifications$
@@ -97,10 +123,21 @@ ngOnInit(): void {
           return;
         }
 
+        const newNotification: StudentDailyQuizNotification = {
+          id: notification.id,
+          daily_quiz_id: notification.daily_quiz_id,
+          notification_type: notification.notification_type,
+          title: notification.title,
+          message: notification.message,
+          is_read: false,
+          read_at: null,
+          created_at: notification.created_at
+        };
+
         this.notifications = [
-          notification,
+          newNotification,
           ...this.notifications
-        ];
+        ].slice(0, 10);
 
         this.unreadCount++;
 
@@ -112,6 +149,7 @@ ngOnInit(): void {
   // ==========================================
   // TOGGLE NOTIFICATION DROPDOWN
   // ==========================================
+
   toggleNotifications(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -119,7 +157,8 @@ ngOnInit(): void {
   // ==========================================
   // MARK ONE NOTIFICATION AS READ
   // ==========================================
-  markAsRead(notification: DailyQuizNotification): void {
+
+  markAsRead(notification: StudentDailyQuizNotification): void {
 
     if (notification.is_read) {
       return;
@@ -146,8 +185,9 @@ ngOnInit(): void {
   }
 
   // ==========================================
-  // MARK ALL AS READ
+  // MARK ALL NOTIFICATIONS AS READ
   // ==========================================
+
   markAllAsRead(): void {
 
     if (this.unreadCount === 0) {
@@ -178,39 +218,40 @@ ngOnInit(): void {
   // ==========================================
   // LOGOUT
   // ==========================================
-logout(): void {
 
-  // Disconnect the existing Socket.IO connection
-  this.chatSocket.disconnect();
+  logout(): void {
 
-  // Clear authentication data
-  this.auth.logout();
+    this.chatSocket.disconnect();
 
-  // Redirect to login
-  this.router.navigate(['/login']);
+    this.auth.logout();
 
-}
+    this.router.navigate(['/login']);
+  }
 
   // ==========================================
   // CLEANUP
   // ==========================================
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   // ==========================================
-// CLOSE DROPDOWN WHEN CLICKING OUTSIDE
-// ==========================================
-@HostListener('document:click')
-closeNotificationsOnOutsideClick(): void {
-  this.isDropdownOpen = false;
-}
+  // CLOSE DROPDOWN ON OUTSIDE CLICK
+  // ==========================================
 
-// ==========================================
-// CLOSE DROPDOWN WITH ESCAPE KEY
-// ==========================================
-@HostListener('document:keydown.escape')
-closeNotificationsOnEscape(): void {
-  this.isDropdownOpen = false;
-}
+  @HostListener('document:click')
+  closeNotificationsOnOutsideClick(): void {
+    this.isDropdownOpen = false;
+  }
+
+  // ==========================================
+  // CLOSE DROPDOWN WITH ESCAPE
+  // ==========================================
+
+  @HostListener('document:keydown.escape')
+  closeNotificationsOnEscape(): void {
+    this.isDropdownOpen = false;
+  }
+
 }

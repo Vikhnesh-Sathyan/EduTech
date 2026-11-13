@@ -29,6 +29,13 @@ const {
     getDailyQuizActivity
 } = require("../../../controllers/student/dailyQuiz/quizActivityController");
 
+const {
+    getDailyQuizNotifications,
+    getUnreadNotificationCount,
+    markDailyQuizNotificationAsRead,
+    markAllDailyQuizNotificationsAsRead
+} = require("../../../controllers/student/dailyQuiz/dailyQuizNotificationController");
+
 // =====================================================
 // STUDENT DAILY QUIZ DASHBOARD
 // =====================================================
@@ -54,6 +61,38 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getDailyQuizActivity
+);
+
+// =====================================================
+// DAILY QUIZ NOTIFICATIONS
+// =====================================================
+
+router.get(
+    "/notifications",
+    authMiddleware,
+    roleMiddleware("student"),
+    getDailyQuizNotifications
+);
+
+router.get(
+    "/notifications/unread-count",
+    authMiddleware,
+    roleMiddleware("student"),
+    getUnreadNotificationCount
+);
+
+router.patch(
+    "/notifications/read-all",
+    authMiddleware,
+    roleMiddleware("student"),
+    markAllDailyQuizNotificationsAsRead
+);
+
+router.patch(
+    "/notifications/:notificationId/read",
+    authMiddleware,
+    roleMiddleware("student"),
+    markDailyQuizNotificationAsRead
 );
 
 // =====================================================
