@@ -1,0 +1,186 @@
+
+<div class="quiz-result-page">
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading your quiz result...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @else if (errorMessage()) {
+    <div class="state-card error-state">
+      <h3>Unable to load result</h3>
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        class="secondary-button"
+        routerLink="/daily-quiz">
+        Back to Dashboard
+      </button>
+    </div>
+  }
+
+  <!-- RESULT -->
+  @else if (result(); as quizResult) {
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">DAILY CHALLENGE</span>
+        <h2>Quiz Result</h2>
+        <p>{{ quizResult.quiz_title }}</p>
+      </div>
+
+      <button
+        class="secondary-button"
+        routerLink="/daily-quiz">
+        Back to Dashboard
+      </button>
+    </div>
+
+    <!-- RESULT SUMMARY -->
+    <section class="result-summary">
+
+      <div class="score-section">
+        <span class="score-label">YOUR SCORE</span>
+
+        <h1>
+          {{ quizResult.score }} / {{ quizResult.total_questions }}
+        </h1>
+
+        <p>{{ percentage }}% correct answers</p>
+      </div>
+
+      <div class="result-details">
+        <div class="detail-item">
+          <span>Subject</span>
+          <strong>{{ quizResult.subject_name }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Quiz Date</span>
+          <strong>{{ quizResult.quiz_date | date:'mediumDate' }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Submitted At</span>
+          <strong>{{ quizResult.submitted_at | date:'medium' }}</strong>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PERFORMANCE CARDS -->
+    <section class="performance-grid">
+
+      <div class="performance-card correct-card">
+        <span class="performance-number">
+          {{ quizResult.correct_answers }}
+        </span>
+        <span class="performance-label">Correct</span>
+      </div>
+
+      <div class="performance-card wrong-card">
+        <span class="performance-number">
+          {{ quizResult.wrong_answers }}
+        </span>
+        <span class="performance-label">Wrong</span>
+      </div>
+
+      <div class="performance-card skipped-card">
+        <span class="performance-number">
+          {{ quizResult.unanswered }}
+        </span>
+        <span class="performance-label">Unanswered</span>
+      </div>
+
+    </section>
+
+    <!-- QUESTION REVIEW -->
+    <section class="question-review">
+
+      <div class="review-header">
+        <div>
+          <span class="eyebrow">PERFORMANCE REVIEW</span>
+          <h3>Question-wise Review</h3>
+          <p>Check your answers against the correct answers.</p>
+        </div>
+
+        <span class="review-count">
+          {{ quizResult.questions.length }} Questions
+        </span>
+      </div>
+
+      @for (question of quizResult.questions; track question.question_id) {
+
+        <div class="review-question">
+
+          <div class="question-heading">
+            <span class="question-number">
+              QUESTION {{ question.question_order }}
+            </span>
+
+            @if (question.is_correct) {
+              <span class="answer-status correct-status">
+                Correct
+              </span>
+            } @else if (question.selected_option_id === null) {
+              <span class="answer-status skipped-status">
+                Unanswered
+              </span>
+            } @else {
+              <span class="answer-status wrong-status">
+                Incorrect
+              </span>
+            }
+          </div>
+
+          <h4>{{ question.question_text }}</h4>
+
+          <!-- OPTIONS -->
+          <div class="review-options">
+
+            @for (option of question.options; track option.id) {
+
+              <div
+                class="review-option"
+                [class.correct-option]="option.id === question.correct_option_id"
+                [class.wrong-option]="
+                  option.id === question.selected_option_id &&
+                  !question.is_correct
+                ">
+
+                <span class="option-text">
+                  {{ option.option_text }}
+                </span>
+
+                @if (option.id === question.correct_option_id) {
+                  <span class="option-indicator correct-indicator">
+                    Correct Answer
+                  </span>
+                }
+
+                @else if (option.id === question.selected_option_id) {
+                  <span class="option-indicator wrong-indicator">
+                    Your Answer
+                  </span>
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

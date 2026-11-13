@@ -29,6 +29,63 @@
       </span>
     </a>
 
+<!-- DAILY QUIZ DROPDOWN -->
+<div class="nav-dropdown">
+
+  <button
+    class="nav-dropdown-toggle"
+    (click)="dailyQuizMenuOpen.set(!dailyQuizMenuOpen())"
+    [class.expanded]="dailyQuizMenuOpen()"
+    [class.active]="
+      router.url.startsWith('/daily-quiz')
+    "
+  >
+    <span class="nav-label">
+      <span class="nav-icon">✦</span>
+      Daily Quiz
+    </span>
+
+    <span class="dropdown-arrow"
+      [class.rotated]="dailyQuizMenuOpen()">
+      ▾
+    </span>
+  </button>
+
+  <div
+    class="nav-dropdown-content"
+    [class.open]="dailyQuizMenuOpen()"
+  >
+
+    <a
+      routerLink="/daily-quiz"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <span class="sub-nav-indicator"></span>
+      Dashboard
+    </a>
+
+    <a
+      routerLink="/daily-quiz/history"
+      routerLinkActive="active"
+    >
+      <span class="sub-nav-indicator"></span>
+      Quiz History
+    </a>
+
+    <a
+      routerLink="/daily-quiz/activity"
+      routerLinkActive="active"
+    >
+      <span class="sub-nav-indicator"></span>
+      Learning Activity
+    </a>
+
+  </div>
+
+</div>
+
+
 
     <!-- Study Progress -->
     @if (currentStudy(); as study) {

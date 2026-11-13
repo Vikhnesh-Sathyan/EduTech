@@ -1,0 +1,128 @@
+<div class="daily-quiz-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY CHALLENGE</span>
+      <h2>Daily Quiz</h2>
+      <p>Test your knowledge with today's three-question challenge.</p>
+    </div>
+
+    <button
+      class="refresh-button"
+      (click)="loadDailyQuiz()"
+      [disabled]="loading()">
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Checking today's quiz...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @else if (errorMessage()) {
+    <div class="state-card error-state">
+      <h3>Unable to load quiz</h3>
+      <p>{{ errorMessage() }}</p>
+
+      <button class="primary-button" (click)="loadDailyQuiz()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  <!-- QUIZ AVAILABLE -->
+  @else if (quiz(); as dailyQuiz) {
+
+    <section class="quiz-card">
+
+      <div class="quiz-card-top">
+        <span class="quiz-label">TODAY'S QUIZ</span>
+
+        <span
+          class="status-badge"
+          [class.completed]="dailyQuiz.has_attempted">
+          {{ dailyQuiz.has_attempted ? 'Completed' : 'Available' }}
+        </span>
+      </div>
+
+      <div class="quiz-content">
+        <div class="quiz-icon">Q</div>
+
+        <div class="quiz-information">
+          <h3>{{ dailyQuiz.title }}</h3>
+          <p class="subject-name">{{ dailyQuiz.subject_name }}</p>
+        </div>
+      </div>
+
+      <p class="quiz-description">
+        {{ dailyQuiz.instructions || 'Answer all three questions and test your understanding.' }}
+      </p>
+
+      <div class="quiz-meta">
+
+        <div class="meta-item">
+          <span class="meta-label">QUESTIONS</span>
+          <strong>03</strong>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">PUBLISHED</span>
+          <strong>{{ dailyQuiz.publish_time }}</strong>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">EXPIRES</span>
+          <strong>{{ dailyQuiz.expires_at | date:'short' }}</strong>
+        </div>
+
+      </div>
+
+    @if (dailyQuiz.has_attempted) {
+  <div class="completed-message">
+    <strong>Quiz completed</strong>
+    <p>You have already attempted today's quiz.</p>
+  </div>
+
+  <button
+    class="primary-button"
+    [routerLink]="['/daily-quiz', dailyQuiz.id, 'result']">
+    View Result
+  </button>
+
+} @else {
+  <button
+    class="primary-button"
+    [routerLink]="['/daily-quiz', dailyQuiz.id]">
+    Start Quiz
+  </button>
+}
+
+    </section>
+
+  }
+
+  <!-- NO QUIZ -->
+  @else {
+    <div class="state-card empty-state">
+      <div class="empty-icon">Q</div>
+
+      <h3>No quiz available right now</h3>
+
+      <p>
+        Today's Daily Quiz has not been published for your enrolled subjects
+        or is no longer available.
+      </p>
+
+      <button class="refresh-button" (click)="loadDailyQuiz()">
+        Check Again
+      </button>
+    </div>
+  }
+
+</div>

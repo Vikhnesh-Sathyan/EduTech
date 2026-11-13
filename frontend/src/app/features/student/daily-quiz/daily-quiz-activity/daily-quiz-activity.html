@@ -1,0 +1,147 @@
+
+<div class="activity-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY QUIZ</span>
+      <h2>Learning Activity</h2>
+      <p>Track your consistency and daily quiz performance.</p>
+    </div>
+
+    <button class="refresh-button"
+      (click)="loadActivity()"
+      [disabled]="loading()">
+      Refresh
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading your activity...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @else if (errorMessage()) {
+    <div class="state-card error-state">
+      <h3>Unable to load activity</h3>
+      <p>{{ errorMessage() }}</p>
+      <button class="primary-button" (click)="loadActivity()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  @else {
+
+    <!-- STATISTICS -->
+    <div class="statistics-grid">
+
+      <div class="stat-card">
+        <span>Total Completed</span>
+        <h3>{{ statistics()?.total_completed ?? 0 }}</h3>
+        <small>Quizzes completed</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Current Streak</span>
+        <h3>{{ statistics()?.current_streak ?? 0 }} days</h3>
+        <small>Keep it going</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Longest Streak</span>
+        <h3>{{ statistics()?.longest_streak ?? 0 }} days</h3>
+        <small>Your best consistency</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Average Score</span>
+        <h3>{{ statistics()?.average_score ?? 0 }}</h3>
+        <small>Out of 3 questions</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Correct Answers</span>
+        <h3>{{ statistics()?.total_correct_answers ?? 0 }}</h3>
+        <small>Total correct answers</small>
+      </div>
+
+    </div>
+
+    <!-- ACTIVITY CALENDAR -->
+
+    <!-- ACTIVITY CALENDAR -->
+<div class="calendar-card">
+
+  <div class="calendar-header">
+    <div>
+      <h3>Daily Contributions</h3>
+      <p>Your quiz completion history over the last year</p>
+    </div>
+  </div>
+
+  @if (activity().length === 0) {
+    <div class="empty-state">
+      <h3>No activity yet</h3>
+      <p>Complete your first daily quiz to start building your activity calendar.</p>
+    </div>
+  } @else {
+
+    <div class="calendar-scroll">
+
+      <div class="calendar-layout">
+
+        <!-- WEEKDAY LABELS -->
+        <div class="weekday-labels">
+          <span></span>
+          <span>Mon</span>
+          <span></span>
+          <span>Wed</span>
+          <span></span>
+          <span>Fri</span>
+          <span></span>
+        </div>
+
+        <!-- CALENDAR DAYS -->
+        <div class="calendar-grid">
+
+          @for (day of calendarDays(); track day.date) {
+
+            <div
+              class="activity-day"
+              [class.level-0]="day.level === 0"
+              [class.level-1]="day.level === 1"
+              [class.level-2]="day.level === 2"
+              [class.level-3]="day.level === 3"
+              [title]="day.date + ' | Score: ' + day.score + '/3 | Correct: ' + day.correct_answers"
+            ></div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- LEGEND -->
+    <div class="calendar-legend">
+      <span>Less</span>
+      <div class="legend-box level-0"></div>
+      <div class="legend-box level-1"></div>
+      <div class="legend-box level-2"></div>
+      <div class="legend-box level-3"></div>
+      <span>More</span>
+    </div>
+
+  }
+
+</div>
+
+  }
+
+</div>

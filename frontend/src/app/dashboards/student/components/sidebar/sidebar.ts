@@ -1,4 +1,6 @@
+
 import { Component, OnInit, signal } from '@angular/core';
+
 import {
   Router,
   RouterLink,
@@ -22,13 +24,23 @@ export class Sidebar implements OnInit {
 
   currentStudy = signal<any | null>(null);
 
+  // Daily Quiz dropdown state
+  dailyQuizMenuOpen = signal(false);
+
   constructor(
-    private router: Router,
+    public router: Router,
     private studentLearningService: StudentLearning
   ) {}
 
   ngOnInit(): void {
+
     this.loadCurrentStudyProgress();
+
+    // Automatically expand when visiting Daily Quiz pages
+    this.dailyQuizMenuOpen.set(
+      this.router.url.startsWith('/daily-quiz')
+    );
+
   }
 
   loadCurrentStudyProgress(): void {
@@ -61,6 +73,7 @@ export class Sidebar implements OnInit {
   }
 
   logout(): void {
+
     localStorage.removeItem('token');
     localStorage.removeItem('user');
 

@@ -134,7 +134,6 @@ import { History as EnglishPracticeHistory }
   from './features/student/english-practice/pages/history/history';
 
   // STUDENT ENGLISH DEBATE
-
 import { DebateDashboard }
   from './features/student/english-practice/pages/debate/debate-dashboard/debate-dashboard';
 
@@ -149,6 +148,28 @@ import { DebateResult }
 
 import { DebateHistory }
   from './features/student/english-practice/pages/debate/debate-history/debate-history';
+
+//STUDENT DAILY QUIZ
+import {
+  DailyQuizDashboard as StudentDailyQuizDashboard
+} from './features/student/daily-quiz/daily-quiz-dashboard/daily-quiz-dashboard';
+
+import {
+  DailyQuizWorkspace
+} from './features/student/daily-quiz/daily-quiz-workspace/daily-quiz-workspace';
+
+import {
+  DailyQuizResultComponent
+} from './features/student/daily-quiz/daily-quiz-result/daily-quiz-result';
+
+import {
+  DailyQuizHistory
+} from './features/student/daily-quiz/daily-quiz-history/daily-quiz-history';
+
+import { DailyQuizActivity } from './features/student/daily-quiz/daily-quiz-activity/daily-quiz-activity';
+
+
+
 
 
 // Admin dashboard
@@ -645,6 +666,33 @@ export const routes: Routes = [
         path: 'english-practice/debate/history',
         component: DebateHistory
       },
+      // =====================================================
+      // STUDENT DAILY QUIZ
+      // =====================================================
+
+      {
+        path: 'daily-quiz',
+        component: StudentDailyQuizDashboard
+      },
+      {
+        path: 'daily-quiz/history',
+        component: DailyQuizHistory
+      },
+      {
+        path: 'daily-quiz/activity',
+        component: DailyQuizActivity
+      },
+      {
+        path: 'daily-quiz/:quizId/result',
+        component: DailyQuizResultComponent
+      },
+      {
+        path: 'daily-quiz/:quizId',
+        component: DailyQuizWorkspace
+      },
+      
+      
+
       
     ]
   },

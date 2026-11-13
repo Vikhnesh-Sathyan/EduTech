@@ -1,0 +1,166 @@
+
+<div class="daily-quiz-history-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">DAILY CHALLENGE</span>
+      <h2>Quiz History</h2>
+      <p>Track your previous daily quiz attempts and performance.</p>
+    </div>
+
+    <button
+      class="refresh-button"
+      (click)="loadHistory()"
+      [disabled]="loading()">
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading your quiz history...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @else if (errorMessage()) {
+    <div class="state-card error-state">
+      <h3>Unable to load history</h3>
+      <p>{{ errorMessage() }}</p>
+
+      <button class="primary-button" (click)="loadHistory()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  @else {
+
+    <!-- SUMMARY CARDS -->
+    <section class="summary-grid">
+
+      <div class="summary-card">
+        <span>Total Quizzes</span>
+        <strong>{{ totalQuizzes() }}</strong>
+      </div>
+
+      <div class="summary-card completed-summary">
+        <span>Completed</span>
+        <strong>{{ completedQuizzes() }}</strong>
+      </div>
+
+      <div class="summary-card pending-summary">
+        <span>Not Attempted</span>
+        <strong>{{ pendingQuizzes() }}</strong>
+      </div>
+
+    </section>
+
+    <!-- HISTORY LIST -->
+    <section class="history-section">
+
+      <div class="section-header">
+        <div>
+          <h3>Your Quiz Activity</h3>
+          <p>Previously published quizzes for your enrolled subjects.</p>
+        </div>
+
+        <span class="total-badge">
+          {{ totalQuizzes() }} Quizzes
+        </span>
+      </div>
+
+      @if (history().length > 0) {
+
+        <div class="history-list">
+
+          @for (quiz of history(); track quiz.quiz_id) {
+
+            <article class="history-card">
+
+              <div class="history-card-main">
+
+                <div class="quiz-icon">Q</div>
+
+                <div class="quiz-information">
+                  <h4>{{ quiz.title }}</h4>
+
+                  <p class="subject-name">
+                    {{ quiz.subject_name }}
+                  </p>
+
+                  <span class="quiz-date">
+                    {{ quiz.quiz_date | date:'mediumDate' }}
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="history-result">
+
+                <span
+                  class="status-badge"
+                  [class.completed]="quiz.has_attempted">
+                  {{ quiz.has_attempted ? 'Completed' : 'Not Attempted' }}
+                </span>
+
+                @if (quiz.has_attempted) {
+
+                  <div class="score-details">
+                    <strong>
+                      {{ quiz.score }} / {{ quiz.total_questions }}
+                    </strong>
+                    <span>Score</span>
+                  </div>
+
+                  <button
+                    class="primary-button result-button"
+                    [routerLink]="['/daily-quiz', quiz.quiz_id, 'result']"
+                    [disabled]="!quiz.can_view_result">
+                    View Result
+                  </button>
+
+                } @else {
+
+                  <div class="score-details">
+                    <strong>—</strong>
+                    <span>No attempt</span>
+                  </div>
+
+                }
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+          <div class="empty-icon">Q</div>
+
+          <h3>No quiz history yet</h3>
+
+          <p>
+            Your daily quiz activity will appear here once quizzes
+            are published for your enrolled subjects.
+          </p>
+
+          <a routerLink="/daily-quiz" class="primary-button">
+            Go to Daily Quiz
+          </a>
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

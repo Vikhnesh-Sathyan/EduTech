@@ -1,0 +1,165 @@
+
+<div class="quiz-workspace-page">
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading your quiz questions...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @else if (errorMessage()) {
+    <div class="state-card error-state">
+      <h3>Unable to load quiz</h3>
+      <p>{{ errorMessage() }}</p>
+
+      <button class="secondary-button" routerLink="/daily-quiz">
+        Back to Dashboard
+      </button>
+    </div>
+  }
+
+  <!-- QUIZ WORKSPACE -->
+  @else if (quiz(); as dailyQuiz) {
+
+    <div class="workspace-header">
+
+      <div>
+        <span class="eyebrow">DAILY CHALLENGE</span>
+        <h2>{{ dailyQuiz.title }}</h2>
+        <p>{{ dailyQuiz.subject_name }}</p>
+      </div>
+
+      <button class="secondary-button" routerLink="/daily-quiz">
+        Exit Quiz
+      </button>
+
+    </div>
+
+    <section class="quiz-card">
+
+      <!-- PROGRESS -->
+      <div class="progress-section">
+
+        <div class="progress-information">
+          <span>QUESTION PROGRESS</span>
+
+          <strong>
+            {{ currentQuestionIndex() + 1 }} / 3
+          </strong>
+        </div>
+
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="((currentQuestionIndex() + 1) / 3) * 100">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- INSTRUCTIONS -->
+      @if (dailyQuiz.instructions) {
+        <p class="quiz-instructions">
+          {{ dailyQuiz.instructions }}
+        </p>
+      }
+
+      <!-- CURRENT QUESTION -->
+      @if (currentQuestion; as question) {
+
+        <div class="question-section">
+
+          <div class="question-heading">
+            <span class="question-number">
+              QUESTION {{ currentQuestionIndex() + 1 }}
+            </span>
+
+            <span class="question-count">
+              3 QUESTIONS
+            </span>
+          </div>
+
+          <h3>{{ question.question_text }}</h3>
+
+          <!-- OPTIONS -->
+          <div class="options-list">
+
+            @for (option of question.options; track option.option_id) {
+
+              <button
+                type="button"
+                class="option-button"
+                [class.selected]="selectedAnswers()[question.question_id] === option.option_id"
+                (click)="selectAnswer(question.question_id, option.option_id)">
+
+                <span class="option-letter">
+                  {{ ['A', 'B', 'C'][option.option_order - 1] }}
+                </span>
+
+                <span class="option-text">
+                  {{ option.option_text }}
+                </span>
+
+                @if (selectedAnswers()[question.question_id] === option.option_id) {
+                  <span class="selected-indicator">✓</span>
+                }
+
+              </button>
+
+            }
+
+          </div>
+
+        </div>
+
+        <!-- NAVIGATION -->
+        <!-- NAVIGATION -->
+<div class="question-navigation">
+
+  <button
+    class="secondary-button"
+    (click)="previousQuestion()"
+    [disabled]="currentQuestionIndex() === 0">
+    Previous
+  </button>
+
+  @if (currentQuestionIndex() < 2) {
+
+    <button
+      class="primary-button"
+      (click)="nextQuestion()">
+      Next Question
+    </button>
+
+  } @else {
+
+    <button
+      class="primary-button"
+      (click)="submitQuiz()"
+      [disabled]="submitting()">
+
+      {{ submitting() ? 'Submitting...' : 'Submit Quiz' }}
+
+    </button>
+
+  }
+
+</div>
+
+<!-- SUBMISSION ERROR -->
+@if (submissionError()) {
+  <div class="submission-error">
+    {{ submissionError() }}
+  </div>
+}}
+
+      
+
+    </section>
+
+  }
+
+</div>

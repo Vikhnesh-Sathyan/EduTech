@@ -2,9 +2,11 @@
    SIDEBAR
 ===================================================== */
 
+
 .sidebar {
   width: 250px;
   height: 100vh;
+  min-height: 0;
 
   display: flex;
   flex-direction: column;
@@ -19,7 +21,39 @@
   padding: 28px 18px;
 
   box-sizing: border-box;
+
+  /* Sidebar scrolling */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
 }
+
+/* Keep sidebar sections from shrinking */
+
+.logo,
+.navigation,
+.study-progress-widget,
+.logout-section {
+  flex-shrink: 0;
+}
+
+/* Sidebar scrollbar */
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+
+
+
 
 
 /* =====================================================
@@ -226,4 +260,169 @@
 
 .study-progress-link:hover span {
   transform: translateX(3px);
+}
+
+
+/* =====================================================
+   DAILY QUIZ DROPDOWN - LIGHT SIDEBAR STYLE
+===================================================== */
+
+.nav-dropdown {
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+/* Main dropdown button */
+
+.nav-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  background: transparent;
+  color: #6b7280;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-dropdown-toggle:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.nav-dropdown-toggle.active {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* Label and icon */
+
+.nav-dropdown-toggle .nav-label {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 26px;
+  height: 26px;
+
+  border-radius: 8px;
+
+  background: #f5f3ff;
+  color: #6366f1;
+
+  font-size: 14px;
+}
+
+/* Dropdown arrow */
+
+.dropdown-arrow {
+  color: #9ca3af;
+  font-size: 12px;
+
+  transition: transform 0.25s ease, color 0.2s ease;
+}
+
+.dropdown-arrow.rotated {
+  transform: rotate(180deg);
+  color: #4f46e5;
+}
+
+/* Dropdown content */
+
+.nav-dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.nav-dropdown-content.open {
+  max-height: 180px;
+  opacity: 1;
+}
+
+/* Sub navigation links */
+
+.navigation .nav-dropdown-content a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-height: 42px;
+  margin: 3px 0 3px 14px;
+  padding: 0 14px;
+
+  border-radius: 9px;
+
+  background: transparent;
+  color: #6b7280;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navigation .nav-dropdown-content a:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.navigation .nav-dropdown-content a.active {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* Small navigation indicator */
+
+.sub-nav-indicator {
+  flex-shrink: 0;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #9ca3af;
+
+  transition: background 0.2s ease;
+}
+
+.navigation .nav-dropdown-content a.active .sub-nav-indicator {
+  background: #4f46e5;
+}
+
+/* Keyboard focus */
+
+.nav-dropdown-toggle:focus-visible,
+.nav-dropdown-content a:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
 }
