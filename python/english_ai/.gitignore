@@ -1,13 +1,11 @@
 
-# Python virtual environment
+# Python virtual environments
 venv/
 .venv/
 
 # Environment variables and secrets
 .env
 .env.*
-
-# Allow example environment file
 !.env.example
 
 # Python cache
@@ -15,7 +13,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Uploaded audio files
+# Uploaded files
 uploads/*
 !uploads/.gitkeep
 
