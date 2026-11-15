@@ -368,7 +368,9 @@ const app = express();
 app.use(cors());
 
 // Parse incoming JSON request data
-app.use(express.json());
+app.use(express.json({
+    limit: "8mb"
+}));
 
 // =====================================================
 // STATIC FILES

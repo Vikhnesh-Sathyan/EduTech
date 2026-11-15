@@ -60,11 +60,19 @@ const uploadPdf = async (file, sessionId) => {
 // UPLOAD TEXT
 // ==========================================
 
-const uploadText = async (text) => {
+
+// ==========================================
+// UPLOAD TEXT
+// ==========================================
+
+const uploadText = async (text, sessionId) => {
 
     const response = await pythonClient.post(
         "/study-companion/upload-text",
-        { text },
+        {
+            session_id: sessionId,
+            text
+        },
         {
             headers: getInternalHeaders()
         }
@@ -72,6 +80,7 @@ const uploadText = async (text) => {
 
     return response.data;
 };
+
 
 // ==========================================
 // RESTORE SESSION FROM MYSQL

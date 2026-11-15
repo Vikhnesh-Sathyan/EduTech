@@ -156,6 +156,185 @@ const uploadStudyDocument = async (req, res) => {
 
 
 // ==========================================
+// UPLOAD STUDY TEXT
+// ==========================================
+
+const uploadStudyText = async (req, res) => {
+
+    const studentId = req.user.id;
+    const { text } = req.body;
+
+    if (
+        typeof text !== "string" ||
+        text.trim().length < 50 ||
+        text.length > 1000000
+    ) {
+        return res.status(400).json({
+            message: "Text must contain between 50 and 1,000,000 characters."
+        });
+    }
+
+    let storedFile = null;
+    let documentSession = null;
+
+    try {
+
+        const cleanText = text.trim();
+
+        // 1. Convert text into a file buffer.
+        const textBuffer = Buffer.from(cleanText, "utf8");
+
+        const textFile = {
+            buffer: textBuffer,
+            size: textBuffer.length,
+            mimetype: "text/plain"
+        };
+
+        // 2. Store text permanently.
+        storedFile = await storageService.storeText(textFile);
+
+        // 3. Create document and session in MySQL.
+        documentSession = await databaseService.createDocumentAndSession({
+            studentId,
+            originalFilename: "study-notes.txt",
+            storedFilename: storedFile.storedFilename,
+            filePath: storedFile.filePath,
+            fileSize: storedFile.fileSize,
+            mimeType: storedFile.mimeType
+        });
+
+        // 4. Mark document as processing.
+        await databaseService.updateDocumentStatus(
+            documentSession.documentId,
+            "processing"
+        );
+
+        // 5. Send text to Python using Node-generated UUID.
+        const aiResult = await aiService.uploadText(
+            cleanText,
+            documentSession.sessionUuid
+        );
+
+        // 6. Validate processed content.
+        if (
+            !aiResult ||
+            aiResult.success !== true ||
+            !Array.isArray(aiResult.pages) ||
+            aiResult.pages.length === 0 ||
+            !Array.isArray(aiResult.chunks) ||
+            aiResult.chunks.length === 0
+        ) {
+            throw new Error("Text processing returned invalid content.");
+        }
+
+        // 7. Save extracted pages permanently.
+        await databaseService.saveDocumentPages(
+            documentSession.documentId,
+            studentId,
+            aiResult.pages
+        );
+
+        // 8. Save document chunks permanently.
+        await databaseService.saveDocumentChunks(
+            documentSession.documentId,
+            studentId,
+            aiResult.chunks
+        );
+
+        // 9. Mark document as completed.
+        await databaseService.updateDocumentStatus(
+            documentSession.documentId,
+            "completed",
+            null,
+            aiResult.pages.length
+        );
+
+        return res.status(201).json({
+            message: "Study text uploaded successfully.",
+
+            document: {
+                documentId: documentSession.documentId,
+                originalFilename: "study-notes.txt",
+                totalPages: aiResult.pages.length,
+                processingStatus: "completed"
+            },
+
+            session: {
+                sessionId: documentSession.sessionId,
+                sessionUuid: documentSession.sessionUuid
+            }
+        });
+
+    } catch (error) {
+
+        console.error("Study Companion text upload error:", error);
+
+        // Mark failed records in MySQL.
+        if (documentSession) {
+
+            try {
+
+                await databaseService.updateDocumentStatus(
+                    documentSession.documentId,
+                    "failed",
+                    error.message
+                );
+
+                await databaseService.updateSessionStatus(
+                    documentSession.sessionId,
+                    "failed"
+                );
+
+            } catch (databaseError) {
+
+                console.error(
+                    "Text upload failure-status update error:",
+                    databaseError
+                );
+            }
+
+            // Remove Python session if created.
+            try {
+
+                await aiService.deleteSession(
+                    documentSession.sessionUuid
+                );
+
+            } catch (pythonError) {
+
+                console.error(
+                    "Python session cleanup error:",
+                    pythonError.message
+                );
+            }
+        }
+
+        // Remove stored text after failed processing.
+        if (storedFile) {
+
+            try {
+
+                await storageService.deleteStoredFile(
+                    storedFile.filePath
+                );
+
+            } catch (storageError) {
+
+                console.error(
+                    "Text cleanup error:",
+                    storageError
+                );
+            }
+        }
+
+        return res.status(500).json({
+            message: "Failed to upload and process study text."
+        });
+    }
+};
+
+
+// ==========================================
 // RESTORE STUDY SESSION
 // ==========================================
 
@@ -410,6 +589,7 @@ const getStudyChatHistory = async (req, res) => {
 
 module.exports = {
     uploadStudyDocument,
+    uploadStudyText,
     restoreStudySession,
     askStudyQuestion,
     getStudyChatHistory

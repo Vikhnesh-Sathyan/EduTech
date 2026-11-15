@@ -3,6 +3,7 @@ const express = require("express");
 
 const {
     uploadStudyDocument,
+    uploadStudyText,
     restoreStudySession,
     askStudyQuestion,
     getStudyChatHistory
@@ -33,6 +34,17 @@ router.post(
     roleMiddleware("student"),
     uploadStudyDocumentMiddleware.single("file"),
     uploadStudyDocument
+);
+
+// ==========================================
+// UPLOAD STUDY TEXT
+// ==========================================
+
+router.post(
+    "/upload-text",
+    authMiddleware,
+    roleMiddleware("student"),
+    uploadStudyText
 );
 
 // Restore existing study session

@@ -178,12 +178,7 @@ async def upload_pdf(
             os.remove(file_path)
 
         await file.close()
-
-
-# ==========================================
-# UPLOAD DIRECT TEXT
-# ==========================================
-
+        
 
 # ==========================================
 # UPLOAD DIRECT TEXT
