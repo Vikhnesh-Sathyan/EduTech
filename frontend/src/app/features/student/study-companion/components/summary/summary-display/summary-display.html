@@ -1,0 +1,50 @@
+
+<div class="summary-display">
+
+  @if (summaries().length === 0) {
+
+    <div class="empty-summary">
+
+      <div class="empty-icon">✦</div>
+
+      <h4>No saved summaries yet</h4>
+
+      <p>
+        Generate a summary to see it here.
+      </p>
+
+    </div>
+
+  } @else {
+
+    @for (summary of summaries(); track summary.summaryId) {
+
+      <article class="summary-card">
+
+        <div class="summary-card-header">
+
+          <div>
+
+            <span class="summary-type">
+              {{ getSummaryLabel(summary) }}
+            </span>
+
+            <p class="summary-date">
+              {{ formatDate(summary.createdAt) }}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="summary-content">
+          {{ summary.summaryContent }}
+        </div>
+
+      </article>
+
+    }
+
+  }
+
+</div>

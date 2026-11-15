@@ -1,0 +1,24 @@
+
+<div
+  class="message-row"
+  [class.user-message]="isUserMessage"
+  [class.assistant-message]="!isUserMessage"
+>
+
+  <div class="message-avatar">
+    {{ isUserMessage ? 'You' : 'AI' }}
+  </div>
+
+  <div class="message-content">
+
+    <div class="message-header">
+      {{ isUserMessage ? 'You' : 'Study Assistant' }}
+    </div>
+
+    <div class="message-bubble">
+      {{ message.messageContent }}
+    </div>
+
+  </div>
+
+</div>

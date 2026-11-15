@@ -1,0 +1,103 @@
+
+/* ==========================================
+   MAIN PAGE
+========================================== */
+
+.study-companion-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 35px;
+  background: #f2e4da;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  padding: 35px;
+  margin-bottom: 30px;
+  background: #5e4b42;
+  border-radius: 20px;
+  color: #ffffff;
+}
+
+.header-content {
+  max-width: 650px;
+}
+
+.eyebrow {
+  color: #e6b9a5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+}
+
+.page-header h1 {
+  margin: 12px 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0;
+  color: #eadbd3;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.header-icon {
+  width: 85px;
+  height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  font-size: 42px;
+}
+
+
+/* ==========================================
+   PAGE SECTIONS
+========================================== */
+
+.upload-section,
+.library-section {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 600px) {
+
+  .study-companion-page {
+    padding: 18px 12px;
+  }
+
+  .page-header {
+    padding: 25px 20px;
+  }
+
+  .page-header h1 {
+    font-size: 25px;
+  }
+
+  .header-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 28px;
+  }
+
+}

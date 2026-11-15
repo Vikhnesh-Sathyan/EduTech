@@ -1,0 +1,176 @@
+
+<div class="study-session-page">
+
+  <!-- PAGE HEADER -->
+  <header class="session-header">
+
+    <div>
+      <span class="eyebrow">AI STUDY COMPANION</span>
+
+      <h1>Study Workspace</h1>
+
+      <p>
+        Your personal learning space for understanding
+        and exploring study materials.
+      </p>
+    </div>
+
+    <a routerLink="/study-companion" class="back-button">
+      ← My Documents
+    </a>
+
+  </header>
+
+
+  <!-- LOADING STATE -->
+  @if (isLoading) {
+
+    <section class="session-state">
+
+      <div class="loader"></div>
+
+      <h2>Restoring your study session</h2>
+
+      <p>
+        Preparing your document and learning materials...
+      </p>
+
+    </section>
+
+  }
+
+
+  <!-- ERROR STATE -->
+  @else if (errorMessage) {
+
+    <section class="session-state error-state">
+
+      <div class="state-icon">⚠</div>
+
+      <h2>Unable to open study session</h2>
+
+      <p>{{ errorMessage }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="restoreSession()">
+
+        Try Again
+
+      </button>
+
+    </section>
+
+  }
+
+
+  <!-- RESTORED SESSION -->
+  @else if (sessionData) {
+
+    <section class="session-content">
+
+      <!-- DOCUMENT INFORMATION -->
+      <div class="document-overview">
+
+        <div class="document-icon">
+          📄
+        </div>
+
+        <div class="document-details">
+
+          <span class="section-label">CURRENT DOCUMENT</span>
+
+          <h2>
+            {{ sessionData.document.originalFilename }}
+          </h2>
+
+          <p>
+            {{ sessionData.document.totalPages }} pages
+          </p>
+
+        </div>
+
+        <span class="session-status">
+          {{ sessionData.session.status }}
+        </span>
+
+      </div>
+
+
+      <!-- RESTORATION INFORMATION -->
+      <div class="restoration-overview">
+
+        <div class="restoration-card">
+
+          <span class="restoration-number">
+            {{ sessionData.restoration.totalPages }}
+          </span>
+
+          <span class="restoration-label">
+            Pages Restored
+          </span>
+
+        </div>
+
+        <div class="restoration-card">
+
+          <span class="restoration-number">
+            {{ sessionData.restoration.totalChunks }}
+          </span>
+
+          <span class="restoration-label">
+            Text Chunks Restored
+          </span>
+
+        </div>
+
+      </div>
+ 
+<!-- DOCUMENT VIEWER -->
+<section class="document-section">
+
+  <app-document-viewer
+    [sessionUuid]="sessionUuid">
+  </app-document-viewer>
+
+</section>
+
+<section class="chat-section">
+
+  <div class="section-heading">
+    <h2>Ask Your Study Assistant</h2>
+    <p>Understand your document through AI-powered conversations.</p>
+  </div>
+
+  <app-chat-panel
+    [sessionUuid]="sessionUuid"
+  />
+
+</section>
+
+<section class="summary-section">
+
+  <app-summary-panel
+    [sessionUuid]="sessionUuid"
+    [totalPages]="sessionData.document.totalPages || 0"
+  />
+
+</section>
+
+<!-- IMPORTANT POINTS SECTION -->
+
+<section class="important-points-section">
+
+  <app-important-points-panel
+    [sessionUuid]="sessionUuid"
+  />
+
+</section>
+
+
+    </section>
+
+  }
+
+</div>

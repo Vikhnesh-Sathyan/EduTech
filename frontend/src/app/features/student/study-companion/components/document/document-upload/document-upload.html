@@ -1,0 +1,185 @@
+
+<div class="document-upload">
+
+  <div class="upload-card">
+
+    <!-- HEADER -->
+    <div class="upload-header">
+
+      <span class="eyebrow">STUDY COMPANION</span>
+
+      <h2>Upload Study Material</h2>
+
+      <p>
+        Upload your PDF documents or paste your study notes
+        to start learning with AI.
+      </p>
+
+    </div>
+
+    <!-- UPLOAD OPTIONS -->
+    <div class="upload-options">
+
+      <button
+        class="upload-option"
+        [class.active]="uploadMode() === 'pdf'"
+        type="button"
+        [disabled]="isUploading()"
+        (click)="changeUploadMode('pdf')">
+
+        <span class="option-icon">📄</span>
+        <span>PDF Document</span>
+
+      </button>
+
+      <button
+        class="upload-option"
+        [class.active]="uploadMode() === 'text'"
+        type="button"
+        [disabled]="isUploading()"
+        (click)="changeUploadMode('text')">
+
+        <span class="option-icon">📝</span>
+        <span>Text Notes</span>
+
+      </button>
+
+    </div>
+
+    <!-- PDF UPLOAD -->
+    @if (uploadMode() === 'pdf') {
+
+      <div class="upload-area">
+
+        <div class="upload-icon">↑</div>
+
+        <h3>Choose your study document</h3>
+
+        <p>Browse and select your PDF document.</p>
+
+        <input
+          type="file"
+          accept=".pdf,application/pdf"
+          id="pdfUpload"
+          hidden
+          [disabled]="isUploading()"
+          (change)="onFileSelected($event)"
+        />
+
+        <label
+          for="pdfUpload"
+          class="upload-button"
+          [class.disabled]="isUploading()">
+
+          Browse PDF
+
+        </label>
+
+        <!-- SELECTED FILE -->
+        @if (selectedFile(); as file) {
+
+          <div class="selected-file">
+
+            <div class="file-information">
+
+              <strong>{{ file.name }}</strong>
+
+              <span>
+                {{ (file.size / 1024 / 1024).toFixed(2) }} MB
+              </span>
+
+            </div>
+
+            <button
+              type="button"
+              class="remove-file"
+              [disabled]="isUploading()"
+              (click)="removeSelectedFile()">
+
+              Remove
+
+            </button>
+
+          </div>
+
+          <!-- UPLOAD BUTTON -->
+          <button
+            type="button"
+            class="upload-button"
+            [disabled]="isUploading()"
+            (click)="uploadPdf()">
+
+            {{ isUploading() ? 'Processing PDF...' : 'Upload PDF' }}
+
+          </button>
+
+        }
+
+        <!-- FILE ERROR -->
+        @if (fileError()) {
+
+          <p class="error-message">
+            {{ fileError() }}
+          </p>
+
+        }
+
+        <span class="upload-hint">
+          Supported format: PDF
+        </span>
+
+      </div>
+
+    }
+
+    <!-- TEXT UPLOAD -->
+    @if (uploadMode() === 'text') {
+
+      <div class="text-upload">
+
+        <label for="studyNotes">
+          Paste your study notes
+        </label>
+
+        <textarea
+          id="studyNotes"
+          placeholder="Start typing or paste your study material here..."
+          rows="8"
+          [value]="studyNotes()"
+          [disabled]="isUploading()"
+          (input)="onTextChanged($any($event.target).value)">
+        </textarea>
+
+        <div class="text-information">
+
+          <span>
+            {{ studyNotes().length }} / 1000000 characters
+          </span>
+
+        </div>
+
+        @if (textError()) {
+
+          <p class="error-message">
+            {{ textError() }}
+          </p>
+
+        }
+
+        <button
+          class="upload-button text-upload-button"
+          type="button"
+          [disabled]="isUploading()"
+          (click)="uploadTextNotes()">
+
+          {{ isUploading() ? 'Processing Notes...' : 'Upload Text Notes' }}
+
+        </button>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

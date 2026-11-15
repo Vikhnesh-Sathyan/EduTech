@@ -1,0 +1,148 @@
+
+<div class="document-viewer">
+
+  <!-- VIEWER HEADER -->
+  <div class="viewer-header">
+
+    <div class="viewer-heading">
+
+      <span class="viewer-label">DOCUMENT READER</span>
+
+      <h2>
+        {{ documentData()?.document?.originalFilename || 'Document Viewer' }}
+      </h2>
+
+    </div>
+
+    @if (documentData(); as data) {
+
+      <span class="page-count">
+        {{ data.pages.length }} Pages
+      </span>
+
+    }
+
+  </div>
+
+  <!-- LOADING STATE -->
+  @if (isLoading()) {
+
+    <div class="viewer-state">
+
+      <div class="loader"></div>
+
+      <h3>Loading document pages</h3>
+
+      <p>Please wait while we prepare your document.</p>
+
+    </div>
+
+  }
+
+  <!-- ERROR STATE -->
+  @else if (errorMessage()) {
+
+    <div class="viewer-state error-state">
+
+      <div class="state-icon">⚠</div>
+
+      <h3>Unable to load document</h3>
+
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadDocumentPages(sessionUuid())">
+
+        Try Again
+
+      </button>
+
+    </div>
+
+  }
+
+  <!-- DOCUMENT CONTENT -->
+  @else if (documentData(); as data) {
+
+    @if (currentPage(); as page) {
+
+      <div class="page-toolbar">
+
+        <span class="current-page">
+          Page {{ page.pageNumber }}
+          of {{ data.pages.length }}
+        </span>
+
+        <div class="page-navigation">
+
+          <button
+            type="button"
+            class="navigation-button"
+            [disabled]="currentPageIndex() === 0"
+            (click)="previousPage()">
+
+            ← Previous
+
+          </button>
+
+          <button
+            type="button"
+            class="navigation-button"
+            [disabled]="currentPageIndex() === data.pages.length - 1"
+            (click)="nextPage()">
+
+            Next →
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- PAGE CONTENT -->
+      <div class="document-page">
+
+        <div class="page-number">
+          PAGE {{ page.pageNumber }}
+        </div>
+
+        <div class="page-content">
+          {{ page.content }}
+        </div>
+
+      </div>
+
+      <!-- PAGE PROGRESS -->
+      <div class="page-progress">
+
+        <div
+          class="page-progress-fill"
+          [style.width.%]="pageProgress()">
+        </div>
+
+      </div>
+
+    }
+
+    <!-- EMPTY DOCUMENT -->
+    @else {
+
+      <div class="viewer-state">
+
+        <div class="state-icon">📄</div>
+
+        <h3>No extracted pages available</h3>
+
+        <p>
+          This document does not contain readable extracted content.
+        </p>
+
+      </div>
+
+    }
+
+  }
+
+</div>

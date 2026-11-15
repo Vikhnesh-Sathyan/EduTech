@@ -1,0 +1,112 @@
+
+<section class="summary-generator">
+
+  <div class="generator-heading">
+    <h3>Generate Study Summary</h3>
+
+    <p>
+      Create an easy-to-understand summary of your study material.
+    </p>
+  </div>
+
+  <div class="mode-selection">
+
+    <button
+      type="button"
+      [class.active]="summaryMode === 'full'"
+      (click)="summaryMode = 'full'"
+      [disabled]="isGenerating"
+    >
+      Full Document
+    </button>
+
+    <button
+      type="button"
+      [class.active]="summaryMode === 'pages'"
+      (click)="summaryMode = 'pages'"
+      [disabled]="isGenerating"
+    >
+      Selected Pages
+    </button>
+
+  </div>
+
+  @if (summaryMode === 'pages') {
+
+    <div class="page-selection">
+
+      <div class="form-group">
+        <label for="startPage">Start Page</label>
+
+        <input
+          id="startPage"
+          type="number"
+          min="1"
+          [max]="totalPages"
+          [value]="startPage"
+          (input)="startPage = +$any($event.target).value"
+          [disabled]="isGenerating"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="endPage">End Page</label>
+
+        <input
+          id="endPage"
+          type="number"
+          min="1"
+          [max]="totalPages"
+          [value]="endPage"
+          (input)="endPage = +$any($event.target).value"
+          [disabled]="isGenerating"
+        />
+      </div>
+
+    </div>
+
+    <p class="page-hint">
+      Document contains {{ totalPages }} pages.
+    </p>
+
+  }
+
+  <div class="form-group">
+    <label for="summaryType">Summary Length</label>
+
+    <select
+      id="summaryType"
+      [value]="summaryType"
+      (change)="summaryType = $any($event.target).value"
+      [disabled]="isGenerating"
+    >
+      <option value="short">Short</option>
+      <option value="medium">Medium</option>
+      <option value="detailed">Detailed</option>
+    </select>
+  </div>
+
+  <button
+    type="button"
+    class="generate-button"
+    (click)="generateSummary()"
+    [disabled]="isGenerating || (summaryMode === 'pages' && totalPages < 1)"
+  >
+    {{ isGenerating ? 'Generating Summary...' : 'Generate Summary' }}
+  </button>
+
+  @if (generatedSummary) {
+
+    <div class="generated-result">
+
+      <h4>Generated Summary</h4>
+
+      <div class="result-content">
+        {{ generatedSummary }}
+      </div>
+
+    </div>
+
+  }
+
+</section>

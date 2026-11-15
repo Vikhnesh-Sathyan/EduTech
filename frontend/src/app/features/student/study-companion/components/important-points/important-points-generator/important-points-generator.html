@@ -1,0 +1,46 @@
+
+<div class="generator-card">
+
+  <div class="generator-header">
+
+    <div>
+      <h3>Generate Important Points</h3>
+
+      <p>
+        Extract the key concepts and important information
+        from your study document.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="replacement-notice">
+    <strong>Note:</strong>
+    Generating again will replace the previously saved
+    important points for this session.
+  </div>
+
+  <button
+    type="button"
+    class="generate-button"
+    [disabled]="isGenerating"
+    (click)="generateImportantPoints()"
+  >
+
+    @if (isGenerating) {
+      Generating Important Points...
+    } @else {
+      Generate Important Points
+    }
+
+  </button>
+
+  @if (generatedCount > 0 && !isGenerating) {
+
+    <p class="success-message">
+      {{ generatedCount }} important points saved successfully.
+    </p>
+
+  }
+
+</div>

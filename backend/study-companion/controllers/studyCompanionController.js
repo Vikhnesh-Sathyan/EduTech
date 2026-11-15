@@ -435,6 +435,43 @@ const restoreStudySession = async (req, res) => {
 
 
 // ==========================================
+// GET STUDENT STUDY DOCUMENTS
+// ==========================================
+
+const getStudentStudyDocuments = async (req, res) => {
+
+    const studentId = req.user.id;
+
+    try {
+
+        // 1. Retrieve documents belonging to this student.
+        const documents = await databaseService.getStudentDocuments(
+            studentId
+        );
+
+        // 2. Return document list.
+        return res.status(200).json({
+
+            message: "Study documents retrieved successfully.",
+
+            documents
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Study Companion document list error:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Unable to retrieve study documents."
+        });
+    }
+};
+
+// ==========================================
 // ASK STUDY DOCUMENT QUESTION
 // ==========================================
 
@@ -587,10 +624,70 @@ const getStudyChatHistory = async (req, res) => {
 };
 
 
+
+// ==========================================
+// GET EXTRACTED DOCUMENT PAGES
+// ==========================================
+
+const getStudyDocumentPages = async (req, res) => {
+
+    const studentId = req.user.id;
+    const sessionUuid = req.params.sessionUuid;
+
+    try {
+
+        // 1. Find the student's session and document
+        const session = await databaseService.getSessionDocument(
+            sessionUuid,
+            studentId
+        );
+
+        if (!session) {
+            return res.status(404).json({
+                message: "Study session not found."
+            });
+        }
+
+        // 2. Retrieve extracted pages
+        const pages = await databaseService.getDocumentPages(
+            session.documentId,
+            studentId
+        );
+
+        // 3. Return document information and page content
+        return res.status(200).json({
+            message: "Document pages retrieved successfully.",
+
+            document: {
+                documentId: session.documentId,
+                originalFilename: session.originalFilename,
+                totalPages: session.totalPages
+            },
+
+            pages: pages.map(page => ({
+                pageNumber: page.page_number,
+                content: page.content
+            }))
+        });
+
+    } catch (error) {
+
+        console.error("Study Companion document pages error:", error);
+
+        return res.status(500).json({
+            message: "Unable to retrieve document pages."
+        });
+
+    }
+};
+
+
 module.exports = {
     uploadStudyDocument,
     uploadStudyText,
     restoreStudySession,
+    getStudentStudyDocuments,
     askStudyQuestion,
-    getStudyChatHistory
+    getStudyChatHistory,
+    getStudyDocumentPages
 };

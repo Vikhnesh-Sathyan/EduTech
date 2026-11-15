@@ -5,8 +5,10 @@ const {
     uploadStudyDocument,
     uploadStudyText,
     restoreStudySession,
+    getStudentStudyDocuments,
     askStudyQuestion,
-    getStudyChatHistory
+    getStudyChatHistory,
+    getStudyDocumentPages
 } = require("../controllers/studyCompanionController");
 
 const {
@@ -45,6 +47,17 @@ router.post(
     authMiddleware,
     roleMiddleware("student"),
     uploadStudyText
+);
+
+// ==========================================
+// GET STUDENT STUDY DOCUMENTS
+// ==========================================
+
+router.get(
+    "/documents",
+    authMiddleware,
+    roleMiddleware("student"),
+    getStudentStudyDocuments
 );
 
 // Restore existing study session
@@ -118,6 +131,15 @@ router.get(
     authMiddleware,
     roleMiddleware("student"),
     getStudyImportantPoints
+);
+
+
+
+router.get(
+    "/:sessionUuid/pages",
+    authMiddleware,
+    roleMiddleware("student"),
+    getStudyDocumentPages
 );
 
 

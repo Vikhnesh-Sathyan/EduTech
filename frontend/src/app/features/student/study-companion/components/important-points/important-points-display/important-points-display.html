@@ -1,0 +1,51 @@
+
+<div class="points-container">
+
+  @if (importantPoints.length === 0) {
+
+    <div class="empty-state">
+      <h3>No Important Points Yet</h3>
+      <p>Generate important points to see the key concepts from your document.</p>
+    </div>
+
+  } @else {
+
+    <div class="points-list">
+
+      @for (point of importantPoints; track point.pointId; let i = $index) {
+
+        <article class="point-card">
+
+          <div class="point-header">
+
+            <span class="point-number">
+              {{ i + 1 }}
+            </span>
+
+            <h3>
+              {{ getPointTitle(point, i) }}
+            </h3>
+
+          </div>
+
+          <p class="point-content">
+            {{ point.pointContent }}
+          </p>
+
+          @if (point.pageNumber !== null) {
+
+            <span class="page-label">
+              Page {{ point.pageNumber }}
+            </span>
+
+          }
+
+        </article>
+
+      }
+
+    </div>
+
+  }
+
+</div>

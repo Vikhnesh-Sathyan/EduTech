@@ -1,0 +1,136 @@
+
+.summary-generator {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #eadfd8;
+  border-radius: 16px;
+}
+
+.generator-heading h3 {
+  margin: 0;
+  color: #5e4b42;
+  font-size: 18px;
+}
+
+.generator-heading p {
+  color: #927e72;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mode-selection {
+  display: flex;
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.mode-selection button {
+  padding: 10px 16px;
+  border: 1px solid #eadfd8;
+  border-radius: 9px;
+  background: #fffaf6;
+  color: #806b60;
+  cursor: pointer;
+}
+
+.mode-selection button.active {
+  background: #5e4b42;
+  color: #ffffff;
+  border-color: #5e4b42;
+}
+
+.page-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  color: #5e4b42;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #e6d8cf;
+  border-radius: 9px;
+  outline: none;
+  background: #fffdfb;
+  color: #46372f;
+  font-size: 13px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #b87866;
+}
+
+.page-hint {
+  margin-top: -8px;
+  margin-bottom: 18px;
+  color: #a18d81;
+  font-size: 11px;
+}
+
+.generate-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 9px;
+  background: #5e4b42;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.generate-button:hover:not(:disabled) {
+  background: #46372f;
+}
+
+.generate-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.generated-result {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eadfd8;
+}
+
+.generated-result h4 {
+  color: #5e4b42;
+  font-size: 15px;
+}
+
+.result-content {
+  padding: 16px;
+  border-radius: 10px;
+  background: #fffaf6;
+  color: #46372f;
+  font-size: 14px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .page-selection {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .mode-selection {
+    flex-wrap: wrap;
+  }
+}

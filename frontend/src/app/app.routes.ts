@@ -168,7 +168,10 @@ import {
 
 import { DailyQuizActivity } from './features/student/daily-quiz/daily-quiz-activity/daily-quiz-activity';
 
+// STUDENT STUDY COMPANION
+import { StudyCompanionPage } from './features/student/study-companion/pages/study-companion-page/study-companion-page';
 
+import { StudySessionPage } from './features/student/study-companion/pages/study-session-page/study-session-page';
 
 
 
@@ -689,6 +692,18 @@ export const routes: Routes = [
       {
         path: 'daily-quiz/:quizId',
         component: DailyQuizWorkspace
+      },
+      // =====================================================
+      // STUDENT STUDY COMPANION
+      // =====================================================
+
+      {
+        path: 'study-companion',
+        component: StudyCompanionPage
+      },
+      {
+        path: 'study-companion/session/:sessionUuid',
+        component: StudySessionPage
       },
       
       

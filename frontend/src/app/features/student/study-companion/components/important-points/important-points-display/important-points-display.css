@@ -1,0 +1,78 @@
+
+.points-container {
+  width: 100%;
+}
+
+.points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.point-card {
+  padding: 20px;
+  background: #fffaf6;
+  border: 1px solid #eadbd1;
+  border-radius: 14px;
+}
+
+.point-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.point-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #5e4b42;
+  color: white;
+  font-weight: 600;
+}
+
+.point-header h3 {
+  margin: 0;
+  color: #5e4b42;
+  font-size: 16px;
+}
+
+.point-content {
+  margin: 0;
+  color: #594b43;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.page-label {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 5px 10px;
+  background: #f2e4da;
+  color: #795a4d;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.empty-state {
+  padding: 30px 20px;
+  text-align: center;
+  background: #fffaf6;
+  border: 1px dashed #d9c4b7;
+  border-radius: 14px;
+}
+
+.empty-state h3 {
+  color: #5e4b42;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #88776d;
+  margin: 0;
+  line-height: 1.6;
+}

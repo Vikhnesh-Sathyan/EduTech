@@ -143,6 +143,42 @@ const getSessionDocument = async (sessionUuid, studentId) => {
 };
 
 // ==========================================
+// GET ALL STUDENT STUDY DOCUMENTS
+// ==========================================
+
+const getStudentDocuments = async (studentId) => {
+
+    const [rows] = await pool.execute(
+        `SELECT
+            d.id AS documentId,
+            d.original_filename AS originalFilename,
+            d.mime_type AS mimeType,
+            d.total_pages AS totalPages,
+            d.processing_status AS processingStatus,
+
+            s.id AS sessionId,
+            s.session_uuid AS sessionUuid,
+            s.status AS sessionStatus
+
+         FROM study_companion_documents d
+
+         INNER JOIN study_companion_sessions s
+            ON s.document_id = d.id
+
+         WHERE d.student_id = ?
+           AND s.student_id = ?
+
+         ORDER BY d.id DESC`,
+        [
+            studentId,
+            studentId
+        ]
+    );
+
+    return rows;
+};
+
+// ==========================================
 // UPDATE SESSION STATUS
 // ==========================================
 
@@ -648,6 +684,7 @@ module.exports = {
     createDocumentAndSession,
     updateDocumentStatus,
     getSessionDocument,
+    getStudentDocuments,
     updateSessionStatus,
     saveDocumentPages,
     getDocumentPages,

@@ -1,0 +1,321 @@
+
+:host {
+  --cream: #f2e4da;
+  --coffee: #5e4b42;
+  --rose-gold: #b87866;
+
+  display: block;
+  width: 100%;
+}
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.document-upload {
+  width: 100%;
+  padding: 24px;
+  background: var(--cream);
+  color: var(--coffee);
+}
+
+.upload-card {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid rgba(94, 75, 66, 0.12);
+  border-radius: 18px;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.upload-header {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  color: var(--rose-gold);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.upload-header h2 {
+  margin: 10px 0;
+  color: var(--coffee);
+  font-size: 26px;
+}
+
+.upload-header p,
+.upload-area p {
+  color: var(--coffee);
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   UPLOAD OPTIONS
+========================================== */
+
+.upload-options {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.upload-option {
+  flex: 1;
+  padding: 14px;
+  color: var(--coffee);
+  background: var(--cream);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.upload-option:hover {
+  border-color: var(--rose-gold);
+}
+
+.upload-option.active {
+  color: var(--rose-gold);
+  background: #fff;
+  border-color: var(--rose-gold);
+}
+
+.option-icon {
+  margin-right: 8px;
+}
+
+
+/* ==========================================
+   PDF UPLOAD AREA
+========================================== */
+
+.upload-area {
+  padding: 38px 20px;
+  text-align: center;
+  background: var(--cream);
+  border: 2px dashed var(--rose-gold);
+  border-radius: 14px;
+}
+
+.upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: #fff;
+  background: var(--rose-gold);
+  border-radius: 50%;
+  font-size: 26px;
+}
+
+.upload-area h3 {
+  color: var(--coffee);
+}
+
+.upload-hint {
+  display: block;
+  margin-top: 14px;
+  color: var(--coffee);
+  opacity: 0.65;
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.upload-button {
+  display: inline-block;
+  padding: 12px 22px;
+  color: #fff;
+  background: var(--rose-gold);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.upload-button:hover {
+  background: var(--coffee);
+}
+
+
+/* ==========================================
+   SELECTED PDF FILE
+========================================== */
+
+.selected-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid var(--rose-gold);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.file-information {
+  min-width: 0;
+}
+
+.selected-file strong {
+  display: block;
+  color: var(--coffee);
+  overflow-wrap: anywhere;
+}
+
+.selected-file span {
+  display: block;
+  margin-top: 5px;
+  color: var(--coffee);
+  opacity: 0.65;
+  font-size: 12px;
+}
+
+.remove-file {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  color: var(--rose-gold);
+  background: transparent;
+  border: 1px solid var(--rose-gold);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.remove-file:hover {
+  color: #fff;
+  background: var(--coffee);
+}
+
+
+/* ==========================================
+   ERROR MESSAGE
+========================================== */
+
+.error-message {
+  margin-top: 14px;
+  color: #c0392b !important;
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   TEXT UPLOAD
+========================================== */
+
+.text-upload label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--coffee);
+  font-weight: 600;
+}
+
+.text-upload textarea {
+  width: 100%;
+  padding: 14px;
+  color: var(--coffee);
+  background: #fff;
+  border: 1px solid var(--rose-gold);
+  border-radius: 10px;
+  font: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.text-upload textarea:focus {
+  outline: 2px solid var(--rose-gold);
+  outline-offset: 2px;
+}
+
+.text-upload-button {
+  margin-top: 14px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 600px) {
+
+  .document-upload {
+    padding: 14px;
+  }
+
+  .upload-card {
+    padding: 20px;
+  }
+
+  .upload-options {
+    flex-direction: column;
+  }
+
+  .upload-header h2 {
+    font-size: 22px;
+  }
+
+  .selected-file {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* ==========================================
+   TEXT INFORMATION
+========================================== */
+
+.text-information {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  color: var(--coffee);
+  opacity: 0.65;
+  font-size: 12px;
+}
+
+/* ==========================================
+   TEXT ERROR
+========================================== */
+
+.text-upload .error-message {
+  margin-top: 12px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+/* ==========================================
+   TEXT UPLOAD BUTTON
+========================================== */
+
+.text-upload-button {
+  margin-top: 16px;
+}
+
+.upload-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-button.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

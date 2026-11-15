@@ -85,8 +85,6 @@
 
 </div>
 
-
-
     <!-- Study Progress -->
     @if (currentStudy(); as study) {
 
@@ -161,14 +159,23 @@
     </a>
 
 
-    <a
-      routerLink="/career"
-      routerLinkActive="active"
-    >
-      <span class="nav-label">
-        Career
-      </span>
-    </a>
+<div class="nav-dropdown">
+
+  <button
+    type="button"
+    class="nav-dropdown-button"
+    routerLink="/study-companion"
+    routerLinkActive="active"
+  >
+    <span class="nav-label">
+      Study Companion
+    </span>
+
+    <span class="nav-arrow">↗</span>
+  </button>
+
+</div>
+
 
 
     <!-- Mentor Discovery -->

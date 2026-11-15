@@ -1,0 +1,60 @@
+
+<section class="important-points-panel">
+
+  <div class="panel-heading">
+
+    <div>
+      <h2>Important Points</h2>
+
+      <p>
+        Review the key concepts extracted from your study document.
+      </p>
+    </div>
+
+    <span class="points-count">
+      {{ importantPoints.length }} Points
+    </span>
+
+  </div>
+
+  <app-important-points-generator
+    [sessionUuid]="sessionUuid"
+    (pointsGenerated)="loadImportantPoints()"
+  />
+
+  <div class="saved-points-section">
+
+    <h3>Saved Important Points</h3>
+
+    @if (isLoading) {
+
+      <div class="loading-state">
+        Loading important points...
+      </div>
+
+    } @else if (errorMessage) {
+
+      <div class="error-state">
+
+        <p>{{ errorMessage }}</p>
+
+        <button
+          type="button"
+          (click)="loadImportantPoints()"
+        >
+          Try Again
+        </button>
+
+      </div>
+
+    } @else {
+
+      <app-important-points-display
+        [importantPoints]="importantPoints"
+      />
+
+    }
+
+  </div>
+
+</section>

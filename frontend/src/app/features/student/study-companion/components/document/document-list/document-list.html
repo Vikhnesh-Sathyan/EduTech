@@ -1,0 +1,171 @@
+
+<section class="document-list">
+
+  <!-- HEADER -->
+  <div class="section-header">
+
+    <div>
+      <span class="eyebrow">YOUR LIBRARY</span>
+      <h2>My Study Documents</h2>
+      <p>Continue learning from your previously uploaded materials.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      [disabled]="isLoading()"
+      (click)="loadDocuments()">
+
+      ↻ Refresh
+
+    </button>
+
+  </div>
+
+  <!-- LOADING STATE -->
+  @if (isLoading()) {
+
+    <div class="state-container">
+
+      <div class="loader"></div>
+
+      <p>Loading your study documents...</p>
+
+    </div>
+
+  }
+
+  <!-- ERROR STATE -->
+  @else if (errorMessage()) {
+
+    <div class="state-container error-state">
+
+      <span class="state-icon">⚠</span>
+
+      <h3>Unable to load documents</h3>
+
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadDocuments()">
+
+        Try Again
+
+      </button>
+
+    </div>
+
+  }
+
+  <!-- EMPTY STATE -->
+  @else if (documents().length === 0) {
+
+    <div class="state-container empty-state">
+
+      <span class="state-icon">📚</span>
+
+      <h3>No study documents yet</h3>
+
+      <p>
+        Upload a PDF or paste your study notes to start learning
+        with your AI Study Companion.
+      </p>
+
+    </div>
+
+  }
+
+  <!-- DOCUMENT CARDS -->
+  @else {
+
+    <div class="document-grid">
+
+      @for (document of documents(); track document.documentId) {
+
+        <article class="document-card">
+
+          <!-- DOCUMENT INFORMATION -->
+          <div class="document-top">
+
+            <div class="document-icon">
+              {{ document.mimeType === 'application/pdf' ? '📄' : '📝' }}
+            </div>
+
+            <span
+              class="status-badge"
+              [class.status-completed]="document.processingStatus === 'completed'"
+              [class.status-processing]="document.processingStatus === 'processing' || document.processingStatus === 'uploaded'"
+              [class.status-failed]="document.processingStatus === 'failed'">
+
+              {{ document.processingStatus }}
+
+            </span>
+
+          </div>
+
+          <!-- DOCUMENT DETAILS -->
+          <div class="document-information">
+
+            <h3 [title]="document.originalFilename">
+              {{ document.originalFilename }}
+            </h3>
+
+            <p>
+              {{ document.mimeType === 'application/pdf' ? 'PDF Document' : 'Text Notes' }}
+            </p>
+
+            @if (document.totalPages !== null) {
+
+              <span class="page-information">
+                {{ document.totalPages }} pages
+              </span>
+
+            }
+
+          </div>
+
+          <!-- OPEN SESSION -->
+          <div class="document-actions">
+
+            @if (canOpenSession(document)) {
+
+              <button
+                type="button"
+                class="open-button"
+                (click)="openSession(document.sessionUuid)">
+
+                Open Study Session →
+
+              </button>
+
+            }
+
+            @else if (document.processingStatus === 'processing' || document.processingStatus === 'uploaded') {
+
+              <span class="action-message">
+                Document is being processed
+              </span>
+
+            }
+
+            @else if (document.processingStatus === 'failed') {
+
+              <span class="action-message failed-message">
+                Processing failed
+              </span>
+
+            }
+
+          </div>
+
+        </article>
+
+      }
+
+    </div>
+
+  }
+
+</section>

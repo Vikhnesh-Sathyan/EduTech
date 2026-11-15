@@ -1,0 +1,56 @@
+
+<section class="summary-panel">
+
+  <div class="panel-heading">
+
+    <h2>Study Summaries</h2>
+
+    <p>
+      Generate summaries and revisit your saved study notes.
+    </p>
+
+  </div>
+
+  <app-summary-generator
+    [sessionUuid]="sessionUuid"
+    [totalPages]="totalPages"
+    (summaryGenerated)="loadSummaries()"
+  />
+
+  <div class="saved-summaries">
+
+    <div class="saved-heading">
+      <h3>Saved Summaries</h3>
+
+      <span>{{ summaries().length }} summaries</span>
+    </div>
+
+    @if (isLoading()) {
+
+      <div class="summary-state">
+        Loading saved summaries...
+      </div>
+
+    } @else if (errorMessage()) {
+
+      <div class="summary-state error-state">
+
+        <p>{{ errorMessage() }}</p>
+
+        <button type="button" (click)="loadSummaries()">
+          Try Again
+        </button>
+
+      </div>
+
+    } @else {
+
+      <app-summary-display
+        [summaries]="summaries()"
+      />
+
+    }
+
+  </div>
+
+</section>

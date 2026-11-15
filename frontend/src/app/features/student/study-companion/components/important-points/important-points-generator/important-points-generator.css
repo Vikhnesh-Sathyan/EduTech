@@ -1,0 +1,58 @@
+
+.generator-card {
+  padding: 22px;
+  background: #fffaf6;
+  border: 1px solid #eadbd1;
+  border-radius: 16px;
+}
+
+.generator-header h3 {
+  margin: 0 0 8px;
+  color: #5e4b42;
+  font-size: 18px;
+}
+
+.generator-header p {
+  margin: 0;
+  color: #88776d;
+  line-height: 1.6;
+}
+
+.replacement-notice {
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: #f2e4da;
+  color: #795a4d;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.generate-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #5e4b42;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.generate-button:hover:not(:disabled) {
+  background: #493930;
+}
+
+.generate-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  margin: 14px 0 0;
+  color: #47734f;
+  font-size: 13px;
+  font-weight: 500;
+}

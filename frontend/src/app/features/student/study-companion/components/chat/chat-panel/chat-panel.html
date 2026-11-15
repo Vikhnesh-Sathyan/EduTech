@@ -1,0 +1,77 @@
+
+<section class="chat-panel">
+
+  <div class="chat-header">
+    <div>
+      <h3>Study Assistant</h3>
+      <p>Ask questions about your uploaded document</p>
+    </div>
+
+    <span class="ai-status">AI Assistant</span>
+  </div>
+
+  <div class="chat-messages">
+
+    @if (isLoadingHistory) {
+
+      <div class="chat-state">
+        Loading conversation...
+      </div>
+
+    } @else if (errorMessage && messages.length === 0) {
+
+      <div class="chat-state error-state">
+        <p>{{ errorMessage }}</p>
+
+        <button type="button" (click)="loadChatHistory()">
+          Try Again
+        </button>
+      </div>
+
+    } @else if (messages.length === 0) {
+
+      <div class="empty-chat">
+        <div class="empty-icon">✦</div>
+
+        <h4>Start learning with your AI assistant</h4>
+
+        <p>
+          Ask questions about your document.
+          I'll help you understand the concepts.
+        </p>
+      </div>
+
+    } @else {
+
+      @for (message of messages; track message.messageId) {
+
+        <app-chat-message [message]="message" />
+
+      }
+
+    }
+
+    @if (isSending) {
+
+      <div class="typing-indicator">
+        Study Assistant is thinking...
+      </div>
+
+    }
+
+  </div>
+
+  <div class="chat-footer">
+
+    <app-chat-input
+      [isSending]="isSending"
+      (sendQuestion)="sendQuestion($event)"
+    />
+
+    <p class="input-hint">
+      Press Enter to send your question.
+    </p>
+
+  </div>
+
+</section>
