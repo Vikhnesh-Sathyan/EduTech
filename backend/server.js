@@ -300,6 +300,21 @@ const studentDailyQuizRoutes = require(
     "./routes/student/daily-quiz/dailyQuiz"
 );
 
+//STUDENT STUDY COMPANION
+const studyCompanionRoutes = require("./study-companion/routes/studyCompanionRoutes");
+
+
+
+
+
+
+
+
+
+
+
+
+
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -450,6 +465,18 @@ app.use(
     "/api/english-practice/admin/topics",
     adminEnglishTopicRoutes
 );
+
+//STUDENT STUDY COMPANION
+app.use("/api/student/study-companion", studyCompanionRoutes);
+
+
+
+
+
+
+
+
+
 
 // =====================================================
 // MENTOR ROUTES

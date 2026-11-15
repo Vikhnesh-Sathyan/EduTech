@@ -1,15 +1,15 @@
-
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 
 from app.study_companion.services.session_service import study_session_service
+from app.study_companion.internal_auth import verify_internal_request
 
 
 router = APIRouter(
     prefix="/study-companion",
-    tags=["Study Companion"]
+    tags=["Study Companion"],
+    dependencies=[Depends(verify_internal_request)]
 )
-
 
 class QuestionRequest(BaseModel):
 

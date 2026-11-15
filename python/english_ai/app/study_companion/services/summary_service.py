@@ -58,7 +58,7 @@ class SummaryService:
 
         chunks = self._get_chunks(pages)
 
-        partial_points = []
+        all_points = []
 
         for batch in self._get_batches(chunks):
 
@@ -71,9 +71,14 @@ class SummaryService:
                 batch_text
             )
 
-            partial_points.append(points)
+            if not isinstance(points, list):
+                raise ValueError(
+                    "Invalid important points response."
+                )
 
-        return "\n\n".join(partial_points)
+            all_points.extend(points)
+
+        return all_points
 
     # ==========================================
     # VALIDATE AND CREATE CHUNKS

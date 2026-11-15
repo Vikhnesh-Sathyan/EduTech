@@ -171,6 +171,52 @@ class StudyDocumentService:
             ]
         }
 
+
+    # ==========================================
+    # RESTORE DOCUMENT FROM SAVED CHUNKS
+    # ==========================================
+
+    
+    # ==========================================
+    # RESTORE DOCUMENT FROM SAVED DATA
+    # ==========================================
+
+    def restore_document(self, pages, chunks):
+
+        if not pages:
+            raise ValueError("Saved document pages are required.")
+
+        if not chunks:
+            raise ValueError("Saved document chunks are required.")
+
+        self.pages = [
+            {
+                "page_number": page["page_number"],
+                "content": page["content"]
+            }
+            for page in pages
+        ]
+
+        self.chunks = [
+            {
+                "page_number": chunk["page_number"],
+                "content": chunk["content"]
+            }
+            for chunk in chunks
+        ]
+
+        # Rebuild FAISS index from saved chunks.
+        self.retrieval_service.build_index(self.chunks)
+
+        self.document_loaded = True
+
+        return {
+            "success": True,
+            "total_pages": len(self.pages),
+            "total_chunks": len(self.chunks),
+            "message": "Document restored successfully."
+        }
+
     # ==========================================
     # CHECK DOCUMENT STATUS
     # ==========================================

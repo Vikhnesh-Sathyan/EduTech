@@ -5,19 +5,21 @@ from uuid import uuid4
 class StudySessionService:
 
     def __init__(self):
-
         self.sessions = {}
 
     # ==========================================
-    # CREATE SESSION
+    # CREATE OR REGISTER SESSION
     # ==========================================
 
-    def create_session(self, document_service):
+    def create_session(self, document_service, session_id=None):
 
         if document_service is None:
             raise ValueError("Document service is required.")
 
-        session_id = str(uuid4())
+        session_id = session_id or str(uuid4())
+
+        if session_id in self.sessions:
+            raise ValueError("Study session already exists.")
 
         self.sessions[session_id] = document_service
 
@@ -56,5 +58,4 @@ class StudySessionService:
         }
 
 
-# One shared session manager for all routes.
 study_session_service = StudySessionService()

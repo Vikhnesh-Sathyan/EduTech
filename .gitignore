@@ -28,3 +28,6 @@ data/cheatsheet/technologies.csv
 
 # Ignore technology images
 frontend/public/assets/images/technologies/
+
+# Study Companion uploaded PDF files
+study-companion/uploads/
