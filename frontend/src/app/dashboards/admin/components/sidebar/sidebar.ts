@@ -12,8 +12,16 @@ export class Sidebar {
 
   challengeArenaOpen = signal(false);
 
+  careerHubOpen = signal(false);
+
+
 toggleChallengeArena(): void {
   this.challengeArenaOpen.update(value => !value);
 }
+
+toggleCareerHub() {
+  this.careerHubOpen.update(value => !value);
+}
+
 
 }

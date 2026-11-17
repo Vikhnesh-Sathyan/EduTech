@@ -173,8 +173,6 @@ import { StudyCompanionPage } from './features/student/study-companion/pages/stu
 
 import { StudySessionPage } from './features/student/study-companion/pages/study-session-page/study-session-page';
 
-
-
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './dashboards/admin/admin-layout/admin-layout';

@@ -45,3 +45,5 @@ Thumbs.db
 
 # Frontend public files
 /frontend/public/
+
+/backend/study-companion/uploads/

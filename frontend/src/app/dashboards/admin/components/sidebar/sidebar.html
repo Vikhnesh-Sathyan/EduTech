@@ -180,6 +180,68 @@
 
     </div>
 
+
+<!-- =================================================
+     CAREER HUB
+================================================== -->
+
+<div class="navigation-group">
+
+  <p>Career Hub</p>
+
+  <button
+    type="button"
+    class="dropdown-toggle"
+    (click)="toggleCareerHub()"
+    [class.expanded]="careerHubOpen()"
+  >
+    <span>Career Management</span>
+
+    <span class="dropdown-arrow">
+      {{ careerHubOpen() ? '⌃' : '⌄' }}
+    </span>
+  </button>
+
+  @if (careerHubOpen()) {
+
+    <div class="dropdown-links">
+
+      <a
+        routerLink="/admin/career-hub/jobs"
+        routerLinkActive="active">
+        Job Management
+      </a>
+
+      <a
+        routerLink="/admin/career-hub/interview-experiences"
+        routerLinkActive="active">
+        Interview Experiences
+      </a>
+
+      <a
+        routerLink="/admin/career-hub/questions"
+        routerLinkActive="active">
+        Career Questions
+      </a>
+
+      <a
+        routerLink="/admin/career-hub/referrals"
+        routerLinkActive="active">
+        Referral Management
+      </a>
+
+      <a
+        routerLink="/admin/career-hub/resources"
+        routerLinkActive="active">
+        Resume & Cover Letter Resources
+      </a>
+
+    </div>
+
+  }
+
+</div>
+
     
 <!-- =================================================
      DEVELOPER CHEAT SHEET

@@ -179,6 +179,11 @@ const adminSwapSkillSuggestionRoutes =
 //ADMIN DAILY QUIZ
 const adminDailyQuizRoutes = require("./routes/admin/daily-quiz/dailyQuiz");
 
+// Admin Career Hub routes
+const adminCareerHubRoutes = require(
+    "./routes/admin/careerHub/careerHubRoutes"
+);
+
 // =====================================================
 // STUDENT ROUTES
 // =====================================================
@@ -303,17 +308,10 @@ const studentDailyQuizRoutes = require(
 //STUDENT STUDY COMPANION
 const studyCompanionRoutes = require("./study-companion/routes/studyCompanionRoutes");
 
-
-
-
-
-
-
-
-
-
-
-
+// Student Career Hub routes
+const studentCareerHubRoutes = require(
+    "./routes/student/careerHub/careerHubRoutes"
+);
 
 // =====================================================
 // MENTOR ROUTES
@@ -353,6 +351,10 @@ const mentorLogicToCodeRoutes = require(
     "./routes/mentor/advanced/logic-to-code/problem.routes"
 );
 
+// Mentor Career Hub routes
+const mentorCareerHubRoutes = require(
+    "./routes/mentor/careerHub/careerHubRoutes"
+);
 
 // =====================================================
 // CREATE EXPRESS APPLICATION
@@ -468,18 +470,6 @@ app.use(
     adminEnglishTopicRoutes
 );
 
-//STUDENT STUDY COMPANION
-app.use("/api/student/study-companion", studyCompanionRoutes);
-
-
-
-
-
-
-
-
-
-
 // =====================================================
 // MENTOR ROUTES
 // =====================================================
@@ -554,7 +544,16 @@ app.use(
     "/api/mentor/advanced/logic-to-code",
     mentorLogicToCodeRoutes
 );
-    
+
+// =====================================================
+// MENTOR CAREER HUB ROUTES
+// =====================================================
+
+app.use(
+    "/api/mentor/career-hub",
+    mentorCareerHubRoutes
+);
+
 // =====================================================
 // ADMIN ROUTES
 // =====================================================
@@ -686,6 +685,14 @@ app.use(
 //DAILY QUIZ ADMIN
 app.use("/api/admin/daily-quiz", adminDailyQuizRoutes);
 
+// =====================================================
+// ADMIN CAREER HUB ROUTES
+// =====================================================
+
+app.use(
+    "/api/admin/career-hub",
+    adminCareerHubRoutes
+);
 
 // =====================================================
 // STUDENT EDUCATION ROUTES
@@ -729,7 +736,6 @@ app.use(
     "/api/diagnostic",
     diagnosticRoutes
 );
-
 
 // =====================================================
 // STUDENT PROJECT UNDERSTANDING ROUTES
@@ -836,6 +842,18 @@ app.use(
 app.use(
     "/api/student/daily-quiz",
     studentDailyQuizRoutes
+);
+
+//STUDENT STUDY COMPANION
+app.use("/api/student/study-companion", studyCompanionRoutes);
+
+// =====================================================
+// STUDENT CAREER HUB ROUTES
+// =====================================================
+
+app.use(
+    "/api/student/career-hub",
+    studentCareerHubRoutes
 );
 
 
