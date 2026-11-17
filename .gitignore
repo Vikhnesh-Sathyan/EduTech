@@ -31,3 +31,4 @@ frontend/public/assets/images/technologies/
 
 # Study Companion uploaded PDF files
 study-companion/uploads/
+/backend/study-companion/uploads/
