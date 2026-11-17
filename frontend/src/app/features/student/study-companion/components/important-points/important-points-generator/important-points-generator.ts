@@ -1,5 +1,12 @@
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  signal
+} from '@angular/core';
+
+import { finalize } from 'rxjs';
 
 import { StudyImportantPointsService } from '../../../services/important-points/study-important-points.service';
 
@@ -16,13 +23,16 @@ import { ToastService } from '../../../../../../services/toast.service';
 })
 export class ImportantPointsGenerator {
 
-  @Input({ required: true }) sessionUuid = '';
+  // Required session input
+  sessionUuid = input.required<string>();
 
-  @Output() pointsGenerated = new EventEmitter<void>();
+  // Notify parent after successful generation
+  pointsGenerated = output<void>();
 
-  isGenerating = false;
+  // Component states
+  isGenerating = signal(false);
 
-  generatedCount = 0;
+  generatedCount = signal(0);
 
   constructor(
     private importantPointsService: StudyImportantPointsService,
@@ -32,22 +42,25 @@ export class ImportantPointsGenerator {
   // Generate and save important points
   generateImportantPoints(): void {
 
-    if (this.isGenerating || !this.sessionUuid) {
+    if (this.isGenerating() || !this.sessionUuid()) {
       return;
     }
 
-    this.isGenerating = true;
-    this.generatedCount = 0;
+    this.isGenerating.set(true);
+    this.generatedCount.set(0);
 
     this.importantPointsService
-      .generateImportantPoints(this.sessionUuid)
+      .generateImportantPoints(this.sessionUuid())
+      .pipe(
+        finalize(() => {
+          this.isGenerating.set(false);
+        })
+      )
       .subscribe({
 
         next: (response: GenerateImportantPointsResponse) => {
 
-          this.isGenerating = false;
-
-          this.generatedCount = response.savedCount;
+          this.generatedCount.set(response.savedCount);
 
           this.pointsGenerated.emit();
 
@@ -58,8 +71,6 @@ export class ImportantPointsGenerator {
         },
 
         error: (error) => {
-
-          this.isGenerating = false;
 
           this.toastService.error(
             error.error?.message ||

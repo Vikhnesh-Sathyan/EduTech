@@ -75,3 +75,54 @@
     max-width: 88%;
   }
 }
+
+
+/* Markdown content */
+
+.message-bubble markdown {
+  display: block;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.message-bubble markdown p {
+  margin: 0 0 12px;
+}
+
+.message-bubble markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.message-bubble markdown h1,
+.message-bubble markdown h2,
+.message-bubble markdown h3 {
+  margin: 16px 0 8px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.message-bubble markdown ul,
+.message-bubble markdown ol {
+  padding-left: 24px;
+  margin: 8px 0 12px;
+}
+
+.message-bubble markdown li {
+  margin-bottom: 5px;
+}
+
+.message-bubble markdown strong {
+  font-weight: 700;
+}
+
+.message-bubble markdown code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.message-bubble markdown pre {
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+}

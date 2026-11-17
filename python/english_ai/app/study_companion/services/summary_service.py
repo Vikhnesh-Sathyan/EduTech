@@ -1,5 +1,11 @@
 
+import logging
+import time
+
 from .chunk_service import ChunkService
+
+
+logger = logging.getLogger(__name__)
 
 
 class SummaryService:
@@ -14,38 +20,105 @@ class SummaryService:
     # GENERATE DOCUMENT SUMMARY
     # ==========================================
 
-    def generate_summary(self, pages, summary_type="medium"):
+    def generate_summary(
+        self,
+        pages,
+        summary_type="medium"
+    ):
 
         if not pages:
-            raise ValueError("No document content available.")
+            raise ValueError(
+                "No document content available."
+            )
 
-        if summary_type not in ["short", "medium", "detailed"]:
-            raise ValueError("Invalid summary type.")
+        if summary_type not in [
+            "short",
+            "medium",
+            "detailed"
+        ]:
+            raise ValueError(
+                "Invalid summary type."
+            )
 
         chunks = self._get_chunks(pages)
 
+        batches = list(self._get_batches(chunks))
+
+        logger.info(
+            "Starting summary generation: %s chunks, %s batches.",
+            len(chunks),
+            len(batches)
+        )
+
         partial_summaries = []
 
-        for batch in self._get_batches(chunks):
+        # Generate one summary for each batch.
+        for batch_index, batch in enumerate(batches, start=1):
 
             batch_text = "\n\n".join(
                 f"Page {chunk['page_number']}:\n{chunk['content']}"
                 for chunk in batch
             )
 
-            partial_summary = self.ai_service.generate_summary(
-                batch_text,
-                summary_type="medium"
+            start_time = time.monotonic()
+
+            logger.info(
+                "Generating summary for batch %s/%s.",
+                batch_index,
+                len(batches)
             )
 
-            partial_summaries.append(partial_summary)
+            try:
 
+                partial_summary = self.ai_service.generate_summary(
+                    batch_text,
+                    summary_type="medium"
+                )
+
+                if not partial_summary:
+                    raise RuntimeError(
+                        f"Empty summary returned for batch {batch_index}."
+                    )
+
+                partial_summaries.append(partial_summary)
+
+                logger.info(
+                    "Summary batch %s/%s completed in %.2f seconds.",
+                    batch_index,
+                    len(batches),
+                    time.monotonic() - start_time
+                )
+
+            except Exception:
+
+                logger.exception(
+                    "Summary generation failed for batch %s/%s.",
+                    batch_index,
+                    len(batches)
+                )
+
+                raise
+
+        # Combine all partial summaries.
         combined_summary = "\n\n".join(partial_summaries)
 
-        return self.ai_service.generate_summary(
+        logger.info(
+            "Generating final combined summary."
+        )
+
+        final_start_time = time.monotonic()
+
+        final_summary = self.ai_service.generate_summary(
             combined_summary,
             summary_type=summary_type
         )
+
+        logger.info(
+            "Final summary completed in %.2f seconds.",
+            time.monotonic() - final_start_time
+        )
+
+        return final_summary
 
     # ==========================================
     # EXTRACT IMPORTANT STUDY POINTS
@@ -54,29 +127,73 @@ class SummaryService:
     def generate_important_points(self, pages):
 
         if not pages:
-            raise ValueError("No document content available.")
+            raise ValueError(
+                "No document content available."
+            )
 
         chunks = self._get_chunks(pages)
 
+        batches = list(self._get_batches(chunks))
+
+        logger.info(
+            "Starting important points generation: %s chunks, %s batches.",
+            len(chunks),
+            len(batches)
+        )
+
         all_points = []
 
-        for batch in self._get_batches(chunks):
+        for batch_index, batch in enumerate(batches, start=1):
 
             batch_text = "\n\n".join(
                 f"Page {chunk['page_number']}:\n{chunk['content']}"
                 for chunk in batch
             )
 
-            points = self.ai_service.generate_important_points(
-                batch_text
+            start_time = time.monotonic()
+
+            logger.info(
+                "Generating important points for batch %s/%s.",
+                batch_index,
+                len(batches)
             )
 
-            if not isinstance(points, list):
-                raise ValueError(
-                    "Invalid important points response."
+            try:
+
+                points = self.ai_service.generate_important_points(
+                    batch_text
                 )
 
-            all_points.extend(points)
+                if not isinstance(points, list):
+                    raise ValueError(
+                        "Invalid important points response."
+                    )
+
+                all_points.extend(points)
+
+                logger.info(
+                    "Important points batch %s/%s completed in %.2f seconds. "
+                    "Points generated: %s.",
+                    batch_index,
+                    len(batches),
+                    time.monotonic() - start_time,
+                    len(points)
+                )
+
+            except Exception:
+
+                logger.exception(
+                    "Important points generation failed for batch %s/%s.",
+                    batch_index,
+                    len(batches)
+                )
+
+                raise
+
+        logger.info(
+            "Important points generation completed. Total points: %s.",
+            len(all_points)
+        )
 
         return all_points
 
@@ -87,12 +204,16 @@ class SummaryService:
     def _get_chunks(self, pages):
 
         if self.BATCH_SIZE <= 0:
-            raise ValueError("Batch size must be positive.")
+            raise ValueError(
+                "Batch size must be positive."
+            )
 
         chunks = ChunkService.create_chunks(pages)
 
         if not chunks:
-            raise ValueError("No readable document content.")
+            raise ValueError(
+                "No readable document content."
+            )
 
         return chunks
 

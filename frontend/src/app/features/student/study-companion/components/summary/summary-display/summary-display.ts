@@ -1,20 +1,23 @@
 
 import { Component, input } from '@angular/core';
 
+import { MarkdownComponent } from 'ngx-markdown';
+
 import { StudySavedSummary } from '../../../models/summary/study-summary.model';
 
 @Component({
   selector: 'app-summary-display',
   standalone: true,
-  imports: [],
+  imports: [MarkdownComponent],
   templateUrl: './summary-display.html',
   styleUrl: './summary-display.css',
 })
 export class SummaryDisplay {
 
-  // INPUT SIGNAL
+  // Receives saved summaries from parent component
   summaries = input<StudySavedSummary[]>([]);
 
+  // Returns summary category label
   getSummaryLabel(summary: StudySavedSummary): string {
 
     if (summary.summaryType === 'full') {
@@ -28,9 +31,17 @@ export class SummaryDisplay {
     return 'Custom Summary';
   }
 
+  // Formats summary creation date
   formatDate(date: string): string {
 
     return new Date(date).toLocaleString();
+
+  }
+
+  // Fixes escaped Markdown characters in existing summaries
+  formatMarkdown(content: string): string {
+
+    return content.replace(/\\([#*_])/g, '$1');
 
   }
 

@@ -13,6 +13,10 @@ from fastapi import (
     Depends
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 from pydantic import BaseModel, Field
 
 from app.study_companion.services.session_service import (
@@ -166,11 +170,11 @@ async def upload_pdf(
         )
 
     except Exception:
-
+        logger.exception("PDF upload failed.")
         raise HTTPException(
-            status_code=500,
-            detail="Unable to process the uploaded PDF."
-        )
+        status_code=500,
+        detail="Unable to process the uploaded PDF."
+    )
 
     finally:
 
@@ -217,11 +221,11 @@ def upload_text(request: TextDocumentRequest):
         )
 
     except Exception:
-
+        logger.exception("Text upload failed.")
         raise HTTPException(
             status_code=500,
             detail="Unable to process the text."
-        )
+    )
 
 # ==========================================
 # RESTORE SESSION FROM SAVED DATA

@@ -6,6 +6,7 @@ const aiService = require("../services/studyCompanionService");
 // GENERATE AND SAVE IMPORTANT POINTS
 // ==========================================
 
+
 const generateStudyImportantPoints = async (req, res) => {
 
     const studentId = req.user.id;
@@ -35,19 +36,58 @@ const generateStudyImportantPoints = async (req, res) => {
         }
 
         // 2. Generate important points using Python AI
-        const aiResult = await aiService.getImportantPoints(
-            sessionUuid
-        );
+        let aiResult;
 
+        try {
+
+            aiResult = await aiService.getImportantPoints(
+                sessionUuid
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Important points AI service error:",
+                error.response?.data || error.message
+            );
+
+            // Preserve Python AI service status
+            if (error.response?.status === 503) {
+                return res.status(503).json({
+                    message:
+                        error.response.data?.detail ||
+                        "AI service is temporarily busy. Please try again shortly."
+                });
+            }
+
+            if (error.response?.status === 400 ||
+                error.response?.status === 404) {
+
+                return res.status(error.response.status).json({
+                    message:
+                        error.response.data?.detail ||
+                        "Unable to process this study session."
+                });
+            }
+
+            return res.status(502).json({
+                message: "Unable to communicate with the AI service."
+            });
+
+        }
+
+        // 3. Validate AI response
         if (
             !aiResult ||
             aiResult.success !== true ||
             !Array.isArray(aiResult.important_points)
         ) {
-            throw new Error("Invalid important points response.");
+            return res.status(502).json({
+                message: "Invalid response received from AI service."
+            });
         }
 
-        // 3. Save important points permanently in MySQL
+        // 4. Save important points in MySQL
         const savedPoints = await databaseService.saveImportantPoints({
             documentId: session.documentId,
             sessionId: session.sessionId,
@@ -55,25 +95,51 @@ const generateStudyImportantPoints = async (req, res) => {
             points: aiResult.important_points
         });
 
-        // 4. Return generated points
+        // 5. Return generated points
         return res.status(200).json({
             message: "Important points generated successfully.",
             savedCount: savedPoints.savedCount,
             importantPoints: aiResult.important_points
         });
 
-    } catch (error) {
+    } 
+catch (error) {
 
-        console.error(
-            "Study Companion important points error:",
-            error
-        );
+    console.error("IMPORTANT POINTS AI ERROR:", {
+        message: error.message,
+        status: error.response?.status,
+        responseData: error.response?.data,
+        errorCode: error.code,
+        hasResponse: !!error.response
+    });
 
-        return res.status(500).json({
-            message: "Unable to generate important points."
+    if (error.response) {
+
+        return res.status(error.response.status).json({
+            message:
+                error.response.data?.detail ||
+                error.response.data?.message ||
+                "AI service request failed."
         });
+
     }
+
+    if (error.code === "ECONNABORTED") {
+
+        return res.status(504).json({
+            message: "AI service request timed out."
+        });
+
+    }
+
+    return res.status(502).json({
+        message: "Unable to connect to the AI service."
+    });
+
+}
+
 };
+
 
 
 // ==========================================

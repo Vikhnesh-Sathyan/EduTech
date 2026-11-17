@@ -12,23 +12,23 @@
 
   <div class="chat-messages">
 
-    @if (isLoadingHistory) {
+    @if (isLoadingHistory()) {
 
       <div class="chat-state">
         Loading conversation...
       </div>
 
-    } @else if (errorMessage && messages.length === 0) {
+    } @else if (errorMessage() && messages().length === 0) {
 
       <div class="chat-state error-state">
-        <p>{{ errorMessage }}</p>
+        <p>{{ errorMessage() }}</p>
 
         <button type="button" (click)="loadChatHistory()">
           Try Again
         </button>
       </div>
 
-    } @else if (messages.length === 0) {
+    } @else if (messages().length === 0) {
 
       <div class="empty-chat">
         <div class="empty-icon">✦</div>
@@ -43,7 +43,7 @@
 
     } @else {
 
-      @for (message of messages; track message.messageId) {
+      @for (message of messages(); track message.messageId) {
 
         <app-chat-message [message]="message" />
 
@@ -51,7 +51,7 @@
 
     }
 
-    @if (isSending) {
+    @if (isSending()) {
 
       <div class="typing-indicator">
         Study Assistant is thinking...
@@ -64,7 +64,7 @@
   <div class="chat-footer">
 
     <app-chat-input
-      [isSending]="isSending"
+      [isSending]="isSending()"
       (sendQuestion)="sendQuestion($event)"
     />
 

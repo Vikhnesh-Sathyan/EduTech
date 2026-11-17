@@ -1,20 +1,21 @@
+
 <div class="chat-input-container">
 
   <textarea
-    [(value)]="question"
+    [value]="question()"
     placeholder="Ask anything about your document..."
     rows="2"
-    [disabled]="isSending"
-    (input)="question = $any($event.target).value"
-    (keydown.enter)="$event.preventDefault(); onSend()"
+    [disabled]="isSending()"
+    (input)="onQuestionChange($any($event.target).value)"
+   (keydown.enter)="onEnter($any($event))"
   ></textarea>
 
   <button
     type="button"
     (click)="onSend()"
-    [disabled]="!question.trim() || isSending"
+    [disabled]="!question().trim() || isSending()"
   >
-    {{ isSending ? 'Sending...' : 'Send' }}
+    {{ isSending() ? 'Sending...' : 'Send' }}
   </button>
 
 </div>

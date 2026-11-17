@@ -1,5 +1,6 @@
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
+
 @Component({
   selector: 'app-chat-input',
   standalone: true,
@@ -9,23 +10,43 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ChatInput {
 
-  question = '';
+  // Stores the current question.
+  question = signal('');
 
-  @Output() sendQuestion = new EventEmitter<string>();
+  // Receives the sending status from the parent.
+  isSending = input(false);
 
-  @Input() isSending = false;
+  // Sends the question to the parent.
+  sendQuestion = output<string>();
 
   onSend(): void {
 
-    const trimmedQuestion = this.question.trim();
+    const trimmedQuestion = this.question().trim();
 
-    if (!trimmedQuestion || this.isSending) {
+    if (!trimmedQuestion || this.isSending()) {
       return;
     }
 
     this.sendQuestion.emit(trimmedQuestion);
 
-    this.question = '';
+    this.question.set('');
   }
+
+  onQuestionChange(value: string): void {
+    this.question.set(value);
+  }
+
+
+onEnter(event: KeyboardEvent): void {
+
+  if (event.shiftKey) {
+    return;
+  }
+
+  event.preventDefault();
+
+  this.onSend();
+}
+
 
 }

@@ -3,7 +3,8 @@ import {
   Component,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  signal
 } from '@angular/core';
 
 import { StudyChatService } from '../../../services/chat/study-chat.service';
@@ -18,59 +19,70 @@ import { ToastService } from '../../../../../../services/toast.service';
 @Component({
   selector: 'app-chat-panel',
   standalone: true,
-  imports: [ChatMessage, ChatInput],
+  imports: [
+    ChatMessage,
+    ChatInput
+  ],
   templateUrl: './chat-panel.html',
-  styleUrl: './chat-panel.css',
+  styleUrl: './chat-panel.css'
 })
 export class ChatPanel implements OnChanges {
 
   @Input({ required: true }) sessionUuid = '';
 
-  messages: StudyChatMessage[] = [];
+  // SIGNAL STATES
+  messages = signal<StudyChatMessage[]>([]);
 
-  isLoadingHistory = false;
-  isSending = false;
+  isLoadingHistory = signal(false);
+  isSending = signal(false);
 
-  errorMessage = '';
+  errorMessage = signal('');
 
   constructor(
     private studyChatService: StudyChatService,
     private toastService: ToastService
   ) {}
 
-  // LOAD CHAT HISTORY WHEN SESSION CHANGES
+  // DETECT SESSION CHANGES
   ngOnChanges(changes: SimpleChanges): void {
 
     if (changes['sessionUuid'] && this.sessionUuid) {
-      this.loadChatHistory();
+
+      // Temporarily disabled for NG0100 investigation.
+      // We will restore history loading after identifying the cause.
+
     }
 
   }
 
-  // GET SAVED CHAT MESSAGES
+  // LOAD SAVED CHAT MESSAGES
   loadChatHistory(): void {
 
-    this.isLoadingHistory = true;
-    this.errorMessage = '';
+    if (!this.sessionUuid) {
+      return;
+    }
+
+    this.isLoadingHistory.set(true);
+    this.errorMessage.set('');
 
     this.studyChatService.getChatHistory(this.sessionUuid).subscribe({
 
       next: (response) => {
 
-        this.messages = response.messages;
-
-        this.isLoadingHistory = false;
+        this.messages.set(response.messages);
+        this.isLoadingHistory.set(false);
 
       },
 
       error: (error) => {
 
-        this.isLoadingHistory = false;
+        this.isLoadingHistory.set(false);
 
-        this.errorMessage =
-          error.error?.message || 'Unable to load chat history.';
+        this.errorMessage.set(
+          error.error?.message || 'Unable to load chat history.'
+        );
 
-        this.toastService.error(this.errorMessage);
+        this.toastService.error(this.errorMessage());
 
       }
 
@@ -81,11 +93,11 @@ export class ChatPanel implements OnChanges {
   // SEND QUESTION TO AI
   sendQuestion(question: string): void {
 
-    if (!question.trim() || this.isSending) {
+    if (!question.trim() || this.isSending()) {
       return;
     }
 
-    this.isSending = true;
+    this.isSending.set(true);
 
     this.studyChatService.askQuestion(
       this.sessionUuid,
@@ -94,23 +106,20 @@ export class ChatPanel implements OnChanges {
 
       next: () => {
 
-        this.isSending = false;
+        this.isSending.set(false);
 
-        // Reload messages with actual database IDs.
         this.loadChatHistory();
 
       },
 
       error: (error) => {
 
-        this.isSending = false;
+        this.isSending.set(false);
 
         this.toastService.error(
           error.error?.message || 'Unable to get an answer.'
         );
 
-        // The backend may have saved the user question
-        // before the AI request failed.
         this.loadChatHistory();
 
       }

@@ -1,11 +1,16 @@
-
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { StudyImportantPointsService } from '../../../services/important-points/study-important-points.service';
-
-import {
-  StudyImportantPoint
-} from '../../../models/important-points/study-important-points.model';
+import { StudyImportantPoint } from '../../../models/important-points/study-important-points.model';
 
 import { ImportantPointsGenerator } from '../important-points-generator/important-points-generator';
 import { ImportantPointsDisplay } from '../important-points-display/important-points-display';
@@ -15,68 +20,58 @@ import { ToastService } from '../../../../../../services/toast.service';
 @Component({
   selector: 'app-important-points-panel',
   standalone: true,
-  imports: [
-    ImportantPointsGenerator,
-    ImportantPointsDisplay
-  ],
+  imports: [ImportantPointsGenerator, ImportantPointsDisplay],
   templateUrl: './important-points-panel.html',
   styleUrl: './important-points-panel.css',
 })
-export class ImportantPointsPanel implements OnChanges {
+export class ImportantPointsPanel {
 
-  @Input({ required: true }) sessionUuid = '';
+  private importantPointsService = inject(StudyImportantPointsService);
+  private toastService = inject(ToastService);
 
-  importantPoints: StudyImportantPoint[] = [];
+  sessionUuid = input.required<string>();
 
-  isLoading = false;
+  importantPoints = signal<StudyImportantPoint[]>([]);
+  isLoading = signal(false);
+  errorMessage = signal('');
 
-  errorMessage = '';
+  private loadSub?: Subscription;
 
-  constructor(
-    private importantPointsService: StudyImportantPointsService,
-    private toastService: ToastService
-  ) {}
+  constructor() {
+    // Reload whenever the session changes. Only sessionUuid is tracked.
+    effect(() => {
+      const uuid = this.sessionUuid();
 
-  ngOnChanges(changes: SimpleChanges): void {
+      if (uuid) {
+        untracked(() => this.loadImportantPoints());
+      }
+    });
 
-    if (changes['sessionUuid'] && this.sessionUuid) {
-      this.loadImportantPoints();
-    }
-
+    inject(DestroyRef).onDestroy(() => this.loadSub?.unsubscribe());
   }
 
   // Retrieve saved important points
   loadImportantPoints(): void {
+    this.loadSub?.unsubscribe();
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
-    this.importantPointsService
-      .getImportantPoints(this.sessionUuid)
+    this.loadSub = this.importantPointsService
+      .getImportantPoints(this.sessionUuid())
       .subscribe({
-
         next: (response) => {
-
-          this.importantPoints = response.importantPoints;
-
-          this.isLoading = false;
-
+          this.importantPoints.set(response.importantPoints);
+          this.isLoading.set(false);
         },
-
         error: (error) => {
+          const message =
+            error.error?.message || 'Unable to load important points.';
 
-          this.isLoading = false;
-
-          this.errorMessage =
-            error.error?.message ||
-            'Unable to load important points.';
-
-          this.toastService.error(this.errorMessage);
-
+          this.errorMessage.set(message);
+          this.isLoading.set(false);
+          this.toastService.error(message);
         }
-
       });
-
   }
-
 }

@@ -1,4 +1,3 @@
-
 from .pdf_service import PDFService
 from .text_service import TextService
 from .chunk_service import ChunkService
@@ -133,6 +132,10 @@ class StudyDocumentService:
     # ASK DOCUMENT QUESTION
     # ==========================================
 
+    # ==========================================
+    # ASK DOCUMENT QUESTION
+    # ==========================================
+
     def ask_question(self, question):
 
         self._check_document()
@@ -140,6 +143,9 @@ class StudyDocumentService:
         if not question or not question.strip():
             raise ValueError("Please enter a question.")
 
+        question = question.strip()
+
+        # Retrieve the most relevant document chunks.
         search_results = self.retrieval_service.search(
             question,
             top_k=5
@@ -152,8 +158,25 @@ class StudyDocumentService:
                 "sources": []
             }
 
+        # Build context using retrieved chunks.
         context = ContextService.build_context(search_results)
 
+        # Debug information to identify large or irrelevant context.
+        print("\n========== STUDY COMPANION DEBUG ==========")
+        print(f"QUESTION: {question}")
+        print(f"RETRIEVED CHUNKS: {len(search_results)}")
+        print(f"CONTEXT LENGTH: {len(context)} characters")
+
+        for index, result in enumerate(search_results, start=1):
+            print(
+                f"CHUNK {index} | "
+                f"PAGE: {result.get('page_number')} | "
+                f"SCORE: {result.get('score')}"
+            )
+
+        print("===========================================\n")
+
+        # Generate answer using Gemini.
         answer = self.ai_service.answer_question(
             question,
             context
@@ -170,11 +193,6 @@ class StudyDocumentService:
                 for result in search_results
             ]
         }
-
-
-    # ==========================================
-    # RESTORE DOCUMENT FROM SAVED CHUNKS
-    # ==========================================
 
     
     # ==========================================

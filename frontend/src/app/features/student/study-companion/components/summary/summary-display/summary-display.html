@@ -38,7 +38,11 @@
         </div>
 
         <div class="summary-content">
-          {{ summary.summaryContent }}
+
+          <markdown
+            [data]="formatMarkdown(summary.summaryContent)"
+          />
+
         </div>
 
       </article>

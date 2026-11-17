@@ -23,11 +23,11 @@
   <button
     type="button"
     class="generate-button"
-    [disabled]="isGenerating"
+    [disabled]="isGenerating()"
     (click)="generateImportantPoints()"
   >
 
-    @if (isGenerating) {
+    @if (isGenerating()) {
       Generating Important Points...
     } @else {
       Generate Important Points
@@ -35,10 +35,10 @@
 
   </button>
 
-  @if (generatedCount > 0 && !isGenerating) {
+  @if (generatedCount() > 0 && !isGenerating()) {
 
     <p class="success-message">
-      {{ generatedCount }} important points saved successfully.
+      {{ generatedCount() }} important points saved successfully.
     </p>
 
   }

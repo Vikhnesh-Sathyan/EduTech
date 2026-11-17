@@ -1,37 +1,31 @@
-
 <section class="summary-generator">
 
   <div class="generator-heading">
     <h3>Generate Study Summary</h3>
-
-    <p>
-      Create an easy-to-understand summary of your study material.
-    </p>
+    <p>Create an easy-to-understand summary of your study material.</p>
   </div>
 
   <div class="mode-selection">
 
     <button
       type="button"
-      [class.active]="summaryMode === 'full'"
-      (click)="summaryMode = 'full'"
-      [disabled]="isGenerating"
-    >
+      [class.active]="summaryMode() === 'full'"
+      (click)="summaryMode.set('full')"
+      [disabled]="isGenerating()">
       Full Document
     </button>
 
     <button
       type="button"
-      [class.active]="summaryMode === 'pages'"
-      (click)="summaryMode = 'pages'"
-      [disabled]="isGenerating"
-    >
+      [class.active]="summaryMode() === 'pages'"
+      (click)="summaryMode.set('pages')"
+      [disabled]="isGenerating()">
       Selected Pages
     </button>
 
   </div>
 
-  @if (summaryMode === 'pages') {
+  @if (summaryMode() === 'pages') {
 
     <div class="page-selection">
 
@@ -42,10 +36,10 @@
           id="startPage"
           type="number"
           min="1"
-          [max]="totalPages"
-          [value]="startPage"
-          (input)="startPage = +$any($event.target).value"
-          [disabled]="isGenerating"
+          [max]="totalPages()"
+          [value]="startPage()"
+          (input)="onStartPageChange($any($event.target).value)"
+          [disabled]="isGenerating()"
         />
       </div>
 
@@ -56,17 +50,17 @@
           id="endPage"
           type="number"
           min="1"
-          [max]="totalPages"
-          [value]="endPage"
-          (input)="endPage = +$any($event.target).value"
-          [disabled]="isGenerating"
+          [max]="totalPages()"
+          [value]="endPage()"
+          (input)="onEndPageChange($any($event.target).value)"
+          [disabled]="isGenerating()"
         />
       </div>
 
     </div>
 
     <p class="page-hint">
-      Document contains {{ totalPages }} pages.
+      Document contains {{ totalPages() }} pages.
     </p>
 
   }
@@ -76,13 +70,11 @@
 
     <select
       id="summaryType"
-      [value]="summaryType"
-      (change)="summaryType = $any($event.target).value"
-      [disabled]="isGenerating"
-    >
-      <option value="short">Short</option>
-      <option value="medium">Medium</option>
-      <option value="detailed">Detailed</option>
+      (change)="summaryType.set($any($event.target).value)"
+      [disabled]="isGenerating()">
+      <option value="short" [selected]="summaryType() === 'short'">Short</option>
+      <option value="medium" [selected]="summaryType() === 'medium'">Medium</option>
+      <option value="detailed" [selected]="summaryType() === 'detailed'">Detailed</option>
     </select>
   </div>
 
@@ -90,21 +82,15 @@
     type="button"
     class="generate-button"
     (click)="generateSummary()"
-    [disabled]="isGenerating || (summaryMode === 'pages' && totalPages < 1)"
-  >
-    {{ isGenerating ? 'Generating Summary...' : 'Generate Summary' }}
+    [disabled]="isGenerating() || (summaryMode() === 'pages' && totalPages() < 1)">
+    {{ isGenerating() ? 'Generating Summary...' : 'Generate Summary' }}
   </button>
 
-  @if (generatedSummary) {
+  @if (generatedSummary(); as summary) {
 
     <div class="generated-result">
-
       <h4>Generated Summary</h4>
-
-      <div class="result-content">
-        {{ generatedSummary }}
-      </div>
-
+      <div class="result-content">{{ summary }}</div>
     </div>
 
   }

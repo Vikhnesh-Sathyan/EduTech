@@ -113,7 +113,8 @@ const generateSummary = async (data) => {
         "/study-companion/summary",
         data,
         {
-            headers: getInternalHeaders()
+            headers: getInternalHeaders(),
+            timeout: 600000
         }
     );
 

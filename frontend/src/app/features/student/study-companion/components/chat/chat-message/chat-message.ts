@@ -1,22 +1,24 @@
 
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
+import { MarkdownComponent } from 'ngx-markdown';
 
 import { StudyChatMessage } from '../../../models/chat/study-chat.model';
 
 @Component({
   selector: 'app-chat-message',
   standalone: true,
-  imports: [],
+  imports: [MarkdownComponent],
   templateUrl: './chat-message.html',
   styleUrl: './chat-message.css',
 })
 export class ChatMessage {
 
-  @Input({ required: true })
-  message!: StudyChatMessage;
+  // Receives the message from the parent.
+  message = input.required<StudyChatMessage>();
 
-  get isUserMessage(): boolean {
-    return this.message.messageType === 'user';
-  }
+  // Checks whether the message belongs to the user.
+  isUserMessage = computed(() =>
+    this.message().messageType === 'user'
+  );
 
 }
