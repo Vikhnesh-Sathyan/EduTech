@@ -242,8 +242,10 @@ import {
 import { Jobs } from './features/admin/career-hub/jobs/jobs/jobs';
 import { CreateJob } from './features/admin/career-hub/jobs/create-job/create-job';
 import { MasterData } from './features/admin/career-hub/master-data/master-data/master-data';
-
-
+import { InterviewExperiences } from './features/admin/career-hub/interview-experiences/interview-experiences/interview-experiences';
+import { Questions } from './features/admin/career-hub/career-questions/questions/questions';
+import { Referrals } from './features/admin/career-hub/referrals/referrals/referrals';
+import { Resources } from './features/admin/career-hub/resources/resources/resources';
 
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
@@ -710,10 +712,6 @@ export const routes: Routes = [
         path: 'study-companion/session/:sessionUuid',
         component: StudySessionPage
       },
-      
-      
-
-      
     ]
   },
 
@@ -820,7 +818,7 @@ export const routes: Routes = [
       // Admin Cheat Sheet management
       {
         path: 'cheatsheet',
-      component: AdminCheatsheetComponent
+        component: AdminCheatsheetComponent
       },
       // Admin Skill Swap
       {
@@ -869,6 +867,23 @@ export const routes: Routes = [
         path: 'career-hub/master-data',
         component: MasterData
       },
+      {
+        path: 'career-hub/interview-experiences',
+        component: InterviewExperiences
+      },
+      {
+        path: 'career-hub/questions',
+        component: Questions
+      },
+      {
+        path: 'career-hub/referrals',
+        component: Referrals
+      },
+      {
+        path: 'career-hub/resources',
+        component: Resources  
+      }
+
     
 
       

@@ -1,0 +1,111 @@
+
+<div class="referrals-page">
+
+  <div class="page-header">
+    <div>
+      <h2>Referral Management</h2>
+      <p>View and manage referral opportunities submitted by students and mentors.</p>
+    </div>
+
+    <button class="refresh-btn" (click)="loadReferrals()">
+      Refresh
+    </button>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert success">{{ successMessage() }}</div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error">{{ errorMessage() }}</div>
+  }
+
+  <div class="table-card">
+
+    <div class="table-header">
+      <h3>Referral Opportunities</h3>
+      <span>{{ referrals().length }} records</span>
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state">Loading referrals...</div>
+    } @else if (referrals().length === 0) {
+      <div class="empty-state">
+        No referral opportunities available yet.
+      </div>
+    } @else {
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Company</th>
+              <th>Job Role</th>
+              <th>Country</th>
+              <th>Contributor</th>
+              <th>Status</th>
+              <th>Created On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (referral of referrals(); track referral.id; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+
+                <td class="company-name">
+                  {{ referral.company_name }}
+                </td>
+
+                <td>{{ referral.role_name }}</td>
+
+                <td>{{ referral.country_name }}</td>
+
+                <td>
+                  <div class="contributor">
+                    <strong>{{ referral.contributor_name }}</strong>
+                    <small>{{ referral.contributor_role }}</small>
+                  </div>
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.published]="referral.status === 'published'"
+                    [class.archived]="referral.status === 'archived'">
+                    {{ referral.status }}
+                  </span>
+                </td>
+
+                <td>{{ referral.created_at | date:'dd MMM yyyy' }}</td>
+
+                <td>
+                  <div class="actions">
+                    <a
+                      [href]="referral.job_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="view-btn">
+                      View Link
+                    </a>
+
+                    @if (referral.status === 'published') {
+                      <button
+                        class="archive-btn"
+                        (click)="archiveReferral(referral.id)">
+                        Archive
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  </div>
+</div>

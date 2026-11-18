@@ -1,0 +1,194 @@
+
+.referrals-page {
+  padding: 24px;
+  color: #080808;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.refresh-btn,
+.archive-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 9px 15px;
+  background: #f20b18;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.table-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.table-header h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.table-header span {
+  color: #777;
+  font-size: 13px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+th {
+  background: #f7f7f7;
+  color: #555;
+  font-weight: 600;
+}
+
+td {
+  color: #333;
+}
+
+.company-name {
+  font-weight: 600;
+  color: #080808;
+}
+
+.contributor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contributor strong {
+  font-weight: 600;
+}
+
+.contributor small {
+  color: #888;
+  text-transform: capitalize;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.published {
+  background: #e9f7ef;
+  color: #16834a;
+}
+
+.status.archived {
+  background: #eee;
+  color: #666;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-btn {
+  color: #080808;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 7px 10px;
+}
+
+.view-btn:hover {
+  border-color: #f20b18;
+  color: #f20b18;
+}
+
+.archive-btn {
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.archive-btn:hover,
+.refresh-btn:hover {
+  background: #d90915;
+}
+
+.empty-state {
+  padding: 45px 20px;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
+.alert {
+  padding: 12px 15px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.alert.success {
+  background: #e9f7ef;
+  color: #16834a;
+}
+
+.alert.error {
+  background: #fdeaea;
+  color: #c62828;
+}
+
+@media (max-width: 768px) {
+  .referrals-page {
+    padding: 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

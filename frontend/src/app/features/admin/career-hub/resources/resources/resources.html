@@ -1,0 +1,150 @@
+
+<div class="resources-page">
+
+  <div class="page-header">
+    <div>
+      <h2>Resume & Cover Letter Resources</h2>
+      <p>Manage submitted resume and cover letter resources.</p>
+    </div>
+
+    <button class="refresh-btn" (click)="loadResources()">
+      Refresh
+    </button>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert success">{{ successMessage() }}</div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error">{{ errorMessage() }}</div>
+  }
+
+  <div class="table-card">
+
+    <div class="table-header">
+      <h3>Career Resources</h3>
+      <span>{{ resources().length }} records</span>
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state">Loading resources...</div>
+    } @else if (resources().length === 0) {
+      <div class="empty-state">
+        No career resources available yet.
+      </div>
+    } @else {
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Resource Type</th>
+              <th>Country</th>
+              <th>Experience Level</th>
+              <th>Contributor</th>
+              <th>PDF</th>
+              <th>Status</th>
+              <th>Created On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (resource of resources(); track resource.id; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+
+                <td class="resource-title">
+                  {{ resource.title }}
+                </td>
+
+                <td>{{ resource.resource_type }}</td>
+
+                <td>{{ resource.country_name || 'Not specified' }}</td>
+
+                <td>{{ resource.experience_level }}</td>
+
+                <td>{{ resource.contributor_name }}</td>
+
+                <td>
+                  @if (resource.public_copy_name) {
+                    <span class="pdf-available">
+                      PDF Available
+                    </span>
+                  } @else {
+                    <span class="pdf-missing">
+                      No Public PDF
+                    </span>
+                  }
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.published]="resource.status === 'published'"
+                    [class.archived]="resource.status === 'archived'">
+                    {{ resource.status }}
+                  </span>
+                </td>
+
+                <td>{{ resource.created_at | date:'dd MMM yyyy' }}</td>
+
+                <td>
+                  <div class="actions">
+
+                    @if (resource.status === 'published' && resource.public_copy_name) {
+                      <button
+                        class="view-btn"
+                        (click)="previewResource(resource)">
+                        Preview
+                      </button>
+                    }
+
+                    @if (resource.status === 'published') {
+                      <button
+                        class="archive-btn"
+                        (click)="archiveResource(resource.id)">
+                        Archive
+                      </button>
+                    }
+
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  </div>
+
+  @if (previewUrl()) {
+    <div class="preview-overlay">
+
+      <div class="preview-modal">
+
+        <div class="preview-header">
+          <h3>{{ previewTitle() }}</h3>
+
+          <button
+            class="close-btn"
+            (click)="closePreview()">
+            ✕
+          </button>
+        </div>
+
+        <iframe
+          [src]="previewUrl()"
+          title="Career Resource PDF Preview">
+        </iframe>
+
+      </div>
+
+    </div>
+  }
+
+</div>

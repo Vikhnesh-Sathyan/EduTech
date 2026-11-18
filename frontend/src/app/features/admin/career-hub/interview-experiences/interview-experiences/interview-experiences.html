@@ -1,0 +1,116 @@
+
+<section class="page-container">
+
+  <div class="page-header">
+    <div>
+      <h1>Interview Experiences</h1>
+      <p>Review and manage interview experiences submitted by students and mentors.</p>
+    </div>
+
+    <button class="refresh-btn" type="button" (click)="loadExperiences()">
+      Refresh
+    </button>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <div class="content-card">
+
+    <div class="card-header">
+      <div>
+        <h2>All Interview Experiences</h2>
+        <p>{{ experiences().length }} records</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="state-message">
+        Loading interview experiences...
+      </div>
+    }
+
+    @else if (experiences().length === 0) {
+      <div class="state-message">
+        No interview experiences found.
+      </div>
+    }
+
+    @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Company & Role</th>
+              <th>Country</th>
+              <th>Experience</th>
+              <th>Contributor</th>
+              <th>Status</th>
+              <th>Submitted On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (experience of experiences(); track experience.id; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+
+                <td>
+                  <strong>{{ experience.company_name }}</strong>
+                  <span class="secondary-text">{{ experience.role_name }}</span>
+                </td>
+
+                <td>{{ experience.country_name || '—' }}</td>
+
+                <td>{{ experience.experience_level || '—' }}</td>
+
+                <td>
+                  <strong>{{ experience.contributor_name || '—' }}</strong>
+                  <span class="secondary-text">
+                    {{ experience.contributor_role || '' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="status-badge">
+                    {{ experience.status }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ experience.created_at | date:'dd MMM yyyy' }}
+                </td>
+
+                <td>
+                  @if (experience.status === 'published') {
+                    <button
+                      class="archive-btn"
+                      type="button"
+                      (click)="archiveExperience(experience.id)">
+                      Archive
+                    </button>
+                  } @else {
+                    <span class="secondary-text">No actions</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  </div>
+
+</section>

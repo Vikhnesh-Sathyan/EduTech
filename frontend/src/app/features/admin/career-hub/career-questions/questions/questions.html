@@ -1,0 +1,582 @@
+
+<section class="page-container">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Career Questions</h1>
+      <p>Create, review and manage career-related questions and categories.</p>
+    </div>
+
+    <div class="header-actions">
+
+      @if (activeTab() === 'questions') {
+        <button class="refresh-btn" type="button" (click)="loadQuestions()">
+          Refresh
+        </button>
+
+        <button class="primary-btn" type="button" (click)="openCreateForm()">
+          Add Question
+        </button>
+      }
+
+      @if (activeTab() === 'categories') {
+        <button class="refresh-btn" type="button" (click)="loadCategories()">
+          Refresh
+        </button>
+
+        <button class="primary-btn" type="button" (click)="openCreateCategoryForm()">
+          Add Category
+        </button>
+      }
+
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- TABS -->
+  <div class="tab-navigation">
+
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active-tab]="activeTab() === 'questions'"
+      (click)="setTab('questions')">
+
+      Questions
+      <span>{{ questions().length }}</span>
+
+    </button>
+
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active-tab]="activeTab() === 'categories'"
+      (click)="setTab('categories')">
+
+      Categories
+      <span>{{ categories().length }}</span>
+
+    </button>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- QUESTIONS TAB -->
+  <!-- ========================================== -->
+
+  @if (activeTab() === 'questions') {
+
+    <!-- QUESTION FORM -->
+    @if (showForm()) {
+
+      <div class="form-card">
+
+        <div class="form-header">
+          <div>
+            <h2>
+              {{ editingId() ? 'Edit Career Question' : 'Add Career Question' }}
+            </h2>
+
+            <p>Enter the question details below.</p>
+          </div>
+
+          <button
+            class="close-btn"
+            type="button"
+            (click)="closeForm()">
+            &times;
+          </button>
+        </div>
+
+        <form [formGroup]="questionForm" (ngSubmit)="submitQuestion()">
+
+          <div class="form-group">
+
+            <label for="category">Question Category *</label>
+
+            <select id="category" formControlName="category_id">
+
+              <option value="">Select category</option>
+
+              @for (category of activeCategories(); track category.id) {
+                <option [value]="category.id">
+                  {{ category.category_name }}
+                </option>
+              }
+
+            </select>
+
+            @if (
+              questionForm.get('category_id')?.touched &&
+              questionForm.get('category_id')?.invalid
+            ) {
+              <small class="field-error">
+                Please select a category.
+              </small>
+            }
+
+            @if (activeCategories().length === 0) {
+              <small class="field-error">
+                No active categories available. Please create or activate a category first.
+              </small>
+            }
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="question">Question *</label>
+
+            <textarea
+              id="question"
+              rows="4"
+              maxlength="5000"
+              formControlName="question_text"
+              placeholder="Enter the career question...">
+            </textarea>
+
+            @if (
+              questionForm.get('question_text')?.touched &&
+              questionForm.get('question_text')?.invalid
+            ) {
+              <small class="field-error">
+                Question is required and cannot exceed 5000 characters.
+              </small>
+            }
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="answer">Answer</label>
+
+            <textarea
+              id="answer"
+              rows="4"
+              formControlName="answer_text"
+              placeholder="Enter the suggested answer (optional)...">
+            </textarea>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="explanation">Explanation</label>
+
+            <textarea
+              id="explanation"
+              rows="4"
+              formControlName="explanation"
+              placeholder="Enter additional explanation (optional)...">
+            </textarea>
+
+          </div>
+
+          <div class="form-actions">
+
+            <button
+              class="cancel-btn"
+              type="button"
+              (click)="closeForm()">
+              Cancel
+            </button>
+
+            <button
+              class="primary-btn"
+              type="submit"
+              [disabled]="submitting() || activeCategories().length === 0">
+
+              {{
+                submitting()
+                  ? 'Saving...'
+                  : editingId()
+                    ? 'Update Question'
+                    : 'Create Question'
+              }}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    }
+
+    <!-- QUESTIONS TABLE -->
+    <div class="content-card">
+
+      <div class="card-header">
+        <div>
+          <h2>All Career Questions</h2>
+          <p>{{ questions().length }} records</p>
+        </div>
+      </div>
+
+      @if (loading()) {
+
+        <div class="state-message">
+          Loading career questions...
+        </div>
+
+      }
+
+      @else if (questions().length === 0) {
+
+        <div class="state-message">
+          No career questions found.
+        </div>
+
+      }
+
+      @else {
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Category</th>
+                <th>Contributor</th>
+                <th>Status</th>
+                <th>Created On</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (
+                question of questions();
+                track question.id;
+                let i = $index
+              ) {
+
+                <tr>
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td class="question-cell">
+
+                    <strong>{{ question.question_text }}</strong>
+
+                    @if (question.answer_text) {
+                      <span class="secondary-text">
+                        Answer: {{ question.answer_text }}
+                      </span>
+                    }
+
+                  </td>
+
+                  <td>{{ question.category_name }}</td>
+
+                  <td>
+                    <strong>{{ question.contributor_name }}</strong>
+
+                    <span class="secondary-text">
+                      {{ question.contributor_role }}
+                    </span>
+                  </td>
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [class.published-status]="question.status === 'published'"
+                      [class.archived-status]="question.status === 'archived'">
+
+                      {{ question.status }}
+
+                    </span>
+
+                  </td>
+
+                  <td>
+                    {{ question.created_at | date:'dd MMM yyyy' }}
+                  </td>
+
+                  <td>
+
+                    <div class="action-buttons">
+
+                      <button
+                        class="edit-btn"
+                        type="button"
+                        (click)="editQuestion(question)">
+                        Edit
+                      </button>
+
+                      @if (question.status === 'published') {
+
+                        <button
+                          class="archive-btn"
+                          type="button"
+                          (click)="archiveQuestion(question.id)">
+                          Archive
+                        </button>
+
+                      }
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+  <!-- ========================================== -->
+  <!-- CATEGORIES TAB -->
+  <!-- ========================================== -->
+
+  @if (activeTab() === 'categories') {
+
+    <!-- CATEGORY FORM -->
+    @if (showCategoryForm()) {
+
+      <div class="form-card">
+
+        <div class="form-header">
+
+          <div>
+            <h2>
+              {{
+                editingCategoryId()
+                  ? 'Edit Category'
+                  : 'Add Question Category'
+              }}
+            </h2>
+
+            <p>Enter the category details below.</p>
+          </div>
+
+          <button
+            class="close-btn"
+            type="button"
+            (click)="closeCategoryForm()">
+            &times;
+          </button>
+
+        </div>
+
+        <form
+          [formGroup]="categoryForm"
+          (ngSubmit)="submitCategory()">
+
+          <div class="form-group">
+
+            <label for="categoryName">Category Name *</label>
+
+            <input
+              id="categoryName"
+              type="text"
+              maxlength="100"
+              formControlName="category_name"
+              placeholder="Example: Technical Interview" />
+
+            @if (
+              categoryForm.get('category_name')?.touched &&
+              categoryForm.get('category_name')?.invalid
+            ) {
+              <small class="field-error">
+                Category name is required and cannot exceed 100 characters.
+              </small>
+            }
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="categoryDescription">Description</label>
+
+            <textarea
+              id="categoryDescription"
+              rows="3"
+              formControlName="description"
+              placeholder="Enter a short category description (optional)...">
+            </textarea>
+
+          </div>
+
+          <div class="form-actions">
+
+            <button
+              class="cancel-btn"
+              type="button"
+              (click)="closeCategoryForm()">
+              Cancel
+            </button>
+
+            <button
+              class="primary-btn"
+              type="submit"
+              [disabled]="categorySubmitting()">
+
+              {{
+                categorySubmitting()
+                  ? 'Saving...'
+                  : editingCategoryId()
+                    ? 'Update Category'
+                    : 'Create Category'
+              }}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    }
+
+    <!-- CATEGORY TABLE -->
+    <div class="content-card">
+
+      <div class="card-header">
+        <div>
+          <h2>All Question Categories</h2>
+          <p>{{ categories().length }} records</p>
+        </div>
+      </div>
+
+      @if (categoryLoading()) {
+
+        <div class="state-message">
+          Loading question categories...
+        </div>
+
+      }
+
+      @else if (categories().length === 0) {
+
+        <div class="state-message">
+          No question categories found. Create your first category.
+        </div>
+
+      }
+
+      @else {
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (
+                category of categories();
+                track category.id;
+                let i = $index
+              ) {
+
+                <tr>
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td>
+                    <strong>{{ category.category_name }}</strong>
+                  </td>
+
+                  <td>
+                    {{ category.description || '—' }}
+                  </td>
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [class.published-status]="isCategoryActive(category)"
+                      [class.archived-status]="!isCategoryActive(category)">
+
+                      {{ isCategoryActive(category) ? 'Active' : 'Inactive' }}
+
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <div class="action-buttons">
+
+                      <button
+                        class="edit-btn"
+                        type="button"
+                        (click)="editCategory(category)">
+                        Edit
+                      </button>
+
+                      <button
+                        [class.archive-btn]="isCategoryActive(category)"
+                        [class.edit-btn]="!isCategoryActive(category)"
+                        type="button"
+                        (click)="toggleCategoryStatus(category)">
+
+                        {{
+                          isCategoryActive(category)
+                            ? 'Deactivate'
+                            : 'Activate'
+                        }}
+
+                      </button>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</section>
