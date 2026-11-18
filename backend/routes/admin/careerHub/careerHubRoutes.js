@@ -72,6 +72,26 @@ const {
     archiveCareerResource
 } = require("../../../controllers/admin/careerHub/resources/careerResourceController");
 
+// ==========================================
+// CAREER MASTER DATA
+// ==========================================
+
+const {
+    getCareerMasterData,
+
+    createCompany,
+    updateCompany,
+    toggleCompanyStatus,
+
+    createJobRole,
+    updateJobRole,
+    toggleJobRoleStatus,
+
+    createCountry,
+    updateCountry,
+    toggleCountryStatus
+
+} = require("../../../controllers/admin/careerHub/masterData/careerMasterDataController");
 
 // ==========================================
 // ADMIN JOB ROUTES
@@ -278,6 +298,95 @@ router.patch(
     archiveCareerResource
 );
 
+// ==========================================
+// ADMIN CAREER MASTER DATA ROUTES
+// ==========================================
+
+// Get all companies, job roles and countries
+router.get(
+    "/master-data",
+    authMiddleware,
+    roleMiddleware("admin"),
+    getCareerMasterData
+);
+
+
+// ==========================================
+// COMPANY ROUTES
+// ==========================================
+
+router.post(
+    "/master-data/companies",
+    authMiddleware,
+    roleMiddleware("admin"),
+    createCompany
+);
+
+router.put(
+    "/master-data/companies/:id",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateCompany
+);
+
+router.patch(
+    "/master-data/companies/:id/status",
+    authMiddleware,
+    roleMiddleware("admin"),
+    toggleCompanyStatus
+);
+
+
+// ==========================================
+// JOB ROLE ROUTES
+// ==========================================
+
+router.post(
+    "/master-data/job-roles",
+    authMiddleware,
+    roleMiddleware("admin"),
+    createJobRole
+);
+
+router.put(
+    "/master-data/job-roles/:id",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateJobRole
+);
+
+router.patch(
+    "/master-data/job-roles/:id/status",
+    authMiddleware,
+    roleMiddleware("admin"),
+    toggleJobRoleStatus
+);
+
+
+// ==========================================
+// COUNTRY ROUTES
+// ==========================================
+
+router.post(
+    "/master-data/countries",
+    authMiddleware,
+    roleMiddleware("admin"),
+    createCountry
+);
+
+router.put(
+    "/master-data/countries/:id",
+    authMiddleware,
+    roleMiddleware("admin"),
+    updateCountry
+);
+
+router.patch(
+    "/master-data/countries/:id/status",
+    authMiddleware,
+    roleMiddleware("admin"),
+    toggleCountryStatus
+);
 
 // ==========================================
 // EXPORT ROUTER

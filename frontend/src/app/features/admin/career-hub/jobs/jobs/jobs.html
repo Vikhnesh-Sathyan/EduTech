@@ -1,1 +1,323 @@
-<p>jobs works!</p>
+
+<div class="career-jobs-page">
+
+  <!-- PAGE HEADER -->
+<div class="page-header">
+
+  <div>
+    <span class="eyebrow">CAREER HUB / ADMINISTRATION</span>
+    <h1>Job Management</h1>
+    <p>
+      Review and manage career opportunities submitted by students and mentors.
+    </p>
+  </div>
+
+  <div class="header-actions">
+
+    <button
+      type="button"
+      class="create-job-btn"
+      routerLink="/admin/career-hub/jobs/create"
+    >
+      + Create Job
+    </button>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="loadJobs()"
+    >
+      ↻ Refresh
+    </button>
+
+  </div>
+
+</div>
+
+
+  <!-- MESSAGES -->
+
+  @if (message) {
+    <div class="alert success">
+      {{ message }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert error">
+      {{ errorMessage }}
+    </div>
+  }
+
+
+  <!-- SUMMARY CARDS -->
+
+  <div class="summary-grid">
+
+    <div class="summary-card">
+      <span>Total Jobs</span>
+      <h2>{{ jobs().length }}</h2>
+    </div>
+
+    <div class="summary-card pending">
+      <span>Pending</span>
+      <h2>
+        {{ jobs().filter(job => job.status === 'pending').length }}
+      </h2>
+    </div>
+
+    <div class="summary-card published">
+      <span>Published</span>
+      <h2>
+        {{ jobs().filter(job => job.status === 'published').length }}
+      </h2>
+    </div>
+
+    <div class="summary-card rejected">
+      <span>Rejected</span>
+      <h2>
+        {{ jobs().filter(job => job.status === 'rejected').length }}
+      </h2>
+    </div>
+
+    <div class="summary-card archived">
+      <span>Archived</span>
+      <h2>
+        {{ jobs().filter(job => job.status === 'archived').length }}
+      </h2>
+    </div>
+
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="filter-section">
+
+    <div class="filter-heading">
+
+      <div>
+        <h3>All Job Opportunities</h3>
+
+        <p>
+          Review submissions and manage published opportunities.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="filters">
+
+      <input
+        type="text"
+        placeholder="Search company or job role..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      >
+
+      <select
+        [value]="selectedStatus()"
+        (change)="selectedStatus.set($any($event.target).value)"
+      >
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="published">Published</option>
+        <option value="rejected">Rejected</option>
+        <option value="archived">Archived</option>
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- JOBS TABLE -->
+
+  <div class="table-container">
+
+    @if (loading()) {
+
+      <div class="loading-state">
+        Loading career opportunities...
+      </div>
+
+    } @else if (filteredJobs.length === 0) {
+
+      <div class="empty-state">
+
+        <h3>No matching jobs found</h3>
+
+        <p>
+          Try changing your search or status filter.
+        </p>
+
+      </div>
+
+    } @else {
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>COMPANY / ROLE</th>
+            <th>LOCATION</th>
+            <th>EXPERIENCE</th>
+            <th>SUBMITTED BY</th>
+            <th>STATUS</th>
+            <th>DATE</th>
+            <th>ACTIONS</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (job of filteredJobs; track job.id) {
+
+            <tr>
+
+              <!-- COMPANY / ROLE -->
+
+              <td>
+
+                <div class="company-name">
+                  {{ job.company_name }}
+                </div>
+
+                <div class="job-role">
+                  {{ job.role_name }}
+                </div>
+
+              </td>
+
+
+              <!-- LOCATION -->
+
+              <td>
+
+                {{ job.city || job.state || job.country_name }}
+
+                <small>
+                  {{ job.country_name }}
+                </small>
+
+              </td>
+
+
+              <!-- EXPERIENCE -->
+
+              <td>
+                {{ job.experience_level }}
+              </td>
+
+
+              <!-- SUBMITTED BY -->
+
+              <td>
+                {{ job.created_by_name }}
+              </td>
+
+
+              <!-- STATUS -->
+
+              <td>
+
+                <span
+                  class="status-badge"
+                  [class.pending]="job.status === 'pending'"
+                  [class.published]="job.status === 'published'"
+                  [class.rejected]="job.status === 'rejected'"
+                  [class.archived]="job.status === 'archived'"
+                >
+                  {{ job.status }}
+                </span>
+
+              </td>
+
+
+              <!-- DATE -->
+
+              <td>
+                {{ job.created_at | date:'mediumDate' }}
+              </td>
+
+
+              <!-- ACTIONS -->
+
+              <td>
+
+                <div class="action-buttons">
+
+                  @if (job.status === 'pending') {
+
+                    <button
+                      type="button"
+                      class="approve-btn"
+                      (click)="openConfirmation('approve', job.id)"
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      type="button"
+                      class="reject-btn"
+                      (click)="openConfirmation('reject', job.id)"
+                    >
+                      Reject
+                    </button>
+
+                  }
+
+                  @if (job.status === 'published') {
+
+                    <button
+                      type="button"
+                      class="archive-btn"
+                      (click)="openConfirmation('archive', job.id)"
+                    >
+                      Archive
+                    </button>
+
+                  }
+
+                  <a
+                    [href]="job.job_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="view-link"
+                  >
+                    View Job
+                  </a>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    }
+
+  </div>
+
+
+  <!-- CONFIRMATION MODAL -->
+
+  <app-confirm-modal
+    [visible]="modalVisible"
+    [title]="modalTitle"
+    [message]="modalMessage"
+    [confirmText]="modalConfirmText"
+    [danger]="modalDanger"
+    (confirmed)="confirmAction()"
+    (cancelled)="closeModal()"
+  >
+  </app-confirm-modal>
+
+</div>

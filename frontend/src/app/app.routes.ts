@@ -238,6 +238,13 @@ import {
   AutomationSettings
 } from './features/admin/daily-quiz/automation-settings/automation-settings';
 
+//ADMIN CAREERS HUB
+import { Jobs } from './features/admin/career-hub/jobs/jobs/jobs';
+import { CreateJob } from './features/admin/career-hub/jobs/create-job/create-job';
+import { MasterData } from './features/admin/career-hub/master-data/master-data/master-data';
+
+
+
 // Mentor dashboard
 import { MentorLayout } from './dashboards/mentor/mentor-layout/mentor-layout';
 import { MentorDashboard } from './dashboards/mentor/mentor-dashboard/mentor-dashboard';
@@ -850,7 +857,18 @@ export const routes: Routes = [
         path: 'daily-quiz/automation',
         component: AutomationSettings
       },
-
+      {
+        path: 'career-hub/jobs',
+        component: Jobs
+      },
+      {
+        path: 'career-hub/jobs/create',
+        component: CreateJob
+      },
+      {
+        path: 'career-hub/master-data',
+        component: MasterData
+      },
     
 
       

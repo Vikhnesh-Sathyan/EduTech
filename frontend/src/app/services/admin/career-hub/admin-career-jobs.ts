@@ -43,4 +43,21 @@ export class AdminCareerJobs {
     );
   }
 
+  // ==========================================
+// GET JOB FORM DROPDOWN DATA
+// ==========================================
+
+getJobFormData(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/jobs/form-data`);
+}
+
+
+// ==========================================
+// CREATE AND PUBLISH JOB
+// ==========================================
+
+createCareerJob(jobData: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}/jobs`, jobData);
+}
+
 }

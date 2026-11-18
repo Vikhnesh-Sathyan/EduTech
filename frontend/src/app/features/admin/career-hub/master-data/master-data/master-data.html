@@ -1,0 +1,450 @@
+
+<div class="master-data-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">CAREER HUB</p>
+      <h1>Master Data</h1>
+      <p class="subtitle">
+        Manage companies, job roles and countries used across Career Hub.
+      </p>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+
+    <button
+      type="button"
+      [class.active]="activeTab() === 'companies'"
+      (click)="changeTab('companies')">
+      Companies
+      <span>{{ companies().length }}</span>
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab() === 'roles'"
+      (click)="changeTab('roles')">
+      Job Roles
+      <span>{{ roles().length }}</span>
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab() === 'countries'"
+      (click)="changeTab('countries')">
+      Countries
+      <span>{{ countries().length }}</span>
+    </button>
+
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  @if (message()) {
+    <div class="alert success">
+      {{ message() }}
+    </div>
+  }
+
+  <!-- ERROR MESSAGE -->
+  @if (errorMessage()) {
+    <div class="alert error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- FORM SECTION -->
+  <section class="content-card">
+
+    <div class="section-heading">
+      <div>
+        <h2>
+          {{ editingId() ? 'Edit Record' : 'Add New Record' }}
+        </h2>
+
+        <p>
+          @if (activeTab() === 'companies') {
+            Add a company to the Career Hub.
+          } @else if (activeTab() === 'roles') {
+            Add a job role for job listings.
+          } @else {
+            Add a country with its two-letter country code.
+          }
+        </p>
+      </div>
+    </div>
+
+    <form
+      [formGroup]="masterForm"
+      (ngSubmit)="submitForm()">
+
+      <div class="form-grid">
+
+        <!-- NAME FIELD -->
+        <div class="form-group">
+
+          <label>
+            @if (activeTab() === 'companies') {
+              Company Name
+            } @else if (activeTab() === 'roles') {
+              Job Role Name
+            } @else {
+              Country Name
+            }
+          </label>
+
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Enter name">
+
+          @if (
+            masterForm.get('name')?.touched &&
+            masterForm.get('name')?.invalid
+          ) {
+            <small class="field-error">
+              Please enter a valid name.
+            </small>
+          }
+
+        </div>
+
+        <!-- COUNTRY CODE FIELD -->
+        @if (activeTab() === 'countries') {
+
+          <div class="form-group">
+
+            <label>Country Code</label>
+
+            <input
+              type="text"
+              formControlName="country_code"
+              maxlength="2"
+              placeholder="Example: IN"
+              (input)="masterForm.get('country_code')?.setValue(
+                masterForm.get('country_code')?.value?.toUpperCase() || ''
+              )">
+
+            <small>
+              Use a two-letter country code.
+            </small>
+
+          </div>
+
+        }
+
+      </div>
+
+      <!-- FORM ACTIONS -->
+      <div class="form-actions">
+
+        @if (editingId()) {
+          <button
+            type="button"
+            class="cancel-btn"
+            (click)="resetForm()">
+            Cancel
+          </button>
+        }
+
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="submitting()">
+
+          @if (submitting()) {
+            Saving...
+          } @else if (editingId()) {
+            Update Record
+          } @else {
+            Add Record
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- RECORDS SECTION -->
+  <section class="content-card records-card">
+
+    <!-- TABLE HEADER -->
+    <div class="section-heading">
+
+      <div>
+        <h2>
+          @if (activeTab() === 'companies') {
+            Companies
+          } @else if (activeTab() === 'roles') {
+            Job Roles
+          } @else {
+            Countries
+          }
+        </h2>
+
+        <p>
+          Manage existing records and their availability.
+        </p>
+      </div>
+
+      <span class="record-count">
+        @if (activeTab() === 'companies') {
+          {{ companies().length }} records
+        } @else if (activeTab() === 'roles') {
+          {{ roles().length }} records
+        } @else {
+          {{ countries().length }} records
+        }
+      </span>
+
+    </div>
+
+    <!-- LOADING -->
+    @if (loading()) {
+
+      <div class="empty-state">
+        Loading master data...
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <!-- TABLE HEAD -->
+          <thead>
+            <tr>
+
+              <th>#</th>
+
+              <th>
+                @if (activeTab() === 'companies') {
+                  Company Name
+                } @else if (activeTab() === 'roles') {
+                  Job Role
+                } @else {
+                  Country Name
+                }
+              </th>
+
+              @if (activeTab() === 'countries') {
+                <th>Country Code</th>
+              }
+
+              <th>Status</th>
+              <th>Actions</th>
+
+            </tr>
+          </thead>
+
+          <!-- TABLE BODY -->
+          <tbody>
+
+            <!-- COMPANIES -->
+            @if (activeTab() === 'companies') {
+
+              @for (
+                company of companies();
+                track company.id;
+                let i = $index
+              ) {
+
+                <tr>
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td class="record-name">
+                    {{ company.company_name }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="status"
+                      [class.active-status]="isActive(company.is_active)"
+                      [class.inactive-status]="!isActive(company.is_active)">
+
+                      {{ isActive(company.is_active) ? 'Active' : 'Inactive' }}
+
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="action-buttons">
+
+                      <button
+                        type="button"
+                        class="edit-btn"
+                        (click)="editRecord(company)">
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="status-btn"
+                        (click)="toggleStatus(company)">
+
+                        {{ isActive(company.is_active) ? 'Deactivate' : 'Activate' }}
+
+                      </button>
+
+                    </div>
+                  </td>
+
+                </tr>
+
+              }
+
+            }
+
+            <!-- JOB ROLES -->
+            @if (activeTab() === 'roles') {
+
+              @for (
+                role of roles();
+                track role.id;
+                let i = $index
+              ) {
+
+                <tr>
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td class="record-name">
+                    {{ role.role_name }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="status"
+                      [class.active-status]="isActive(role.is_active)"
+                      [class.inactive-status]="!isActive(role.is_active)">
+
+                      {{ isActive(role.is_active) ? 'Active' : 'Inactive' }}
+
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="action-buttons">
+
+                      <button
+                        type="button"
+                        class="edit-btn"
+                        (click)="editRecord(role)">
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="status-btn"
+                        (click)="toggleStatus(role)">
+
+                        {{ isActive(role.is_active) ? 'Deactivate' : 'Activate' }}
+
+                      </button>
+
+                    </div>
+                  </td>
+
+                </tr>
+
+              }
+
+            }
+
+            <!-- COUNTRIES -->
+            @if (activeTab() === 'countries') {
+
+              @for (
+                country of countries();
+                track country.id;
+                let i = $index
+              ) {
+
+                <tr>
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td class="record-name">
+                    {{ country.country_name }}
+                  </td>
+
+                  <td>
+                    {{ country.country_code }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="status"
+                      [class.active-status]="isActive(country.is_active)"
+                      [class.inactive-status]="!isActive(country.is_active)">
+
+                      {{ isActive(country.is_active) ? 'Active' : 'Inactive' }}
+
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="action-buttons">
+
+                      <button
+                        type="button"
+                        class="edit-btn"
+                        (click)="editRecord(country)">
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="status-btn"
+                        (click)="toggleStatus(country)">
+
+                        {{ isActive(country.is_active) ? 'Deactivate' : 'Activate' }}
+
+                      </button>
+
+                    </div>
+                  </td>
+
+                </tr>
+
+              }
+
+            }
+
+            <!-- EMPTY STATE -->
+            @if (
+              (activeTab() === 'companies' && companies().length === 0) ||
+              (activeTab() === 'roles' && roles().length === 0) ||
+              (activeTab() === 'countries' && countries().length === 0)
+            ) {
+
+              <tr>
+                <td
+                  [attr.colspan]="activeTab() === 'countries' ? 5 : 4"
+                  class="empty-state">
+
+                  No records found. Add your first record above.
+
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</div>

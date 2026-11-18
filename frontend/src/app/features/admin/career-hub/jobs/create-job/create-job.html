@@ -1,0 +1,355 @@
+
+<div class="create-job-page">
+
+  <!-- PAGE HEADER -->
+
+<div class="page-header">
+
+  <a
+    routerLink="/admin/career-hub/jobs"
+    class="back-link"
+  >
+    ← Back to Job Management
+  </a>
+
+  <h1>Create Job Opportunity</h1>
+
+  <p>
+    Publish a new full-time job opportunity for students.
+  </p>
+
+</div>
+
+
+  <!-- SUCCESS MESSAGE -->
+
+  @if (message) {
+    <div class="alert success">
+      {{ message }}
+    </div>
+  }
+
+
+  <!-- ERROR MESSAGE -->
+
+  @if (errorMessage) {
+    <div class="alert error">
+      {{ errorMessage }}
+    </div>
+  }
+
+
+  <!-- LOADING DROPDOWN DATA -->
+
+  @if (loading()) {
+
+    <div class="loading-state">
+      Loading job form data...
+    </div>
+
+  } @else {
+
+    <!-- JOB FORM -->
+
+    <form
+      [formGroup]="jobForm"
+      (ngSubmit)="createJob()"
+      class="job-form"
+    >
+
+      <!-- SECTION HEADER -->
+
+      <div class="form-section-header">
+
+        <div>
+          <h2>Job Details</h2>
+
+          <p>
+            Enter the company, role and job location details.
+          </p>
+        </div>
+
+        <span class="required-note">
+          * Required fields
+        </span>
+
+      </div>
+
+
+      <!-- COMPANY AND ROLE -->
+
+      <div class="form-grid">
+
+        <!-- COMPANY -->
+
+        <div class="form-group">
+
+          <label for="company_id">
+            Company <span>*</span>
+          </label>
+
+          <select
+            id="company_id"
+            formControlName="company_id"
+          >
+
+            <option value="">
+              Select company
+            </option>
+
+            @for (company of companies(); track company.id) {
+
+              <option [value]="company.id">
+                {{ company.company_name }}
+              </option>
+
+            }
+
+          </select>
+
+          @if (
+            jobForm.get('company_id')?.touched &&
+            jobForm.get('company_id')?.invalid
+          ) {
+            <small class="field-error">
+              Please select a company.
+            </small>
+          }
+
+        </div>
+
+
+        <!-- JOB ROLE -->
+
+        <div class="form-group">
+
+          <label for="job_role_id">
+            Job Role <span>*</span>
+          </label>
+
+          <select
+            id="job_role_id"
+            formControlName="job_role_id"
+          >
+
+            <option value="">
+              Select job role
+            </option>
+
+            @for (role of roles(); track role.id) {
+
+              <option [value]="role.id">
+                {{ role.role_name }}
+              </option>
+
+            }
+
+          </select>
+
+          @if (
+            jobForm.get('job_role_id')?.touched &&
+            jobForm.get('job_role_id')?.invalid
+          ) {
+            <small class="field-error">
+              Please select a job role.
+            </small>
+          }
+
+        </div>
+
+
+        <!-- COUNTRY -->
+
+        <div class="form-group">
+
+          <label for="country_id">
+            Country <span>*</span>
+          </label>
+
+          <select
+            id="country_id"
+            formControlName="country_id"
+          >
+
+            <option value="">
+              Select country
+            </option>
+
+            @for (country of countries(); track country.id) {
+
+              <option [value]="country.id">
+                {{ country.country_name }}
+              </option>
+
+            }
+
+          </select>
+
+          @if (
+            jobForm.get('country_id')?.touched &&
+            jobForm.get('country_id')?.invalid
+          ) {
+            <small class="field-error">
+              Please select a country.
+            </small>
+          }
+
+        </div>
+
+
+        <!-- EXPERIENCE LEVEL -->
+
+        <div class="form-group">
+
+          <label for="experience_level">
+            Experience Level <span>*</span>
+          </label>
+
+          <select
+            id="experience_level"
+            formControlName="experience_level"
+          >
+
+            <option value="">
+              Select experience level
+            </option>
+
+            <option value="fresher">
+              Fresher
+            </option>
+
+            <option value="experienced">
+              Experienced
+            </option>
+
+          </select>
+
+          @if (
+            jobForm.get('experience_level')?.touched &&
+            jobForm.get('experience_level')?.invalid
+          ) {
+            <small class="field-error">
+              Please select an experience level.
+            </small>
+          }
+
+        </div>
+
+
+        <!-- STATE -->
+
+        <div class="form-group">
+
+          <label for="state">
+            State / Province
+          </label>
+
+          <input
+            id="state"
+            type="text"
+            formControlName="state"
+            placeholder="Enter state or province"
+          >
+
+        </div>
+
+
+        <!-- CITY -->
+
+        <div class="form-group">
+
+          <label for="city">
+            City
+          </label>
+
+          <input
+            id="city"
+            type="text"
+            formControlName="city"
+            placeholder="Enter city"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- JOB LINK -->
+
+      <div class="form-section-header link-section-header">
+
+        <div>
+          <h2>Application Details</h2>
+
+          <p>
+            Provide the official job application link.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="form-group full-width">
+
+        <label for="job_link">
+          Job Application Link <span>*</span>
+        </label>
+
+        <input
+          id="job_link"
+          type="url"
+          formControlName="job_link"
+          placeholder="https://company.com/careers/job"
+        >
+
+        @if (
+          jobForm.get('job_link')?.touched &&
+          jobForm.get('job_link')?.invalid
+        ) {
+
+          <small class="field-error">
+
+            @if (jobForm.get('job_link')?.errors?.['required']) {
+              Job application link is required.
+            } @else if (jobForm.get('job_link')?.errors?.['pattern']) {
+              Please enter a valid HTTP or HTTPS link.
+            } @else if (jobForm.get('job_link')?.errors?.['maxlength']) {
+              Job link cannot exceed 1000 characters.
+            }
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- FORM FOOTER -->
+
+      <div class="form-footer">
+
+        <p>
+          This job will be published immediately after creation.
+        </p>
+
+        <button
+          type="submit"
+          class="publish-btn"
+          [disabled]="submitting()"
+        >
+
+          @if (submitting()) {
+            Publishing...
+          } @else {
+            Publish Job
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  }
+
+</div>
