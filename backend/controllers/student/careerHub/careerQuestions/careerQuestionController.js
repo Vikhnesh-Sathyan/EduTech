@@ -37,6 +37,7 @@ const getQuestionFormData = async (req, res) => {
 // SUBMIT CAREER QUESTION
 // ==========================================
 
+
 const submitCareerQuestion = async (req, res) => {
 
     try {
@@ -50,29 +51,86 @@ const submitCareerQuestion = async (req, res) => {
             explanation
         } = req.body;
 
-        if (!category_id || !question_text?.trim()) {
+        // ==========================================
+        // REQUIRED FIELD VALIDATION
+        // ==========================================
 
+        if (
+            category_id === undefined ||
+            category_id === null ||
+            !Number.isInteger(Number(category_id)) ||
+            Number(category_id) <= 0
+        ) {
             return res.status(400).json({
                 success: false,
-                message: "Category and question are required"
+                message: "Please select a valid category"
             });
         }
+
+        if (
+            typeof question_text !== "string" ||
+            !question_text.trim()
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Question is required"
+            });
+        }
+
+        // ==========================================
+        // TEXT LENGTH VALIDATION
+        // ==========================================
+
+        const trimmedQuestion = question_text.trim();
+        const trimmedAnswer =
+            typeof answer_text === "string" ? answer_text.trim() : "";
+
+        const trimmedExplanation =
+            typeof explanation === "string" ? explanation.trim() : "";
+
+        if (trimmedQuestion.length > 5000) {
+            return res.status(400).json({
+                success: false,
+                message: "Question cannot exceed 5000 characters"
+            });
+        }
+
+        if (trimmedAnswer.length > 10000) {
+            return res.status(400).json({
+                success: false,
+                message: "Answer cannot exceed 10000 characters"
+            });
+        }
+
+        if (trimmedExplanation.length > 10000) {
+            return res.status(400).json({
+                success: false,
+                message: "Explanation cannot exceed 10000 characters"
+            });
+        }
+
+        // ==========================================
+        // VALIDATE ACTIVE CATEGORY
+        // ==========================================
 
         const [categories] = await db.execute(
             `SELECT id
              FROM career_question_categories
              WHERE id = ?
              AND is_active = 1`,
-            [category_id]
+            [Number(category_id)]
         );
 
         if (categories.length === 0) {
-
             return res.status(400).json({
                 success: false,
                 message: "Invalid or inactive category"
             });
         }
+
+        // ==========================================
+        // INSERT CAREER QUESTION
+        // ==========================================
 
         await db.execute(
             `INSERT INTO career_questions
@@ -86,10 +144,10 @@ const submitCareerQuestion = async (req, res) => {
              )
              VALUES (?, ?, ?, ?, ?, 'published')`,
             [
-                category_id,
-                question_text.trim(),
-                answer_text?.trim() || null,
-                explanation?.trim() || null,
+                Number(category_id),
+                trimmedQuestion,
+                trimmedAnswer || null,
+                trimmedExplanation || null,
                 studentId
             ]
         );
@@ -109,7 +167,6 @@ const submitCareerQuestion = async (req, res) => {
         });
     }
 };
-
 
 // ==========================================
 // GET CAREER QUESTIONS

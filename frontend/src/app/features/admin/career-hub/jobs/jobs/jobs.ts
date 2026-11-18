@@ -7,6 +7,8 @@ import { RouterLink } from '@angular/router';
 import { AdminCareerJobs } from '../../../../../services/admin/career-hub/admin-career-jobs';
 import { ConfirmModalComponent } from '../../../../../shared/confirm-modal/confirm-modal';
 
+import { AdminCareerMasterData } from '../../../../../services/admin/career-hub/admin-career-master-data';
+
 type JobAction = 'approve' | 'reject' | 'archive';
 
 @Component({
@@ -24,6 +26,8 @@ export class Jobs implements OnInit {
 
   jobs = signal<any[]>([]);
   loading = signal(false);
+
+  companyLoading = signal(false);
 
   searchTerm = signal('');
   selectedStatus = signal('all');
@@ -50,8 +54,9 @@ export class Jobs implements OnInit {
   // ==========================================
 
   constructor(
-    private careerJobsService: AdminCareerJobs
-  ) {}
+  private careerJobsService: AdminCareerJobs,
+  private masterDataService: AdminCareerMasterData
+) {}
 
   // ==========================================
   // INITIALIZE PAGE
@@ -256,6 +261,55 @@ export class Jobs implements OnInit {
     });
 
   }
+addSuggestedCompany(job: any) {
+  const companyName = job.company_name?.trim();
+
+  if (!companyName || job.company_id) return;
+
+  const confirmed = confirm(
+    `Add "${companyName}" to the company master list and link it to this job?`
+  );
+
+  if (!confirmed) return;
+
+  this.companyLoading.set(true);
+  this.message = '';
+  this.errorMessage = '';
+
+  this.masterDataService.createCompany({
+    company_name: companyName
+  }).subscribe({
+    next: (response) => {
+      const companyId = response.data.id;
+
+      this.careerJobsService.linkCompanyToCareerJob(
+        job.id,
+        companyId
+      ).subscribe({
+        next: () => {
+          this.message = `${companyName} added and linked successfully.`;
+          this.companyLoading.set(false);
+          this.loadJobs();
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message ||
+            `${companyName} was added, but linking it to the job failed.`;
+
+          this.companyLoading.set(false);
+          this.loadJobs();
+        }
+      });
+    },
+    error: (error) => {
+      this.errorMessage =
+        error.error?.message ||
+        'Failed to add company to master data.';
+
+      this.companyLoading.set(false);
+    }
+  });
+}
 
   // ==========================================
   // FILTER JOBS

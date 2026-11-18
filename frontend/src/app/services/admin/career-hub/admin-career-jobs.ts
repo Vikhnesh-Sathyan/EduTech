@@ -51,13 +51,20 @@ getJobFormData(): Observable<any> {
   return this.http.get(`${this.apiUrl}/jobs/form-data`);
 }
 
-
 // ==========================================
 // CREATE AND PUBLISH JOB
 // ==========================================
 
 createCareerJob(jobData: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/jobs`, jobData);
+}
+
+// Link a company to a pending job
+linkCompanyToCareerJob(jobId: number, companyId: number): Observable<any> {
+  return this.http.patch(
+    `${this.apiUrl}/jobs/${jobId}/company`,
+    { company_id: companyId }
+  );
 }
 
 }

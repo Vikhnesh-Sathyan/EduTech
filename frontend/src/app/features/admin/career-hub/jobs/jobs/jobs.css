@@ -330,6 +330,33 @@ td small {
   background: #f20b18;
 }
 
+
+/* Add Company Button */
+
+.add-company-btn {
+  background: #fff0f0;
+  color: #f20b18;
+  border: 1px solid #f20b18 !important;
+  transition: 0.2s ease;
+}
+
+.add-company-btn:hover:not(:disabled) {
+  background: #f20b18;
+  color: #fff;
+}
+
+.add-company-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Disabled Approve Button */
+
+.approve-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .reject-btn {
   background: #fff0f0;
   color: #f20b18;

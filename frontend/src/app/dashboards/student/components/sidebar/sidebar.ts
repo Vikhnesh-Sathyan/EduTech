@@ -27,6 +27,8 @@ export class Sidebar implements OnInit {
   // Daily Quiz dropdown state
   dailyQuizMenuOpen = signal(false);
 
+  careerHubMenuOpen = signal(false);
+
   constructor(
     public router: Router,
     private studentLearningService: StudentLearning

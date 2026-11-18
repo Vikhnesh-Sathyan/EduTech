@@ -1,0 +1,430 @@
+
+<div class="jobs-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="page-label">CAREER HUB</span>
+      <h1>Job Opportunities</h1>
+      <p>Discover opportunities and share job openings with other students.</p>
+    </div>
+
+    <button class="primary-btn" (click)="openForm()">
+      + Submit a Job
+    </button>
+  </div>
+
+  <!-- ALERT MESSAGES -->
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+      <button type="button" (click)="successMessage.set('')">×</button>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+      <button type="button" (click)="errorMessage.set('')">×</button>
+    </div>
+  }
+
+  <!-- JOB STATISTICS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <span>Available Jobs</span>
+      <h2>{{ availableJobs().length }}</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>My Submissions</span>
+      <h2>{{ mySubmissions().length }}</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>Pending Approval</span>
+      <h2>
+        {{ mySubmissions().filter(job => job.status === 'pending').length }}
+      </h2>
+    </div>
+
+  </div>
+
+  <!-- TABS -->
+  <div class="jobs-toolbar">
+
+    <div class="tabs">
+      <button
+        type="button"
+        [class.active]="activeTab() === 'available'"
+        (click)="changeTab('available')">
+        Available Jobs
+      </button>
+
+      <button
+        type="button"
+        [class.active]="activeTab() === 'submissions'"
+        (click)="changeTab('submissions')">
+        My Submissions
+      </button>
+    </div>
+
+    <button class="refresh-btn" type="button" (click)="loadJobs()">
+      ↻ Refresh
+    </button>
+
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loader"></div>
+      <p>Loading job opportunities...</p>
+    </div>
+  }
+
+  @else {
+
+    <!-- AVAILABLE JOBS -->
+    @if (activeTab() === 'available') {
+
+      @if (availableJobs().length > 0) {
+
+        <div class="jobs-grid">
+
+          @for (job of availableJobs(); track job.id) {
+
+            <article class="job-card">
+
+              <div class="job-card-header">
+                <div class="company-icon">
+                  {{ job.company_name.charAt(0).toUpperCase() }}
+                </div>
+
+                <span class="status-badge published">
+                  Published
+                </span>
+              </div>
+
+              <h3>{{ job.role_name }}</h3>
+
+              <h4>{{ job.company_name }}</h4>
+
+              <div class="job-details">
+
+                <span>📍 {{ job.city || 'Location not specified' }}{{ job.state ? ', ' + job.state : '' }}</span>
+
+                <span>🌍 {{ job.country_name }}</span>
+
+                <span>
+                  Experience:
+                  {{ job.experience_level === 'fresher' ? 'Fresher' : 'Experienced' }}
+                </span>
+
+              </div>
+
+              <div class="job-card-footer">
+                <span>{{ job.created_at | date:'mediumDate' }}</span>
+
+                <a
+                  [href]="job.job_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="view-job-btn">
+                  View Job ↗
+                </a>
+              </div>
+
+              <div class="contributor">
+                Shared by {{ job.created_by_name }}
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+      @else {
+
+        <div class="empty-state">
+          <div class="empty-icon">⌕</div>
+          <h3>No jobs available yet</h3>
+          <p>Published job opportunities will appear here.</p>
+        </div>
+
+      }
+
+    }
+
+    <!-- MY SUBMISSIONS -->
+    @if (activeTab() === 'submissions') {
+
+      @if (mySubmissions().length > 0) {
+
+        <div class="submissions-list">
+
+          @for (job of mySubmissions(); track job.id) {
+
+            <div class="submission-card">
+
+              <div class="submission-info">
+                <h3>{{ job.role_name }}</h3>
+                <p>{{ job.company_name }}</p>
+
+                <span class="submission-date">
+                  Submitted {{ job.created_at | date:'mediumDate' }}
+                </span>
+              </div>
+
+              <div class="submission-status">
+                <span
+                  class="status-badge"
+                  [class.pending]="job.status === 'pending'"
+                  [class.rejected]="job.status === 'rejected'"
+                  [class.archived]="job.status === 'archived'">
+                  {{ job.status | titlecase }}
+                </span>
+
+                <a
+                  [href]="job.job_link"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  View Link ↗
+                </a>
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+      @else {
+
+        <div class="empty-state">
+          <div class="empty-icon">＋</div>
+          <h3>No submissions yet</h3>
+          <p>Share a useful job opportunity with other students.</p>
+
+          <button class="primary-btn" (click)="openForm()">
+            Submit Your First Job
+          </button>
+        </div>
+
+      }
+
+    }
+
+  }
+
+</div>
+
+
+<!-- ==========================================
+     SUBMIT JOB MODAL
+========================================== -->
+
+@if (showForm()) {
+
+  <div class="modal-overlay" (click)="closeForm()">
+
+    <div class="job-modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div>
+          <span class="page-label">CONTRIBUTE</span>
+          <h2>Submit a Job</h2>
+          <p>Share an opportunity with the student community.</p>
+        </div>
+
+        <button type="button" class="close-btn" (click)="closeForm()">
+          ×
+        </button>
+      </div>
+
+      <form [formGroup]="jobForm" (ngSubmit)="submitJob()">
+
+        <div class="form-grid">
+
+          <!-- COMPANY -->
+          
+<!-- COMPANY SELECTION -->
+<div class="form-group">
+
+  <label for="company_id">Existing Company (Optional)</label>
+
+  <select
+    id="company_id"
+    formControlName="company_id"
+    (change)="selectExistingCompany()"
+  >
+    <option value="">Select an existing company</option>
+
+    @for (company of formData()?.companies || []; track company.id) {
+      <option [value]="company.id">
+        {{ company.company_name }}
+      </option>
+    }
+
+  </select>
+
+</div>
+
+<!-- NEW COMPANY NAME -->
+<div class="form-group">
+
+  <label for="company_name">Or Enter a New Company Name</label>
+
+  <input
+    id="company_name"
+    type="text"
+    formControlName="company_name"
+    placeholder="e.g. Infosys, TCS, Wipro"
+    maxlength="150"
+    (input)="enterNewCompany()"
+  />
+
+  @if (checkDuplicateCompany()) {
+  <small class="company-error">
+    This company already exists. Please select it from the dropdown.
+  </small>
+}
+
+@if (
+  jobForm.get('company_name')?.value &&
+  !checkDuplicateCompany()
+) {
+  <small class="company-success">
+    New company name available for admin review.
+  </small>
+}
+
+  <small>
+    Select an existing company or enter a new company name.
+    Only one is required.
+  </small>
+
+</div>
+
+
+          <!-- JOB ROLE -->
+          <div class="form-group">
+            <label>Job Role <span>*</span></label>
+
+            <select formControlName="job_role_id">
+              <option value="">Select job role</option>
+
+              @for (role of formData()?.roles || []; track role.id) {
+                <option [value]="role.id">
+                  {{ role.role_name }}
+                </option>
+              }
+
+            </select>
+
+            @if (jobForm.get('job_role_id')?.touched && jobForm.get('job_role_id')?.invalid) {
+              <small>Please select a job role.</small>
+            }
+          </div>
+
+          <!-- COUNTRY -->
+          <div class="form-group">
+            <label>Country <span>*</span></label>
+
+            <select formControlName="country_id">
+              <option value="">Select country</option>
+
+              @for (country of formData()?.countries || []; track country.id) {
+                <option [value]="country.id">
+                  {{ country.country_name }}
+                </option>
+              }
+
+            </select>
+
+            @if (jobForm.get('country_id')?.touched && jobForm.get('country_id')?.invalid) {
+              <small>Please select a country.</small>
+            }
+          </div>
+
+          <!-- EXPERIENCE -->
+          <div class="form-group">
+            <label>Experience Level <span>*</span></label>
+
+            <select formControlName="experience_level">
+              <option value="fresher">Fresher</option>
+              <option value="experienced">Experienced</option>
+            </select>
+          </div>
+
+          <!-- STATE -->
+          <div class="form-group">
+            <label>State <span class="optional">(Optional)</span></label>
+            <input
+              type="text"
+              formControlName="state"
+              placeholder="Enter state">
+          </div>
+
+          <!-- CITY -->
+          <div class="form-group">
+            <label>City <span class="optional">(Optional)</span></label>
+            <input
+              type="text"
+              formControlName="city"
+              placeholder="Enter city">
+          </div>
+
+          <!-- JOB LINK -->
+          <div class="form-group full-width">
+            <label>Official Job Link <span>*</span></label>
+
+            <input
+              type="url"
+              formControlName="job_link"
+              placeholder="https://company.com/careers/job">
+
+            @if (jobForm.get('job_link')?.touched && jobForm.get('job_link')?.invalid) {
+              <small>Please enter a valid HTTP or HTTPS job link.</small>
+            }
+          </div>
+
+        </div>
+
+        <div class="form-note">
+          Your submission will be reviewed by an admin before it becomes visible to other students.
+        </div>
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="secondary-btn"
+            (click)="closeForm()">
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="primary-btn"
+            [disabled]="formLoading()">
+
+            {{ formLoading() ? 'Submitting...' : 'Submit Job' }}
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+}

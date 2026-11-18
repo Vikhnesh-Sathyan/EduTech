@@ -19,7 +19,8 @@ const {
     getCareerJobs,
     approveCareerJob,
     rejectCareerJob,
-    archiveCareerJob
+    archiveCareerJob,
+    linkCompanyToCareerJob
 } = require("../../../controllers/admin/careerHub/jobs/careerJobController");
 
 // ==========================================
@@ -119,6 +120,14 @@ router.get(
     authMiddleware,
     roleMiddleware("admin"),
     getCareerJobs
+);
+
+// Link a suggested company to a submitted job
+router.patch(
+    "/jobs/:jobId/company",
+    authMiddleware,
+    roleMiddleware("admin"),
+    linkCompanyToCareerJob
 );
 
 // Approve a submitted job

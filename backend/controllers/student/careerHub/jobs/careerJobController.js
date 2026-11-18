@@ -59,11 +59,10 @@ const getJobFormData = async (req, res) => {
 // ==========================================
 
 const submitCareerJob = async (req, res) => {
-
     try {
-
         const {
             company_id,
+            company_name,
             job_role_id,
             country_id,
             state,
@@ -74,30 +73,76 @@ const submitCareerJob = async (req, res) => {
 
         const studentId = req.user.id;
 
-        // Validate required fields
+        // ==========================================
+        // VALIDATE COMPANY SELECTION
+        // ==========================================
+
+        const selectedCompanyId =
+            company_id === null || company_id === undefined || company_id === ''
+                ? null
+                : Number(company_id);
+
+        const enteredCompanyName =
+            typeof company_name === "string"
+                ? company_name.trim()
+                : "";
+
+        // Exactly one company option is required
 
         if (
-            !company_id ||
+            (selectedCompanyId !== null && enteredCompanyName) ||
+            (selectedCompanyId === null && !enteredCompanyName)
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Select an existing company or enter a new company name"
+            });
+        }
+
+        // Validate existing company ID
+
+        if (
+            selectedCompanyId !== null &&
+            (!Number.isInteger(selectedCompanyId) || selectedCompanyId <= 0)
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid company selection"
+            });
+        }
+
+        // Validate manually entered company name
+
+        if (
+            selectedCompanyId === null &&
+            (
+                enteredCompanyName.length === 0 ||
+                enteredCompanyName.length > 150
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Company name is required and must not exceed 150 characters"
+            });
+        }
+
+        // ==========================================
+        // VALIDATE REQUIRED FIELDS
+        // ==========================================
+
+        if (
             !job_role_id ||
             !country_id ||
             !experience_level ||
             !job_link
         ) {
-
             return res.status(400).json({
                 success: false,
-                message: "Company, job role, country, experience level and job link are required"
+                message: "Job role, country, experience level and job link are required"
             });
-
         }
 
-        // Validate IDs
-
-        const ids = [
-            company_id,
-            job_role_id,
-            country_id
-        ];
+        const ids = [job_role_id, country_id];
 
         if (
             !ids.every(id =>
@@ -105,79 +150,114 @@ const submitCareerJob = async (req, res) => {
                 Number(id) > 0
             )
         ) {
-
             return res.status(400).json({
                 success: false,
-                message: "Invalid company, job role or country"
+                message: "Invalid job role or country"
             });
-
         }
 
-        // Validate experience level
+        const roleId = Number(job_role_id);
+        const countryId = Number(country_id);
+
+        // ==========================================
+        // VALIDATE EXPERIENCE LEVEL
+        // ==========================================
 
         if (!["fresher", "experienced"].includes(experience_level)) {
-
             return res.status(400).json({
                 success: false,
                 message: "Invalid experience level"
             });
-
         }
 
-        // Validate job link
+        // ==========================================
+        // VALIDATE JOB LINK
+        // ==========================================
 
         if (
             typeof job_link !== "string" ||
             job_link.trim().length === 0 ||
             job_link.trim().length > 1000
         ) {
-
             return res.status(400).json({
                 success: false,
                 message: "Please provide a valid job link"
             });
-
         }
 
         let parsedUrl;
 
         try {
-
             parsedUrl = new URL(job_link.trim());
-
         } catch {
-
             return res.status(400).json({
                 success: false,
                 message: "Please provide a valid job link"
             });
-
         }
 
         if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-
             return res.status(400).json({
                 success: false,
                 message: "Only HTTP and HTTPS job links are allowed"
             });
-
         }
 
-        // Validate optional location fields
+        // ==========================================
+        // VALIDATE OPTIONAL LOCATION FIELDS
+        // ==========================================
 
         if (
             (state != null && typeof state !== "string") ||
             (city != null && typeof city !== "string")
         ) {
-
             return res.status(400).json({
                 success: false,
                 message: "Invalid state or city"
             });
+        }
+
+
+        // ==========================================
+        // CHECK FOR DUPLICATE COMPANY NAME
+        // ==========================================
+
+        if (selectedCompanyId === null) {
+
+            const [existingCompanies] = await db.execute(
+                `
+                    SELECT id, company_name, is_active
+                    FROM career_companies
+                    WHERE LOWER(TRIM(company_name)) = LOWER(?)
+                    LIMIT 1
+                `,
+                [enteredCompanyName]
+            );
+
+            if (existingCompanies.length > 0) {
+
+                const existingCompany = existingCompanies[0];
+
+                if (existingCompany.is_active) {
+                    return res.status(409).json({
+                        success: false,
+                        message: "This company already exists. Please select it from the company dropdown."
+                    });
+                }
+
+                return res.status(409).json({
+                    success: false,
+                    message: "This company already exists but is currently inactive. Please contact the admin."
+                });
+
+            }
 
         }
 
-        // Verify active master records
+
+        // ==========================================
+        // VALIDATE ACTIVE MASTER RECORDS
+        // ==========================================
 
         const validationSql = `
             SELECT
@@ -185,15 +265,15 @@ const submitCareerJob = async (req, res) => {
                 jr.id AS job_role_id,
                 co.id AS country_id
 
-            FROM career_companies c
+            FROM career_job_roles jr
 
-            CROSS JOIN career_job_roles jr
             CROSS JOIN career_countries co
 
-            WHERE c.id = ?
-              AND c.is_active = 1
+            LEFT JOIN career_companies c
+                ON c.id = ?
+                AND c.is_active = 1
 
-              AND jr.id = ?
+            WHERE jr.id = ?
               AND jr.is_active = 1
 
               AND co.id = ?
@@ -203,27 +283,51 @@ const submitCareerJob = async (req, res) => {
         const [validRecords] = await db.execute(
             validationSql,
             [
-                company_id,
-                job_role_id,
-                country_id
+                selectedCompanyId,
+                roleId,
+                countryId
             ]
         );
 
-        if (validRecords.length === 0) {
-
+        if (
+            validRecords.length === 0 ||
+            (selectedCompanyId !== null && !validRecords[0].company_id)
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "Selected company, job role or country is unavailable"
             });
-
         }
 
-        // Insert student submission as pending
+        // ==========================================
+        // DETERMINE COMPANY NAME
+        // ==========================================
+
+        let finalCompanyName = enteredCompanyName;
+
+        if (selectedCompanyId !== null) {
+            const [companies] = await db.execute(
+                `
+                    SELECT company_name
+                    FROM career_companies
+                    WHERE id = ?
+                      AND is_active = 1
+                `,
+                [selectedCompanyId]
+            );
+
+            finalCompanyName = companies[0].company_name;
+        }
+
+        // ==========================================
+        // INSERT STUDENT JOB SUBMISSION
+        // ==========================================
 
         const insertSql = `
             INSERT INTO career_jobs
             (
                 company_id,
+                company_name,
                 job_role_id,
                 country_id,
                 state,
@@ -234,15 +338,16 @@ const submitCareerJob = async (req, res) => {
                 status
             )
 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
         `;
 
         const [result] = await db.execute(
             insertSql,
             [
-                company_id,
-                job_role_id,
-                country_id,
+                selectedCompanyId,
+                finalCompanyName,
+                roleId,
+                countryId,
                 state?.trim() || null,
                 city?.trim() || null,
                 experience_level,
@@ -261,16 +366,13 @@ const submitCareerJob = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error("Student job submission error:", error);
 
         return res.status(500).json({
             success: false,
             message: "Failed to submit job"
         });
-
     }
-
 };
 
 
@@ -279,9 +381,7 @@ const submitCareerJob = async (req, res) => {
 // ==========================================
 
 const getCareerJobs = async (req, res) => {
-
     try {
-
         const studentId = req.user.id;
 
         const sql = `
@@ -289,7 +389,7 @@ const getCareerJobs = async (req, res) => {
                 cj.id,
 
                 cj.company_id,
-                cc.company_name,
+                COALESCE(cj.company_name, cc.company_name) AS company_name,
 
                 cj.job_role_id,
                 jr.role_name,
@@ -312,7 +412,7 @@ const getCareerJobs = async (req, res) => {
 
             FROM career_jobs cj
 
-            INNER JOIN career_companies cc
+            LEFT JOIN career_companies cc
                 ON cc.id = cj.company_id
 
             INNER JOIN career_job_roles jr
@@ -343,18 +443,14 @@ const getCareerJobs = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error("Get student career jobs error:", error);
 
         return res.status(500).json({
             success: false,
             message: "Failed to fetch career jobs"
         });
-
     }
-
 };
-
 
 // ==========================================
 // EXPORT CONTROLLERS

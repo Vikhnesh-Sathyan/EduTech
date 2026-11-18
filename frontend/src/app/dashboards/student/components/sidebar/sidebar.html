@@ -139,16 +139,6 @@
       </span>
     </a>
 
-
-    <a
-      routerLink="/practice"
-      routerLinkActive="active"
-    >
-      <span class="nav-label">
-        Practice
-      </span>
-    </a>
-
     <a
       routerLink="/student-cheatsheet"
       routerLinkActive="active"
@@ -176,8 +166,6 @@
 
 </div>
 
-
-
     <!-- Mentor Discovery -->
     <a
       routerLink="/mentors"
@@ -187,9 +175,6 @@
         Mentors
       </span>
     </a>
-
-
-    
 <a
   routerLink="/student-chat"
   routerLinkActive="active"
@@ -198,6 +183,64 @@
     💬 Mentor Chat
   </span>
 </a>
+
+
+<!-- CAREER HUB DROPDOWN -->
+<div class="nav-dropdown career-hub-dropdown">
+
+  <button
+    type="button"
+    class="nav-dropdown-toggle career-hub-toggle"
+    (click)="careerHubMenuOpen.set(!careerHubMenuOpen())"
+    [class.expanded]="careerHubMenuOpen()"
+    [class.active]="router.url.startsWith('/career-hub')"
+  >
+    <span class="nav-label">
+      <span class="nav-icon">✦</span>
+      Career Hub
+    </span>
+
+    <span
+      class="dropdown-arrow"
+      [class.rotated]="careerHubMenuOpen()"
+    >
+      ▾
+    </span>
+  </button>
+
+  <div
+    class="nav-dropdown-content career-hub-content"
+    [class.open]="careerHubMenuOpen()"
+  >
+
+    <a routerLink="/career-hub/jobs" routerLinkActive="active">
+      <span class="sub-nav-indicator"></span>
+      Jobs
+    </a>
+
+    <a routerLink="/career-hub/interview-experiences" routerLinkActive="active">
+      <span class="sub-nav-indicator"></span>
+      Interview Experiences
+    </a>
+
+    <a routerLink="/career-hub/career-questions" routerLinkActive="active">
+      <span class="sub-nav-indicator"></span>
+      Career Questions
+    </a>
+
+    <a routerLink="/career-hub/referrals" routerLinkActive="active">
+      <span class="sub-nav-indicator"></span>
+      Referrals
+    </a>
+
+    <a routerLink="/career-hub/resources" routerLinkActive="active">
+      <span class="sub-nav-indicator"></span>
+      Resume & Cover Letter Resources
+    </a>
+
+  </div>
+
+</div>
 
 
     <!-- Current Mentor -->

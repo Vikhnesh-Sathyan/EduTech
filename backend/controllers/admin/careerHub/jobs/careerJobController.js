@@ -257,6 +257,7 @@ const createCareerJob = async (req, res) => {
 // GET ALL CAREER JOBS
 // ==========================================
 
+
 const getCareerJobs = async (req, res) => {
 
     try {
@@ -266,7 +267,7 @@ const getCareerJobs = async (req, res) => {
                 cj.id,
 
                 cj.company_id,
-                cc.company_name,
+                COALESCE(cj.company_name, cc.company_name) AS company_name,
 
                 cj.job_role_id,
                 jr.role_name,
@@ -295,7 +296,7 @@ const getCareerJobs = async (req, res) => {
 
             FROM career_jobs cj
 
-            INNER JOIN career_companies cc
+            LEFT JOIN career_companies cc
                 ON cc.id = cj.company_id
 
             INNER JOIN career_job_roles jr
@@ -334,7 +335,6 @@ const getCareerJobs = async (req, res) => {
 
 };
 
-
 // ==========================================
 // APPROVE CAREER JOB
 // ==========================================
@@ -368,6 +368,7 @@ const approveCareerJob = async (req, res) => {
 
             WHERE id = ?
               AND status = 'pending'
+              AND company_id IS NOT NULL
         `;
 
         const [result] = await db.execute(
@@ -382,7 +383,7 @@ const approveCareerJob = async (req, res) => {
 
             return res.status(404).json({
                 success: false,
-                message: "Pending job not found"
+                message: "Pending job not found or company has not been linked"
             });
 
         }
@@ -404,6 +405,7 @@ const approveCareerJob = async (req, res) => {
     }
 
 };
+
 
 
 // ==========================================
@@ -540,6 +542,90 @@ const archiveCareerJob = async (req, res) => {
 
 };
 
+// ==========================================
+// LINK COMPANY TO SUBMITTED JOB
+// ==========================================
+
+const linkCompanyToCareerJob = async (req, res) => {
+
+    try {
+
+        const { jobId } = req.params;
+        const { company_id } = req.body;
+
+        // Validate IDs
+        if (
+            !Number.isInteger(Number(jobId)) ||
+            Number(jobId) <= 0 ||
+            !Number.isInteger(Number(company_id)) ||
+            Number(company_id) <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid job ID or company ID"
+            });
+        }
+
+        // Verify active company
+        const [companies] = await db.execute(
+            `SELECT id, company_name
+             FROM career_companies
+             WHERE id = ? AND is_active = 1`,
+            [Number(company_id)]
+        );
+
+        if (companies.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Active company not found"
+            });
+        }
+
+        const company = companies[0];
+
+        // Link company to pending job
+        const [result] = await db.execute(
+            `UPDATE career_jobs
+             SET company_id = ?,
+                 company_name = ?
+             WHERE id = ?
+               AND status = 'pending'
+               AND company_id IS NULL`,
+            [
+                company.id,
+                company.company_name,
+                Number(jobId)
+            ]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(409).json({
+                success: false,
+                message: "Job is not pending or already has a company linked"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Company linked to job successfully",
+            data: {
+                company_id: company.id,
+                company_name: company.company_name
+            }
+        });
+
+    } catch (error) {
+
+        console.error("Link company to career job error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to link company to job"
+        });
+
+    }
+
+};
 
 // ==========================================
 // EXPORT CONTROLLERS
@@ -551,5 +637,6 @@ module.exports = {
     getCareerJobs,
     approveCareerJob,
     rejectCareerJob,
-    archiveCareerJob
+    archiveCareerJob,
+    linkCompanyToCareerJob
 };

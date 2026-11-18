@@ -245,54 +245,72 @@
 
               <!-- ACTIONS -->
 
-              <td>
+           
+<!-- ACTIONS -->
 
-                <div class="action-buttons">
+<td>
 
-                  @if (job.status === 'pending') {
+  <div class="action-buttons">
 
-                    <button
-                      type="button"
-                      class="approve-btn"
-                      (click)="openConfirmation('approve', job.id)"
-                    >
-                      Approve
-                    </button>
+    @if (job.status === 'pending') {
 
-                    <button
-                      type="button"
-                      class="reject-btn"
-                      (click)="openConfirmation('reject', job.id)"
-                    >
-                      Reject
-                    </button>
+      @if (!job.company_id) {
 
-                  }
+        <button
+          type="button"
+          class="add-company-btn"
+          [disabled]="companyLoading()"
+          (click)="addSuggestedCompany(job)"
+        >
+          {{ companyLoading() ? 'Adding...' : '+ Add Company' }}
+        </button>
 
-                  @if (job.status === 'published') {
+      }
 
-                    <button
-                      type="button"
-                      class="archive-btn"
-                      (click)="openConfirmation('archive', job.id)"
-                    >
-                      Archive
-                    </button>
+      <button
+        type="button"
+        class="approve-btn"
+        [disabled]="!job.company_id"
+        (click)="openConfirmation('approve', job.id)"
+      >
+        Approve
+      </button>
 
-                  }
+      <button
+        type="button"
+        class="reject-btn"
+        (click)="openConfirmation('reject', job.id)"
+      >
+        Reject
+      </button>
 
-                  <a
-                    [href]="job.job_link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="view-link"
-                  >
-                    View Job
-                  </a>
+    }
 
-                </div>
+    @if (job.status === 'published') {
 
-              </td>
+      <button
+        type="button"
+        class="archive-btn"
+        (click)="openConfirmation('archive', job.id)"
+      >
+        Archive
+      </button>
+
+    }
+
+    <a
+      [href]="job.job_link"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="view-link"
+    >
+      View Job
+    </a>
+
+  </div>
+
+</td>
+
 
             </tr>
 

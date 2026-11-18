@@ -28,6 +28,8 @@ export class InterviewExperiences implements OnInit {
   private service = inject(AdminCareerInterviewExperiencesService);
 
   experiences = signal<InterviewExperience[]>([]);
+  selectedExperience = signal<InterviewExperience | null>(null);
+
   loading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
@@ -97,5 +99,14 @@ export class InterviewExperiences implements OnInit {
     });
 
   }
+
+  viewExperience(experience: InterviewExperience): void {
+  this.selectedExperience.set(experience);
+}
+
+closeExperienceDetails(): void {
+  this.selectedExperience.set(null);
+}
+
 
 }

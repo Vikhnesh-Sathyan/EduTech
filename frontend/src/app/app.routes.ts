@@ -170,8 +170,13 @@ import { DailyQuizActivity } from './features/student/daily-quiz/daily-quiz-acti
 
 // STUDENT STUDY COMPANION
 import { StudyCompanionPage } from './features/student/study-companion/pages/study-companion-page/study-companion-page';
-
 import { StudySessionPage } from './features/student/study-companion/pages/study-session-page/study-session-page';
+
+//STUDENT CAREER
+import { Jobs as StudentJobs } from './features/student/career-hub/jobs/jobs/jobs';
+import { InterviewExperiences as StudentInterviewExperiences }
+  from './features/student/career-hub/interview-experiences/interview-experiences/interview-experiences';
+
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -712,6 +717,18 @@ export const routes: Routes = [
         path: 'study-companion/session/:sessionUuid',
         component: StudySessionPage
       },
+
+      // =====================================================
+      // STUDENT CAREER HUB
+      // =====================================================
+      {
+        path: 'career-hub/jobs',
+        component: StudentJobs
+      },
+      {
+        path: 'career-hub/interview-experiences',
+        component: StudentInterviewExperiences
+      },
     ]
   },
 
@@ -883,10 +900,6 @@ export const routes: Routes = [
         path: 'career-hub/resources',
         component: Resources  
       }
-
-    
-
-      
     ]
   },
 

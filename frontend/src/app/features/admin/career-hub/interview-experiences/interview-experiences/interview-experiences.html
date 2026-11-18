@@ -92,18 +92,25 @@
                   {{ experience.created_at | date:'dd MMM yyyy' }}
                 </td>
 
-                <td>
-                  @if (experience.status === 'published') {
-                    <button
-                      class="archive-btn"
-                      type="button"
-                      (click)="archiveExperience(experience.id)">
-                      Archive
-                    </button>
-                  } @else {
-                    <span class="secondary-text">No actions</span>
-                  }
-                </td>
+            <td>
+  <div class="action-buttons">
+    <button
+      class="view-btn"
+      type="button"
+      (click)="viewExperience(experience)">
+      View
+    </button>
+
+    @if (experience.status === 'published') {
+      <button
+        class="archive-btn"
+        type="button"
+        (click)="archiveExperience(experience.id)">
+        Archive
+      </button>
+    }
+  </div>
+</td>
               </tr>
             }
           </tbody>
@@ -112,5 +119,79 @@
     }
 
   </div>
+
+  @if (selectedExperience(); as experience) {
+  <div class="modal-overlay" (click)="closeExperienceDetails()">
+
+    <div class="details-modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div>
+          <h2>Interview Experience Details</h2>
+          <p>Review the submitted interview experience.</p>
+        </div>
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeExperienceDetails()">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="detail-grid">
+          <div>
+            <label>Company</label>
+            <strong>{{ experience.company_name }}</strong>
+          </div>
+
+          <div>
+            <label>Job Role</label>
+            <strong>{{ experience.role_name }}</strong>
+          </div>
+
+          <div>
+            <label>Country</label>
+            <strong>{{ experience.country_name }}</strong>
+          </div>
+
+          <div>
+            <label>Experience Level</label>
+            <strong>{{ experience.experience_level }}</strong>
+          </div>
+
+          <div>
+            <label>Contributor</label>
+            <strong>{{ experience.contributor_name }}</strong>
+          </div>
+
+          <div>
+            <label>Status</label>
+            <strong>{{ experience.status }}</strong>
+          </div>
+        </div>
+
+        <div class="questions-section">
+          <label>Interview Questions and Experience</label>
+
+          <pre>{{ experience.questions_text }}</pre>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="close-modal-btn"
+          (click)="closeExperienceDetails()">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
 
 </section>
