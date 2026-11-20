@@ -355,7 +355,7 @@
 }
 
 .nav-dropdown-content.open {
-  max-height: 180px;
+  max-height: 400px;
   opacity: 1;
 }
 
@@ -420,9 +420,6 @@
   outline: 2px solid #6366f1;
   outline-offset: 2px;
 }
-
-
-
 
 .nav-dropdown {
   width: 100%;

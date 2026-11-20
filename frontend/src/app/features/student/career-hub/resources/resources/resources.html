@@ -1,0 +1,496 @@
+
+@if (selectedResourceId() === null) {
+
+<div class="resources-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+      <span class="eyebrow">CAREER HUB</span>
+      <h1>Resume & Cover Letter Library</h1>
+
+      <p>
+        Explore career resources shared by students and contribute
+        your own documents to help others.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="upload-resource-button"
+      (click)="openUploadForm()"
+    >
+      + Upload Resource
+    </button>
+
+  </div>
+
+  <!-- UPLOAD RESOURCE FORM -->
+  @if (showUploadForm()) {
+
+    <section class="upload-form-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>Upload Career Resource</h2>
+          <p>Share your resume or cover letter with other students.</p>
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeUploadForm()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="upload-form">
+
+        <!-- RESOURCE TYPE -->
+        <div class="form-field">
+          <label>Resource Type</label>
+
+          <select
+            [value]="uploadResourceType()"
+            (change)="uploadResourceType.set($any($event.target).value)"
+          >
+            <option value="resume">Resume</option>
+            <option value="cover_letter">Cover Letter</option>
+          </select>
+        </div>
+
+        <!-- TITLE -->
+        <div class="form-field">
+          <label>Title</label>
+
+          <input
+            type="text"
+            [value]="uploadTitle()"
+            (input)="uploadTitle.set($any($event.target).value)"
+            placeholder="Enter resource title"
+          />
+        </div>
+
+        <!-- COUNTRY -->
+        <div class="form-field">
+          <label>Country</label>
+
+          <select
+            [value]="uploadCountryId()"
+            (change)="uploadCountryId.set($any($event.target).value)"
+          >
+            <option value="">Select Country</option>
+
+            @for (country of countries(); track country.id) {
+              <option [value]="country.id">
+                {{ country.country_name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- EXPERIENCE LEVEL -->
+        <div class="form-field">
+          <label>Experience Level</label>
+
+          <select
+            [value]="uploadExperienceLevel()"
+            (change)="uploadExperienceLevel.set($any($event.target).value)"
+          >
+            <option value="fresher">Fresher</option>
+            <option value="experienced">Experienced</option>
+          </select>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-field full-width">
+          <label>Description (Optional)</label>
+
+          <textarea
+            rows="3"
+            [value]="uploadDescription()"
+            (input)="uploadDescription.set($any($event.target).value)"
+            placeholder="Describe this resource..."
+          ></textarea>
+        </div>
+
+        <!-- PDF DOCUMENT -->
+        <div class="form-field full-width">
+          <label>PDF Document</label>
+
+          <input
+            type="file"
+            accept="application/pdf"
+            (change)="onFileSelected($event)"
+          />
+
+          @if (selectedFile()) {
+            <p class="selected-file">
+              Selected: {{ selectedFile()?.name }}
+            </p>
+          }
+        </div>
+
+        <!-- UPLOAD ACTIONS -->
+        <div class="form-actions full-width">
+
+          <button
+            type="button"
+            class="submit-upload-button"
+            [disabled]="isUploading()"
+            (click)="uploadResource()"
+          >
+            @if (isUploading()) {
+              Uploading...
+            } @else {
+              Upload Resource
+            }
+          </button>
+
+          <button
+            type="button"
+            class="cancel-upload-button"
+            [disabled]="isUploading()"
+            (click)="closeUploadForm()"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  }
+
+  <!-- TABS -->
+  <div class="tabs">
+
+    <button
+      type="button"
+      [class.active]="activeTab() === 'library'"
+      (click)="setActiveTab('library')"
+    >
+      Resource Library
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab() === 'my-resources'"
+      (click)="setActiveTab('my-resources')"
+    >
+      My Uploads
+    </button>
+
+  </div>
+
+  <!-- RESOURCE LIBRARY -->
+  @if (activeTab() === 'library') {
+
+    <section class="library-section">
+
+      <!-- FILTERS -->
+      <div class="filter-panel">
+
+        <div class="filter-field">
+          <label for="resourceType">Resource Type</label>
+
+          <select
+            id="resourceType"
+            [value]="selectedResourceType()"
+            (change)="selectedResourceType.set($any($event.target).value)"
+          >
+            <option value="">All Resources</option>
+            <option value="resume">Resume</option>
+            <option value="cover_letter">Cover Letter</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="experienceLevel">Experience Level</label>
+
+          <select
+            id="experienceLevel"
+            [value]="selectedExperienceLevel()"
+            (change)="selectedExperienceLevel.set($any($event.target).value)"
+          >
+            <option value="">All Levels</option>
+            <option value="fresher">Fresher</option>
+            <option value="experienced">Experienced</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="country">Country</label>
+
+          <select
+            id="country"
+            [value]="selectedCountryId()"
+            (change)="selectedCountryId.set($any($event.target).value)"
+          >
+            <option value="">All Countries</option>
+
+            @for (country of countries(); track country.id) {
+              <option [value]="country.id">
+                {{ country.country_name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-actions">
+
+          <button
+            type="button"
+            class="apply-button"
+            (click)="applyFilters()"
+          >
+            Apply Filters
+          </button>
+
+          <button
+            type="button"
+            class="reset-button"
+            (click)="resetFilters()"
+          >
+            Reset
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- ERROR -->
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- LOADING -->
+      @if (isLoading()) {
+        <div class="loading-state">
+          Loading resources...
+        </div>
+      }
+
+      <!-- RESOURCE LIST -->
+      @if (!isLoading()) {
+
+        <div class="resource-grid">
+
+          @for (resource of resources(); track resource.id) {
+
+            <article class="resource-card">
+
+              <div class="card-top">
+
+                <span class="resource-type">
+                  {{ resource.resource_type === 'resume'
+                    ? 'Resume'
+                    : 'Cover Letter' }}
+                </span>
+
+                <span class="experience-badge">
+                  {{ resource.experience_level }}
+                </span>
+
+              </div>
+
+              <h3>{{ resource.title }}</h3>
+
+              @if (resource.description) {
+                <p class="description">
+                  {{ resource.description }}
+                </p>
+              }
+
+              <div class="resource-meta">
+                <span>{{ resource.country_name }}</span>
+                <span>By {{ resource.contributor_name }}</span>
+              </div>
+
+           
+<div class="resource-actions">
+
+  <button
+    type="button"
+    class="view-button"
+    [disabled]="isLoadingPreview()"
+    (click)="viewResource(resource.id)"
+  >
+    <span>View PDF</span>
+  </button>
+
+  <button
+    type="button"
+    class="download-button"
+    (click)="downloadResource(resource.id)"
+  >
+    Download PDF
+  </button>
+
+</div>
+
+
+            </article>
+
+          } @empty {
+
+            <div class="empty-state">
+              <h3>No resources found</h3>
+              <p>Try changing your filters or check again later.</p>
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+  <!-- MY UPLOADS -->
+  @if (activeTab() === 'my-resources') {
+
+    <section class="my-resources-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>My Contributions</h2>
+          <p>Track the resources you have uploaded.</p>
+        </div>
+      </div>
+
+      @if (isLoadingMyResources()) {
+        <div class="loading-state">
+          Loading your uploads...
+        </div>
+      }
+
+      @if (!isLoadingMyResources()) {
+
+        <div class="my-resource-list">
+
+          @for (resource of myResources(); track resource.id) {
+
+            <article class="my-resource-card">
+
+              <div class="my-resource-info">
+
+                <h3>{{ resource.title }}</h3>
+
+                <p>
+                  {{ resource.resource_type === 'resume'
+                    ? 'Resume'
+                    : 'Cover Letter' }}
+                  · {{ resource.country_name }}
+                  · {{ resource.experience_level }}
+                </p>
+
+              </div>
+
+              <span
+                class="status-badge"
+                [attr.data-status]="resource.status"
+              >
+                {{ resource.status }}
+              </span>
+
+              <!-- CONTINUE PDF EDITING -->
+              @if (
+                resource.status === 'processing' ||
+                resource.status === 'awaiting_confirmation'
+              ) {
+                <button
+                  type="button"
+                  class="edit-pdf-button"
+                  (click)="openPdfEditor(resource.id)"
+                >
+                  Continue Editing
+                </button>
+              }
+
+            </article>
+
+          } @empty {
+
+            <div class="empty-state">
+              <h3>You haven't uploaded any resources yet</h3>
+              <p>Your contributions will appear here.</p>
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+<!-- PDF PREVIEW MODAL -->
+@if (previewUrl() || isLoadingPreview() || previewError()) {
+
+  <div class="preview-modal-backdrop">
+
+    <section class="preview-modal">
+
+      <div class="preview-modal-header">
+
+        <h2>Resource PDF Preview</h2>
+
+        <button
+          type="button"
+          class="preview-close-button"
+          (click)="closeResourcePreview()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+      @if (isLoadingPreview()) {
+        <div class="loading-state">
+          Loading PDF preview...
+        </div>
+      }
+
+      @if (previewError()) {
+        <div class="error-message">
+          {{ previewError() }}
+        </div>
+      }
+
+      @if (previewUrl()) {
+        <iframe
+          [src]="previewUrl()"
+          class="resource-preview-frame"
+          title="Career Resource PDF Preview"
+        ></iframe>
+      }
+
+    </section>
+
+  </div>
+
+}
+
+
+</div>
+
+} @else {
+
+  <!-- PDF EDITOR -->
+  <app-pdf-editor
+    [resourceId]="selectedResourceId()!"
+    (closeEditor)="closePdfEditor()"
+  />
+
+}

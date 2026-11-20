@@ -1,0 +1,349 @@
+
+<section class="referrals-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="page-label">CAREER HUB</span>
+      <h1>Referral Opportunities</h1>
+      <p>
+        Discover job referrals shared by the community and
+        help fellow students find career opportunities.
+      </p>
+    </div>
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+    </div>
+  }
+
+  <!-- ERROR MESSAGE -->
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- SUBMIT REFERRAL -->
+  <div class="content-card">
+
+    <div class="section-heading">
+      <div>
+        <h2>Share a Referral Opportunity</h2>
+        <p>Help another student by sharing a job referral.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="referralForm" (ngSubmit)="submitReferral()">
+
+      <div class="form-grid">
+
+        <!-- COMPANY -->
+        <div class="form-group">
+          <label for="company">Company *</label>
+
+          <select id="company" formControlName="company_id">
+
+            <option value="">Select company</option>
+
+            @for (company of companies(); track company.id) {
+              <option [value]="company.id">
+                {{ company.company_name }}
+              </option>
+            }
+
+          </select>
+
+          @if (
+            referralForm.get('company_id')?.touched &&
+            referralForm.get('company_id')?.invalid
+          ) {
+            <small class="field-error">
+              Please select a company.
+            </small>
+          }
+        </div>
+
+        <!-- JOB ROLE -->
+        <div class="form-group">
+          <label for="jobRole">Job Role *</label>
+
+          <select id="jobRole" formControlName="job_role_id">
+
+            <option value="">Select job role</option>
+
+            @for (role of jobRoles(); track role.id) {
+              <option [value]="role.id">
+                {{ role.role_name }}
+              </option>
+            }
+
+          </select>
+
+          @if (
+            referralForm.get('job_role_id')?.touched &&
+            referralForm.get('job_role_id')?.invalid
+          ) {
+            <small class="field-error">
+              Please select a job role.
+            </small>
+          }
+        </div>
+
+        <!-- COUNTRY -->
+        <div class="form-group">
+          <label for="country">Country *</label>
+
+          <select id="country" formControlName="country_id">
+
+            <option value="">Select country</option>
+
+            @for (country of countries(); track country.id) {
+              <option [value]="country.id">
+                {{ country.country_name }}
+              </option>
+            }
+
+          </select>
+
+          @if (
+            referralForm.get('country_id')?.touched &&
+            referralForm.get('country_id')?.invalid
+          ) {
+            <small class="field-error">
+              Please select a country.
+            </small>
+          }
+        </div>
+
+        <!-- JOB LINK -->
+        <div class="form-group">
+          <label for="jobLink">Official Job Link *</label>
+
+          <input
+            id="jobLink"
+            type="url"
+            formControlName="job_link"
+            placeholder="https://company.com/careers/job">
+
+          @if (
+            referralForm.get('job_link')?.touched &&
+            referralForm.get('job_link')?.invalid
+          ) {
+            <small class="field-error">
+              Enter a valid HTTP or HTTPS job link.
+            </small>
+          }
+        </div>
+
+      </div>
+
+      <!-- REFERRAL INSTRUCTIONS -->
+      <div class="form-group">
+        <label for="instructions">Referral Instructions *</label>
+
+        <textarea
+          id="instructions"
+          rows="5"
+          formControlName="referral_instructions"
+          placeholder="Explain how students can contact you, request a referral, or apply for this opportunity...">
+        </textarea>
+
+        @if (
+          referralForm.get('referral_instructions')?.touched &&
+          referralForm.get('referral_instructions')?.invalid
+        ) {
+          <small class="field-error">
+            Referral instructions are required and must not exceed
+            10,000 characters.
+          </small>
+        }
+      </div>
+
+      <div class="form-footer">
+        <span class="form-note">* Required fields</span>
+
+        <button
+          type="submit"
+          [disabled]="submitting() || formLoading()">
+
+          @if (submitting()) {
+            Sharing...
+          } @else {
+            Share Referral
+          }
+
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- REFERRAL LIBRARY -->
+  <div class="library-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Explore Referral Opportunities</h2>
+        <p>Find opportunities shared by students and mentors.</p>
+      </div>
+
+      <span class="referral-count">
+        {{ referrals().length }} Opportunities
+      </span>
+    </div>
+
+    @if (loading()) {
+
+      <div class="empty-state">
+        Loading referral opportunities...
+      </div>
+
+    } @else if (referrals().length === 0) {
+
+      <div class="empty-state">
+        <h3>No referral opportunities available</h3>
+        <p>Be the first to share a referral opportunity!</p>
+      </div>
+
+    } @else {
+
+      <div class="referrals-grid">
+
+        @for (referral of referrals(); track referral.id) {
+
+          <article class="referral-card">
+
+            <div class="referral-card-header">
+
+              <div class="company-avatar">
+                {{ referral.company_name.charAt(0).toUpperCase() }}
+              </div>
+
+              <div class="company-info">
+                <h3>{{ referral.company_name }}</h3>
+                <span>{{ referral.country_name }}</span>
+              </div>
+
+            </div>
+
+            <div class="role-badge">
+              {{ referral.role_name }}
+            </div>
+
+            <p class="contributor">
+              Shared by {{ referral.contributor_name }}
+            </p>
+
+            <div class="referral-card-footer">
+
+              <span class="referral-date">
+                {{ referral.created_at | date:'mediumDate' }}
+              </span>
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="viewReferral(referral)">
+                View Details
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+  <!-- REFERRAL DETAILS MODAL -->
+  @if (selectedReferral(); as referral) {
+
+    <div
+      class="modal-overlay"
+      (click)="closeReferralDetails()">
+
+      <div
+        class="details-modal"
+        (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+
+          <div>
+            <span class="role-badge">
+              {{ referral.role_name }}
+            </span>
+
+            <h2>{{ referral.company_name }}</h2>
+
+            <p>{{ referral.country_name }}</p>
+          </div>
+
+          <button
+            type="button"
+            class="close-btn"
+            (click)="closeReferralDetails()">
+            &times;
+          </button>
+
+        </div>
+
+        <div class="modal-content">
+
+          <div class="detail-item">
+            <label>Referral Instructions</label>
+            <p>{{ referral.referral_instructions }}</p>
+          </div>
+
+          <div class="detail-item">
+            <label>Official Job Link</label>
+
+            <a
+              [href]="referral.job_link"
+              target="_blank"
+              rel="noopener noreferrer">
+              {{ referral.job_link }}
+            </a>
+          </div>
+
+          <div class="detail-meta">
+            <span>Shared by {{ referral.contributor_name }}</span>
+            <span>{{ referral.created_at | date:'mediumDate' }}</span>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+          <button
+            type="button"
+            class="close-modal-btn"
+            (click)="closeReferralDetails()">
+            Close
+          </button>
+
+          <a
+            class="apply-btn"
+            [href]="referral.job_link"
+            target="_blank"
+            rel="noopener noreferrer">
+            View Job <span aria-hidden="true">↗</span>
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

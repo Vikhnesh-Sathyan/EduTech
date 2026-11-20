@@ -232,8 +232,6 @@ const uploadCareerResource = async (req, res) => {
     }
 };
 
-
-
 // ==========================================
 // GET PUBLISHED CAREER RESOURCES
 // ==========================================
@@ -909,11 +907,44 @@ const downloadCareerResource = async (req, res) => {
     }
 };
 
+// ==========================================
+// GET RESOURCE FORM DATA
+// ==========================================
+
+const getResourceFormData = async (req, res) => {
+
+    try {
+
+        const [countries] = await db.execute(
+            `SELECT id, country_name, country_code
+             FROM career_countries
+             WHERE is_active = 1
+             ORDER BY country_name ASC`
+        );
+
+        return res.status(200).json({
+            success: true,
+            countries
+        });
+
+    } catch (error) {
+
+        console.error("Get Resource Form Data Error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to load resource form data."
+        });
+
+    }
+};
+
 module.exports = {
     uploadCareerResource,
     getCareerResources,
     getMyCareerResources,
     previewAnonymizedCopy,
     confirmResourcePublication,
-    downloadCareerResource
+    downloadCareerResource,
+    getResourceFormData
 };

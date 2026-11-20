@@ -67,6 +67,20 @@ const submitCareerReferral = async (req, res) => {
             referral_instructions
         } = req.body;
 
+        // ==========================================
+// VALIDATE IDs
+// ==========================================
+
+const ids = [company_id, job_role_id, country_id];
+
+if (!ids.every(id => Number.isInteger(Number(id)) && Number(id) > 0)) {
+
+    return res.status(400).json({
+        success: false,
+        message: "Invalid company, job role, or country"
+    });
+}
+
         if (
             !company_id ||
             !job_role_id ||

@@ -176,7 +176,12 @@ import { StudySessionPage } from './features/student/study-companion/pages/study
 import { Jobs as StudentJobs } from './features/student/career-hub/jobs/jobs/jobs';
 import { InterviewExperiences as StudentInterviewExperiences }
   from './features/student/career-hub/interview-experiences/interview-experiences/interview-experiences';
-
+import { CareerQuestions as StudentCareerQuestions }
+  from './features/student/career-hub/career-questions/career-questions/career-questions';
+import { Referrals as StudentCareerReferrals }
+  from './features/student/career-hub/referrals/referrals/referrals';
+import { Resources as StudentCareerResources }
+  from './features/student/career-hub/resources/resources/resources';
 
 // Admin dashboard
 import { AdminDashboard } from './dashboards/admin/admin-dashboard/admin-dashboard';
@@ -728,6 +733,18 @@ export const routes: Routes = [
       {
         path: 'career-hub/interview-experiences',
         component: StudentInterviewExperiences
+      },
+      {
+        path: 'career-hub/career-questions',
+        component: StudentCareerQuestions
+      },
+      {
+        path: 'career-hub/referrals',
+        component: StudentCareerReferrals
+      },
+      {
+        path: 'career-hub/resources',
+        component: StudentCareerResources
       },
     ]
   },

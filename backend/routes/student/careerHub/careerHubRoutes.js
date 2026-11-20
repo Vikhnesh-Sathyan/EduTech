@@ -62,7 +62,8 @@ const {
     getMyCareerResources,
     previewAnonymizedCopy,
     confirmResourcePublication,
-    downloadCareerResource
+    downloadCareerResource,
+    getResourceFormData
 } = require("../../../controllers/student/careerHub/resources/careerResourceController");
 
 const {
@@ -148,7 +149,6 @@ router.get(
     careerQuestionController.getCareerQuestions
 );
 
-
 // ==========================================
 // STUDENT REFERRAL ROUTES
 // ==========================================
@@ -218,6 +218,17 @@ router.patch(
     authMiddleware,
     roleMiddleware("student"),
     confirmResourcePublication
+);
+
+// ==========================================
+// RESOURCE FORM DATA
+// ==========================================
+
+router.get(
+    "/resources/form-data",
+    authMiddleware,
+    roleMiddleware("student"),
+    getResourceFormData
 );
 
 

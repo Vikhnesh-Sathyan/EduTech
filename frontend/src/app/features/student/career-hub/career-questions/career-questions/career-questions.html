@@ -1,0 +1,276 @@
+
+<section class="career-questions-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="page-label">CAREER HUB</span>
+      <h1>Career Questions</h1>
+      <p>
+        Explore interview and career-related questions shared by
+        students and contribute your own knowledge.
+      </p>
+    </div>
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+    </div>
+  }
+
+  <!-- ERROR MESSAGE -->
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- SUBMIT QUESTION -->
+  <div class="content-card">
+
+    <div class="section-heading">
+      <div>
+        <h2>Share a Career Question</h2>
+        <p>Help other students prepare by sharing useful questions.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="questionForm" (ngSubmit)="submitQuestion()">
+
+      <div class="form-group">
+        <label for="category">Question Category *</label>
+
+        <select
+          id="category"
+          formControlName="category_id">
+
+          <option value="">Select a category</option>
+
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">
+              {{ category.category_name }}
+            </option>
+          }
+
+        </select>
+
+        @if (
+          questionForm.get('category_id')?.touched &&
+          questionForm.get('category_id')?.invalid
+        ) {
+          <small class="field-error">
+            Please select a category.
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="question">Question *</label>
+
+        <textarea
+          id="question"
+          rows="4"
+          formControlName="question_text"
+          placeholder="Enter your career or interview question...">
+        </textarea>
+
+        @if (
+          questionForm.get('question_text')?.touched &&
+          questionForm.get('question_text')?.invalid
+        ) {
+          <small class="field-error">
+            Question is required and must not exceed 5000 characters.
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="answer">Answer</label>
+
+        <textarea
+          id="answer"
+          rows="4"
+          formControlName="answer_text"
+          placeholder="Enter an answer (optional)...">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="explanation">Explanation</label>
+
+        <textarea
+          id="explanation"
+          rows="3"
+          formControlName="explanation"
+          placeholder="Add additional explanation (optional)...">
+        </textarea>
+      </div>
+
+      <div class="form-footer">
+        <span class="form-note">
+          * Required fields
+        </span>
+
+        <button
+          type="submit"
+          [disabled]="submitting() || formLoading()">
+
+          @if (submitting()) {
+            Sharing...
+          } @else {
+            Share Question
+          }
+
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- QUESTION LIBRARY -->
+  <div class="library-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Explore Career Questions</h2>
+        <p>Learn from questions contributed by the community.</p>
+      </div>
+
+      <span class="question-count">
+        {{ questions().length }} Questions
+      </span>
+    </div>
+
+    @if (loading()) {
+
+      <div class="empty-state">
+        Loading career questions...
+      </div>
+
+    } @else if (questions().length === 0) {
+
+      <div class="empty-state">
+        <h3>No questions available yet</h3>
+        <p>Be the first to share a career question!</p>
+      </div>
+
+    } @else {
+
+      <div class="questions-grid">
+
+        @for (question of questions(); track question.id) {
+
+          <article class="question-card">
+
+            <div class="question-card-top">
+              <span class="category-badge">
+                {{ question.category_name }}
+              </span>
+
+              <span class="question-date">
+                {{ question.created_at | date:'mediumDate' }}
+              </span>
+            </div>
+
+            <h3>{{ question.question_text }}</h3>
+
+            <p class="contributor">
+              Shared by {{ question.contributor_name }}
+            </p>
+
+            <div class="question-card-footer">
+              <span class="answer-status">
+                {{ question.answer_text ? 'Answer available' : 'Question only' }}
+              </span>
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="viewQuestion(question)">
+                View Details
+              </button>
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+  <!-- QUESTION DETAILS MODAL -->
+  @if (selectedQuestion(); as question) {
+
+    <div
+      class="modal-overlay"
+      (click)="closeQuestionDetails()">
+
+      <div
+        class="details-modal"
+        (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div>
+            <span class="category-badge">
+              {{ question.category_name }}
+            </span>
+
+            <h2>Question Details</h2>
+          </div>
+
+          <button
+            type="button"
+            class="close-btn"
+            (click)="closeQuestionDetails()">
+            &times;
+          </button>
+        </div>
+
+        <div class="modal-content">
+
+          <div class="detail-item">
+            <label>Question</label>
+            <p>{{ question.question_text }}</p>
+          </div>
+
+          @if (question.answer_text) {
+            <div class="detail-item">
+              <label>Answer</label>
+              <p>{{ question.answer_text }}</p>
+            </div>
+          }
+
+          @if (question.explanation) {
+            <div class="detail-item">
+              <label>Explanation</label>
+              <p>{{ question.explanation }}</p>
+            </div>
+          }
+
+          <div class="detail-meta">
+            <span>Shared by {{ question.contributor_name }}</span>
+            <span>{{ question.created_at | date:'mediumDate' }}</span>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            (click)="closeQuestionDetails()">
+            Close
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>
