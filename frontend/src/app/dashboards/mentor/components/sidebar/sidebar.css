@@ -558,3 +558,97 @@
 .logic-thinking-link.active .advanced-tool-description {
   color: #99f6e4;
 }
+
+
+
+
+/* =========================================
+   CAREER HUB DROPDOWN
+========================================= */
+
+.career-hub-dropdown {
+  width: 100%;
+  margin: 6px 0;
+}
+
+.career-hub-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #393441;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.career-hub-toggle:hover,
+.career-hub-toggle.expanded {
+  background: #F0ECF5;
+  border-color: #DED5E9;
+  color: #76648F;
+}
+
+.career-hub-icon {
+  width: 20px;
+  color: #B18A43;
+  font-size: 18px;
+  text-align: center;
+}
+
+.career-hub-label {
+  flex: 1;
+}
+
+.career-hub-chevron {
+  color: #8B7AA8;
+  font-size: 13px;
+  transition: transform 0.2s ease;
+}
+
+.career-hub-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.career-hub-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 5px 0 8px 24px;
+  padding-left: 15px;
+  border-left: 2px solid #D6AD60;
+}
+
+.career-hub-submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #716B79;
+  font-size: 13px;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.career-hub-submenu-link:hover,
+.career-hub-submenu-link.active {
+  background: #F0ECF5;
+  color: #76648F;
+  font-weight: 650;
+}
+
+.career-hub-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #D6AD60;
+  flex-shrink: 0;
+}

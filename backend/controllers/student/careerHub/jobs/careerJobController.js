@@ -42,7 +42,7 @@ const getJobFormData = async (req, res) => {
 
     } catch (error) {
 
-        console.error("Student job form data error:", error);
+        console.error("Mentor job form data error:", error);
 
         return res.status(500).json({
             success: false,
@@ -55,11 +55,13 @@ const getJobFormData = async (req, res) => {
 
 
 // ==========================================
-// SUBMIT STUDENT JOB
+// SUBMIT MENTOR JOB
 // ==========================================
 
 const submitCareerJob = async (req, res) => {
+
     try {
+
         const {
             company_id,
             company_name,
@@ -71,14 +73,16 @@ const submitCareerJob = async (req, res) => {
             job_link
         } = req.body;
 
-        const studentId = req.user.id;
+        const mentorId = req.user.id;
 
         // ==========================================
         // VALIDATE COMPANY SELECTION
         // ==========================================
 
         const selectedCompanyId =
-            company_id === null || company_id === undefined || company_id === ''
+            company_id === null ||
+            company_id === undefined ||
+            company_id === ''
                 ? null
                 : Number(company_id);
 
@@ -93,22 +97,29 @@ const submitCareerJob = async (req, res) => {
             (selectedCompanyId !== null && enteredCompanyName) ||
             (selectedCompanyId === null && !enteredCompanyName)
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Select an existing company or enter a new company name"
             });
+
         }
 
         // Validate existing company ID
 
         if (
             selectedCompanyId !== null &&
-            (!Number.isInteger(selectedCompanyId) || selectedCompanyId <= 0)
+            (
+                !Number.isInteger(selectedCompanyId) ||
+                selectedCompanyId <= 0
+            )
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Invalid company selection"
             });
+
         }
 
         // Validate manually entered company name
@@ -120,10 +131,12 @@ const submitCareerJob = async (req, res) => {
                 enteredCompanyName.length > 150
             )
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Company name is required and must not exceed 150 characters"
             });
+
         }
 
         // ==========================================
@@ -136,10 +149,12 @@ const submitCareerJob = async (req, res) => {
             !experience_level ||
             !job_link
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Job role, country, experience level and job link are required"
             });
+
         }
 
         const ids = [job_role_id, country_id];
@@ -150,10 +165,12 @@ const submitCareerJob = async (req, res) => {
                 Number(id) > 0
             )
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Invalid job role or country"
             });
+
         }
 
         const roleId = Number(job_role_id);
@@ -163,11 +180,15 @@ const submitCareerJob = async (req, res) => {
         // VALIDATE EXPERIENCE LEVEL
         // ==========================================
 
-        if (!["fresher", "experienced"].includes(experience_level)) {
+        if (
+            !["fresher", "experienced"].includes(experience_level)
+        ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Invalid experience level"
             });
+
         }
 
         // ==========================================
@@ -179,28 +200,38 @@ const submitCareerJob = async (req, res) => {
             job_link.trim().length === 0 ||
             job_link.trim().length > 1000
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Please provide a valid job link"
             });
+
         }
 
         let parsedUrl;
 
         try {
+
             parsedUrl = new URL(job_link.trim());
+
         } catch {
+
             return res.status(400).json({
                 success: false,
                 message: "Please provide a valid job link"
             });
+
         }
 
-        if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        if (
+            !["http:", "https:"].includes(parsedUrl.protocol)
+        ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Only HTTP and HTTPS job links are allowed"
             });
+
         }
 
         // ==========================================
@@ -211,12 +242,13 @@ const submitCareerJob = async (req, res) => {
             (state != null && typeof state !== "string") ||
             (city != null && typeof city !== "string")
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Invalid state or city"
             });
-        }
 
+        }
 
         // ==========================================
         // CHECK FOR DUPLICATE COMPANY NAME
@@ -239,10 +271,12 @@ const submitCareerJob = async (req, res) => {
                 const existingCompany = existingCompanies[0];
 
                 if (existingCompany.is_active) {
+
                     return res.status(409).json({
                         success: false,
                         message: "This company already exists. Please select it from the company dropdown."
                     });
+
                 }
 
                 return res.status(409).json({
@@ -253,7 +287,6 @@ const submitCareerJob = async (req, res) => {
             }
 
         }
-
 
         // ==========================================
         // VALIDATE ACTIVE MASTER RECORDS
@@ -291,12 +324,17 @@ const submitCareerJob = async (req, res) => {
 
         if (
             validRecords.length === 0 ||
-            (selectedCompanyId !== null && !validRecords[0].company_id)
+            (
+                selectedCompanyId !== null &&
+                !validRecords[0].company_id
+            )
         ) {
+
             return res.status(400).json({
                 success: false,
                 message: "Selected company, job role or country is unavailable"
             });
+
         }
 
         // ==========================================
@@ -306,6 +344,7 @@ const submitCareerJob = async (req, res) => {
         let finalCompanyName = enteredCompanyName;
 
         if (selectedCompanyId !== null) {
+
             const [companies] = await db.execute(
                 `
                     SELECT company_name
@@ -317,10 +356,11 @@ const submitCareerJob = async (req, res) => {
             );
 
             finalCompanyName = companies[0].company_name;
+
         }
 
         // ==========================================
-        // INSERT STUDENT JOB SUBMISSION
+        // INSERT MENTOR JOB SUBMISSION
         // ==========================================
 
         const insertSql = `
@@ -352,7 +392,7 @@ const submitCareerJob = async (req, res) => {
                 city?.trim() || null,
                 experience_level,
                 job_link.trim(),
-                studentId
+                mentorId
             ]
         );
 
@@ -366,13 +406,16 @@ const submitCareerJob = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Student job submission error:", error);
+
+        console.error("Mentor job submission error:", error);
 
         return res.status(500).json({
             success: false,
             message: "Failed to submit job"
         });
+
     }
+
 };
 
 
@@ -381,8 +424,10 @@ const submitCareerJob = async (req, res) => {
 // ==========================================
 
 const getCareerJobs = async (req, res) => {
+
     try {
-        const studentId = req.user.id;
+
+        const mentorId = req.user.id;
 
         const sql = `
             SELECT
@@ -433,7 +478,7 @@ const getCareerJobs = async (req, res) => {
 
         const [jobs] = await db.execute(
             sql,
-            [studentId]
+            [mentorId]
         );
 
         return res.status(200).json({
@@ -443,14 +488,18 @@ const getCareerJobs = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Get student career jobs error:", error);
+
+        console.error("Get mentor career jobs error:", error);
 
         return res.status(500).json({
             success: false,
             message: "Failed to fetch career jobs"
         });
+
     }
+
 };
+
 
 // ==========================================
 // EXPORT CONTROLLERS

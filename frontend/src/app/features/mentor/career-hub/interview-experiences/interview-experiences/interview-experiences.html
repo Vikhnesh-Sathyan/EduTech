@@ -1,0 +1,360 @@
+
+<div class="interview-page">
+
+  <!-- PAGE HEADER -->
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">CAREER HUB / MENTOR</span>
+      <h1>Interview Experiences</h1>
+      <p>
+        Share your interview journey and help students prepare for their careers.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="loadExperiences()"
+      [disabled]="loading()"
+    >
+      ↻ Refresh
+    </button>
+  </div>
+
+  <!-- MESSAGES -->
+
+  @if (successMessage()) {
+    <div class="alert success">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- SUBMISSION FORM -->
+
+  <section class="form-section">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">CONTRIBUTE</span>
+        <h2>Share Your Interview Experience</h2>
+        <p>
+          Help students prepare by sharing the questions and interview rounds you faced.
+        </p>
+      </div>
+    </div>
+
+    @if (formLoading()) {
+
+      <div class="loading-state">
+        Loading form data...
+      </div>
+
+    } @else {
+
+      <form
+        [formGroup]="experienceForm"
+        (ngSubmit)="submitExperience()"
+      >
+
+        <div class="form-grid">
+
+          <!-- COMPANY -->
+
+          <div class="form-group">
+            <label for="company_id">Company *</label>
+
+            <select id="company_id" formControlName="company_id">
+              <option value="">Select company</option>
+
+              @for (company of companies(); track company.id) {
+                <option [value]="company.id">
+                  {{ company.company_name }}
+                </option>
+              }
+            </select>
+
+            @if (
+              experienceForm.get('company_id')?.touched &&
+              experienceForm.get('company_id')?.invalid
+            ) {
+              <small class="field-error">
+                Please select a company.
+              </small>
+            }
+          </div>
+
+          <!-- JOB ROLE -->
+
+          <div class="form-group">
+            <label for="job_role_id">Job Role *</label>
+
+            <select id="job_role_id" formControlName="job_role_id">
+              <option value="">Select job role</option>
+
+              @for (role of roles(); track role.id) {
+                <option [value]="role.id">
+                  {{ role.role_name }}
+                </option>
+              }
+            </select>
+
+            @if (
+              experienceForm.get('job_role_id')?.touched &&
+              experienceForm.get('job_role_id')?.invalid
+            ) {
+              <small class="field-error">
+                Please select a job role.
+              </small>
+            }
+          </div>
+
+          <!-- COUNTRY -->
+
+          <div class="form-group">
+            <label for="country_id">Country *</label>
+
+            <select id="country_id" formControlName="country_id">
+              <option value="">Select country</option>
+
+              @for (country of countries(); track country.id) {
+                <option [value]="country.id">
+                  {{ country.country_name }}
+                </option>
+              }
+            </select>
+
+            @if (
+              experienceForm.get('country_id')?.touched &&
+              experienceForm.get('country_id')?.invalid
+            ) {
+              <small class="field-error">
+                Please select a country.
+              </small>
+            }
+          </div>
+
+          <!-- EXPERIENCE LEVEL -->
+
+          <div class="form-group">
+            <label for="experience_level">Experience Level *</label>
+
+            <select
+              id="experience_level"
+              formControlName="experience_level"
+            >
+              <option value="fresher">Fresher</option>
+              <option value="experienced">Experienced</option>
+            </select>
+          </div>
+
+          <!-- INTERVIEW QUESTIONS -->
+
+          <div class="form-group full-width">
+            <label for="questions_text">
+              Interview Questions and Experience *
+            </label>
+
+            <textarea
+              id="questions_text"
+              rows="7"
+              maxlength="10000"
+              formControlName="questions_text"
+              placeholder="Share the interview questions, technical rounds, HR questions, and your overall experience..."
+            ></textarea>
+
+            <div class="field-footer">
+              <small>
+                Maximum 10,000 characters.
+              </small>
+
+              <small>
+                {{ experienceForm.get('questions_text')?.value?.length || 0 }}/10000
+              </small>
+            </div>
+
+            @if (
+              experienceForm.get('questions_text')?.touched &&
+              experienceForm.get('questions_text')?.invalid
+            ) {
+              <small class="field-error">
+                Please enter your interview experience.
+              </small>
+            }
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="submitting()"
+          >
+            {{ submitting() ? 'Publishing...' : 'Publish Experience' }}
+          </button>
+        </div>
+
+      </form>
+
+    }
+
+  </section>
+
+  <!-- EXPERIENCE LIBRARY -->
+
+  <section class="experiences-section">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">COMMUNITY LIBRARY</span>
+        <h2>Shared Interview Experiences</h2>
+        <p>
+          Explore interview experiences contributed by students and mentors.
+        </p>
+      </div>
+
+      <span class="count-badge">
+        {{ experiences().length }} Experiences
+      </span>
+    </div>
+
+    @if (loading()) {
+
+      <div class="loading-state">
+        Loading interview experiences...
+      </div>
+
+    } @else if (experiences().length === 0) {
+
+      <div class="empty-state">
+        <h3>No interview experiences yet</h3>
+        <p>
+          Be the first to share your interview journey!
+        </p>
+      </div>
+
+    } @else {
+
+      <div class="experience-grid">
+
+        @for (experience of experiences(); track experience.id) {
+
+          <article class="experience-card">
+
+            <div class="card-top">
+              <div class="company-icon">
+                {{ experience.company_name.charAt(0) || 'C' }}
+              </div>
+
+              <span class="level-badge">
+                {{ experience.experience_level }}
+              </span>
+            </div>
+
+            <h3>{{ experience.company_name }}</h3>
+
+            <p class="role-name">
+              {{ experience.role_name }}
+            </p>
+
+            <div class="card-meta">
+              <span>{{ experience.country_name }}</span>
+              <span>By {{ experience.contributor_name }}</span>
+            </div>
+
+            <p class="experience-preview">
+              {{ experience.questions_text }}
+            </p>
+
+            <div class="card-footer">
+              <small>
+                {{ experience.created_at | date:'mediumDate' }}
+              </small>
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="viewExperience(experience)"
+              >
+                Read Experience →
+              </button>
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+  <!-- EXPERIENCE DETAILS MODAL -->
+
+  @if (selectedExperience(); as experience) {
+
+    <div
+      class="modal-overlay"
+      (click)="closeExperienceDetails()"
+    >
+
+      <div
+        class="details-modal"
+        (click)="$event.stopPropagation()"
+      >
+
+        <div class="modal-header">
+          <div>
+            <span class="section-label">INTERVIEW EXPERIENCE</span>
+            <h2>{{ experience.company_name }}</h2>
+            <p>{{ experience.role_name }}</p>
+          </div>
+
+          <button
+            type="button"
+            class="close-btn"
+            (click)="closeExperienceDetails()"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="detail-meta">
+          <span>{{ experience.country_name }}</span>
+          <span>{{ experience.experience_level }}</span>
+          <span>By {{ experience.contributor_name }}</span>
+        </div>
+
+        <div class="questions-content">
+          {{ experience.questions_text }}
+        </div>
+
+        <div class="modal-footer">
+          <small>
+            Shared on {{ experience.created_at | date:'mediumDate' }}
+          </small>
+
+          <button
+            type="button"
+            class="close-modal-btn"
+            (click)="closeExperienceDetails()"
+          >
+            Close
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

@@ -325,6 +325,22 @@ import {
 } from './features/mentor/advanced/logic-to-code/discussions/discussion-list/discussion-list';
 import { DiscussionReports } from './features/mentor/advanced/logic-to-code/discussions/discussion-reports/discussion-reports';
 
+//MENTOR CAREERS
+import { Jobs as MentorCareerJobs }
+  from './features/mentor/career-hub/jobs/jobs/jobs';
+
+import {
+  InterviewExperiences as MentorInterviewExperiences
+} from './features/mentor/career-hub/interview-experiences/interview-experiences/interview-experiences';
+
+import {
+  CareerQuestions as MentorCareerQuestions
+} from './features/mentor/career-hub/career-questions/career-questions/career-questions';
+
+import {
+  Referrals as MentorCareerReferrals
+} from './features/mentor/career-hub/referrals/referrals/referrals';
+
 
 export const routes: Routes = [
 
@@ -1119,6 +1135,25 @@ export const routes: Routes = [
       {
         path: 'mentor/advanced/logic-to-code/:problemId/mistakes',
         component: MistakeManagement
+      },
+      {
+        path: 'mentor/career-hub/jobs',
+        component: MentorCareerJobs
+      },
+
+      {
+        path: 'mentor/career-hub/interview-experiences',
+        component: MentorInterviewExperiences
+      },
+
+      {
+        path: 'mentor/career-hub/career-questions',
+        component: MentorCareerQuestions
+      },
+
+      {
+        path: 'mentor/career-hub/referrals',
+        component: MentorCareerReferrals
       },
     ]
   },

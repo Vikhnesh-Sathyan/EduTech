@@ -1,0 +1,167 @@
+
+<div class="career-jobs-page">
+
+  <div class="page-header">
+    <div>
+      <h2>Job Opportunities</h2>
+      <p>Explore career opportunities and share job openings with students.</p>
+    </div>
+
+    <button class="primary-btn" (click)="openForm()">
+      + Share a Job
+    </button>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert success-alert">{{ successMessage() }}</div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error-alert">{{ errorMessage() }}</div>
+  }
+
+  @if (showForm()) {
+    <section class="job-form-card">
+      <div class="section-heading">
+        <div>
+          <h3>Share a Job Opportunity</h3>
+          <p>Your submission will be reviewed by the admin.</p>
+        </div>
+        <button type="button" class="close-btn" (click)="closeForm()">×</button>
+      </div>
+
+      <form [formGroup]="jobForm" (ngSubmit)="submitJob()">
+
+        <div class="form-group">
+          <label>Existing Company</label>
+          <select formControlName="company_id" (change)="onCompanyChange()">
+            <option [ngValue]="null">Select a company</option>
+            @for (company of formData()?.companies ?? []; track company.id) {
+              <option [ngValue]="company.id">{{ company.company_name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Or Enter New Company Name</label>
+          <input
+            type="text"
+            formControlName="company_name"
+            (input)="onCompanyNameChange()"
+            placeholder="Enter company name"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Job Role *</label>
+            <select formControlName="job_role_id">
+              <option [ngValue]="null">Select job role</option>
+              @for (role of formData()?.roles ?? []; track role.id) {
+                <option [ngValue]="role.id">{{ role.role_name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Country *</label>
+            <select formControlName="country_id">
+              <option [ngValue]="null">Select country</option>
+              @for (country of formData()?.countries ?? []; track country.id) {
+                <option [ngValue]="country.id">{{ country.country_name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" formControlName="state" placeholder="State" />
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" formControlName="city" placeholder="City" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Experience Level *</label>
+          <select formControlName="experience_level">
+            <option value="fresher">Fresher</option>
+            <option value="experienced">Experienced</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Job Application Link *</label>
+          <input
+            type="url"
+            formControlName="job_link"
+            placeholder="https://example.com/careers/job"
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="secondary-btn" (click)="closeForm()">
+            Cancel
+          </button>
+
+          <button type="submit" class="primary-btn" [disabled]="isSubmitting()">
+            {{ isSubmitting() ? 'Submitting...' : 'Submit Job' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  }
+
+  <section class="jobs-section">
+    <div class="section-heading">
+      <div>
+        <h3>Job Library</h3>
+        <p>Published opportunities and your submitted jobs.</p>
+      </div>
+      <span class="job-count">{{ jobs().length }} Jobs</span>
+    </div>
+
+    @if (isLoading()) {
+      <div class="empty-state">Loading jobs...</div>
+    } @else if (jobs().length === 0) {
+      <div class="empty-state">
+        <h3>No jobs available</h3>
+        <p>Job opportunities will appear here when available.</p>
+      </div>
+    } @else {
+      <div class="jobs-grid">
+        @for (job of jobs(); track job.id) {
+          <article class="job-card">
+            <div class="job-card-top">
+              <div>
+                <h3>{{ job.role_name }}</h3>
+                <p class="company-name">{{ job.company_name }}</p>
+              </div>
+
+              <span class="status-badge" [class]="job.status">
+                {{ job.status }}
+              </span>
+            </div>
+
+            <div class="job-details">
+              <span>{{ job.city || 'Location not specified' }}{{ job.country_name ? ', ' + job.country_name : '' }}</span>
+              <span>{{ job.experience_level === 'fresher' ? 'Fresher' : 'Experienced' }}</span>
+            </div>
+
+            <div class="job-card-footer">
+              <span>Posted by {{ job.created_by_name }}</span>
+              <a [href]="job.job_link" target="_blank" rel="noopener noreferrer">
+                View Opportunity ↗
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+
+</div>

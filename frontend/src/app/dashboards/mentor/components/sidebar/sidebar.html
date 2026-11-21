@@ -219,53 +219,85 @@
     </span>
   </span>
 </a>
-
-
 </div>
 
 
-<!-- CHALLENGE ARENA -->
-<div class="sidebar-dropdown">
+
+<!-- Career Hub Dropdown -->
+<div class="career-hub-dropdown">
 
   <button
     type="button"
-    class="sidebar-dropdown-toggle"
-    (click)="challengeArenaOpen = !challengeArenaOpen"
-    [class.expanded]="challengeArenaOpen"
-    [attr.aria-expanded]="challengeArenaOpen"
+    class="career-hub-toggle"
+    (click)="careerHubOpen = !careerHubOpen"
+    [class.expanded]="careerHubOpen"
+    [attr.aria-expanded]="careerHubOpen"
   >
-    <span class="sidebar-menu-icon">⚡</span>
-    <span class="sidebar-menu-label">Challenge Arena</span>
-    <span class="dropdown-chevron" [class.rotated]="challengeArenaOpen">
+    <span class="career-hub-icon">✦</span>
+    <span class="career-hub-label">Career Hub</span>
+    <span class="career-hub-chevron" [class.rotated]="careerHubOpen">
       ▾
     </span>
   </button>
 
-  @if (challengeArenaOpen) {
-    <div class="sidebar-submenu">
+  @if (careerHubOpen) {
+    <div class="career-hub-submenu">
 
+      <!-- Jobs -->
       <a
-        routerLink="/mentor/challenge-arena/coding-challenges"
+        routerLink="/mentor/career-hub/jobs"
         routerLinkActive="active"
-        class="sidebar-submenu-link"
+        class="career-hub-submenu-link"
       >
-        <span class="submenu-dot"></span>
-        Coding Challenges
+        <span class="career-hub-item-icon">▤</span>
+        Jobs
       </a>
 
+      <!-- Interview Experiences -->
       <a
-        routerLink="/mentor/challenge-arena/theory-challenges"
+        routerLink="/mentor/career-hub/interview-experiences"
         routerLinkActive="active"
-        class="sidebar-submenu-link"
+        class="career-hub-submenu-link"
       >
-        <span class="submenu-dot"></span>
-        Theory Challenges
+        <span class="career-hub-item-icon">◷</span>
+        Interview Experiences
+      </a>
+
+      <!-- Career Questions -->
+      <a
+        routerLink="/mentor/career-hub/career-questions"
+        routerLinkActive="active"
+        class="career-hub-submenu-link"
+      >
+        <span class="career-hub-item-icon">?</span>
+        Career Questions
+      </a>
+
+      <!-- Referrals -->
+      <a
+        routerLink="/mentor/career-hub/referrals"
+        routerLinkActive="active"
+        class="career-hub-submenu-link"
+      >
+        <span class="career-hub-item-icon">⇄</span>
+        Referrals
+      </a>
+
+      <!-- Resume & Cover Letter Resources -->
+      <a
+        routerLink="/mentor/career-hub/resources"
+        routerLinkActive="active"
+        class="career-hub-submenu-link"
+      >
+        <span class="career-hub-item-icon">▣</span>
+        Resume & Cover Letter Resources
       </a>
 
     </div>
   }
 
 </div>
+
 
     <!-- Profile -->
     <a routerLink="/mentor-profile" routerLinkActive="active">

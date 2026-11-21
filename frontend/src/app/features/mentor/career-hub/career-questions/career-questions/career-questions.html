@@ -1,0 +1,335 @@
+
+<div class="career-questions-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">CAREER HUB / MENTOR</span>
+      <h1>Career Questions</h1>
+      <p>
+        Share useful career questions, answers and explanations
+        to help students strengthen their knowledge.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="loadQuestions()"
+      [disabled]="loading()">
+      ↻ Refresh
+    </button>
+  </div>
+
+  <!-- ALERT MESSAGES -->
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- QUESTION SUBMISSION FORM -->
+  <section class="form-section">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">CONTRIBUTE</span>
+        <h2>Share a Career Question</h2>
+        <p>Add a question with an optional answer and explanation.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="questionForm" (ngSubmit)="submitQuestion()">
+
+      <!-- CATEGORY -->
+      <div class="form-group">
+        <label for="category_id">
+          Question Category <span>*</span>
+        </label>
+
+        <select
+          id="category_id"
+          formControlName="category_id">
+
+          <option value="">Select a category</option>
+
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">
+              {{ category.category_name }}
+            </option>
+          }
+
+        </select>
+
+        @if (
+          questionForm.controls.category_id.touched &&
+          questionForm.controls.category_id.invalid
+        ) {
+          <small class="field-error">Please select a category.</small>
+        }
+
+        @if (!formLoading() && categories().length === 0) {
+          <small class="field-hint">
+            No active categories are currently available.
+          </small>
+        }
+      </div>
+
+      <!-- QUESTION -->
+      <div class="form-group">
+        <label for="question_text">
+          Question <span>*</span>
+        </label>
+
+        <textarea
+          id="question_text"
+          rows="4"
+          maxlength="5000"
+          formControlName="question_text"
+          placeholder="Enter your career-related question...">
+        </textarea>
+
+        <div class="field-footer">
+          @if (
+            questionForm.controls.question_text.touched &&
+            questionForm.controls.question_text.invalid
+          ) {
+            <small class="field-error">
+              Question is required and must not exceed 5000 characters.
+            </small>
+          }
+
+          <small>
+            {{ questionForm.controls.question_text.value?.length || 0 }}/5000
+          </small>
+        </div>
+      </div>
+
+      <!-- OPTIONAL ANSWER -->
+      <div class="form-group">
+        <label for="answer_text">
+          Answer <span class="optional-label">Optional</span>
+        </label>
+
+        <textarea
+          id="answer_text"
+          rows="4"
+          formControlName="answer_text"
+          placeholder="Enter the suggested answer...">
+        </textarea>
+      </div>
+
+      <!-- OPTIONAL EXPLANATION -->
+      <div class="form-group">
+        <label for="explanation">
+          Explanation <span class="optional-label">Optional</span>
+        </label>
+
+        <textarea
+          id="explanation"
+          rows="4"
+          formControlName="explanation"
+          placeholder="Add additional explanation or examples...">
+        </textarea>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="submitting() || formLoading() || categories().length === 0">
+
+          @if (submitting()) {
+            Publishing...
+          } @else {
+            Publish Question →
+          }
+
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- QUESTION LIBRARY -->
+  <section class="library-section">
+
+    <div class="section-heading library-heading">
+      <div>
+        <span class="section-label">KNOWLEDGE LIBRARY</span>
+        <h2>Career Question Library</h2>
+        <p>Explore questions shared by students and mentors.</p>
+      </div>
+
+      <span class="question-count">
+        {{ questions().length }} Questions
+      </span>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        Loading career questions...
+      </div>
+    }
+
+    @else if (questions().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">?</div>
+        <h3>No Questions Available</h3>
+        <p>Career questions will appear here once they are published.</p>
+      </div>
+    }
+
+    @else {
+
+      <div class="question-grid">
+
+        @for (question of questions(); track question.id) {
+
+          <article class="question-card">
+
+            <div class="card-top">
+              <span class="category-tag">
+                {{ question.category_name }}
+              </span>
+
+              @if (question.created_by) {
+                <span class="status-tag">
+                  {{ question.status }}
+                </span>
+              }
+            </div>
+
+            <h3>{{ question.question_text }}</h3>
+
+            @if (question.answer_text) {
+              <p class="answer-preview">
+                {{ question.answer_text }}
+              </p>
+            } @else {
+              <p class="answer-preview muted-text">
+                No answer provided.
+              </p>
+            }
+
+            <div class="card-footer">
+
+              <div class="contributor-info">
+                <span class="contributor-icon">✦</span>
+
+                <div>
+                  <strong>{{ question.contributor_name }}</strong>
+                  <small>
+                    {{ question.contributor_role }}
+                    ·
+                    {{ question.created_at | date:'mediumDate' }}
+                  </small>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="viewQuestion(question)">
+                View Details →
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+  <!-- QUESTION DETAILS MODAL -->
+  @if (selectedQuestion(); as question) {
+
+    <div
+      class="modal-backdrop"
+      (click)="closeQuestionDetails()">
+
+      <div
+        class="details-modal"
+        (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div>
+            <span class="section-label">QUESTION DETAILS</span>
+            <h2>{{ question.category_name }}</h2>
+          </div>
+
+          <button
+            type="button"
+            class="close-btn"
+            (click)="closeQuestionDetails()">
+            ×
+          </button>
+        </div>
+
+        <div class="modal-content">
+
+          <div class="detail-block">
+            <label>Question</label>
+            <p>{{ question.question_text }}</p>
+          </div>
+
+          <div class="detail-block">
+            <label>Answer</label>
+
+            @if (question.answer_text) {
+              <p>{{ question.answer_text }}</p>
+            } @else {
+              <p class="muted-text">No answer provided.</p>
+            }
+          </div>
+
+          <div class="detail-block">
+            <label>Explanation</label>
+
+            @if (question.explanation) {
+              <p>{{ question.explanation }}</p>
+            } @else {
+              <p class="muted-text">No explanation provided.</p>
+            }
+          </div>
+
+          <div class="detail-meta">
+            <span>
+              Contributor: {{ question.contributor_name }}
+            </span>
+
+            <span>
+              Date: {{ question.created_at | date:'mediumDate' }}
+            </span>
+          </div>
+
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="close-modal-btn"
+            (click)="closeQuestionDetails()">
+            Close
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

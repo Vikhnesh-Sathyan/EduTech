@@ -23,7 +23,7 @@ export class Sidebar {
 
   codeShuffleExpanded = false;
 
-  challengeArenaOpen = false;
+  careerHubOpen = false;
 
   toggleCodeShuffle(): void {
     this.codeShuffleExpanded = !this.codeShuffleExpanded;

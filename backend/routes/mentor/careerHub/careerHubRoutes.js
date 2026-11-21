@@ -174,7 +174,6 @@ router.get(
     careerReferralController.getCareerReferrals
 );
 
-
 // ==========================================
 // MENTOR CAREER RESOURCE ROUTES
 // ==========================================
