@@ -1,0 +1,166 @@
+
+<div class="pdf-editor-page">
+
+  <!-- HEADER -->
+  <div class="editor-header">
+
+    <div>
+      <span class="eyebrow">CAREER HUB</span>
+
+      <h1>PDF Anonymization Editor</h1>
+
+      <p>
+        Review your document before sharing it with other students.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="close()"
+    >
+      ← Back to Resources
+    </button>
+
+  </div>
+
+  <!-- LOADING -->
+  @if (isLoading()) {
+    <div class="editor-message">
+      Loading your original PDF...
+    </div>
+  }
+
+  <!-- ERROR -->
+  @if (errorMessage()) {
+    <div class="editor-error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- PDF WORKSPACE -->
+  <section class="pdf-workspace">
+
+    <div class="workspace-heading">
+
+      <div>
+        <h2>Original Document</h2>
+
+        <p>
+          Review your document and remove personal information.
+        </p>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="editor-toolbar">
+
+        <button
+          type="button"
+          class="toolbar-button"
+          [class.active]="redactionMode()"
+          [disabled]="isLoading() || !!errorMessage()"
+          (click)="toggleRedactionMode()"
+        >
+          {{ redactionMode()
+            ? 'Exit Redaction Mode'
+            : 'Enable Redaction' }}
+        </button>
+
+        <button
+          type="button"
+          class="toolbar-button undo-button"
+          [disabled]="redactionCount() === 0 || isSaving()"
+          (click)="undoRedaction()"
+        >
+          Undo ({{ redactionCount() }})
+        </button>
+
+        <button
+          type="button"
+          class="toolbar-button save-button"
+          [disabled]="redactionCount() === 0 || isSaving()"
+          (click)="saveEditedPdf()"
+        >
+          {{ isSaving() ? 'Saving PDF...' : 'Save Edited PDF' }}
+        </button>
+
+        <button
+          type="button"
+          class="toolbar-button"
+          [disabled]="isLoadingPreview() || isSaving()"
+          (click)="loadAnonymizedPreview()"
+        >
+          {{ isLoadingPreview()
+            ? 'Loading Preview...'
+            : 'Preview Anonymized PDF' }}
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- SAVE MESSAGE -->
+    @if (saveMessage()) {
+      <div class="editor-message">
+        {{ saveMessage() }}
+      </div>
+    }
+
+    <!-- ANONYMIZED PREVIEW -->
+    @if (previewUrl()) {
+
+      <section class="pdf-preview-section">
+
+        <h2>Anonymized PDF Preview</h2>
+
+        <p>
+          Carefully check that your personal information is no longer visible.
+        </p>
+
+        <iframe
+          [src]="previewUrl()"
+          class="pdf-preview-frame"
+          title="Anonymized PDF Preview"
+        ></iframe>
+
+        @if (!publicationCompleted()) {
+
+          <button
+            type="button"
+            class="toolbar-button publish-button"
+            [disabled]="!previewUrl() || isConfirming()"
+            (click)="confirmPublication()"
+          >
+            {{ isConfirming()
+              ? 'Publishing...'
+              : 'Confirm & Publish Resource' }}
+          </button>
+
+        } @else {
+
+          <div class="publication-success">
+            Resource published successfully!
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+    <!-- REDACTION INSTRUCTIONS -->
+    @if (redactionMode()) {
+      <div class="redaction-instructions">
+        Drag over personal information to mark it for redaction.
+      </div>
+    }
+
+    <!-- PDF PAGES -->
+    <div
+      #pagesContainer
+      class="pdf-pages-container"
+    ></div>
+
+  </section>
+
+</div>

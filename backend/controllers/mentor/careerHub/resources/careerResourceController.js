@@ -634,10 +634,242 @@ const confirmResourcePublication = async (req, res) => {
     }
 };
 
+
+// ==========================================
+// GET PUBLISHED CAREER RESOURCES
+// ==========================================
+
+const getCareerResources = async (req, res) => {
+
+    try {
+
+        const {
+            resource_type,
+            experience_level,
+            country_id
+        } = req.query;
+
+        let query = `
+            SELECT
+                cr.id,
+                cr.resource_type,
+                cr.title,
+                cr.country_id,
+                cc.country_name,
+                cr.experience_level,
+                cr.description,
+                cr.created_at,
+                u.id AS contributor_id,
+                u.name AS contributor_name
+
+            FROM career_resources cr
+
+            LEFT JOIN career_countries cc
+                ON cc.id = cr.country_id
+
+            LEFT JOIN users u
+                ON u.id = cr.created_by
+
+            WHERE cr.status = 'published'
+
+            AND EXISTS (
+                SELECT 1
+                FROM career_resource_files crf
+                WHERE crf.resource_id = cr.id
+                AND crf.file_type = 'public_copy'
+            )
+        `;
+
+        const params = [];
+
+        if (resource_type) {
+
+            if (!["resume", "cover_letter"].includes(resource_type)) {
+                return res.status(400).json({
+                    message: "Invalid resource type"
+                });
+            }
+
+            query += " AND cr.resource_type = ?";
+            params.push(resource_type);
+        }
+
+        if (experience_level) {
+
+            if (!["fresher", "experienced"].includes(experience_level)) {
+                return res.status(400).json({
+                    message: "Invalid experience level"
+                });
+            }
+
+            query += " AND cr.experience_level = ?";
+            params.push(experience_level);
+        }
+
+        if (country_id) {
+
+            const countryId = Number(country_id);
+
+            if (!Number.isInteger(countryId) || countryId <= 0) {
+                return res.status(400).json({
+                    message: "Invalid country"
+                });
+            }
+
+            query += " AND cr.country_id = ?";
+            params.push(countryId);
+        }
+
+        query += " ORDER BY cr.created_at DESC";
+
+        const [resources] = await db.execute(query, params);
+
+        return res.status(200).json({
+            message: "Career resources fetched successfully",
+            total: resources.length,
+            resources
+        });
+
+    } catch (error) {
+
+        console.error("Mentor career resources fetch error:", error);
+
+        return res.status(500).json({
+            message: "Unable to fetch career resources"
+        });
+    }
+};
+
+// ==========================================
+// GET RESOURCE FORM DATA
+// ==========================================
+
+const getResourceFormData = async (req, res) => {
+
+    try {
+
+        const [countries] = await db.execute(
+            `SELECT id, country_name
+             FROM career_countries
+             WHERE is_active = 1
+             ORDER BY country_name ASC`
+        );
+
+        return res.status(200).json({
+            success: true,
+            countries
+        });
+
+    } catch (error) {
+
+        console.error("Mentor resource form data error:", error);
+
+        return res.status(500).json({
+            message: "Unable to fetch resource form data"
+        });
+    }
+};
+
+// ==========================================
+// DOWNLOAD PUBLISHED CAREER RESOURCE
+// ==========================================
+
+const downloadCareerResource = async (req, res) => {
+
+    try {
+
+        const resourceId = Number(req.params.resourceId);
+
+        if (!Number.isInteger(resourceId) || resourceId <= 0) {
+            return res.status(400).json({
+                message: "Invalid resource ID"
+            });
+        }
+
+        const [files] = await db.execute(
+            `SELECT
+                cr.id,
+                cr.title,
+                crf.file_path,
+                crf.file_name,
+                crf.mime_type
+             FROM career_resources cr
+             INNER JOIN career_resource_files crf
+                ON crf.resource_id = cr.id
+             WHERE cr.id = ?
+             AND cr.status = 'published'
+             AND crf.file_type = 'public_copy'
+             LIMIT 1`,
+            [resourceId]
+        );
+
+        if (files.length === 0) {
+            return res.status(404).json({
+                message: "Published resource not found"
+            });
+        }
+
+        const resource = files[0];
+
+        if (resource.mime_type !== "application/pdf") {
+            return res.status(400).json({
+                message: "Invalid document format"
+            });
+        }
+
+        const publicCopyRoot = path.resolve(
+            process.cwd(),
+            "uploads",
+            "career-resources",
+            "public-copies"
+        );
+
+        const filePath = path.resolve(
+            process.cwd(),
+            resource.file_path
+        );
+
+        if (!filePath.startsWith(publicCopyRoot + path.sep)) {
+            return res.status(403).json({
+                message: "Invalid document location"
+            });
+        }
+
+        await fs.access(filePath);
+
+        res.setHeader("Cache-Control", "private, no-store");
+        res.setHeader("X-Content-Type-Options", "nosniff");
+
+        return res.download(
+            filePath,
+            `career-resource-${resourceId}.pdf`,
+            (error) => {
+                if (error && !res.headersSent) {
+                    console.error("Mentor resource download error:", error);
+                    res.status(500).json({
+                        message: "Unable to download career resource"
+                    });
+                }
+            }
+        );
+
+    } catch (error) {
+
+        console.error("Mentor career resource download error:", error);
+
+        if (!res.headersSent) {
+            return res.status(500).json({
+                message: "Unable to download career resource"
+            });
+        }
+    }
+};
 module.exports = {
     uploadCareerResource,
+    getCareerResources,
     getMyCareerResources,
+    getResourceFormData,
     previewAnonymizedCopy,
-    confirmResourcePublication
-
+    confirmResourcePublication,
+    downloadCareerResource
 };

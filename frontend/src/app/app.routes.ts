@@ -341,6 +341,8 @@ import {
   Referrals as MentorCareerReferrals
 } from './features/mentor/career-hub/referrals/referrals/referrals';
 
+import { MentorResources } from './features/mentor/career-hub/resources/resources/resources';
+
 
 export const routes: Routes = [
 
@@ -1155,6 +1157,13 @@ export const routes: Routes = [
         path: 'mentor/career-hub/referrals',
         component: MentorCareerReferrals
       },
+
+      {
+        path: 'mentor/career-hub/resources',
+        component: MentorResources
+      },
+
+      
     ]
   },
 

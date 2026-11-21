@@ -60,9 +60,12 @@ const careerReferralController = require(
 
 const {
     uploadCareerResource,
+    getCareerResources,
     getMyCareerResources,
+    getResourceFormData,
     previewAnonymizedCopy,
-    confirmResourcePublication
+    confirmResourcePublication,
+    downloadCareerResource
 } = require("../../../controllers/mentor/careerHub/resources/careerResourceController");
 
 const {
@@ -209,6 +212,39 @@ router.patch(
     authMiddleware,
     roleMiddleware("mentor"),
     confirmResourcePublication
+);
+
+// ==========================================
+// BROWSE PUBLISHED RESOURCES
+// ==========================================
+
+router.get(
+    "/resources",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getCareerResources
+);
+
+// ==========================================
+// RESOURCE FORM DATA
+// ==========================================
+
+router.get(
+    "/resources/form-data",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    getResourceFormData
+);
+
+// ==========================================
+// DOWNLOAD PUBLISHED RESOURCE
+// ==========================================
+
+router.get(
+    "/resources/:resourceId/download",
+    authMiddleware,
+    roleMiddleware("mentor"),
+    downloadCareerResource
 );
 
 

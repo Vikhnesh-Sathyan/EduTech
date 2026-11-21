@@ -750,8 +750,6 @@ export class PdfEditor implements AfterViewInit {
     });
   }
 
-
-
   // CLOSE
 
   close(): void {

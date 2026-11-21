@@ -315,7 +315,6 @@ downloadResource(resourceId: number): void {
     this.closeResourcePreview();
   }
 
-
   // ==========================================
 // ACTIVE TAB
 // ==========================================
